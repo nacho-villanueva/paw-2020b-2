@@ -31,13 +31,20 @@
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>interfaces</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>services</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.parent.version}</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
