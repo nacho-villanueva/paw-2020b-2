@@ -31,7 +31,12 @@ public class HelloWorldController {
         mav.addObject("user", us.findById(id));
         return mav;
     }
-    */
+
+
+
+
+}
+
 
     //url/?studyId=asdas
     @RequestMapping("/")
@@ -40,5 +45,15 @@ public class HelloWorldController {
         mav.addObject("user", us.findById(id));
         return mav;
     }
-    
+*/
+//url/view-study/asdas
+
+    @RequestMapping("/view-study/{studyId}")
+    public ModelAndView viewStudy(@PathVariable("studyId") final long id) {
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("user", us.findById(id));
+        return mav;
+    }
+
+
 }
