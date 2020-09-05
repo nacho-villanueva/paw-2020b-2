@@ -32,12 +32,6 @@ public class HelloWorldController {
         return mav;
     }
 
-
-
-
-}
-
-
     //url/?studyId=asdas
     @RequestMapping("/")
     public ModelAndView viewStudy2(@RequestParam(value = "studyId", required = false, defaultValue = "0") final long id) {
@@ -48,7 +42,7 @@ public class HelloWorldController {
 */
 //url/view-study/asdas
 
-    @RequestMapping("/view-study/{studyId}")
+    @RequestMapping("/view-study-test/{studyId}")
     public ModelAndView viewStudy(@PathVariable("studyId") final long id) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", us.findById(id));

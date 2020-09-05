@@ -7,14 +7,17 @@ public class Result {
    // private long order;         //se podria sacar de la orden en si
    // private Institute institute;//se podria sacar de la orden en si
    // private Date date;
+
+    //vamos a hacer referencia al OrderDao que conseguimos del link!!!!!
     private Order order;
+
     private String resultdescription;
     private Object data;
     private Medic responsible; //doctor?
-    private Image signresponsible;
+    private Object signresponsible;
 
 
-    public Result(final Order order, final String resultdescription, final Object data, final Medic responsible, final Image signresponsible){
+    public Result(final Order order, final String resultdescription, final Object data, final Medic responsible, final Object signresponsible){
         this.order = order;
         this.resultdescription = resultdescription;
         this.data = data;
@@ -22,9 +25,7 @@ public class Result {
         this.signresponsible = signresponsible;
     }
 
-    public long getOrderNumber(){
-        return order.getOrderNumber();
-    }
+    //public long getOrderNumber() {return order.getId();}
     public String getResultDescription(){
         return resultdescription;
     }
