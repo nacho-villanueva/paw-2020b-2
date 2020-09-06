@@ -12,11 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class ResultUploadController {
 
 
-    @RequestMapping("/create-result")
+    @RequestMapping("/upload-result")
     public ModelAndView helloWorld() {
-        final ModelAndView mav = new ModelAndView("create-result");
+        final ModelAndView mav = new ModelAndView("upload-result");
         return mav;
     }
+
+
+    //
 
     @RequestMapping(value = "/result-uploaded", method = RequestMethod.POST)
     public String submit(@RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign, ModelMap modelMap) {
