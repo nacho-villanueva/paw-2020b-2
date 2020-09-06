@@ -27,22 +27,22 @@
                 Order
             </div>
             <div class="card-body">
-                <h5 class="card-title">Order Number: ${order.id}</h5>
+                <h5 class="card-title">Order Number: ${id}</h5>
                 <hr class="mt-3 mb-2"/>
                 <div class="row justify-content-start">
                     <div class="col">Date: ${order.date}</div>
-                    <div class="col">Patient: ${order.patientname}</div>
+                    <div class="col">Patient: ${order.patient.name}</div>
                     <div class="w-100"></div>
-                    <div class="col">Medic Plan: ${order.medicplan}</div>
-                    <div class="col">Medic Plan Number: ${order.medicplannumber}</div>
+                    <div class="col">Medic Plan: ${order.patient_insurance_plan}</div>
+                    <div class="col">Medic Plan Number: ${order.patient_insurance_number}</div>
                 </div>
                 <hr class="mt-3 mb-4"/>
-                <p class="card-text">${order.ordertext}
+                <p class="card-text">${order.description}
                 <hr class="mt-5 mb-4"/>
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="mt-0 mb-1">${order.medic.fullname}</h5>
-                        M.N.:${order.medic.licenceNumber}
+                        <h5 class="mt-0 mb-1">${order.medic.name}</h5>
+                        M.N.:${order.medic.licence_number}
                     </div>
                     <img src="./WEB-INF/IMG_20190605_210209.jpg" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                 </div>
@@ -64,11 +64,9 @@
                             Result
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Order Number: ${result.id}</h5>
-                            <hr class="mt-3 mb-2"/>
                             <div class="row justify-content-start">
                                 <div class="col">Date: ${result.date}</div>
-                                <div class="col">Clinic: ${result.order.clinic}</div>
+                                <div class="col">Clinic: ${order.clinic.name}</div>
                             </div>
                             <hr class="mt-3 mb-4"/>
                                 ${result.data}

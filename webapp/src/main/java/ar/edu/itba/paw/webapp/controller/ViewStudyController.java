@@ -20,6 +20,7 @@ public class ViewStudyController {
     @RequestMapping("/view-study/{orderId}")
     public ModelAndView uploadResults(@PathVariable("orderId") final long id) {
         final ModelAndView mav = new ModelAndView("view-study");
+        mav.addObject("id", id);
         mav.addObject("order", os.findById(id));
         mav.addObject("results", rs.findByOrderId(id));
         return mav;
