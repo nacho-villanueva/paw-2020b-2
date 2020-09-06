@@ -1,93 +1,66 @@
 package ar.edu.itba.paw.model;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.Collection;
 
 public class Order {
-
-    private long id;
-    private Date date;
-    private String patientname, medicplan, medicplannumber;
-    private String ordertext;
     private Medic medic;
-    private Object signature;
+    private Date date;
+    private Clinic clinic;
+    private String study;
+    private String description;
+    private byte[] identification;
+    private String patient_insurance_plan;
+    private String patient_insurance_number;
+    private Patient patient;
+    private Collection<Result> study_results;
 
-
-
-    public Order (final long id){
-        this.id = id;
-        //hardcodeo
-        this.date = new Date();
-        this.patientname = "Dario Solanum";
-        this.medicplan="Galera Plata";
-        this.medicplannumber = "60-671952-01";
-        this.ordertext = "Ecografia abdominal";
-        this.medic = new Medic(241351,"Dr. Cesar Aritmetica Sr.", "cearitm@mediconotfake.org", "+54 11 8461-1351");
-        this.signature = null;
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
+    public Order(final Medic medic, final Date date, final Clinic clinic, final String study, final String description, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final Patient patient, final Collection<Result> study_results) {
+        this.medic = medic;
         this.date = date;
-    }
-
-    public void setPatientname(String patientname) {
-        this.patientname = patientname;
-    }
-
-    public String getPatientname() {
-        return patientname;
-    }
-
-    public String getMedicplan() {
-        return medicplan;
-    }
-
-    public void setMedicplan(String medicplan) {
-        this.medicplan = medicplan;
-    }
-
-    public String getMedicplannumber() {
-        return medicplannumber;
-    }
-
-    public void setMedicplannumber(String medicplannumber) {
-        this.medicplannumber = medicplannumber;
-    }
-
-    public String getOrdertext() {
-        return ordertext;
-    }
-
-    public void setOrdertext(String ordertext) {
-        this.ordertext = ordertext;
+        this.clinic = clinic;
+        this.study = study;
+        this.description = description;
+        this.identification = identification;
+        this.patient_insurance_plan = patient_insurance_plan;
+        this.patient_insurance_number = patient_insurance_number;
+        this.patient = patient;
+        this.study_results = study_results;
     }
 
     public Medic getMedic() {
         return medic;
     }
 
-    public void setMedic(Medic medic) {
-        this.medic = medic;
+    public Date getDate() {
+        return date;
     }
 
-    public Object getSignature() {
-        return signature;
+    public Clinic getClinic() {
+        return clinic;
     }
 
-    public void setSignature(Object signature) {
-        this.signature = signature;
+    public String getStudy() {
+        return study;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public byte[] getIdentification() {
+        return identification;
+    }
+
+    public String getPatient_insurance_plan() {
+        return patient_insurance_plan;
+    }
+
+    public String getPatient_insurance_number() {
+        return patient_insurance_number;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
 }
