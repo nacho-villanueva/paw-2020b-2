@@ -15,14 +15,13 @@ public class HelloWorldController {
 
     @Autowired
     private UserService us;
-    /*
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", us.findById(1));
         return mav;
     }
-
+    /*
     //url/view-study/asdas
 
     @RequestMapping("/view-study/{studyId}")
