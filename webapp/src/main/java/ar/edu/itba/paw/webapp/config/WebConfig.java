@@ -14,6 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
         "ar.edu.itba.paw.services",
+        "ar.edu.itba.paw.persistence",
 })
 @Configuration
 public class WebConfig {
