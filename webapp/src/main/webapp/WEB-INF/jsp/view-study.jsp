@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: matia
@@ -16,14 +17,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>MedTransfer</title>
 </head>
 <body>
-<h1>Hello, world!</h1>
-<h2>${order.id}</h2>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="card text-center" style="width: 50rem;">
+    <div class="row justify-content-center pb-8">
+        <div class="card text-center pb-8 mt-4" style="width: 50rem;">
             <div class="card-header">
                 Order
             </div>
@@ -43,14 +42,53 @@
                 <div class="media">
                     <div class="media-body">
                         <h5 class="mt-0 mb-1">${order.medic.fullname}</h5>
-                        ${order.medic.licenceNumber}
+                        M.N.:${order.medic.licenceNumber}
                     </div>
-                    <img src="../IMG_20190605_210209.jpg" class="align-self-end ml-3" alt="the medic's signature">
+                    <img src="./WEB-INF/IMG_20190605_210209.jpg" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                 </div>
             </div>
         </div>
     </div>
-    <a href="#" class="btn btn-primary align-self-center">Go somewhere</a>
+    <div class="row justify-content-center align-items-end">
+        <button type="button" class="btn btn-primary align-self-center align-items-end my-4">Upload results</button>
+    </div>
+    <c:choose>
+        <c:when test="${results eq null}">
+            <h1 class="text-center mt-6">It seems there are no results to show yet!</h1>
+        </c:when>
+        <c:otherwise>
+            <c:forEach items="${results}" var="result">
+                <div class="row justify-content-center pb-8">
+                    <div class="card text-center pb-8" style="width: 50rem;">
+                        <div class="card-header">
+                            Result
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Order Number: ${result.id}</h5>
+                            <hr class="mt-3 mb-2"/>
+                            <div class="row justify-content-start">
+                                <div class="col">Date: ${result.date}</div>
+                                <div class="col">Clinic: ${result.order.clinic}</div>
+                            </div>
+                            <hr class="mt-3 mb-4"/>
+                                ${result.data}
+                            <hr class="mt-5 mb-4"/>
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1">${result.responsible_name}</h5>
+                                    M.N.:${result.responsible_licence_number}
+                                </div>
+                                <img src="${result.identification}" class="align-self-end ml-3" alt="the medic's signature">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
+
+
 </div>
 
 <!-- Optional JavaScript -->
