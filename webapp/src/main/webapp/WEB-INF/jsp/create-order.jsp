@@ -23,9 +23,19 @@
             <div class="card-body">
 
                 <c:url var="post_createorder"  value="/create-order"/>
-                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm">
-                    <label>Medic's Name </label> <f:select class="selectpicker" data-live-search="true" items="${medicsList}" name="MedicId" path="medicId" /><br>
-                    <label>Medical Clinic </label> <f:select class="selectpicker" data-live-search="true" items="${clinicsList}" name="MedicId" path="clinicId" /><br>
+                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm" enctype="multipart/form-data">
+
+                    <label>Medic's Name</label>
+                    <f:select cssClass="selectpicker" data-live-search="true" path="medicId" >
+                        <f:option value="-" label="Choose Medic"/>
+                        <f:options items="${medicsList}"/>
+                    </f:select><br>
+
+                    <label>Medical Clinic </label>
+                    <f:select cssClass="selectpicker" data-live-search="true" path="clinicId" >
+                        <f:option value="-" label="Choose Clinic"/>
+                        <f:options items="${clinicsList}"/>
+                    </f:select><br>
 
                     <hr class="mt-3 mb-2"/>
 
@@ -33,7 +43,12 @@
                     <label> Patient Insurance Plan <f:input type="text" path="patient_insurance_plan" /> </label> <br>
                     <label> Patient Insurance Number <f:input type="text" path="patient_insurance_number" /> </label> <br>
 
-                    <label>Study Type </label> <f:select cssClass="selectpicker" data-live-search="true" items="${studiesList}" path="study" /><br>
+                    <label>Study Type </label>
+                    <f:select cssClass="selectpicker" data-live-search="true" path="study" >
+                        <f:option value="-" label="Choose Study"/>
+                        <f:options items="${studiesList}"/>
+                    </f:select><br>
+
                     <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label> <br>
                     <label> Medical Order Image <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
                     <input type="submit" value="Create Order"/>

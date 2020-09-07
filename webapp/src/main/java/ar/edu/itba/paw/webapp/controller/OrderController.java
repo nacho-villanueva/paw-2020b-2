@@ -8,8 +8,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +47,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createOrder(@ModelAttribute OrderForm orderForm, BindingResult bindingResult) {
+    public String createOrder(@ModelAttribute OrderForm orderForm, @RequestParam("orderAttach") MultipartFile file, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
 
@@ -52,9 +55,14 @@ public class OrderController {
             return "index";
 
         } else {
+            try {
+                String id = orderFormService.HandleOrderForm(orderForm, file.getBytes());
+                return "redirect:view-study/" + id;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "index"; //TODO: RETURN EXCEPTION PAGE
+            }
 
-            String id = orderFormService.HandleOrderForm(orderForm, null); //TODO: ADD IDENTIFICATION FILE
-            return "view-study/" + id;
         }
 
     }
