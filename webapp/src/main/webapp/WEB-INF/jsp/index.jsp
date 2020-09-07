@@ -8,9 +8,32 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+
     <title>Home</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand ml-4" href="#"> <i class="fas fa-laptop-medical fa-lg"></i> MedTransfer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">View studies (WIP)</a>
+            </li>
+        </ul>
+        <span class="navbar-text">
+          <em class="fas fa-user-circle fa-lg mr-4"></em>
+        </span>
+    </div>
+</nav>
 <h1>Welcome</h1>
 <button type="button" class="btn btn-primary btn-lg btn-block">Create Order</button>
 
