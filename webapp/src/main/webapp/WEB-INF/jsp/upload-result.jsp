@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="en">
@@ -13,6 +14,7 @@
     <title>MedTrans</title>
 </head>
 <body>
+<c:url value="/result-uploaded" var="postPath"/>
 <div class="container">
     <div class="row justify-content-center pb-8 mt-4" style="width: 50rem;">
         <div class="card">
@@ -20,7 +22,7 @@
                 Upload result
             </div>
             <div class="card-body">
-                <form:form method="POST" action="/result-uploaded" enctype="multipart/form-data">
+                <form:form method="POST" action="${postPath}" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Observations:</label>
                         <textarea class="form-control form-control-lg" id="exampleFormControlTextarea1" rows="3"></textarea>
