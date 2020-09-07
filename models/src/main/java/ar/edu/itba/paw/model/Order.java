@@ -11,19 +11,21 @@ public class Order {
     private Clinic clinic;
     private StudyType study;
     private String description;
+    private String identification_type;
     private byte[] identification;
     private String patient_insurance_plan;
     private String patient_insurance_number;
     private Patient patient;
     private Collection<Result> study_results;
 
-    public Order(final long order_id,final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final Patient patient, final Collection<Result> study_results) {
+    public Order(final long order_id,final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final Patient patient, final Collection<Result> study_results) {
         this.order_id = order_id;
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
         this.study = study;
         this.description = description;
+        this.identification_type = identification_type;
         this.identification = identification;
         this.patient_insurance_plan = patient_insurance_plan;
         this.patient_insurance_number = patient_insurance_number;
@@ -31,13 +33,14 @@ public class Order {
         this.study_results = study_results;
     }
 
-    public Order(final long order_id,final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final Patient patient) {
+    public Order(final long order_id,final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final Patient patient) {
         this.order_id = order_id;
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
         this.study = study;
         this.description = description;
+        this.identification_type = identification_type;
         this.identification = identification;
         this.patient_insurance_plan = patient_insurance_plan;
         this.patient_insurance_number = patient_insurance_number;
@@ -71,6 +74,10 @@ public class Order {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getIdentification_type() {
+        return identification_type;
     }
 
     public byte[] getIdentification() {

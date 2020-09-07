@@ -29,6 +29,7 @@ public class OrderJdbcDao implements OrderDao {
                     new StudyType(rs.getInt("study_id"),
                             rs.getString("study_name")),
                     rs.getString("description"),
+                    rs.getString("identification_type"),
                     rs.getBytes("identification"),
                     rs.getString("medic_plan"),
                     rs.getString("medic_plan_number"),
@@ -90,6 +91,7 @@ public class OrderJdbcDao implements OrderDao {
                "patient_id int not null," +
                "study_id int not null," +
                "description text," +
+               "identification_type text not null," +
                "identification bytea not null," +
                "medic_plan text,medic_plan_number text," +
                "foreign key(medic_id) references medics," +
@@ -101,7 +103,9 @@ public class OrderJdbcDao implements OrderDao {
        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS results (" +
                "id serial primary key," +
                "order_id bigint not null," +
+               "result_data_type text not null," +
                "result_data bytea not null," +
+               "identification_type text not null," +
                "identification bytea not null," +
                "date date not null," +
                "responsible_name text not null," +
@@ -114,7 +118,7 @@ public class OrderJdbcDao implements OrderDao {
    public Optional<Order> findById(long id) {
 
        //To make code less confusing, we name the sql query
-       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, medical_studies.id as study_id, date, description, identification, medic_plan, medic_plan_number from " +
+       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, medical_studies.id as study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
                "(select clinics.id as clinic_id, clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, * from " +
                "(select medics.id as medic_id, medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, * from " +
                "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, patients.id as patient_id, * from " +
@@ -138,7 +142,7 @@ public class OrderJdbcDao implements OrderDao {
    }
 
    @Override
-   public Order register(final Medic medic, final Date date, final Clinic clinic, final Patient patient, final StudyType studyType, final String description, final byte[] identification, final String medic_plan, final String medic_plan_number) {
+   public Order register(final Medic medic, final Date date, final Clinic clinic, final Patient patient, final StudyType studyType, final String description, final String identification_type, final byte[] identification, final String medic_plan, final String medic_plan_number) {
        //When creating an order, all the info is guaranteed to already exist (since they are choosing from the list of available info) except for patient info, so lets see if patient exists already or not
        Patient patientFromDB = patientDao.findOrRegister(patient.getEmail(), patient.getName());
 
@@ -149,6 +153,7 @@ public class OrderJdbcDao implements OrderDao {
        insertMap.put("patient_id", patientFromDB.getId());
        insertMap.put("study_id", studyType.getId());
        insertMap.put("description", description);
+       insertMap.put("identification_type", identification_type);
        insertMap.put("identification", identification);
        insertMap.put("medic_plan", medic_plan);
        insertMap.put("medic_plan_number", medic_plan_number);
@@ -157,6 +162,6 @@ public class OrderJdbcDao implements OrderDao {
 
        //Todo: check success
 
-       return new Order(key.longValue(),medic, date, clinic, studyType,description,identification,medic_plan,medic_plan_number,patientFromDB);
+       return new Order(key.longValue(),medic, date, clinic, studyType,description,identification_type,identification,medic_plan,medic_plan_number,patientFromDB);
    }
 }
