@@ -35,7 +35,7 @@
 
                     <label>Study Type </label> <f:select cssClass="selectpicker" data-live-search="true" items="${studiesList}" path="study" /><br>
                     <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label> <br>
-                    <!-- <label> Medical Order Image <input type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br> -->
+                    <label> Medical Order Image <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
                     <input type="submit" value="Create Order"/>
 
                     <datalist id="studiesList">
