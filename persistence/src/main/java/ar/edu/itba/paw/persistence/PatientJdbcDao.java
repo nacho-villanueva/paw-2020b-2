@@ -15,7 +15,8 @@ import java.util.Optional;
 @Repository
 public class PatientJdbcDao implements PatientDao {
 
-    private static final RowMapper<Patient> PATIENT_ROW_MAPPER = (rs, rowNum) -> new Patient(rs.getString("email"),rs.getString("name"));
+    private static final RowMapper<Patient> PATIENT_ROW_MAPPER = (rs, rowNum) ->
+            new Patient(rs.getInt("id"),rs.getString("email"),rs.getString("name"));
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -30,7 +31,8 @@ public class PatientJdbcDao implements PatientDao {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS patients (" +
                 "id serial primary key," +
                 "email text not null," +
-                "name text not null" +
+                "name text not null," +
+                "unique(email)" +
                 ")");
 
     }
@@ -45,8 +47,8 @@ public class PatientJdbcDao implements PatientDao {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email",email);
         insertMap.put("name",name);
-        jdbcInsert.executeAndReturnKey(insertMap);
+        Number key = jdbcInsert.executeAndReturnKey(insertMap);
         //TODO: Check success
-        return new Patient(email, name);
+        return new Patient(key.intValue(), email, name);
     }
 }
