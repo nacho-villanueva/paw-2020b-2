@@ -6,12 +6,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.util.Properties;
+import javax.sql.DataSource;
 
 @EnableWebMvc
 @ComponentScan({
@@ -50,6 +52,18 @@ public class WebConfig {
         props.put("mail.debug", "true");
 
         return mailSender;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+
+        ds.setDriverClass(org.postgresql.Driver.class);
+        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setUsername("root");
+        ds.setPassword("root");
+
+        return ds;
     }
 
 }
