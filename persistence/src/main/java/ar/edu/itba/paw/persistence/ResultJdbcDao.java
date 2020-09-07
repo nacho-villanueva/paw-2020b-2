@@ -39,7 +39,7 @@ public class ResultJdbcDao implements ResultDao {
     }
 
     @Override
-    public Optional<Result> findById(long id) {
+    public Optional<Result> findById(int id) {
         return jdbcTemplate.query("SELECT * FROM results WHERE id = ?", new Object[]{ id }, RESULT_ROW_MAPPER).stream().findFirst();
     }
 

@@ -17,18 +17,21 @@ public class MedicJdbcDao implements MedicDao {
     private static final RowMapper<Medic> MEDIC_ROW_MAPPER = (rs, rowNum) ->
             new Medic(rs.getInt("id"),rs.getString("name"),rs.getString("email"),rs.getString("telephone"),rs.getString("licence_number"));
 
-    private static final RowMapper<MedicalField> MEDIC_FIELDS_ROW_MAPPER = (rs, rowNum) ->
-            new MedicalField(rs.getInt("id"),rs.getString("name"));
-
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert jdbcInsertMedic;
+    private SimpleJdbcInsert jdbcInsertField;
+
+    @Autowired
+    MedicalFieldDao medicalFieldDao;
 
     @Autowired
     public MedicJdbcDao(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds)
+        jdbcInsertMedic = new SimpleJdbcInsert(ds)
                 .withTableName("medics")
                 .usingGeneratedKeyColumns("id");
+        jdbcInsertField = new SimpleJdbcInsert(ds)
+                .withTableName("medic_medical_fields");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medics (" +
                 "id serial primary key," +
@@ -55,14 +58,10 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     @Override
-    public Optional<Medic> findById(long id) {
+    public Optional<Medic> findById(int id) {
         Optional<Medic> medic = jdbcTemplate.query("SELECT * FROM medics WHERE id = ?", new Object[] { id }, MEDIC_ROW_MAPPER).stream().findFirst();
         if(medic.isPresent()) {
-            List<MedicalField> knownFields = jdbcTemplate.query("SELECT name, medical_fields.id as id FROM medic_medical_fields INNER JOIN medical_fields ON field_id = medical_fields.id AND medic_id = ?", new Object[]{ id }, MEDIC_FIELDS_ROW_MAPPER);
-
-            if(!knownFields.isEmpty()) {
-                medic.get().setMedical_fields(knownFields);
-            }
+            medic.get().setMedical_fields(medicalFieldDao.findByMedicId(id));
         }
         return medic;
     }
@@ -75,9 +74,31 @@ public class MedicJdbcDao implements MedicDao {
         insertMap.put("telephone", telephone);
         insertMap.put("licence_number", licence_number);
 
-        Number key = jdbcInsert.executeAndReturnKey(insertMap);
+        Number key = jdbcInsertMedic.executeAndReturnKey(insertMap);
 
         //Todo: verify success and register medical fields if needed
-        return new Medic(key.intValue(),name, email, telephone, licence_number, known_fields);
+        Collection<MedicalField> actual_known_fields = new ArrayList<>();
+
+        known_fields.forEach(medicalField -> {
+            MedicalField actualMedicField = this.registerFieldToMedic(key.intValue(),medicalField);
+            actual_known_fields.add(actualMedicField);
+        });
+
+        return new Medic(key.intValue(),name, email, telephone, licence_number, actual_known_fields);
+    }
+
+    @Override
+    public MedicalField registerFieldToMedic(final int medic_id, MedicalField medicalField) {
+        //We check if it exists
+        MedicalField medicalFieldFromDB = medicalFieldDao.findOrRegister(medicalField.getName());
+
+        //Now that we made sure it exist, we add the relation
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("medic_id", medic_id);
+        insertMap.put("field_id", medicalFieldFromDB.getId());
+
+        int rowsAffected = jdbcInsertField.execute(insertMap);
+
+        return medicalFieldFromDB;
     }
 }

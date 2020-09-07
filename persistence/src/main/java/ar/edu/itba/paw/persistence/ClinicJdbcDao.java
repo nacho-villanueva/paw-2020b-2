@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Clinic;
-import ar.edu.itba.paw.model.Study;
+import ar.edu.itba.paw.model.StudyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,18 +17,21 @@ public class ClinicJdbcDao implements ClinicDao {
     private static final RowMapper<Clinic> CLINIC_ROW_MAPPER = (rs, rowNum) ->
             new Clinic(rs.getInt("id"),rs.getString("name"),rs.getString("email"),rs.getString("telephone"));
 
-    private static final RowMapper<Study> CLINIC_STUDIES_ROW_MAPPER = (rs, rowNum) ->
-            new Study(rs.getInt("id"),rs.getString("name"));
-
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert jdbcInsertClinic;
+    private SimpleJdbcInsert jdbcInsertStudies;
+
+    @Autowired
+    StudyTypeDao studyTypeDao;
 
     @Autowired
     public ClinicJdbcDao(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds)
+        jdbcInsertClinic = new SimpleJdbcInsert(ds)
                 .withTableName("clinics")
                 .usingGeneratedKeyColumns("id");
+        jdbcInsertStudies = new SimpleJdbcInsert(ds)
+                .withTableName("clinic_available_studies");
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clinics (" +
                 "id serial primary key," +
@@ -54,30 +57,48 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     @Override
-    public Optional<Clinic> findById(long id) {
+    public Optional<Clinic> findById(int id) {
         //We get the basic clinic info
         Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics WHERE id = ?", new Object[] { id }, CLINIC_ROW_MAPPER).stream().findFirst();
         if(clinic.isPresent()) {
-            List<Study> availableStudies = jdbcTemplate.query("SELECT name, medical_studies.id as id FROM clinic_available_studies INNER JOIN medical_studies ON study_id = medical_studies.id AND clinic_id = ?", new Object[] { id },CLINIC_STUDIES_ROW_MAPPER);
-
-            if(!availableStudies.isEmpty()) {
-                clinic.get().setMedical_studies(availableStudies);
-            }
+            clinic.get().setMedical_studies(studyTypeDao.findByClinicId(id));
         }
         return clinic;
     }
 
     @Override
-    public Clinic register(final String name, final String email, final String telephone, final Collection<Study> available_studies) {
+    public Clinic register(final String name, final String email, final String telephone, final Collection<StudyType> available_studies) {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("name", name);
         insertMap.put("email", email);
         insertMap.put("telephone", telephone);
 
-        Number key = jdbcInsert.executeAndReturnKey(insertMap);
+        Number key = jdbcInsertClinic.executeAndReturnKey(insertMap);
 
-        //Todo: check success and register studies to clinic
+        //Todo: check success and register new studies types to clinic
+        Collection<StudyType> actual_available_studies = new ArrayList<>();
 
-        return new Clinic(key.intValue(),name,email,telephone,available_studies);
+        //Goes through the list of available studies, adds them to the clinic_available_studies and if there are new study types it adds them to db
+        available_studies.forEach(studyType -> {
+            StudyType actualStudyType = this.registerStudyToClinic(key.intValue(), studyType);
+            actual_available_studies.add(actualStudyType);
+        });
+
+        return new Clinic(key.intValue(),name,email,telephone,actual_available_studies);
+    }
+
+    @Override
+    public StudyType registerStudyToClinic(final int clinic_id, StudyType studyType) {
+        //We check if it exists
+        StudyType studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
+
+        //Now that we made sure it exist, we add the relation
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id", clinic_id);
+        insertMap.put("study_id", studyTypeFromDB.getId());
+
+        int rowsAffected = jdbcInsertStudies.execute(insertMap);
+
+        return studyTypeFromDB;
     }
 }

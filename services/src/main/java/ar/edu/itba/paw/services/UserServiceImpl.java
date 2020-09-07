@@ -19,7 +19,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(long id) {
         // TODO : Make 4 real!
-        patientDao.register("asd","dasdas");
         return new User(id, "PAW");
     }
 }

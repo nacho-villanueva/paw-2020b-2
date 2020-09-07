@@ -38,8 +38,24 @@ public class PatientJdbcDao implements PatientDao {
     }
 
     @Override
-    public Optional<Patient> findById(long id) {
+    public Optional<Patient> findById(int id) {
         return jdbcTemplate.query("SELECT * FROM patients WHERE id = ?", new Object[] { id }, PATIENT_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Optional<Patient> findByEmail(String email) {
+        return jdbcTemplate.query("SELECT * FROM patients WHERE email = ?", new Object[]{email}, PATIENT_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Patient findOrRegister(String email, String name) {
+        Optional<Patient> patient = this.findByEmail(email);
+
+        if(patient.isPresent()) {
+            return patient.get();
+        }
+
+        return this.register(email, name);
     }
 
     @Override

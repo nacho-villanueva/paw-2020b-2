@@ -8,9 +8,9 @@ public class Clinic {
     private String name;
     private String email;
     private String telephone;
-    private Collection<Study> medical_studies;
+    private Collection<StudyType> medical_studies;
 
-    public Clinic(final int id, final String name, final String email, final String telephone, final Collection<Study> medical_studies) {
+    public Clinic(final int id, final String name, final String email, final String telephone, final Collection<StudyType> medical_studies) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -26,7 +26,7 @@ public class Clinic {
         this.medical_studies = new ArrayList<>();
     }
 
-    public void setMedical_studies(Collection<Study> medical_studies) {
+    public void setMedical_studies(Collection<StudyType> medical_studies) {
         this.medical_studies = medical_studies;
     }
 
@@ -46,7 +46,7 @@ public class Clinic {
         return telephone;
     }
 
-    public Collection<Study> getMedical_studies() {
+    public Collection<StudyType> getMedical_studies() {
         return medical_studies;
     }
 }
