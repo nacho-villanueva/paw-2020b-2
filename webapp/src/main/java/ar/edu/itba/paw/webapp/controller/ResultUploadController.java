@@ -19,9 +19,10 @@ public class ResultUploadController {
     @Autowired
     private OrderService os;
 
-    @RequestMapping("/upload-result/{studyId}")
+    @RequestMapping("/upload-result/{orderId}")
     public ModelAndView uploadResult(@PathVariable("orderId") final long id) {
         final ModelAndView mav = new ModelAndView("upload-result");
+        mav.addObject("id", id);
         mav.addObject("order", os.findById(id));
         return mav;
     }

@@ -16,21 +16,30 @@
 <body>
 <c:url value="/result-uploaded" var="postPath"/>
 <div class="container">
-    <div class="row justify-content-center pb-8 mt-4" style="width: 50rem;">
-        <div class="card">
-            <div class="card-header">
+    <div class="row justify-content-center pb-8 mt-4">
+        <div class="card pb-8 mt-4" style="width: 40rem;">
+            <div class="card-header text-center">
                 Upload result
             </div>
             <div class="card-body">
+                <div class="row justify-content-start">
+                    <div class="col">Order Number: ${id}</div>
+                    <div class="col">Patient: ${order.patient.name}</div>
+                    <div class="w-100"></div>
+                    <div class="col">Medic Plan: ${order.patient_insurance_plan}</div>
+                    <div class="col">Medic Plan Number: ${order.patient_insurance_number}</div>
+                </div>
+                <hr class="mt-2 mb-3"/>
                 <form:form method="POST" action="${postPath}" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Observations:</label>
                         <textarea class="form-control form-control-lg" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="form-inline">
                         <label for="exampleFormControlFile1">Select files to upload</label>
                         <input multiple required type="file" class="form-control-file" id="exampleFormControlFile1" name="files">
                     </div>
+                    <hr class="mt-3 mb-4"/>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group">
@@ -45,11 +54,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-inline mt-2">
                         <label for="exampleFormControlFile2">Upload signature</label>
                         <input type="file" class="form-control-file" id="exampleFormControlFile2" name="sign">
                     </div>
-                    <button class="btn btn-primary mt-4 mb-2" type="submit">Submit results</button>
+                    <button class="btn btn-primary mt-4 mb-2 float-right" type="submit">Submit results</button>
                 </form:form>
 
             </div>
