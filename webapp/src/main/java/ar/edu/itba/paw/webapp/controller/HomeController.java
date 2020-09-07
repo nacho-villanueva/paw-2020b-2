@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class HelloWorldController {
+public class HomeController {
 
-    @Autowired
-    private UserService us;
 
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", us.findById(1));
+        //mav.addObject("user", us.findById(1));
         return mav;
     }
 }
