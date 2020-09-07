@@ -67,6 +67,15 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     @Override
+    public Collection<Clinic> getAll() {
+        Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics", CLINIC_ROW_MAPPER);
+        clinics.forEach(clinic -> {
+            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getId()));
+        });
+        return clinics;
+    }
+
+    @Override
     public Clinic register(final String name, final String email, final String telephone, final Collection<StudyType> available_studies) {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("name", name);
