@@ -2,7 +2,11 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Patient;
 
+import java.util.Optional;
+
 public interface PatientDao {
 
-    public Patient findById(long id);
+    public Optional<Patient> findById(long id);
+
+    public Patient register(String email, String name);
 }

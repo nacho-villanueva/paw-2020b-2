@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Clinic {
@@ -12,6 +13,17 @@ public class Clinic {
         this.name = name;
         this.email = email;
         this.telephone = telephone;
+        this.medical_studies = medical_studies;
+    }
+
+    public Clinic(final String name, final String email, final String telephone) {
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.medical_studies = new ArrayList<>();
+    }
+
+    public void setMedical_studies(Collection<String> medical_studies) {
         this.medical_studies = medical_studies;
     }
 
