@@ -24,7 +24,9 @@ public class ResultJdbcDao implements ResultDao {
                     rs.getDate("date"),
                     rs.getString("responsible_name"),
                     rs.getString("responsible_licence_number"),
+                    rs.getString("identification_type"),
                     rs.getBytes("identification"),
+                    rs.getString("result_data_type"),
                     rs.getBytes("result_data"));
 
     private JdbcTemplate jdbcTemplate;
@@ -49,10 +51,12 @@ public class ResultJdbcDao implements ResultDao {
     }
 
     @Override
-    public Result register(final long order_id, final byte[] result_data, final byte[] identification, final Date date, final String responsible_name, final String responsible_licence_number) {
+    public Result register(final long order_id, final String result_data_type, final byte[] result_data, final String identification_type, final byte[] identification, final Date date, final String responsible_name, final String responsible_licence_number) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("order_id", order_id);
+        insertMap.put("result_data_type", result_data_type);
         insertMap.put("result_data", result_data);
+        insertMap.put("identification_type", identification_type);
         insertMap.put("identification", identification);
         insertMap.put("date", date);
         insertMap.put("responsible_name", responsible_name);
@@ -62,6 +66,6 @@ public class ResultJdbcDao implements ResultDao {
 
         //Todo: Verify success
 
-        return new Result(key.intValue(),order_id,date,responsible_name,responsible_licence_number,identification,result_data);
+        return new Result(key.intValue(),order_id,date,responsible_name,responsible_licence_number,identification_type,identification,result_data_type,result_data);
     }
 }

@@ -67,6 +67,15 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     @Override
+    public Collection<Medic> getAll() {
+        Collection<Medic> medics = jdbcTemplate.query("SELECT * FROM medics", MEDIC_ROW_MAPPER);
+        medics.forEach(medic -> {
+            medic.setMedical_fields(medicalFieldDao.findByMedicId(medic.getId()));
+        });
+        return medics;
+    }
+
+    @Override
     public Medic register(final String name, final String email, final String telephone, final String licence_number, final Collection<MedicalField> known_fields) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("name", name);

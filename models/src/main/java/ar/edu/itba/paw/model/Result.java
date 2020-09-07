@@ -8,16 +8,20 @@ public class Result {
     private Date date;
     private String responsible_name;
     private String responsible_licence_number;
+    private String identification_type;
     private byte[] identification;
+    private String data_type;
     private byte[] data;
 
-    public Result(final int id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number, final byte[] identification, final byte[] data) {
+    public Result(final int id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number,final String identification_type, final byte[] identification, final String data_type, final byte[] data) {
         this.id = id;
         this.order_id = order_id;
         this.date = date;
         this.responsible_name = responsible_name;
         this.responsible_licence_number = responsible_licence_number;
+        this.identification_type = identification_type;
         this.identification = identification;
+        this.data_type = data_type;
         this.data = data;
     }
 
@@ -41,8 +45,16 @@ public class Result {
         return responsible_licence_number;
     }
 
+    public String getIdentification_type() {
+        return identification_type;
+    }
+
     public byte[] getIdentification() {
         return identification;
+    }
+
+    public String getData_type() {
+        return data_type;
     }
 
     public byte[] getData() {
