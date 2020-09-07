@@ -32,8 +32,9 @@ public class OrderFormServiceImpl implements OrderFormService {
         Order order = GenerateOrder(orderForm, identification);
 
         //TODO: orderDao.storeOrder(order);
+        String id = "getID";
 
-        return "id"; //TODO: RETURN ID TO VIEW ORDER
+        return id; //TODO: RETURN ID TO VIEW ORDER
     }
 
     private Order GenerateOrder(OrderForm orderForm, byte[] identification) {

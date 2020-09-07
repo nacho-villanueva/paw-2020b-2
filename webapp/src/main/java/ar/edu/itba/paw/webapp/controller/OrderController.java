@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.OrderFormService;
-import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.OrderForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getOrderCreationForm() {
-        final ModelAndView mav = new ModelAndView("createOrder");
+        final ModelAndView mav = new ModelAndView("create-order");
 
         Map<Long, String> medicsList = new HashMap<>();
         medicsList.put(1L, "Dr. Pepito");
@@ -55,7 +54,7 @@ public class OrderController {
         } else {
 
             String id = orderFormService.HandleOrderForm(orderForm, null); //TODO: ADD IDENTIFICATION FILE
-            return "view-order/";
+            return "view-study/" + id;
         }
 
     }
