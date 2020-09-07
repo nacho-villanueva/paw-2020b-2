@@ -58,6 +58,7 @@
                         <label for="exampleFormControlFile2">Upload signature</label>
                         <input type="file" class="form-control-file" id="exampleFormControlFile2" name="sign">
                     </div>
+                    <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button">Cancel</a>
                     <button class="btn btn-primary mt-4 mb-2 float-right" type="submit">Submit results</button>
                 </form:form>
 

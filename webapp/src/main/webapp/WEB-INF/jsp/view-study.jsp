@@ -19,11 +19,12 @@
 
     <title>MedTransfer</title>
 </head>
+<c:url value="/upload-result/${id}" var="uploadPath"/>
 <body>
 <div class="container">
     <div class="row justify-content-center pb-8">
-        <div class="card text-center pb-8 mt-4" style="width: 50rem;">
-            <div class="card-header">
+        <div class="card pb-8 mt-4" style="width: 40rem;">
+            <div class="card-header text-center">
                 Order
             </div>
             <div class="card-body">
@@ -37,12 +38,12 @@
                     <div class="col">Medic Plan Number: ${order.patient_insurance_number}</div>
                 </div>
                 <hr class="mt-3 mb-4"/>
-                <p class="card-text">${order.description}
+                <p class="card-text text-center">${order.description}
                 <hr class="mt-5 mb-4"/>
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="mt-0 mb-1">${order.medic.name}</h5>
-                        M.N.:${order.medic.licence_number}
+                        <h5 class="mt-0 mb-1 text-center">${order.medic.name}</h5>
+                        <p class="text-center">M.N.:${order.medic.licence_number}</p>
                     </div>
                     <img src="./WEB-INF/IMG_20190605_210209.jpg" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                 </div>
@@ -50,7 +51,7 @@
         </div>
     </div>
     <div class="row justify-content-center align-items-end">
-        <button type="button" class="btn btn-primary align-self-center align-items-end my-4">Upload results</button>
+        <a href="${uploadPath}" class="btn btn-primary align-self-center align-items-end my-4" role="button">Upload results</a>
     </div>
     <c:choose>
         <c:when test="${results eq null}">
@@ -59,8 +60,8 @@
         <c:otherwise>
             <c:forEach items="${results}" var="result">
                 <div class="row justify-content-center pb-8">
-                    <div class="card text-center pb-8" style="width: 50rem;">
-                        <div class="card-header">
+                    <div class="card pb-8" style="width: 45rem;">
+                        <div class="card-header text-center">
                             Result
                         </div>
                         <div class="card-body">
@@ -68,13 +69,13 @@
                                 <div class="col">Date: ${result.date}</div>
                                 <div class="col">Clinic: ${order.clinic.name}</div>
                             </div>
-                            <hr class="mt-3 mb-4"/>
+                            <hr class="mt-3 mb-4 text-center"/>
                                 ${result.data}
                             <hr class="mt-5 mb-4"/>
                             <div class="media">
                                 <div class="media-body">
-                                    <h5 class="mt-0 mb-1">${result.responsible_name}</h5>
-                                    M.N.:${result.responsible_licence_number}
+                                    <h5 class="mt-0 mb-1 text-center">${result.responsible_name}</h5>
+                                    <p class="text-center">M.N.:${result.responsible_licence_number}</p>
                                 </div>
                                 <img src="${result.identification}" class="align-self-end ml-3" alt="the medic's signature">
                             </div>
