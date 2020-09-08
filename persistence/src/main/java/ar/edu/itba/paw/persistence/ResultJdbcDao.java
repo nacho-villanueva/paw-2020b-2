@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ResultJdbcDao implements ResultDao {
 
     private static final RowMapper<Result> RESULT_ROW_MAPPER = (rs, rowNum) ->
-            new Result(rs.getInt("id"),
+            new Result(rs.getLong("id"),
                     rs.getLong("order_id"),
                     rs.getDate("date"),
                     rs.getString("responsible_name"),
@@ -41,7 +41,7 @@ public class ResultJdbcDao implements ResultDao {
     }
 
     @Override
-    public Optional<Result> findById(int id) {
+    public Optional<Result> findById(long id) {
         return jdbcTemplate.query("SELECT * FROM results WHERE id = ?", new Object[]{ id }, RESULT_ROW_MAPPER).stream().findFirst();
     }
 
@@ -66,6 +66,6 @@ public class ResultJdbcDao implements ResultDao {
 
         //Todo: Verify success
 
-        return new Result(key.intValue(),order_id,date,responsible_name,responsible_licence_number,identification_type,identification,result_data_type,result_data);
+        return new Result(key.longValue(),order_id,date,responsible_name,responsible_licence_number,identification_type,identification,result_data_type,result_data);
     }
 }
