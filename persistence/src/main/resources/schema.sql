@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS medical_orders (
 );
 
 CREATE TABLE IF NOT EXISTS results (
-   id serial primary key,
+   id bigserial primary key,
    order_id bigint not null,
    result_data_type text not null,
    result_data bytea not null,

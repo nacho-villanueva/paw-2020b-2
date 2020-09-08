@@ -3,7 +3,7 @@ package ar.edu.itba.paw.model;
 import java.sql.Date;
 
 public class Result {
-    private int id;
+    private long id;
     private long order_id;
     private Date date;
     private String responsible_name;
@@ -13,7 +13,7 @@ public class Result {
     private String data_type;
     private byte[] data;
 
-    public Result(final int id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number,final String identification_type, final byte[] identification, final String data_type, final byte[] data) {
+    public Result(final long id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number,final String identification_type, final byte[] identification, final String data_type, final byte[] data) {
         this.id = id;
         this.order_id = order_id;
         this.date = date;
@@ -25,7 +25,7 @@ public class Result {
         this.data = data;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
