@@ -6,6 +6,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ResultService {
-    public Optional<Result> findById(int id);
+    public Optional<Result> findById(long id);
     public Collection<Result> findByOrderId(long id);
 }

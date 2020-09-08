@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ResultFormService;
+import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.ResultForm;
 import ar.edu.itba.paw.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 public class ResultUploadController {
@@ -28,10 +30,20 @@ public class ResultUploadController {
 
     @RequestMapping("/upload-result/{orderId}")
     public ModelAndView uploadResult(@PathVariable("orderId") final long id) {
-        final ModelAndView mav = new ModelAndView("upload-result");
-        mav.addObject("id", id);
-        mav.addObject("order", os.findById(id));
-        orderId = id;
+        ModelAndView mav;
+        Optional<Order> o = os.findById(id);
+        Order aux;
+        if(o.isPresent()) {
+            mav = new ModelAndView("upload-result");
+            aux = o.get();
+            mav.addObject("id", id);
+            mav.addObject("order", aux);
+            orderId = id;
+        }else{
+            mav = new ModelAndView("redirect:/404");
+            // 404 go to
+        }
+
         return mav;
     }
 
@@ -46,7 +58,7 @@ public class ResultUploadController {
         }else{
             try{
                 byte[] signBytes = sign.getBytes();
-                //for each of the files uploaded as results, it registers a diferent result in the db
+                //for each of the files uploaded as results, it registers a different result in the db
                 for(MultipartFile file: files){
                     byte[] fileBytes = file.getBytes();
                     resultFormService.HandleOrderForm(resultForm, signBytes, sign.getContentType(), fileBytes, file.getContentType(), orderId);

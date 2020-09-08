@@ -19,7 +19,7 @@ public class ResultFormServiceImpl implements ResultFormService {
     private ResultDao resultDao;
 
     @Override
-    public Integer HandleOrderForm(ResultForm resultForm, byte[] identification, String identificationType, byte[] resultData, String resultDataType, long orderId) {
+    public Long HandleOrderForm(ResultForm resultForm, byte[] identification, String identificationType, byte[] resultData, String resultDataType, long orderId) {
         Result result = resultDao.register(orderId,
                                     resultDataType,
                                     resultData,

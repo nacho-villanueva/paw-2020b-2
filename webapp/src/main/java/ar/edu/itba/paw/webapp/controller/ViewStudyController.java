@@ -27,7 +27,7 @@ public class ViewStudyController {
             mav = new ModelAndView("view-study");
             aux = o.get();
             mav.addObject("id", id);
-            mav.addObject("order", os.findById(id));
+            mav.addObject("order", aux);
             mav.addObject("results", aux.getStudy_results());
         }else{
             mav = new ModelAndView("redirect:/404");

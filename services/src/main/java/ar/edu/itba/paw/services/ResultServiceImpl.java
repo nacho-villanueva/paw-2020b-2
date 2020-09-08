@@ -16,7 +16,7 @@ public class ResultServiceImpl implements ResultService {
     private ResultDao resultDao;
 
     @Override
-    public Optional<Result> findById(int id) {
+    public Optional<Result> findById(long id) {
         return resultDao.findById(id);
     }
 
