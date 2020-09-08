@@ -4,5 +4,6 @@ import ar.edu.itba.paw.model.OrderForm;
 
 public interface OrderFormService {
 
-    public String HandleOrderForm(OrderForm orderForm, byte[] identification);
+    public Long HandleOrderForm(OrderForm orderForm, byte[] identification, String identificationType);
+
 }

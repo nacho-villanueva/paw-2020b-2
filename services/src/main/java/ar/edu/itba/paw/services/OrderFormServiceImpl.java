@@ -1,56 +1,49 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.OrderFormService;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.OrderForm;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.persistence.ClinicDao;
 import ar.edu.itba.paw.persistence.MedicDao;
 import ar.edu.itba.paw.persistence.OrderDao;
-import ar.edu.itba.paw.persistence.PatientDao;
+import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.time.Instant;
 
 @Primary
 @Service
 public class OrderFormServiceImpl implements OrderFormService {
 
     @Autowired
-    private MedicDao medicDao;
-    @Autowired
-    private PatientDao patientDao;
+    private OrderDao orderDao;
     @Autowired
     private ClinicDao clinicDao;
     @Autowired
-    private OrderDao orderDao;
+    private MedicDao medicDao;
+    @Autowired
+    private StudyTypeDao studyTypeDao;
 
     @Override
-    public String HandleOrderForm(OrderForm orderForm, byte[] identification) {
-        Order order = GenerateOrder(orderForm, identification);
+    public Long HandleOrderForm(OrderForm orderForm, byte[] identification, String identificationType) {
+        Medic medic = medicDao.findById(orderForm.getMedicId()).get();
+        Clinic clinic = clinicDao.findById(orderForm.getClinicId()).get();
+        StudyType studyType = studyTypeDao.findById(orderForm.getStudyId()).get();
 
-        //TODO: orderDao.storeOrder(order);
-        String id = "getID";
 
-        return id; //TODO: RETURN ID TO VIEW ORDER
-    }
-
-    private Order GenerateOrder(OrderForm orderForm, byte[] identification) {
-        Order order = new Order(
-                medicDao.findById(orderForm.getMedicId()),
+        Order order = orderDao.register(
+                medic,
                 new Date(System.currentTimeMillis()),
-                clinicDao.findById(orderForm.getClinicId()),
-                orderForm.getStudy(),
+                clinic,
+                new Patient(orderForm.getPatientEmail(), orderForm.getPatientName()),
+                studyType,
                 orderForm.getDescription(),
+                identificationType,
                 identification,
                 orderForm.getPatient_insurance_plan(),
-                orderForm.getPatient_insurance_number(),
-                patientDao.findById(12L), //TODO: CREATE findByEmail(email);
-                null //TODO: REMOVE THIS FROM CONSTRUCTOR
-                );
+                orderForm.getPatient_insurance_number());
 
-        return order;
+        return order.getOrder_id();
     }
 }

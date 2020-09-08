@@ -1,18 +1,19 @@
 package ar.edu.itba.paw.model;
 
 public class OrderForm {
-    private Long medicId;
-    private Long clinicId;
-    private String study;
+    private Integer medicId;
+    private Integer clinicId;
+    private Integer studyId;
     private String description;
     private String patient_insurance_plan;
     private String patient_insurance_number;
     private String patientEmail;
+    private String patientName;
 
-    public OrderForm(Long medicId, Long clinicId, String study, String description, String patient_insurance_plan, String patient_insurance_number, String patientEmail) {
+    public OrderForm(Integer medicId, Integer clinicId, Integer studyId, String description, String patient_insurance_plan, String patient_insurance_number, String patientEmail) {
         this.medicId = medicId;
         this.clinicId = clinicId;
-        this.study = study;
+        this.studyId = studyId;
         this.description = description;
         this.patient_insurance_plan = patient_insurance_plan;
         this.patient_insurance_number = patient_insurance_number;
@@ -21,16 +22,16 @@ public class OrderForm {
 
     public OrderForm(){ }
 
-    public Long getMedicId() {
+    public Integer getMedicId() {
         return medicId;
     }
 
-    public Long getClinicId() {
+    public Integer getClinicId() {
         return clinicId;
     }
 
-    public String getStudy() {
-        return study;
+    public Integer getStudyId() {
+        return studyId;
     }
 
     public String getDescription() {
@@ -49,16 +50,20 @@ public class OrderForm {
         return patientEmail;
     }
 
-    public void setMedicId(Long medicId) {
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setMedicId(Integer medicId) {
         this.medicId = medicId;
     }
 
-    public void setClinicId(Long clinicId) {
+    public void setClinicId(Integer clinicId) {
         this.clinicId = clinicId;
     }
 
-    public void setStudy(String study) {
-        this.study = study;
+    public void setStudyId(Integer studyId) {
+        this.studyId = studyId;
     }
 
     public void setDescription(String description) {
@@ -75,5 +80,9 @@ public class OrderForm {
 
     public void setPatientEmail(String patientEmail) {
         this.patientEmail = patientEmail;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 }

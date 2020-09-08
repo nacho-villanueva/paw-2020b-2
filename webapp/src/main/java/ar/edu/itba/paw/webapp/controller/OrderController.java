@@ -2,13 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.OrderFormService;
 import ar.edu.itba.paw.model.OrderForm;
+import ar.edu.itba.paw.persistence.ClinicDao;
+import ar.edu.itba.paw.persistence.MedicDao;
+import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,25 +24,24 @@ public class OrderController {
     @Autowired
     private OrderFormService orderFormService;
 
+    @Autowired
+    private ClinicDao clinicDao;
+
+    @Autowired
+    private MedicDao medicDao;
+
+    @Autowired
+    private StudyTypeDao studyTypeDao;
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getOrderCreationForm() {
         final ModelAndView mav = new ModelAndView("create-order");
 
-        Map<Long, String> medicsList = new HashMap<>();
-        medicsList.put(1L, "Dr. Pepito");
-        medicsList.put(2L, "Dr. Garcia");
-        medicsList.put(3L, "Dr. Perez");
-        medicsList.put(4L, "Dr. Gonzalez");
-        mav.addObject("medicsList", medicsList); // TODO: CONSEGUIR LISTA DE DOCTORES
+        mav.addObject("medicsList", medicDao.getAll());
 
-        mav.addObject("studiesList", new String[] {"Colonoscopy", "X-ray", "Blood Test", "MRI"}); // TODO: CONSEGUIR LISTA DE STUDIOS
+        mav.addObject("studiesList", studyTypeDao.getAll());
 
-        Map<Long, String> clinicsList = new HashMap<>();
-        clinicsList.put(1L, "Laboratorio Idalgo");
-        clinicsList.put(2L, "Zona Vital");
-        clinicsList.put(3L, "Diagnostico Maipu");
-        clinicsList.put(4L, "Central Lab");
-        mav.addObject("clinicsList", clinicsList); // TODO: CONSEGUIR LISTA DE CLINICAS
+        mav.addObject("clinicsList", clinicDao.getAll());
         mav.addObject("orderForm", new OrderForm());
         return mav;
     }
@@ -56,15 +56,21 @@ public class OrderController {
 
         } else {
             try {
-                String id = orderFormService.HandleOrderForm(orderForm, file.getBytes());
+                byte[] fileBytes = file.getBytes();
+                String id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType()).toString();
                 return "redirect:view-study/" + id;
             } catch (IOException e) {
-                e.printStackTrace();
                 return "index"; //TODO: RETURN EXCEPTION PAGE
             }
 
         }
 
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handle(Exception e) {
+        System.out.println("Returning HTTP 400 Bad Request" + e.getMessage());
     }
 
 }

@@ -26,31 +26,32 @@
                 <f:form action="${post_createorder}" method="post" modelAttribute="orderForm" enctype="multipart/form-data">
 
                     <label>Medic's Name</label>
-                    <f:select cssClass="selectpicker" data-live-search="true" path="medicId" >
-                        <f:option value="-" label="Choose Medic"/>
-                        <f:options items="${medicsList}"/>
+                    <f:select cssClass="selectpicker" data-live-search="true" path="medicId">
+                        <f:option value="-1" label="Choose Medic"/>
+                        <f:options items="${medicsList}" itemLabel="name" itemValue="id"/>
                     </f:select><br>
 
                     <label>Medical Clinic </label>
                     <f:select cssClass="selectpicker" data-live-search="true" path="clinicId" >
-                        <f:option value="-" label="Choose Clinic"/>
-                        <f:options items="${clinicsList}"/>
+                        <f:option value="-1" label="Choose Clinic"/>
+                        <f:options items="${clinicsList}" itemLabel="name" itemValue="id"/>
                     </f:select><br>
 
                     <hr class="mt-3 mb-2"/>
 
+                    <label> Patient Name <f:input type="text" path="patientName"/> </label> <br>
                     <label> Patient Email <f:input type="email" path="patientEmail"/> </label> <br>
                     <label> Patient Insurance Plan <f:input type="text" path="patient_insurance_plan" /> </label> <br>
                     <label> Patient Insurance Number <f:input type="text" path="patient_insurance_number" /> </label> <br>
 
                     <label>Study Type </label>
-                    <f:select cssClass="selectpicker" data-live-search="true" path="study" >
-                        <f:option value="-" label="Choose Study"/>
-                        <f:options items="${studiesList}"/>
+                    <f:select cssClass="selectpicker" data-live-search="true" path="studyId" >
+                        <f:option value="-1" label="Choose Study"/>
+                        <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                     </f:select><br>
 
                     <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label> <br>
-                    <label> Medical Order Image <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
+                    <label> Medic Identification <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
                     <input type="submit" value="Create Order"/>
 
                     <datalist id="studiesList">
