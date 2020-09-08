@@ -27,14 +27,6 @@ public class PatientJdbcDao implements PatientDao {
         jdbcInsert = new SimpleJdbcInsert(ds)
                 .withTableName("patients")
                 .usingGeneratedKeyColumns("id");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS patients (" +
-                "id serial primary key," +
-                "email text not null," +
-                "name text not null," +
-                "unique(email)" +
-                ")");
-
     }
 
     @Override
