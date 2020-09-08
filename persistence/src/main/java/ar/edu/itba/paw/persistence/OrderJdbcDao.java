@@ -58,10 +58,10 @@ public class OrderJdbcDao implements OrderDao {
    public Optional<Order> findById(long id) {
 
        //To make code less confusing, we name the sql query
-       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, medical_studies.id as study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select clinics.id as clinic_id, clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, * from " +
-               "(select medics.id as medic_id, medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, * from " +
-               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, patients.id as patient_id, * from " +
+       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, * from " +
+               "(select medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, * from " +
+               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, * from " +
                "medical_orders join patients " +
                "on patient_id = patients.id and medical_orders.id = ?) as order_patient join medics " +
                "on medic_id = medics.id) as order_medic join clinics " +
