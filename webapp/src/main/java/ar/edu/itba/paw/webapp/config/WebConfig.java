@@ -12,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 import javax.sql.DataSource;
 
@@ -38,7 +40,7 @@ public class WebConfig {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
@@ -66,4 +68,9 @@ public class WebConfig {
         return ds;
     }
 
+    @Bean
+    public URL getURL() throws MalformedURLException {
+        final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
+        return url;
+    }
 }
