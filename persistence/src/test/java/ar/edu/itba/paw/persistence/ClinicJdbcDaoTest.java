@@ -1,8 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,6 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -23,10 +31,10 @@ public class ClinicJdbcDaoTest {
     private static final int ZERO_ID = 0;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    ClinicJdbcDao clinicJdbcDao;
+    private ClinicJdbcDao clinicJdbcDao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -39,5 +47,32 @@ public class ClinicJdbcDaoTest {
                 .usingGeneratedKeyColumns("id");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TABLE_NAME);
+    }
+
+    @Test
+    public void testFindByIdExists() {
+        int dbkey = insertTestClinic();
+
+        final Optional<Clinic> maybeClinic = clinicJdbcDao.findById(dbkey);
+
+        Assert.assertNotNull(maybeClinic);
+        Assert.assertTrue(maybeClinic.isPresent());
+        Assert.assertEquals(NAME, maybeClinic.get().getName());
+    }
+
+    @Test
+    public void testFindByIdNotExists() {
+        final Optional<Clinic> maybeClinic = clinicJdbcDao.findById(ZERO_ID);
+
+        Assert.assertNotNull(maybeClinic);
+        Assert.assertFalse(maybeClinic.isPresent());
+    }
+
+    private int insertTestClinic() {
+        Map<String,Object> insertMap = new HashMap<>();
+        insertMap.put("name", NAME);
+        insertMap.put("email", EMAIL);
+        insertMap.put("telephone", TELEPHONE);
+        return jdbcInsert.executeAndReturnKey(insertMap).intValue();
     }
 }

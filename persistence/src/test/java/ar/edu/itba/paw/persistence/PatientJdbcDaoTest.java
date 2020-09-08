@@ -58,20 +58,21 @@ public class PatientJdbcDaoTest {
 
     @Test(expected = DuplicateKeyException.class)
     public void testRegisterAlreadyExists() {
-        insertTestUsername();
+        insertTestPatient();
 
-        final Patient patient = patientDao.register(EMAIL, NAME);
+        patientDao.register(EMAIL, NAME);
     }
 
     @Test
     public void testFindByIdPatientExists() {
-        int dbKey = insertTestUsername();
+        int dbKey = insertTestPatient();
 
-        final Patient patient = patientDao.findById(dbKey).get();
+        final Optional<Patient> maybePatient = patientDao.findById(dbKey);
 
-        Assert.assertNotNull(patient);
-        Assert.assertEquals(EMAIL, patient.getEmail());
-        Assert.assertEquals(NAME, patient.getName());
+        Assert.assertNotNull(maybePatient);
+        Assert.assertTrue(maybePatient.isPresent());
+        Assert.assertEquals(EMAIL, maybePatient.get().getEmail());
+        Assert.assertEquals(NAME, maybePatient.get().getName());
     }
 
     @Test
@@ -84,12 +85,13 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testFindByEmailPatientExists() {
-        insertTestUsername();
+        insertTestPatient();
 
-        final Patient patient = patientDao.findByEmail(EMAIL).get();
+        final Optional<Patient> maybePatient = patientDao.findByEmail(EMAIL);
 
-        Assert.assertNotNull(patient);
-        Assert.assertEquals(NAME, patient.getName());
+        Assert.assertNotNull(maybePatient);
+        Assert.assertTrue(maybePatient.isPresent());
+        Assert.assertEquals(NAME, maybePatient.get().getName());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, TABLE_NAME));
     }
 
@@ -103,7 +105,7 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testFindOrRegisterAlreadyExists() {
-        int dbKey = insertTestUsername();
+        int dbKey = insertTestPatient();
 
         final Patient patient = patientDao.findOrRegister(EMAIL, NAME);
 
@@ -123,7 +125,7 @@ public class PatientJdbcDaoTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,TABLE_NAME));
     }
 
-    private int insertTestUsername() {
+    private int insertTestPatient() {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email", EMAIL);
         insertMap.put("name", NAME);
