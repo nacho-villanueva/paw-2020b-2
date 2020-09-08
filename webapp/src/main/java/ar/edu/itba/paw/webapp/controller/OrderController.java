@@ -51,8 +51,7 @@ public class OrderController {
 
         if (bindingResult.hasErrors()) {
 
-            // TODO: RETORNAR ERROR PAGE
-            return "index";
+            return "index"; // TODO: RETURN ERROR
 
         } else {
             try {
@@ -60,7 +59,7 @@ public class OrderController {
                 String id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType()).toString();
                 return "redirect:view-study/" + id;
             } catch (IOException e) {
-                return "index"; //TODO: RETURN EXCEPTION PAGE
+                return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
             }
 
         }

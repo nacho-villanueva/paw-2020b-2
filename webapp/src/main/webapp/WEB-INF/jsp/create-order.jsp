@@ -29,28 +29,36 @@
                     <f:select cssClass="selectpicker" data-live-search="true" path="medicId">
                         <f:option value="-1" label="Choose Medic"/>
                         <f:options items="${medicsList}" itemLabel="name" itemValue="id"/>
-                    </f:select><br>
+                    </f:select>
+                    <f:errors path="medicId" cssClass="error" /><br>
 
                     <label>Medical Clinic </label>
                     <f:select cssClass="selectpicker" data-live-search="true" path="clinicId" >
                         <f:option value="-1" label="Choose Clinic"/>
                         <f:options items="${clinicsList}" itemLabel="name" itemValue="id"/>
-                    </f:select><br>
+                    </f:select>
+                    <f:errors path="clinicId" cssClass="error" /><br>
 
                     <hr class="mt-3 mb-2"/>
 
-                    <label> Patient Name <f:input type="text" path="patientName"/> </label> <br>
-                    <label> Patient Email <f:input type="email" path="patientEmail"/> </label> <br>
-                    <label> Patient Insurance Plan <f:input type="text" path="patient_insurance_plan" /> </label> <br>
-                    <label> Patient Insurance Number <f:input type="text" path="patient_insurance_number" /> </label> <br>
+                    <label> Patient Name <f:input type="text" path="patientName" required="required"/> </label>
+                    <f:errors path="patientName" cssClass="error" /><br>
+                    <label> Patient Email <f:input type="email" path="patientEmail" required="required"/> </label>
+                    <f:errors path="patientEmail" cssClass="error" /><br>
+                    <label> Patient Insurance Plan <f:input type="text" path="patient_insurance_plan" required="required"/> </label>
+                    <f:errors path="patient_insurance_plan" cssClass="error" /><br>
+                    <label> Patient Insurance Number <f:input type="text" path="patient_insurance_number" required="required"/> </label>
+                    <f:errors path="patient_insurance_number" cssClass="error" /><br>
 
                     <label>Study Type </label>
                     <f:select cssClass="selectpicker" data-live-search="true" path="studyId" >
                         <f:option value="-1" label="Choose Study"/>
                         <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
-                    </f:select><br>
+                    </f:select>
+                    <f:errors path="studyId" cssClass="error" /><br>
 
-                    <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label> <br>
+                    <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label>
+                    <f:errors path="description" cssClass="error" /> <br>
                     <label> Medic Identification <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
                     <input type="submit" value="Create Order"/>
 
