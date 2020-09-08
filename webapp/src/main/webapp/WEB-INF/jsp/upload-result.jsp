@@ -26,31 +26,30 @@
                     <div class="col">Order Number: ${id}</div>
                     <div class="col">Patient: ${order.patient.name}</div>
                     <div class="w-100"></div>
-                    <div class="col">Medic Plan: ${order.patient_insurance_plan}</div>
-                    <div class="col">Medic Plan Number: ${order.patient_insurance_number}</div>
+                    <div class="col">Patient Insurance Plan: ${order.patient_insurance_plan}</div>
+                    <div class="col">Patient Insurance Number: ${order.patient_insurance_number}</div>
                 </div>
                 <hr class="mt-2 mb-3"/>
-                <form:form method="POST" action="${postPath}" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Observations:</label>
-                        <textarea class="form-control form-control-lg" id="exampleFormControlTextarea1" rows="3"></textarea>
-                    </div>
+                <%--@elvariable id="resultForm" type=""--%>
+                <form:form method="POST" action="${postPath}" enctype="multipart/form-data" modelAttribute="resultForm">
                     <div class="form-inline">
-                        <label for="exampleFormControlFile1">Select files to upload</label>
-                        <input multiple required type="file" class="form-control-file" id="exampleFormControlFile1" name="files" accept="image/png, image/jpeg">
+                        <label for="resultFiles">Select files to upload</label>
+                        <input multiple required type="file" class="form-control-file" id="resultFiles" name="files" accept="image/png, image/jpeg">
                     </div>
                     <hr class="mt-3 mb-4"/>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="exampleFormControlInput1">Responsible medic:</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Dr. Hipo Tenusa">
+                                <label for="responsibleInput1">Responsible medic:</label>
+                                <form:input type="text" class="form-control" id="responsibleInput1" placeholder="Dr. Hipo Tenusa" path="responsible_name"/>
+                                <form:errors path="responsible_name" cssClass="error"/>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="exampleFormControlInput2">Responsible medic's licence number:</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="000001">
+                                <label for="responsibleInput2">Responsible medic's licence number:</label>
+                                <form:input type="text" class="form-control" id="responsibleInput2" placeholder="000001" path="responsible_licence_number"/>
+                                <form:errors path="responsible_licence_number" cssClass="error"/>
                             </div>
                         </div>
                     </div>

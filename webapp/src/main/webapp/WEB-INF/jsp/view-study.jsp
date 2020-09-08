@@ -28,14 +28,16 @@
                 Order
             </div>
             <div class="card-body">
-                <h5 class="card-title">Order Number: ${id}</h5>
+                <h5 class="card-title">Order number: ${id}</h5>
                 <hr class="mt-3 mb-2"/>
                 <div class="row justify-content-start">
                     <div class="col">Date: ${order.date}</div>
                     <div class="col">Patient: ${order.patient.name}</div>
+                    <div class="col">Medical clinic: ${order.clinic.name}</div>
                     <div class="w-100"></div>
-                    <div class="col">Medic Plan: ${order.patient_insurance_plan}</div>
-                    <div class="col">Medic Plan Number: ${order.patient_insurance_number}</div>
+                    <div class="col">Patient insurance plan: ${order.patient_insurance_plan}</div>
+                    <div class="col">Patient insurance number: ${order.patient_insurance_number}</div>
+                    <div class="col">Study type: ${order.study.name}</div>
                 </div>
                 <hr class="mt-3 mb-4"/>
                 <p class="card-text text-center">${order.description}

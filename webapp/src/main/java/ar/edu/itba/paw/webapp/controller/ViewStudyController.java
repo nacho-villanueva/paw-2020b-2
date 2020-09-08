@@ -30,7 +30,7 @@ public class ViewStudyController {
             mav.addObject("order", os.findById(id));
             mav.addObject("results", aux.getStudy_results());
         }else{
-            // mav = new ModelAndView("redirect:/404");
+            mav = new ModelAndView("redirect:/404");
             // 404 go to
         }
 

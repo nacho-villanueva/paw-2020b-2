@@ -1,15 +1,17 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.ResultFormService;
+import ar.edu.itba.paw.model.ResultForm;
 import ar.edu.itba.paw.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @Controller
 public class ResultUploadController {
@@ -19,11 +21,17 @@ public class ResultUploadController {
     @Autowired
     private OrderService os;
 
+    @Autowired
+    private ResultFormService resultFormService;
+
+    private long orderId;
+
     @RequestMapping("/upload-result/{orderId}")
     public ModelAndView uploadResult(@PathVariable("orderId") final long id) {
         final ModelAndView mav = new ModelAndView("upload-result");
         mav.addObject("id", id);
         mav.addObject("order", os.findById(id));
+        orderId = id;
         return mav;
     }
 
@@ -31,14 +39,23 @@ public class ResultUploadController {
     //
 
     @RequestMapping(value = "/result-uploaded", method = RequestMethod.POST)
-    public String submit(@RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign, ModelMap modelMap) {
+    public String submit(@ModelAttribute ResultForm resultForm, @RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign, BindingResult bindingResult) {
 
-        // TODO: validations for submitted data
-
-        // TODO: upload files to the database in this step
-
-        modelMap.addAttribute("files", files);
-        modelMap.addAttribute("sign", sign);
-        return "result-uploaded";
+        if(bindingResult.hasErrors()){
+            return "index"; //There should be a way to validate and show errors on the form...
+        }else{
+            try{
+                byte[] signBytes = sign.getBytes();
+                //for each of the files uploaded as results, it registers a diferent result in the db
+                for(MultipartFile file: files){
+                    byte[] fileBytes = file.getBytes();
+                    resultFormService.HandleOrderForm(resultForm, signBytes, sign.getContentType(), fileBytes, file.getContentType(), orderId);
+                }
+                return "redirect:view-study/" + orderId;
+            }catch (IOException e){
+                return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
+            }
+        }
     }
+
 }
