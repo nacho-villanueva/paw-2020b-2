@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-inline">
                         <label for="exampleFormControlFile1">Select files to upload</label>
-                        <input multiple required type="file" class="form-control-file" id="exampleFormControlFile1" name="files">
+                        <input multiple required type="file" class="form-control-file" id="exampleFormControlFile1" name="files" accept="image/png, image/jpeg">
                     </div>
                     <hr class="mt-3 mb-4"/>
                     <div class="form-row">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="form-inline mt-2">
                         <label for="exampleFormControlFile2">Upload signature</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile2" name="sign">
+                        <input type="file" class="form-control-file" id="exampleFormControlFile2" name="sign" accept="image/png, image/jpeg">
                     </div>
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button">Cancel</a>
                     <button class="btn btn-primary mt-4 mb-2 float-right" type="submit">Submit results</button>

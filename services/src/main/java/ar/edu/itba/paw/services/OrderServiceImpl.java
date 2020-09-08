@@ -6,6 +6,8 @@ import ar.edu.itba.paw.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -14,7 +16,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Order findById(long id) {
+    public Optional<Order> findById(long id) {
         return orderDao.findById(id);
     }
 }

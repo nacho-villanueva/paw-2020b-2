@@ -77,7 +77,7 @@
                                     <h5 class="mt-0 mb-1 text-center">${result.responsible_name}</h5>
                                     <p class="text-center">M.N.:${result.responsible_licence_number}</p>
                                 </div>
-                                <img src="${result.identification}" class="align-self-end ml-3" alt="the medic's signature">
+                                <img src="${result.identification}" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                             </div>
                         </div>
                     </div>
