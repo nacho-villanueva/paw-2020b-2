@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.model.Patient;
 import ar.edu.itba.paw.model.User;
 
 
