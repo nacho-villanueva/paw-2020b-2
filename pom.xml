@@ -16,6 +16,9 @@
     <jstl.version>1.2</jstl.version>
     <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
+    <mockito.version>2.25.1</mockito.version>
+    <junit.version>4.12</junit.version>
+    <org.hsqldb.version>2.3.1</org.hsqldb.version>
   </properties>
 
   <dependencyManagement>
@@ -36,9 +39,33 @@
         <version>${org.springframework.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${org.postgresql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${org.springframework.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>${org.hsqldb.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
