@@ -32,28 +32,6 @@ public class ClinicJdbcDao implements ClinicDao {
                 .usingGeneratedKeyColumns("id");
         jdbcInsertStudies = new SimpleJdbcInsert(ds)
                 .withTableName("clinic_available_studies");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clinics (" +
-                "id serial primary key," +
-                "name text not null," +
-                "email text not null," +
-                "telephone text," +
-                "unique(email)" +
-                ")");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medical_studies (" +
-                "id serial primary key," +
-                "name text not null," +
-                "unique(name)" +
-                ")");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clinic_available_studies (" +
-                "clinic_id int not null," +
-                "study_id int not null," +
-                "primary key(clinic_id,study_id)," +
-                "foreign key(clinic_id) references clinics," +
-                "foreign key(study_id) references medical_studies" +
-                ")");
     }
 
     @Override
