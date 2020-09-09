@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.OrderFormService;
+import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.OrderForm;
 import ar.edu.itba.paw.persistence.ClinicDao;
 import ar.edu.itba.paw.persistence.MedicDao;
@@ -20,6 +21,9 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/create-order")
 public class OrderController {
+
+    @Autowired
+    private UrlEncoderService urlEncoderService;
 
     @Autowired
     private OrderFormService orderFormService;
@@ -56,8 +60,8 @@ public class OrderController {
         } else {
             try {
                 byte[] fileBytes = file.getBytes();
-                String id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType()).toString();
-                return "redirect:view-study/" + id;
+                long id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType());
+                return "redirect:view-study/" + urlEncoderService.encode(id);
             } catch (IOException e) {
                 return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
             }
