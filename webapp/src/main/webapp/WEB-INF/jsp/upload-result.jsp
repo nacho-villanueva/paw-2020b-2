@@ -30,7 +30,6 @@
                     <div class="col">Patient Insurance Number: ${order.patient_insurance_number}</div>
                 </div>
                 <hr class="mt-2 mb-3"/>
-                <%--@elvariable id="resultForm" type=""--%>
                 <form:form method="POST" action="${postPath}" enctype="multipart/form-data" modelAttribute="resultForm">
                     <div class="form-inline">
                         <label for="resultFiles">Select files to upload</label>

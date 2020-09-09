@@ -38,6 +38,7 @@ public class ResultUploadController {
             aux = o.get();
             mav.addObject("id", id);
             mav.addObject("order", aux);
+            mav.addObject("resultForm", new ResultForm());
             orderId = id;
         }else{
             mav = new ModelAndView("redirect:/404");
