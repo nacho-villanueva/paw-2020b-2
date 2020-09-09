@@ -21,32 +21,4 @@ public class HelloWorldController {
         mav.addObject("user", us.findById(1));
         return mav;
     }
-    /*
-    //url/view-study/asdas
-
-    @RequestMapping("/view-study/{studyId}")
-    public ModelAndView viewStudy(@PathVariable("studyId") final long id) {
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", us.findById(id));
-        return mav;
-    }
-
-    //url/?studyId=asdas
-    @RequestMapping("/")
-    public ModelAndView viewStudy2(@RequestParam(value = "studyId", required = false, defaultValue = "0") final long id) {
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", us.findById(id));
-        return mav;
-    }
-*/
-//url/view-study/asdas
-
-    @RequestMapping("/view-study-test/{studyId}")
-    public ModelAndView viewStudy(@PathVariable("studyId") final long id) {
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", us.findById(id));
-        return mav;
-    }
-
-
 }
