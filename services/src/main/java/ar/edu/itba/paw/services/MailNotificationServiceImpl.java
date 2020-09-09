@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.OrderNotFoundForExistingResultException;
-import ar.edu.itba.paw.interfaces.MailNotificationService;
+import ar.edu.itba.paw.service.MailNotificationService;
 
-import ar.edu.itba.paw.interfaces.MailService;
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
+import ar.edu.itba.paw.service.MailService;
+import ar.edu.itba.paw.service.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.service.OrderService;
