@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.MailNotificationService;
 import ar.edu.itba.paw.interfaces.OrderFormService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.persistence.ClinicDao;
@@ -25,6 +26,9 @@ public class OrderFormServiceImpl implements OrderFormService {
     @Autowired
     private StudyTypeDao studyTypeDao;
 
+    @Autowired
+    private MailNotificationService mailNotificationService;
+
     @Override
     public Long HandleOrderForm(OrderForm orderForm, byte[] identification, String identificationType) {
         Medic medic = medicDao.findById(orderForm.getMedicId()).get();
@@ -43,6 +47,8 @@ public class OrderFormServiceImpl implements OrderFormService {
                 identification,
                 orderForm.getPatient_insurance_plan(),
                 orderForm.getPatient_insurance_number());
+
+        mailNotificationService.sendOrderMail(order);
 
         return order.getOrder_id();
     }
