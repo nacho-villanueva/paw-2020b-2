@@ -1,12 +1,17 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -26,6 +31,12 @@ import javax.sql.DataSource;
 })
 @Configuration
 public class WebConfig {
+
+    @Value("classpath:schema.sql")
+    private Resource schemaSql;
+
+    @Value("classpath:initialPopulator.sql")
+    private Resource initialPopulatorSql;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -69,9 +80,9 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020b-2");
+        ds.setUsername("paw-2020b-2");
+        ds.setPassword("pt8AieF9x");
 
         return ds;
     }
@@ -80,5 +91,24 @@ public class WebConfig {
     public URL getURL() throws MalformedURLException {
         final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
         return url;
+    }
+
+    @Bean
+    public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
+        final DataSourceInitializer dsi = new DataSourceInitializer();
+
+        dsi.setDataSource(ds);
+        dsi.setDatabasePopulator(databasePopulator());
+
+        return dsi;
+    }
+
+    private DatabasePopulator databasePopulator() {
+        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+
+        dbp.addScript(schemaSql);
+        //dbp.addScript(initialPopulatorSql);
+
+        return dbp;
     }
 }

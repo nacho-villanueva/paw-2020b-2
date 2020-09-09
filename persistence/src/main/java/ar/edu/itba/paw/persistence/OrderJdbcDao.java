@@ -34,8 +34,8 @@ public class OrderJdbcDao implements OrderDao {
                     rs.getString("medic_plan"),
                     rs.getString("medic_plan_number"),
                     new Patient(rs.getInt("patient_id"),
-                            rs.getString("patient_name"),
-                            rs.getString("patient_email")));
+                            rs.getString("patient_email"),
+                            rs.getString("patient_name")));
 
    @Autowired
    ResultDao resultDao;
@@ -52,76 +52,16 @@ public class OrderJdbcDao implements OrderDao {
        jdbcInsert = new SimpleJdbcInsert(ds)
                .withTableName("medical_orders")
                .usingGeneratedKeyColumns("id");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS patients (" +
-               "id serial primary key," +
-               "email text not null," +
-               "name text not null," +
-               "unique(email)" +
-               ")");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medics (" +
-               "id serial primary key," +
-               "name text not null," +
-               "email text not null," +
-               "telephone text," +
-               "licence_number text not null," +
-               "unique(email)" +
-               ")");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clinics (" +
-               "id serial primary key," +
-               "name text not null," +
-               "email text not null," +
-               "telephone text," +
-               "unique(email)" +
-               ")");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medical_studies (" +
-               "id serial primary key," +
-               "name text not null," +
-               "unique(name)" +
-               ")");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medical_orders (" +
-               "id bigserial primary key," +
-               "medic_id int not null," +
-               "date date not null," +
-               "clinic_id int not null," +
-               "patient_id int not null," +
-               "study_id int not null," +
-               "description text," +
-               "identification_type text not null," +
-               "identification bytea not null," +
-               "medic_plan text,medic_plan_number text," +
-               "foreign key(medic_id) references medics," +
-               "foreign key(clinic_id) references clinics," +
-               "foreign key(patient_id) references patients," +
-               "foreign key(study_id) references medical_studies" +
-               ")");
-
-       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS results (" +
-               "id serial primary key," +
-               "order_id bigint not null," +
-               "result_data_type text not null," +
-               "result_data bytea not null," +
-               "identification_type text not null," +
-               "identification bytea not null," +
-               "date date not null," +
-               "responsible_name text not null," +
-               "responsible_licence_number text not null," +
-               "foreign key(order_id) references medical_orders" +
-               ")");
    }
 
    @Override
    public Optional<Order> findById(long id) {
 
        //To make code less confusing, we name the sql query
-       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, medical_studies.id as study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select clinics.id as clinic_id, clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, * from " +
-               "(select medics.id as medic_id, medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, * from " +
-               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, patients.id as patient_id, * from " +
+       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, medic_name, medic_email, medic_telephone, medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
                "medical_orders join patients " +
                "on patient_id = patients.id and medical_orders.id = ?) as order_patient join medics " +
                "on medic_id = medics.id) as order_medic join clinics " +
