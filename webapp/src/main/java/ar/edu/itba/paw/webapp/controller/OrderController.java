@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.OrderFormService;
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.OrderForm;
 import ar.edu.itba.paw.persistence.ClinicDao;
 import ar.edu.itba.paw.persistence.MedicDao;
@@ -29,23 +28,23 @@ public class OrderController {
     private OrderFormService orderFormService;
 
     @Autowired
-    private ClinicDao clinicDao;
+    private StudyService studyService;
 
     @Autowired
-    private MedicDao medicDao;
+    private MedicService medicService;
 
     @Autowired
-    private StudyTypeDao studyTypeDao;
+    private ClinicService clinicService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getOrderCreationForm() {
         final ModelAndView mav = new ModelAndView("create-order");
 
-        mav.addObject("medicsList", medicDao.getAll());
+        mav.addObject("medicsList", medicService.getAllMedics());
 
-        mav.addObject("studiesList", studyTypeDao.getAll());
+        mav.addObject("studiesList", studyService.getAllStudyTypes());
 
-        mav.addObject("clinicsList", clinicDao.getAll());
+        mav.addObject("clinicsList", clinicService.getAllClinics());
         mav.addObject("orderForm", new OrderForm());
         return mav;
     }
@@ -55,7 +54,7 @@ public class OrderController {
 
         if (bindingResult.hasErrors()) {
 
-            return "index"; // TODO: RETURN ERROR
+            return "/create-order"; // TODO: RETURN VALIDATION ERRORS
 
         } else {
             try {
