@@ -30,9 +30,6 @@
                 <a class="nav-link" href="<c:url value="/create-order" />">Create a new order</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/create-order">Create a new order</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="#">View studies (WIP)</a>
             </li>
         </ul>
