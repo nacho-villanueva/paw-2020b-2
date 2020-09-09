@@ -29,9 +29,16 @@ public class UrlEncoderServiceImpl implements UrlEncoderService {
         if(path.length() > 20){
             return ret;
         }
-        BigInteger pathBigInteger = new BigInteger(path,num3);
-        pathBigInteger = pathBigInteger.subtract(BigInteger.valueOf(num2));
 
+        BigInteger pathBigInteger;
+
+        try{
+            pathBigInteger = new BigInteger(path,num3);
+        }catch (NumberFormatException e){
+            return ret;
+        }
+
+        pathBigInteger = pathBigInteger.subtract(BigInteger.valueOf(num2));
         if(0 > pathBigInteger.compareTo(BigInteger.ZERO)){
             return ret;
         }
