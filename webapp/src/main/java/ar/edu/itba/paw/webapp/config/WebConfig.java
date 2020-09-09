@@ -35,6 +35,9 @@ public class WebConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:initialPopulator.sql")
+    private Resource initialPopulatorSql;
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -71,9 +74,9 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020b-2");
+        ds.setUsername("paw-2020b-2");
+        ds.setPassword("pt8AieF9x");
 
         return ds;
     }
@@ -83,6 +86,7 @@ public class WebConfig {
         final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
         return url;
     }
+
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
@@ -104,8 +108,8 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
         dbp.addScript(schemaSql);
+        //dbp.addScript(initialPopulatorSql);
 
         return dbp;
     }
-
 }

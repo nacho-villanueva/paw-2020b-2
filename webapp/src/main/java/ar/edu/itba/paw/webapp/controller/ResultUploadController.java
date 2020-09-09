@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.MailNotificationService;
-import ar.edu.itba.paw.interfaces.ResultFormService;
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
+import ar.edu.itba.paw.service.MailNotificationService;
+import ar.edu.itba.paw.service.ResultFormService;
+import ar.edu.itba.paw.service.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.ResultForm;
 import ar.edu.itba.paw.service.OrderService;

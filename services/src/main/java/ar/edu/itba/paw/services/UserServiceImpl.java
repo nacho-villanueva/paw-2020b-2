@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Patient;
 import ar.edu.itba.paw.model.User;
 
 
@@ -14,10 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-
     @Autowired
     private UserDao userDao;
-
 
     @Override
     public User findById(long id) {

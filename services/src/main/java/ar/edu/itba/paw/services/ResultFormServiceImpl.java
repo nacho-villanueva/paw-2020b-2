@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.MailNotificationService;
-import ar.edu.itba.paw.interfaces.ResultFormService;
+import ar.edu.itba.paw.service.MailNotificationService;
+import ar.edu.itba.paw.service.ResultFormService;
 import ar.edu.itba.paw.model.OrderForm;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.model.ResultForm;

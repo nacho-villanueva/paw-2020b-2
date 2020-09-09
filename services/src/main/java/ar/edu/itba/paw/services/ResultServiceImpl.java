@@ -25,3 +25,4 @@ public class ResultServiceImpl implements ResultService {
         return resultDao.findByOrderId(id);
     }
 }
+
