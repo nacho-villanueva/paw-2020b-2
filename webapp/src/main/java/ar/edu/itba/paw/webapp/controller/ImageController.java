@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.persistence.OrderDao;
@@ -18,18 +19,23 @@ import java.util.Optional;
 public class ImageController {
 
     @Autowired
+    private UrlEncoderService urlEncoderService;
+
+    @Autowired
     private OrderDao orderDao;
 
     @Autowired
     private ResultDao resultDao;
 
-    @RequestMapping(value = "/order/{id}/identification", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getOrderIdentification(@PathVariable long id) {
+    @RequestMapping(value = "/order/{encodedId}/identification", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getOrderIdentification(@PathVariable("encodedId") final String encodedId) {
 
         ResponseEntity<byte[]> responseEntity;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        long id = urlEncoderService.decode(encodedId);
 
         Optional<Order> orderOpt = orderDao.findById(id);
 
@@ -51,17 +57,20 @@ public class ImageController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/result/{id}/identification", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getResultIdentification(@PathVariable long id) {
+    @RequestMapping(value = "/result/{encodedId}/{resultId}/identification", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getResultIdentification(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId) {
 
         ResponseEntity<byte[]> responseEntity;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
-        Optional<Result> resultOpt = resultDao.findById(id);
+        Optional<Result> resultOpt = resultDao.findById(resultId);
 
-        if(resultOpt.isPresent()){
+        long id = urlEncoderService.decode(encodedId);
+
+
+        if(resultOpt.isPresent() && resultOpt.get().getOrder_id()==id){
             // image present
 
             Result result = resultOpt.get();
@@ -79,17 +88,19 @@ public class ImageController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/result/{id}/result-data", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getResultResultData(@PathVariable long id) {
+    @RequestMapping(value = "/result/{encodedId}/{resultId}/result-data", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getResultResultData(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId) {
 
         ResponseEntity<byte[]> responseEntity;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
-        Optional<Result> resultOpt = resultDao.findById(id);
+        Optional<Result> resultOpt = resultDao.findById(resultId);
 
-        if(resultOpt.isPresent()){
+        long id = urlEncoderService.decode(encodedId);
+
+        if(resultOpt.isPresent() && resultOpt.get().getOrder_id()==id){
             // image present
 
             Result result = resultOpt.get();
