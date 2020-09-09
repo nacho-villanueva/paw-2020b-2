@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Order;
+import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.persistence.OrderDao;
 import ar.edu.itba.paw.persistence.ResultDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class ImageController {
     @Autowired
     private OrderDao orderDao;
 
-    //@Autowired
-    //private ResultDao resultDao;
+    @Autowired
+    private ResultDao resultDao;
 
     @RequestMapping(value = "/order/{id}/identification", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getOrderIdentification(@PathVariable long id) {
@@ -50,8 +51,60 @@ public class ImageController {
         return responseEntity;
     }
 
-    //@RequestMapping(value = "/result/{id}/identification", method = RequestMethod.GET)
+    @RequestMapping(value = "/result/{id}/identification", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getResultIdentification(@PathVariable long id) {
 
-    //@RequestMapping(value = "/result/{id}/result-data", method = RequestMethod.GET)
+        ResponseEntity<byte[]> responseEntity;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        Optional<Result> resultOpt = resultDao.findById(id);
+
+        if(resultOpt.isPresent()){
+            // image present
+
+            Result result = resultOpt.get();
+
+            headers.setContentType(MediaType.parseMediaType(result.getIdentification_type()));
+            byte[] media = result.getIdentification();
+
+            responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+
+        }else{
+            // not present
+            responseEntity = new ResponseEntity<>(null,headers,HttpStatus.NOT_FOUND);
+        }
+
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/result/{id}/result-data", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getResultResultData(@PathVariable long id) {
+
+        ResponseEntity<byte[]> responseEntity;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        Optional<Result> resultOpt = resultDao.findById(id);
+
+        if(resultOpt.isPresent()){
+            // image present
+
+            Result result = resultOpt.get();
+
+            headers.setContentType(MediaType.parseMediaType(result.getData_type()));
+            byte[] media = result.getData();
+
+            responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+
+        }else{
+            // not present
+            responseEntity = new ResponseEntity<>(null,headers,HttpStatus.NOT_FOUND);
+        }
+
+        return responseEntity;
+    }
 
 }
