@@ -34,8 +34,8 @@ public class OrderJdbcDao implements OrderDao {
                     rs.getString("medic_plan"),
                     rs.getString("medic_plan_number"),
                     new Patient(rs.getInt("patient_id"),
-                            rs.getString("patient_name"),
-                            rs.getString("patient_email")));
+                            rs.getString("patient_email"),
+                            rs.getString("patient_name")));
 
    @Autowired
    ResultDao resultDao;

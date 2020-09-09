@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.MailNotificationService;
 import ar.edu.itba.paw.interfaces.ResultFormService;
 import ar.edu.itba.paw.model.OrderForm;
 import ar.edu.itba.paw.model.Result;
@@ -16,6 +17,9 @@ import java.sql.Date;
 public class ResultFormServiceImpl implements ResultFormService {
 
     @Autowired
+    private MailNotificationService mailNotificationService;
+
+    @Autowired
     private ResultDao resultDao;
 
     @Override
@@ -28,6 +32,8 @@ public class ResultFormServiceImpl implements ResultFormService {
                                     new Date(System.currentTimeMillis()),
                                     resultForm.getResponsible_name(),
                                     resultForm.getResponsible_licence_number());
+        mailNotificationService.sendResultMail(result);
+
         return result.getId();
     }
 }

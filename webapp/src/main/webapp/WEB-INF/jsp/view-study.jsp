@@ -72,14 +72,14 @@
                                 <div class="col">Clinic: ${order.clinic.name}</div>
                             </div>
                             <hr class="mt-3 mb-4 text-center"/>
-                            <img src="/assets/image/result/${id}/result-data" class="align-self-end ml-3" alt="/assets/image/result/${id}/result-data" style="width: 30rem;">
+                            <img src="/assets/image/result/${result.id}/result-data" class="align-self-end ml-3" alt="/assets/image/result/${id}/result-data" style="width: 30rem;">
                             <hr class="mt-5 mb-4"/>
                             <div class="media">
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1 text-center">${result.responsible_name}</h5>
                                     <p class="text-center">M.N.:${result.responsible_licence_number}</p>
                                 </div>
-                                <img src="/assets/image/result/${id}/identification" class="align-self-end ml-3" alt="/assets/image/result/${id}/identification" style="width: 5rem;">
+                                <img src="/assets/image/result/${result.id}/identification" class="align-self-end ml-3" alt="/assets/image/result/${id}/identification" style="width: 5rem;">
                             </div>
                         </div>
                     </div>
