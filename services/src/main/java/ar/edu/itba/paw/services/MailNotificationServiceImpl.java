@@ -33,7 +33,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private static final String doctorResultSubject  = "[Order %s/%s] New results are available.";
     private static final String clinicResultSubject  = "[Order %s/%s] Your results has been uploaded successfully.";
 
-    private static final String orderTextTemplate    = "Details for this order are available from:\n\n%s/view-order/%s\n\nContect Info:\n%s:\t%s\n%s:\t%s\n\nWith love,\n\tMedTracker (%s)";
+    private static final String orderTextTemplate    = "Details for this order are available from:\n\n%s/view-order/%s\n\nContact Info\n%s: %s (%s)\n%s: %s (%s)\n\nWith love,\n\tMedTracker (%s)";
     private static final String resultTextTemplate   = orderTextTemplate;
 
     public void sendOrderMail(Order order) {
@@ -42,23 +42,26 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         String patientMail  = order.getPatient().getEmail();
         String doctorMail   = order.getMedic().getEmail();
-        String clinicMail   = order.getMedic().getEmail();
+        String clinicMail   = order.getClinic().getEmail();
+        String patientName  = order.getPatient().getName();
+        String doctorName   = order.getMedic().getName();
+        String clinicName   = order.getClinic().getName();
         String orderID      = String.valueOf(order.getOrder_id());
 
         // mail to patient
         ms.sendSimpleMessage(patientMail,
                 String.format(patientOrderSubject, orderID),
-                String.format(orderTextTemplate,url,orderID,"Doctor",doctorMail,"Clinic",clinicMail,url));
+                String.format(orderTextTemplate,url,orderID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
 
         // mail to doctor
         ms.sendSimpleMessage(doctorMail,
                 String.format(doctorOrderSubject, orderID),
-                String.format(orderTextTemplate,url,orderID,"Patient",patientMail,"Clinic",clinicMail,url));
+                String.format(orderTextTemplate,url,orderID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
 
         // mail to clinic
         ms.sendSimpleMessage(order.getClinic().getEmail(),
                 String.format(clinicOrderSubject, order.getOrder_id()),
-                String.format(orderTextTemplate,url,orderID,"Patient",patientMail,"Doctor",doctorMail,url));
+                String.format(orderTextTemplate,url,orderID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
     }
 
     public void sendResultMail(Result result){
@@ -73,24 +76,27 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
             String patientMail  = order.getPatient().getEmail();
             String doctorMail   = order.getMedic().getEmail();
-            String clinicMail   = order.getMedic().getEmail();
+            String clinicMail   = order.getClinic().getEmail();
+            String patientName  = order.getPatient().getName();
+            String doctorName   = order.getMedic().getName();
+            String clinicName   = order.getClinic().getName();
             String orderID      = String.valueOf(order.getOrder_id());
             String resultID     = String.valueOf(result.getId());
 
             // mail to patient
             ms.sendSimpleMessage(patientMail,
                     String.format(patientResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Doctor",doctorMail,"Clinic",clinicMail,url));
+                    String.format(resultTextTemplate,url,orderID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
 
             // mail to doctor
             ms.sendSimpleMessage(doctorMail,
                     String.format(doctorResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Patient",patientMail,"Clinic",clinicMail,url));
+                    String.format(resultTextTemplate,url,orderID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
 
             // mail to clinic
             ms.sendSimpleMessage(clinicMail,
                     String.format(clinicResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Patient",patientMail,"Doctor",doctorMail,url));
+                    String.format(resultTextTemplate,url,orderID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
 
         }else{
             // log error
