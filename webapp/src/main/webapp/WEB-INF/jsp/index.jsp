@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,7 +24,10 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<c:url value="/" />">Home <span class="sr-only">(current)</span></a>
+            </li    >
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/create-order" />">Create a new order</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/create-order">Create a new order</a>
@@ -46,12 +50,12 @@
         <hr class="my-4">
         <p>Get notified and never lose another important file just because a piece of paper went missing.</p>
         <p class="lead align-items-center text-center mt-4 mb-0">
-            <a class="btn btn-outline-primary btn-lg" href="/create-order" role="button"><i class="fas fa-file-medical-alt"></i> Create a new Order</a>
+            <a class="btn btn-outline-primary btn-lg" href="<c:url value="/create-order" />" role="button"><i class="fas fa-file-medical-alt"></i> Create a new Order</a>
         </p>
     </div>
     <footer class="footer" style="position: absolute; left: 0; bottom: 0; width: 100%; background: #f5f5f5 ;">
         <div class="inner text-center my-3">
-            <p class="text-muted">A <a href="/">Group2</a> project</p>
+            <p class="text-muted">A <a href="<c:url value="/" />">Group2</a> project</p>
         </div>
     </footer>
 
