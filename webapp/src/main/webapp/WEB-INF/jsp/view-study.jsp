@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
-<html lang="en">
+<html lang="en" style="position: relative; min-height: 100%">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -21,6 +21,28 @@
 </head>
 <c:url value="/upload-result/${id}" var="uploadPath"/>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand ml-4" href="#"> <i class="fas fa-laptop-medical fa-lg"></i> MedTransfer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/create-order">Create a new order</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">View studies (WIP) <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <span class="navbar-text">
+            <!--space for future user profile icon-->
+        </span>
+    </div>
+</nav>
 <div class="container">
     <div class="row justify-content-center pb-8">
         <div class="card pb-8 mt-4" style="width: 40rem;">
@@ -91,6 +113,8 @@
 
 
 </div>
+
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
