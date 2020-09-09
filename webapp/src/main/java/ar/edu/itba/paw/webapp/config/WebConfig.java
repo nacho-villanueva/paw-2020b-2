@@ -34,6 +34,9 @@ public class WebConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:initialPopulator.sql")
+    private Resource initialPopulatorSql;
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -96,6 +99,7 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
         dbp.addScript(schemaSql);
+        dbp.addScript(initialPopulatorSql);
 
         return dbp;
     }
