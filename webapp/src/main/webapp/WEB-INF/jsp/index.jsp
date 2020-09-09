@@ -50,11 +50,7 @@
             <a class="btn btn-outline-primary btn-lg" href="<c:url value="/create-order" />" role="button"><i class="fas fa-file-medical-alt"></i> Create a new Order</a>
         </p>
     </div>
-    <footer class="footer" style="position: absolute; left: 0; bottom: 0; width: 100%; background: #f5f5f5 ;">
-        <div class="inner text-center my-3">
-            <p class="text-muted">A <a href="<c:url value="/" />">Group2</a> project</p>
-        </div>
-    </footer>
+
 
 </div>
 
