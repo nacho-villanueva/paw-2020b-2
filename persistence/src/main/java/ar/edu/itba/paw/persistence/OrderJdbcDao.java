@@ -34,8 +34,8 @@ public class OrderJdbcDao implements OrderDao {
                     rs.getString("medic_plan"),
                     rs.getString("medic_plan_number"),
                     new Patient(rs.getInt("patient_id"),
-                            rs.getString("patient_name"),
-                            rs.getString("patient_email")));
+                            rs.getString("patient_email"),
+                            rs.getString("patient_name")));
 
    @Autowired
    ResultDao resultDao;
@@ -59,9 +59,9 @@ public class OrderJdbcDao implements OrderDao {
 
        //To make code less confusing, we name the sql query
        String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, * from " +
-               "(select medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, * from " +
-               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, * from " +
+               "(select clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, medic_name, medic_email, medic_telephone, medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
+               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
                "medical_orders join patients " +
                "on patient_id = patients.id and medical_orders.id = ?) as order_patient join medics " +
                "on medic_id = medics.id) as order_medic join clinics " +

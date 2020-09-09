@@ -32,7 +32,7 @@ public class PatientJdbcDaoTest {
     private DataSource ds;
 
     @Autowired
-    private PatientJdbcDao patientDao;
+    private PatientJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -48,7 +48,7 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testRegisterValid() {
-        final Patient patient = patientDao.register(EMAIL, NAME);
+        final Patient patient = dao.register(EMAIL, NAME);
 
         Assert.assertNotNull(patient);
         Assert.assertEquals(EMAIL,patient.getEmail());
@@ -60,14 +60,14 @@ public class PatientJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         insertTestPatient();
 
-        patientDao.register(EMAIL, NAME);
+        dao.register(EMAIL, NAME);
     }
 
     @Test
     public void testFindByIdPatientExists() {
         int dbKey = insertTestPatient();
 
-        final Optional<Patient> maybePatient = patientDao.findById(dbKey);
+        final Optional<Patient> maybePatient = dao.findById(dbKey);
 
         Assert.assertNotNull(maybePatient);
         Assert.assertTrue(maybePatient.isPresent());
@@ -77,7 +77,7 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testFindByIdPatientNotExists() {
-        final Optional<Patient> maybePatient = patientDao.findById(ZERO_ID);
+        final Optional<Patient> maybePatient = dao.findById(ZERO_ID);
 
         Assert.assertNotNull(maybePatient);
         Assert.assertFalse(maybePatient.isPresent());
@@ -87,7 +87,7 @@ public class PatientJdbcDaoTest {
     public void testFindByEmailPatientExists() {
         insertTestPatient();
 
-        final Optional<Patient> maybePatient = patientDao.findByEmail(EMAIL);
+        final Optional<Patient> maybePatient = dao.findByEmail(EMAIL);
 
         Assert.assertNotNull(maybePatient);
         Assert.assertTrue(maybePatient.isPresent());
@@ -97,7 +97,7 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testFindByEmailPatientNotExists() {
-        final Optional<Patient> maybePatient = patientDao.findByEmail(EMAIL);
+        final Optional<Patient> maybePatient = dao.findByEmail(EMAIL);
 
         Assert.assertNotNull(maybePatient);
         Assert.assertFalse(maybePatient.isPresent());
@@ -107,7 +107,7 @@ public class PatientJdbcDaoTest {
     public void testFindOrRegisterAlreadyExists() {
         int dbKey = insertTestPatient();
 
-        final Patient patient = patientDao.findOrRegister(EMAIL, NAME);
+        final Patient patient = dao.findOrRegister(EMAIL, NAME);
 
         Assert.assertNotNull(patient);
         Assert.assertEquals(dbKey, patient.getId());
@@ -117,7 +117,7 @@ public class PatientJdbcDaoTest {
 
     @Test
     public void testFindOrRegisterNotExists() {
-        final Patient patient = patientDao.findOrRegister(EMAIL, NAME);
+        final Patient patient = dao.findOrRegister(EMAIL, NAME);
 
         Assert.assertNotNull(patient);
         Assert.assertEquals(EMAIL, patient.getEmail());
