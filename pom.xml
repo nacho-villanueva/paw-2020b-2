@@ -15,6 +15,9 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
     <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+    <spring-context-support.version>5.2.8.RELEASE</spring-context-support.version>
+    <mail.version>1.4.7</mail.version>
+    <org.postgresql.version>42.2.5</org.postgresql.version>
   </properties>
 
   <dependencyManagement>
@@ -30,6 +33,16 @@
         <version>${org.springframework.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${org.postgresql.version}</version>
+      </dependency>
+      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
         <version>${servlet-api.version}</version>
@@ -40,6 +53,16 @@
         <artifactId>jstl</artifactId>
         <version>${jstl.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring-context-support.version}</version>
+      </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
+        </dependency>
     </dependencies>
   </dependencyManagement>
 

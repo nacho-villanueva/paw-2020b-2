@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class ResultServiceImpl implements ResultService {
@@ -15,7 +16,7 @@ public class ResultServiceImpl implements ResultService {
     private ResultDao resultDao;
 
     @Override
-    public Result findById(long id) {
+    public Optional<Result> findById(long id) {
         return resultDao.findById(id);
     }
 
@@ -24,3 +25,4 @@ public class ResultServiceImpl implements ResultService {
         return resultDao.findByOrderId(id);
     }
 }
+
