@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,19 +24,41 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<c:url value="/" />">Home <span class="sr-only">(current)</span></a>
+            </li    >
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/create-order" />">Create a new order</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">View studies (WIP)</a>
             </li>
         </ul>
         <span class="navbar-text">
-          <em class="fas fa-user-circle fa-lg mr-4"></em>
+            <!--space for future user profile icon-->
         </span>
     </div>
 </nav>
-<h1>Welcome</h1>
-<button type="button" class="btn btn-primary btn-lg btn-block">Create Order</button>
+<div class="container">
+    <div class="jumbotron mt-4 mx-auto">
+        <h2 class="display-4">Your medical records, in your hand.</h2>
+        <h1>Anywhere. Anytime. Always.</h1>
+        <p class="lead">Your medics can now fill in their orders or upload results to studies into MedTransfer, and you get it
+         in your computer, phone or tablet.</p>
+        <hr class="my-4">
+        <p>Get notified and never lose another important file just because a piece of paper went missing.</p>
+        <p class="lead align-items-center text-center mt-4 mb-0">
+            <a class="btn btn-outline-primary btn-lg" href="<c:url value="/create-order" />" role="button"><i class="fas fa-file-medical-alt"></i> Create a new Order</a>
+        </p>
+    </div>
+    <footer class="footer" style="position: absolute; left: 0; bottom: 0; width: 100%; background: #f5f5f5 ;">
+        <div class="inner text-center my-3">
+            <p class="text-muted">A <a href="<c:url value="/" />">Group2</a> project</p>
+        </div>
+    </footer>
+
+</div>
+
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
