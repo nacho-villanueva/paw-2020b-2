@@ -72,9 +72,9 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020b-2");
+        ds.setUsername("paw-2020b-2");
+        ds.setPassword("pt8AieF9x");
 
         return ds;
     }
@@ -99,7 +99,7 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
         dbp.addScript(schemaSql);
-        dbp.addScript(initialPopulatorSql);
+        //dbp.addScript(initialPopulatorSql);
 
         return dbp;
     }
