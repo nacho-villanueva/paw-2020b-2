@@ -11,6 +11,11 @@ public class Patient {
         this.name = name;
     }
 
+    public Patient(String email, String name) {
+        this.email = email;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
