@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.MailNotificationService;
 
 import ar.edu.itba.paw.interfaces.MailService;
+import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.persistence.OrderDao;
@@ -22,6 +23,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     @Autowired
     private URL address;
+
+    @Autowired
+    private UrlEncoderService urlEncoderService;
 
     @Autowired
     private OrderDao orderDao;
@@ -47,21 +51,22 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String doctorName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
         String orderID      = String.valueOf(order.getOrder_id());
+        String encodedID    = urlEncoderService.encode(order.getOrder_id());
 
         // mail to patient
         ms.sendSimpleMessage(patientMail,
                 String.format(patientOrderSubject, orderID),
-                String.format(orderTextTemplate,url,orderID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
+                String.format(orderTextTemplate,url,encodedID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
 
         // mail to doctor
         ms.sendSimpleMessage(doctorMail,
                 String.format(doctorOrderSubject, orderID),
-                String.format(orderTextTemplate,url,orderID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
+                String.format(orderTextTemplate,url,encodedID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
 
         // mail to clinic
         ms.sendSimpleMessage(order.getClinic().getEmail(),
                 String.format(clinicOrderSubject, order.getOrder_id()),
-                String.format(orderTextTemplate,url,orderID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
+                String.format(orderTextTemplate,url,encodedID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
     }
 
     public void sendResultMail(Result result){
@@ -81,22 +86,23 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             String doctorName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
             String orderID      = String.valueOf(order.getOrder_id());
+            String encodedID    = urlEncoderService.encode(order.getOrder_id());
             String resultID     = String.valueOf(result.getId());
 
             // mail to patient
             ms.sendSimpleMessage(patientMail,
                     String.format(patientResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
+                    String.format(resultTextTemplate,url,encodedID,"Doctor",doctorName,doctorMail,"Clinic",clinicName,clinicMail,url));
 
             // mail to doctor
             ms.sendSimpleMessage(doctorMail,
                     String.format(doctorResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
+                    String.format(resultTextTemplate,url,encodedID,"Patient",patientName,patientMail,"Clinic",clinicName,clinicMail,url));
 
             // mail to clinic
             ms.sendSimpleMessage(clinicMail,
                     String.format(clinicResultSubject,orderID,resultID),
-                    String.format(resultTextTemplate,url,orderID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
+                    String.format(resultTextTemplate,url,encodedID,"Patient",patientName,patientMail,"Doctor",doctorName,doctorMail,url));
 
         }else{
             // log error
