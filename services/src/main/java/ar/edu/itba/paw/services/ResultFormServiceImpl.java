@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.service.MailNotificationService;
-import ar.edu.itba.paw.service.ResultFormService;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.model.ResultForm;
-import ar.edu.itba.paw.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

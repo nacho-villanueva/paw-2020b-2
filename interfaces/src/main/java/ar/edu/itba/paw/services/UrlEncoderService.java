@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.service;
+package ar.edu.itba.paw.services;
 
 public interface UrlEncoderService {
 
