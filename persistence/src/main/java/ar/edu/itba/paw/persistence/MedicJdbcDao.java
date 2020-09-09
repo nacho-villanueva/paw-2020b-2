@@ -32,29 +32,6 @@ public class MedicJdbcDao implements MedicDao {
                 .usingGeneratedKeyColumns("id");
         jdbcInsertField = new SimpleJdbcInsert(ds)
                 .withTableName("medic_medical_fields");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medics (" +
-                "id serial primary key," +
-                "name text not null," +
-                "email text not null," +
-                "telephone text," +
-                "licence_number text not null," +
-                "unique(email)" +
-                ")");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medical_fields (" +
-                "id serial primary key," +
-                "name text not null," +
-                "unique(name)" +
-                ")");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS medic_medical_fields (" +
-                "medic_id int not null," +
-                "field_id int not null," +
-                "primary key(medic_id, field_id)," +
-                "foreign key(medic_id) references medics," +
-                "foreign key(field_id) references medical_fields" +
-                ")");
     }
 
     @Override
@@ -64,6 +41,15 @@ public class MedicJdbcDao implements MedicDao {
             medic.get().setMedical_fields(medicalFieldDao.findByMedicId(id));
         }
         return medic;
+    }
+
+    @Override
+    public Collection<Medic> getAll() {
+        Collection<Medic> medics = jdbcTemplate.query("SELECT * FROM medics", MEDIC_ROW_MAPPER);
+        medics.forEach(medic -> {
+            medic.setMedical_fields(medicalFieldDao.findByMedicId(medic.getId()));
+        });
+        return medics;
     }
 
     @Override
