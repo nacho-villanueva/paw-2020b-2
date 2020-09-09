@@ -40,19 +40,13 @@ public class WebConfig {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("WEB-INF/jsp/");
+        viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
 
 
         return viewResolver;
     }
 
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(1000000);
-        return multipartResolver;
-    }
 
     @Bean
     public DataSource dataSource() {
@@ -70,6 +64,13 @@ public class WebConfig {
     public URL getURL() throws MalformedURLException {
         final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
         return url;
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(70*1024*1000000L);
+        return multipartResolver;
     }
 
     @Bean

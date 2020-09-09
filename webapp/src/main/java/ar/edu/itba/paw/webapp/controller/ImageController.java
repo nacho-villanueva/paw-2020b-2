@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
+import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.service.OrderService;
-import ar.edu.itba.paw.service.ResultService;
+import ar.edu.itba.paw.services.OrderService;
+import ar.edu.itba.paw.services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;

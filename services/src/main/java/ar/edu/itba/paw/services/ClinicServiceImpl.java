@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.ClinicService;
 import ar.edu.itba.paw.model.Clinic;
-import ar.edu.itba.paw.model.Medic;
 import ar.edu.itba.paw.persistence.ClinicDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

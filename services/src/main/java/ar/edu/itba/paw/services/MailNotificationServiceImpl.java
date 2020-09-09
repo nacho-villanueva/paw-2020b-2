@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.OrderNotFoundForExistingResultException;
-import ar.edu.itba.paw.interfaces.MailNotificationService;
 
-import ar.edu.itba.paw.interfaces.MailService;
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

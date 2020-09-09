@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
