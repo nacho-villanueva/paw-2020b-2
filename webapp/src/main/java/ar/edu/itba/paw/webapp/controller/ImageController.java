@@ -3,8 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.persistence.OrderDao;
-import ar.edu.itba.paw.persistence.ResultDao;
+import ar.edu.itba.paw.service.OrderService;
+import ar.edu.itba.paw.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -22,10 +22,10 @@ public class ImageController {
     private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private OrderDao orderDao;
+    private OrderService orderService;
 
     @Autowired
-    private ResultDao resultDao;
+    private ResultService resultService;
 
     @RequestMapping(value = "/order/{encodedId}/identification", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getOrderIdentification(@PathVariable("encodedId") final String encodedId) {
@@ -37,7 +37,7 @@ public class ImageController {
 
         long id = urlEncoderService.decode(encodedId);
 
-        Optional<Order> orderOpt = orderDao.findById(id);
+        Optional<Order> orderOpt = orderService.findById(id);
 
         if(orderOpt.isPresent()){
             // image present
@@ -65,7 +65,7 @@ public class ImageController {
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
-        Optional<Result> resultOpt = resultDao.findById(resultId);
+        Optional<Result> resultOpt = resultService.findById(resultId);
 
         long id = urlEncoderService.decode(encodedId);
 
@@ -96,7 +96,7 @@ public class ImageController {
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
-        Optional<Result> resultOpt = resultDao.findById(resultId);
+        Optional<Result> resultOpt = resultService.findById(resultId);
 
         long id = urlEncoderService.decode(encodedId);
 
