@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.service.OrderService;
 import ar.edu.itba.paw.service.ResultService;
@@ -17,15 +18,19 @@ public class ViewStudyController {
     @Autowired
     private OrderService os;
 
+    @Autowired
+    private UrlEncoderService urlEncoderService;
 
-    @RequestMapping("/view-study/{orderId}")
-    public ModelAndView uploadResults(@PathVariable("orderId") final long id) {
+    @RequestMapping("/view-study/{encodedId}")
+    public ModelAndView uploadResults(@PathVariable("encodedId") final String encodedId) {
         ModelAndView mav;
+        long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
         Order aux;
         if(o.isPresent()) {
             mav = new ModelAndView("view-study");
             aux = o.get();
+            mav.addObject("encodedId",encodedId);
             mav.addObject("id", id);
             mav.addObject("order", aux);
             mav.addObject("results", aux.getStudy_results());

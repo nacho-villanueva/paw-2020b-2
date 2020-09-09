@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.MailNotificationService;
 import ar.edu.itba.paw.interfaces.ResultFormService;
+import ar.edu.itba.paw.interfaces.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.ResultForm;
 import ar.edu.itba.paw.service.OrderService;
@@ -27,11 +28,15 @@ public class ResultUploadController {
     @Autowired
     private ResultFormService resultFormService;
 
+    @Autowired
+    private UrlEncoderService urlEncoderService;
+
     private long orderId;
 
-    @RequestMapping("/upload-result/{orderId}")
-    public ModelAndView uploadResult(@PathVariable("orderId") final long id) {
+    @RequestMapping("/upload-result/{encodedId}")
+    public ModelAndView uploadResult(@PathVariable("encodedId") final String encodedId) {
         ModelAndView mav;
+        long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
         Order aux;
         if(o.isPresent()) {
@@ -65,7 +70,7 @@ public class ResultUploadController {
                     byte[] fileBytes = file.getBytes();
                     resultFormService.HandleOrderForm(resultForm, signBytes, sign.getContentType(), fileBytes, file.getContentType(), orderId);
                 }
-                return "redirect:view-study/" + orderId;
+                return "redirect:view-study/" + urlEncoderService.encode(orderId);
             }catch (IOException e){
                 return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
             }
