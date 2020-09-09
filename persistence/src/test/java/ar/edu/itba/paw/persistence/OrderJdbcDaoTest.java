@@ -27,7 +27,10 @@ public class OrderJdbcDaoTest {
 
     //Table names
     private static final String ORDERS_TABLE_NAME = "medical_orders";
+    private static final String MEDIC_FIELDS_TABLE_NAME = "medical_fields";
+    private static final String MEDIC_RELATIONS_TABLE_NAME = "medic_medical_fields";
     private static final String MEDICS_TABLE_NAME = "medics";
+    private static final String CLINIC_RELATIONS_TABLE_NAME = "clinic_available_studies";
     private static final String CLINICS_TABLE_NAME = "clinics";
     private static final String PATIENTS_TABLE_NAME = "patients";
     private static final String STUDIES_TABLE_NAME = "medical_studies";
@@ -92,10 +95,13 @@ public class OrderJdbcDaoTest {
                 .usingGeneratedKeyColumns("id");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDIC_RELATIONS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_RELATIONS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,STUDIES_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,STUDIES_TABLE_NAME);
     }
 
     @Test

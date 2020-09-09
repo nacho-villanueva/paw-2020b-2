@@ -1,11 +1,9 @@
-package ar.edu.itba.paw.service;
+package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Result;
 
 import java.sql.Date;
 import java.util.Collection;
-import java.util.Optional;
-
 import java.util.Optional;
 
 public interface ResultService {
