@@ -34,7 +34,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private static final String doctorResultSubject  = "[Order %s-%s] New results are available.";
     private static final String clinicResultSubject  = "[Order %s-%s] Your results has been uploaded successfully.";
 
-    private static final String orderTextTemplate    = "Details for this order are available from:\n\n%s/view-order/%s\n\nContact Info\n%s: %s (%s)\n%s: %s (%s)\n\nWith love,\n\tMedTracker (%s)";
+    private static final String orderTextTemplate    = "Details for this order are available from:\n\n%s/view-study/%s\n\nContact Info\n%s: %s (%s)\n%s: %s (%s)\n\nWith love,\n\tMedTracker (%s)";
     private static final String resultTextTemplate   = orderTextTemplate;
 
     public void sendOrderMail(Order order) {
