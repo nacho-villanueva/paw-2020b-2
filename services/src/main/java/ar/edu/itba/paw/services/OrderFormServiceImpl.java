@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.service.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.service.OrderService;
 import org.springframework.beans.MethodInvocationException;

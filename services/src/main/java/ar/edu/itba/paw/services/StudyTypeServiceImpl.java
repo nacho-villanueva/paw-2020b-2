@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.StudyTypeService;
+import ar.edu.itba.paw.service.StudyTypeService;
 import ar.edu.itba.paw.model.StudyType;
 import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;

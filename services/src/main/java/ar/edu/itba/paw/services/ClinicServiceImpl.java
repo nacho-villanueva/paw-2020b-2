@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.ClinicService;
+import ar.edu.itba.paw.service.ClinicService;
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.Medic;
 import ar.edu.itba.paw.persistence.ClinicDao;

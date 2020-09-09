@@ -1,6 +1,5 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.model.Medic;
 import ar.edu.itba.paw.model.StudyType;
 
 import java.util.Collection;
