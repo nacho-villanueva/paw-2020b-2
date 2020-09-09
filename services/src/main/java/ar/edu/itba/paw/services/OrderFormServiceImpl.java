@@ -1,47 +1,47 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.MailNotificationService;
-import ar.edu.itba.paw.interfaces.OrderFormService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.persistence.ClinicDao;
-import ar.edu.itba.paw.persistence.MedicDao;
-import ar.edu.itba.paw.persistence.OrderDao;
-import ar.edu.itba.paw.persistence.StudyTypeDao;
+import ar.edu.itba.paw.service.OrderService;
+import org.springframework.beans.MethodInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Optional;
 
 @Primary
 @Service
 public class OrderFormServiceImpl implements OrderFormService {
 
     @Autowired
-    private OrderDao orderDao;
+    private OrderService orderService;
     @Autowired
-    private ClinicDao clinicDao;
+    private ClinicService clinicService;
     @Autowired
-    private MedicDao medicDao;
+    private MedicService medicService;
     @Autowired
-    private StudyTypeDao studyTypeDao;
+    private StudyTypeService studyTypeService;
 
     @Autowired
     private MailNotificationService mailNotificationService;
 
     @Override
     public Long HandleOrderForm(OrderForm orderForm, byte[] identification, String identificationType) {
-        Medic medic = medicDao.findById(orderForm.getMedicId()).get();
-        Clinic clinic = clinicDao.findById(orderForm.getClinicId()).get();
-        StudyType studyType = studyTypeDao.findById(orderForm.getStudyId()).get();
+        Optional<Medic> medic = medicService.findById(orderForm.getMedicId());
+        Optional<Clinic> clinic = clinicService.findById(orderForm.getClinicId());
+        Optional<StudyType> studyType = studyTypeService.findById(orderForm.getStudyId());
 
+        if(!medic.isPresent() || !clinic.isPresent() || !studyType.isPresent())
+            return null;
 
-        Order order = orderDao.register(
-                medic,
+        Order order = orderService.register(
+                medic.get(),
                 new Date(System.currentTimeMillis()),
-                clinic,
+                clinic.get(),
                 new Patient(orderForm.getPatientEmail(), orderForm.getPatientName()),
-                studyType,
+                studyType.get(),
                 orderForm.getDescription(),
                 identificationType,
                 identification,

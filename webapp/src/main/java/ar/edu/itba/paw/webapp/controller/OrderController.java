@@ -2,9 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.OrderForm;
-import ar.edu.itba.paw.persistence.ClinicDao;
-import ar.edu.itba.paw.persistence.MedicDao;
-import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -14,8 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/create-order")
@@ -28,7 +23,7 @@ public class OrderController {
     private OrderFormService orderFormService;
 
     @Autowired
-    private StudyService studyService;
+    private StudyTypeService studyService;
 
     @Autowired
     private MedicService medicService;
