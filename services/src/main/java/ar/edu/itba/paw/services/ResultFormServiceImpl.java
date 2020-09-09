@@ -2,10 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.service.MailNotificationService;
 import ar.edu.itba.paw.service.ResultFormService;
-import ar.edu.itba.paw.model.OrderForm;
 import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.model.ResultForm;
-import ar.edu.itba.paw.persistence.ResultDao;
+import ar.edu.itba.paw.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,11 @@ public class ResultFormServiceImpl implements ResultFormService {
     private MailNotificationService mailNotificationService;
 
     @Autowired
-    private ResultDao resultDao;
+    private ResultService resultService;
 
     @Override
     public Long HandleOrderForm(ResultForm resultForm, byte[] identification, String identificationType, byte[] resultData, String resultDataType, long orderId) {
-        Result result = resultDao.register(orderId,
+        Result result = resultService.register(orderId,
                                     resultDataType,
                                     resultData,
                                     identificationType,
