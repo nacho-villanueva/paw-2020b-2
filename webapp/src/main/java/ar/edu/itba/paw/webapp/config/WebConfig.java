@@ -16,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.sql.DataSource;
 
 @EnableWebMvc
@@ -30,35 +32,45 @@ public class WebConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:initialPopulator.sql")
+    private Resource initialPopulatorSql;
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("WEB-INF/jsp/");
+        viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
 
 
         return viewResolver;
     }
 
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(1000000);
-        return multipartResolver;
-    }
 
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("root");
-        ds.setPassword("root");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020b-2");
+        ds.setUsername("paw-2020b-2");
+        ds.setPassword("pt8AieF9x");
 
         return ds;
+    }
+
+    @Bean
+    public URL getURL() throws MalformedURLException {
+        final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
+        return url;
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(70*1024*1000000L);
+        return multipartResolver;
     }
 
     @Bean
@@ -75,8 +87,8 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
         dbp.addScript(schemaSql);
+        //dbp.addScript(initialPopulatorSql);
 
         return dbp;
     }
-
 }
