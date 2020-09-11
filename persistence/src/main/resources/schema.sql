@@ -81,3 +81,14 @@ CREATE TABLE IF NOT EXISTS results (
    responsible_licence_number text not null,
    foreign key(order_id) references medical_orders
 );
+
+
+CREATE TABLE IF NOT EXISTS users (
+    id serial primary key,
+    email text not null unique,
+    password text not null
+);
+
+alter table if exists patients add column if not exists user_id int references users;
+alter table if exists medics add column if not exists user_id int references users;
+alter table if exists clinics add column if not exists user_id int references users;
