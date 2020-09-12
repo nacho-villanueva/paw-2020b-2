@@ -1,0 +1,172 @@
+:root {
+    --main-font: Roboto, sans-serif;
+}
+
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
+}
+
+body {
+    font-family: var(--main-font);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #212121;
+}
+
+a, a:hover {
+    outline: none;
+    text-decoration: none;
+}
+
+.main-container {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%), url("../img/background.jpg");
+    background-size: cover;
+
+    height: 100vh;
+    padding-top: 4.5rem;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        font-size: 1.5rem;
+    }
+    100% {
+        opacity: 1;
+        font-size: 1.25rem;
+    }
+}
+
+.navbar-title {
+    font-weight: 600;
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+
+    animation: 2s ease-out 0s 1 fadeIn;
+}
+
+.navbar-options {
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    padding-left: 3rem;
+    font-size: 1rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+@keyframes slideInFromDown {
+    0% {
+        opacity: 0;
+        transform: translateY(15%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.main-card {
+    margin-top: 5%;
+    margin-left: 10%;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+    width: 25%;
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
+@media (max-width: 1085px) {
+    .main-card {
+        width: 80%;
+        margin-top: 15%;
+    }
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    border-radius: 100px;
+    background-color: var(--primary);
+    color: white;
+}
+
+.toggle_radio{
+    position: relative;
+    background: rgba(255,255,255,.1);
+    overflow: hidden;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    border-top: 0;
+    margin: 0;
+    padding: 0 !important;
+    height: 26px;
+    width: 318px;
+}
+.toggle_radio > * {
+    float: left;
+}
+.toggle_radio input[type=radio]{
+    display: none;
+    /*position: fixed;*/
+}
+.toggle_radio label{
+    font-size: 1rem;
+    color: var(--primary);
+    display: block;
+    width: 100px;
+    height: 65px;
+    margin: 3px 3px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 1;
+    /*background: rgba(0,0,0,.1);*/
+    text-align: center;
+    /*margin: 0 2px;*/
+    /*background: blue;*/ /*make it blue*/
+}
+.toggle_option_slider{
+    /*display: none;*/
+    /*background: red;*/
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+}
+
+#first_toggle:checked ~ .toggle_option_slider{
+    background: rgba(40, 165, 68, 0.3);
+    color: white;
+    left: 3px;
+}
+#second_toggle:checked ~ .toggle_option_slider{
+    background: rgba(30, 195, 145, 0.3);
+    color: white;
+    left: 109px;
+}
+#third_toggle:checked ~ .toggle_option_slider{
+    background: rgba(25, 176, 200, 0.3);
+    color: white;
+    left: 215px;
+}
