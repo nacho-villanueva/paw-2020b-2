@@ -19,11 +19,6 @@ body {
     background-color: #212121;
 }
 
-a, a:hover {
-    outline: none;
-    text-decoration: none;
-}
-
 .main-container {
     position: relative;
     background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%), url("../img/background.jpg");
@@ -42,30 +37,6 @@ a, a:hover {
         opacity: 1;
         font-size: 1.25rem;
     }
-}
-
-.navbar-title {
-    font-weight: 600;
-    display: inline-block;
-    padding-top: 0.3125rem;
-    padding-bottom: 0.3125rem;
-    margin-right: 1rem;
-    font-size: 1.25rem;
-    line-height: inherit;
-    white-space: nowrap;
-
-    animation: 2s ease-out 0s 1 fadeIn;
-}
-
-.navbar-options {
-    display: inline-block;
-    padding-top: 0.3125rem;
-    padding-bottom: 0.3125rem;
-    margin-right: 1rem;
-    padding-left: 3rem;
-    font-size: 1rem;
-    line-height: inherit;
-    white-space: nowrap;
 }
 
 @keyframes slideInFromDown {

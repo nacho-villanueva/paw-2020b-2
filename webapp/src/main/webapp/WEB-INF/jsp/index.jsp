@@ -5,23 +5,12 @@
 <html lang="en">
 <head>
     <%@ include file="fragments/include-header.jsp"%>
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/homepage.css"/>">
 </head>
 <body>
 <div class="main-container">
-    <nav class="navbar-expand-lg fixed-top py-3 navbar bg-light" id="mainNav">
-        <div class="container">
-            <a class="navbar-title text-primary"><i class="fas fa-laptop-medical fa-lg"></i>&nbsp;&nbsp;/&nbsp;&nbsp;MedTransfer</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="navbar-options" href="#team">Team</a></li>
-                    <li class="nav-item"><a class="navbar-options" href="#help">Help</a></li>
-                    <li class="nav-item"><a class="navbar-options" href="#About Us">About Us</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <%@include file="fragments/navbar-fragment.jsp"%>
 
     <div class="card main-card bg-light">
         <div class="card-body">
