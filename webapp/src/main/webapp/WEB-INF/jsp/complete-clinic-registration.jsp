@@ -25,24 +25,14 @@
         <h3>We need a couple more details.</h3>
     </div>
     <form>
-        <div class="row">
-            <fieldset class="form-group">
-                <label for="firstName" class="bmd-label-floating">First Name</label>
-                <input type="text" class="form-control" id="firstName">
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="lastName" class="bmd-label-floating">Last Name</label>
-                <input type="text" class="form-control" id="lastName">
-            </fieldset>
-        </div>
+        <fieldset class="form-group">
+            <label for="clinicName" class="bmd-label-floating">Clinic's Name</label>
+            <input type="text" class="form-control" id="clinicName">
+        </fieldset>
         <fieldset class="form-group row">
             <label for="phoneNumber" class="bmd-label-floating">Phone Number</label>
             <input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+">
             <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
-        </fieldset>
-        <fieldset class="form-group row">
-            <label for="licenseNumber" class="bmd-label-floating">License Number</label>
-            <input type="text" class="form-control" pattern="[a-zA-Z0-9]" id="licenseNumber">
         </fieldset>
         <fieldset class="mt-4 form-group">
             <label for="identificationFile" class="bmd-label-floating">Seal and Signature</label>
