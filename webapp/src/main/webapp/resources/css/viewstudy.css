@@ -52,8 +52,8 @@ body {
 }
 
 .order-card {
-    right: 1rem;
-    margin-top: 5%;
+    right: 1em;
+    margin-top: 2em;
 
     width: 40rem;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
@@ -78,12 +78,12 @@ body {
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
 .results-card {
-    left: 2rem;
-    margin-top: 5%;
-    width: 40rem;
+    left: 2em;
+    margin-top: 2em;
+    width: 42em;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
-    height:40rem;
+    height:43em;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
@@ -120,8 +120,15 @@ body {
     height: 300px;
 }
 .tab-result{
-    max-height: 30rem;
+    max-height: 30em;
 }
 .result-card{
-    max-height: 30rem;
+    max-height: 30em;
+    width: 26em;
+}
+.result-list{
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
 }

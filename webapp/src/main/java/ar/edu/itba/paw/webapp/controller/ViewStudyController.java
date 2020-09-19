@@ -27,7 +27,7 @@ public class ViewStudyController {
         Optional<Order> o = os.findById(id);
         Order aux;
         if(o.isPresent()) {
-            mav = new ModelAndView("view-order");
+            mav = new ModelAndView("view-study");
             aux = o.get();
             mav.addObject("encodedId",encodedId);
             mav.addObject("id", id);
