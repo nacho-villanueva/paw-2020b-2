@@ -21,7 +21,7 @@ body {
 
 .main-container {
     position: relative;
-    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%);
+    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.5) 0%, rgba(119, 119, 119, 0.3) 100%);
     background-size: cover;
 
     height: 100vh;
@@ -52,8 +52,9 @@ body {
 }
 
 .order-card {
-    margin-top: 10%;
-    margin-left: 20rem;
+    right: 1rem;
+    margin-top: 5%;
+
     width: 40rem;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
@@ -77,11 +78,12 @@ body {
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
 .results-card {
-    margin-top: 10%;
+    left: 2rem;
+    margin-top: 5%;
     width: 40rem;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
-    min-height: 30.5rem;
+    height:40rem;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
@@ -116,4 +118,10 @@ body {
     width: 70%;
     border-left: none;
     height: 300px;
+}
+.tab-result{
+    max-height: 30rem;
+}
+.result-card{
+    max-height: 30rem;
 }
