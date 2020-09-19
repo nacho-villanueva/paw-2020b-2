@@ -21,13 +21,13 @@ public class ViewStudyController {
     private UrlEncoderService urlEncoderService;
 
     @RequestMapping("/view-study/{encodedId}")
-    public ModelAndView uploadResults(@PathVariable("encodedId") final String encodedId) {
+    public ModelAndView viewStudy(@PathVariable("encodedId") final String encodedId) {
         ModelAndView mav;
         long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
         Order aux;
         if(o.isPresent()) {
-            mav = new ModelAndView("view-study");
+            mav = new ModelAndView("view-order");
             aux = o.get();
             mav.addObject("encodedId",encodedId);
             mav.addObject("id", id);

@@ -1,0 +1,119 @@
+:root {
+    --main-font: Roboto, sans-serif;
+}
+
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
+}
+
+body {
+    font-family: var(--main-font);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #212121;
+}
+
+.main-container {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%);
+    background-size: cover;
+
+    height: 100vh;
+    padding-top: 4.5rem;
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        font-size: 1.5rem;
+    }
+    100% {
+        opacity: 1;
+        font-size: 1.25rem;
+    }
+}
+
+@keyframes slideInFromDown {
+    0% {
+        opacity: 0;
+        transform: translateY(15%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.order-card {
+    margin-top: 10%;
+    margin-left: 20rem;
+    width: 40rem;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
+}
+.type {
+    margin-bottom: 0.75rem;
+}
+
+.upload-btn{
+    background: #19b0c8;
+    color: white;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.results-card {
+    margin-top: 10%;
+    width: 40rem;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+    min-height: 30.5rem;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.result-not {
+    margin-top: 20%;
+}
+
+.tab{
+    float: left;
+    width: 30%;
+}
+.tab button{
+    display: block;
+    background: #f1f1f1;
+    color: black;
+}
+.tab button:hover{
+    background: rgba(25, 176, 200, 0.3);
+    color: white;
+
+}
+.tab button.active{
+    background: #19b0c8;
+    color: white;
+
+}
+
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    width: 70%;
+    border-left: none;
+    height: 300px;
+}
