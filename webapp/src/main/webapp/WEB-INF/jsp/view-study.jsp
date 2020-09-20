@@ -29,7 +29,7 @@
 
                         </div>
                     </div>
-                    <hr class="mt-3 mb-2"/>
+                    <hr class="mt-5 mb-4"/>
                     <div class="row justify-content-start">
                         <div class="col type"><p class="type-title">Patient:</p>${order.patient.name}</div>
                         <div class="col type"><p class="type-title">Medical clinic:</p>${order.clinic.name}</div>
@@ -37,7 +37,7 @@
                         <div class="col type"><p class="type-title">Patient insurance plan:</p>${order.patient_insurance_plan}</div>
                         <div class="col type"><p class="type-title">Patient insurance number:</p>${order.patient_insurance_number}</div>
                     </div>
-                    <hr class="mt-3 mb-4"/>
+                    <hr class="mt-3 mb-5"/>
                     <p class="card-text text-center h5">Study type: ${order.study.name}</p>
                     <c:choose>
                         <c:when test="${order.description != null}">
@@ -60,9 +60,9 @@
                 <div class="card-body">
                     <p class="card-title h4">Results</p>
                     <c:choose>
-                        <c:when test="${results eq null}">
+                        <c:when test="${results.size() < 1}">
                             <div class="align-items-end result-not">
-                                <h1 class="text-center mt-6 py-6">It seems there are no results to show yet!</h1>
+                                <h1 class="text-center mt-5 py-5">It seems there are no results to show yet!</h1>
                             </div>
                         </c:when>
                         <c:otherwise>
