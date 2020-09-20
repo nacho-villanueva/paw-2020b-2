@@ -25,8 +25,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //TODO: Assign roles based on the username data provided
         final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN"));
+                new SimpleGrantedAuthority("ROLE_USER"));//,
+                //new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
 
