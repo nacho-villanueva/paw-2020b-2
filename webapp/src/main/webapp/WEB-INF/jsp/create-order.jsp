@@ -13,6 +13,48 @@
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
+    <!-- Bootstrap JS Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+
+    <!-- Query: Get Clinic from study id -->
+    <c:url var="getClinicByMedicalStudy" value="/api/data/clinic/get-clinics-by-medical-study"/>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $('#medicalStudy').on('change', function(){
+                let studyId = $(this).val();
+                let clinicSelect = $('#clinic');
+
+                if(studyId>=0){
+                    $.getJSON('${getClinicByMedicalStudy}',{
+                        study : studyId
+                    }, function(response) {
+                        let clinicList = '<option value="">Choose Clinic</option>';
+                        let clinicLen = response.length;
+                        for(let i =0; i<clinicLen;i++){
+                            clinicList += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
+                        }
+                        clinicList += '</option>';
+
+                        clinicSelect.html(clinicList);
+                        clinicSelect.attr('title',"Choose Clinic");
+                        clinicSelect.attr('disabled',false);
+                        clinicSelect.selectpicker('refresh');
+                    });
+                }else{
+                    clinicSelect.html('');
+                    clinicSelect.attr('title',"Choose Study first");
+                    clinicSelect.attr('disabled',true);
+                    clinicSelect.selectpicker('refresh');
+                }
+            });
+        });
+    </script>
+
     <title>Create Order</title>
 </head>
 <body>
@@ -57,9 +99,7 @@
                     <f:errors path="medicId" cssClass="error" /><br>
 
                     <label>Medical Clinic </label>
-                    <f:select cssClass="selectpicker" data-live-search="true" path="clinicId" >
-                        <f:option value="-1" label="Choose Clinic"/>
-                        <f:options items="${clinicsList}" itemLabel="name" itemValue="id"/>
+                    <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" title="Choose Study first" disabled="true">
                     </f:select>
                     <f:errors path="clinicId" cssClass="error" /><br>
 
@@ -75,7 +115,7 @@
                     <f:errors path="patient_insurance_number" cssClass="error" /><br>
 
                     <label>Study Type </label>
-                    <f:select cssClass="selectpicker" data-live-search="true" path="studyId" >
+                    <f:select id="medicalStudy" cssClass="selectpicker" data-live-search="true" path="studyId" >
                         <f:option value="-1" label="Choose Study"/>
                         <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                     </f:select>
@@ -97,10 +137,5 @@
     </div>
 </div>
 
-    <!-- Bootstrap JS Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 </body>
 </html>
