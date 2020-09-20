@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller.api;
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.services.ClinicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,19 +21,22 @@ public class DataController {
 
     @RequestMapping(value = "/clinic/get-clinics-by-medical-study", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Collection<Clinic> getClinicsByMedicalStudy(@RequestParam(value = "study", required = false) String studyString){
+    public ResponseEntity<Collection<Clinic>> getClinicsByMedicalStudy(@RequestParam(value = "study", required = false) String studyString){
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
         if(studyString == null || studyString.isEmpty())
-            return clinicService.getAllClinics();
+            return new ResponseEntity<>(clinicService.getAllClinics(),headers,HttpStatus.OK);
 
         int studyType_id;
 
         try{
             studyType_id = Integer.parseInt(studyString);
         }catch (NumberFormatException e){
-            return null;
+            return new ResponseEntity<>(null,headers,HttpStatus.BAD_REQUEST);
         }
 
-        return clinicService.getByStudyTypeId(studyType_id);
+        return new ResponseEntity<>(clinicService.getByStudyTypeId(studyType_id),headers,HttpStatus.OK);
     }
 }

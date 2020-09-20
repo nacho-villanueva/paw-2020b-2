@@ -33,7 +33,7 @@
                     $.getJSON('${getClinicByMedicalStudy}',{
                         study : studyId
                     }, function(response) {
-                        let clinicList = '<option value="">Choose Clinic</option>';
+                        let clinicList = '<option value="-1">Choose Clinic</option>';
                         let clinicLen = response.length;
                         for(let i =0; i<clinicLen;i++){
                             clinicList += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
@@ -41,13 +41,11 @@
                         clinicList += '</option>';
 
                         clinicSelect.html(clinicList);
-                        clinicSelect.attr('title',"Choose Clinic");
                         clinicSelect.attr('disabled',false);
                         clinicSelect.selectpicker('refresh');
                     });
                 }else{
-                    clinicSelect.html('');
-                    clinicSelect.attr('title',"Choose Study first");
+                    clinicSelect.html('<option value="-1">Choose Study first</option>');
                     clinicSelect.attr('disabled',true);
                     clinicSelect.selectpicker('refresh');
                 }
@@ -99,7 +97,8 @@
                     <f:errors path="medicId" cssClass="error" /><br>
 
                     <label>Medical Clinic </label>
-                    <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" title="Choose Study first" disabled="true">
+                    <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" disabled="true">
+                        <f:option value="-1">Choose Study first</f:option>
                     </f:select>
                     <f:errors path="clinicId" cssClass="error" /><br>
 
