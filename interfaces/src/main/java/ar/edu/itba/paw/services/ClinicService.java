@@ -9,5 +9,7 @@ public interface ClinicService {
 
     Collection<Clinic> getAllClinics();
 
+    Collection<Clinic> getByStudyTypeId(int studyType_id);
+
     Optional<Clinic> findById(int id);
 }
