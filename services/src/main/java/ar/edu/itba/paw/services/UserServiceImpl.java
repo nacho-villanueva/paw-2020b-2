@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
@@ -15,9 +17,24 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+
     @Override
-    public User findById(long id) {
+    public Optional<User> findById(int id) {
         return userDao.findById(id);
-        // TODO : Make 4 realz
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
+    public User register(String email, String password, int role) {
+        return userDao.register(email,password,role);
+    }
+
+    @Override
+    public User updateRole(User user, int role) {
+        return userDao.updateRole(user,role);
     }
 }

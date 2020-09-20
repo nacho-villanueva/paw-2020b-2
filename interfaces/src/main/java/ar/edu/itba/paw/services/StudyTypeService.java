@@ -7,7 +7,16 @@ import java.util.Optional;
 
 public interface StudyTypeService {
 
-    Collection<StudyType> getAllStudyTypes();
+    Collection<StudyType> getAll();
 
-    Optional<StudyType> findById(int id);
+    public Collection<StudyType> findByClinicId(int clinic_id);
+
+    public Optional<StudyType> findById(int id);
+
+    public Optional<StudyType> findByName(String name);
+
+    public StudyType findOrRegister(String name);
+
+    public StudyType register(String name);
+
 }

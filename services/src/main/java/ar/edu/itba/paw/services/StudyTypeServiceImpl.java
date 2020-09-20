@@ -12,16 +12,36 @@ import java.util.Optional;
 public class StudyTypeServiceImpl implements StudyTypeService {
 
     @Autowired
-    StudyTypeDao studyTypeDao;
+    private StudyTypeDao studyTypeDao;
 
     @Override
-    public Collection<StudyType> getAllStudyTypes() {
+    public Collection<StudyType> getAll() {
         return studyTypeDao.getAll();
+    }
+
+    @Override
+    public Collection<StudyType> findByClinicId(int clinic_id) {
+        return studyTypeDao.findByClinicId(clinic_id);
     }
 
     @Override
     public Optional<StudyType> findById(int id){
         return studyTypeDao.findById(id);
+    }
+
+    @Override
+    public Optional<StudyType> findByName(String name) {
+        return studyTypeDao.findByName(name);
+    }
+
+    @Override
+    public StudyType findOrRegister(String name) {
+        return studyTypeDao.findOrRegister(name);
+    }
+
+    @Override
+    public StudyType register(String name) {
+        return studyTypeDao.register(name);
     }
 
 }

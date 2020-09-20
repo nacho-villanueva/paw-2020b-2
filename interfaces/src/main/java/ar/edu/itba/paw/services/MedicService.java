@@ -1,13 +1,21 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Medic;
+import ar.edu.itba.paw.model.MedicalField;
+import ar.edu.itba.paw.model.User;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public interface MedicService {
 
-    public Collection<Medic> getAllMedics();
+    Collection<Medic> getAll();
 
-    Optional<Medic> findById(int id);
+    Collection<Medic> getAllUnverified();
+
+    Medic register(User user, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, boolean verified, Collection<MedicalField> known_fields);
+
+    Optional<Medic> findByUserId(int user_id);
+
+    MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
 }

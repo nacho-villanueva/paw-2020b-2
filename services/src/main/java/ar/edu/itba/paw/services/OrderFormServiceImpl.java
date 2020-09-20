@@ -26,8 +26,8 @@ public class OrderFormServiceImpl implements OrderFormService {
 
     @Override
     public Long HandleOrderForm(OrderForm orderForm, byte[] identification, String identificationType) {
-        Optional<Medic> medic = medicService.findById(orderForm.getMedicId());
-        Optional<Clinic> clinic = clinicService.findById(orderForm.getClinicId());
+        Optional<Medic> medic = medicService.findByUserId(orderForm.getMedicId());
+        Optional<Clinic> clinic = clinicService.findByUserId(orderForm.getClinicId());
         Optional<StudyType> studyType = studyTypeService.findById(orderForm.getStudyId());
 
         if(!medic.isPresent() || !clinic.isPresent() || !studyType.isPresent())
@@ -37,7 +37,8 @@ public class OrderFormServiceImpl implements OrderFormService {
                 medic.get(),
                 new Date(System.currentTimeMillis()),
                 clinic.get(),
-                new Patient(orderForm.getPatientEmail(), orderForm.getPatientName()),
+                orderForm.getPatientName(),
+                orderForm.getPatientEmail(),
                 studyType.get(),
                 orderForm.getDescription(),
                 identificationType,

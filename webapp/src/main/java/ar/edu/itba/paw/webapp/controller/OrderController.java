@@ -35,11 +35,11 @@ public class OrderController {
     public ModelAndView getOrderCreationForm() {
         final ModelAndView mav = new ModelAndView("create-order");
 
-        mav.addObject("medicsList", medicService.getAllMedics());
+        mav.addObject("medicsList", medicService.getAll());
 
-        mav.addObject("studiesList", studyService.getAllStudyTypes());
+        mav.addObject("studiesList", studyService.getAll());
 
-        mav.addObject("clinicsList", clinicService.getAllClinics());
+        mav.addObject("clinicsList", clinicService.getAll());
         mav.addObject("orderForm", new OrderForm());
         return mav;
     }

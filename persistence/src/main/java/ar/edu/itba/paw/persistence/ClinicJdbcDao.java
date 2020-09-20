@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +16,11 @@ import java.util.*;
 public class ClinicJdbcDao implements ClinicDao {
 
     private static final RowMapper<Clinic> CLINIC_ROW_MAPPER = (rs, rowNum) ->
-            new Clinic(rs.getInt("id"),rs.getString("name"),rs.getString("email"),rs.getString("telephone"));
+            new Clinic(rs.getInt("user_id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("telephone"),
+                    rs.getBoolean("verified"));
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertClinic;
@@ -28,54 +33,61 @@ public class ClinicJdbcDao implements ClinicDao {
     public ClinicJdbcDao(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertClinic = new SimpleJdbcInsert(ds)
-                .withTableName("clinics")
-                .usingGeneratedKeyColumns("id");
+                .withTableName("clinics");
         jdbcInsertStudies = new SimpleJdbcInsert(ds)
                 .withTableName("clinic_available_studies");
     }
 
     @Override
-    public Optional<Clinic> findById(int id) {
+    public Optional<Clinic> findByUserId(int user_id) {
         //We get the basic clinic info
-        Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics WHERE id = ?", new Object[] { id }, CLINIC_ROW_MAPPER).stream().findFirst();
-        if(clinic.isPresent()) {
-            clinic.get().setMedical_studies(studyTypeDao.findByClinicId(id));
-        }
+        Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics WHERE user_id = ?", new Object[] { user_id }, CLINIC_ROW_MAPPER).stream().findFirst();
+        clinic.ifPresent(value -> value.setMedical_studies(studyTypeDao.findByClinicId(user_id)));
         return clinic;
     }
 
     @Override
     public Collection<Clinic> getAll() {
-        Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics", CLINIC_ROW_MAPPER);
+        return getAll(true);
+    }
+
+    @Override
+    public Collection<Clinic> getAllUnverified() {
+        return getAll(false);
+    }
+
+    private Collection<Clinic> getAll(final boolean verified) {
+        Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics WHERE verified = ?", new Object[]{verified}, CLINIC_ROW_MAPPER);
         clinics.forEach(clinic -> {
-            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getId()));
+            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
         });
         return clinics;
     }
 
     @Override
-    public Clinic register(final String name, final String email, final String telephone, final Collection<StudyType> available_studies) {
-        Map<String,Object> insertMap = new HashMap<>();
+    public Clinic register(final User user, final String name, final String email, final String telephone, final boolean verified, final Collection<StudyType> available_studies) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
         insertMap.put("email", email);
         insertMap.put("telephone", telephone);
+        insertMap.put("verified", verified);
 
-        Number key = jdbcInsertClinic.executeAndReturnKey(insertMap);
+        jdbcInsertClinic.execute(insertMap);
+        //Todo: Check success
+        Collection<StudyType> available_studiesDB = new ArrayList<>();
 
-        //Todo: check success and register new studies types to clinic
-        Collection<StudyType> actual_available_studies = new ArrayList<>();
-
-        //Goes through the list of available studies, adds them to the clinic_available_studies and if there are new study types it adds them to db
+        //Adds studies that dont exist in our database //TODO: Think of more elegant solution, prone to duplication under misspellings
         available_studies.forEach(studyType -> {
-            StudyType actualStudyType = this.registerStudyToClinic(key.intValue(), studyType);
-            actual_available_studies.add(actualStudyType);
+            StudyType studyTypeFromDB = this.registerStudyToClinic(user.getId(), studyType);
+            available_studiesDB.add(studyTypeFromDB);
         });
 
-        return new Clinic(key.intValue(),name,email,telephone,actual_available_studies);
+        return new Clinic(user.getId(),name,email,telephone,available_studiesDB,verified);
     }
 
     @Override
-    public StudyType registerStudyToClinic(final int clinic_id, StudyType studyType) {
+    public StudyType registerStudyToClinic(final int clinic_id, final StudyType studyType) {
         //We check if it exists
         StudyType studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
 
@@ -84,7 +96,9 @@ public class ClinicJdbcDao implements ClinicDao {
         insertMap.put("clinic_id", clinic_id);
         insertMap.put("study_id", studyTypeFromDB.getId());
 
-        int rowsAffected = jdbcInsertStudies.execute(insertMap);
+        jdbcInsertStudies.execute(insertMap);
+
+        //Todo: verify success
 
         return studyTypeFromDB;
     }

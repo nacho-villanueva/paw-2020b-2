@@ -25,12 +25,15 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 public class ResultJdbcDaoTest {
 
-    //Table names
-    private static final String RESULTS_TABLE_NAME = "results";
-    private static final String ORDERS_TABLE_NAME = "medical_orders";
-    private static final String MEDICS_TABLE_NAME = "medics";
+    //TABLE NAMES
+    private static final String USERS_TABLE_NAME = "users";
     private static final String CLINICS_TABLE_NAME = "clinics";
+    private static final String CLINICS_RELATION_TABLE_NAME = "clinic_available_studies";
+    private static final String MEDICS_TABLE_NAME = "medics";
+    private static final String MEDICS_RELATION_TABLE_NAME = "medic_medical_fields";
     private static final String PATIENTS_TABLE_NAME = "patients";
+    private static final String ORDERS_TABLE_NAME = "medical_orders";
+    private static final String RESULTS_TABLE_NAME = "results";
     private static final String STUDIES_TABLE_NAME = "medical_studies";
 
     //Shared Info
@@ -53,12 +56,17 @@ public class ResultJdbcDaoTest {
     private static final String STUDY_NAME = "MRA";
 
     //Test Patient Info
-    private static final String PATIENT_EMAIL = "patient@zero.com";
     private static final String PATIENT_NAME = "Patient Zero";
+
+    //USER INFO
+    private static final String USER_EMAIL = "patient@zero.com";
+    private static final String PASSWORD = "GroundZer0";
+    private static final int ROLE = 4;
 
     //Others
     private static final long ZERO_ID_LONG = 0;
     private static final int ZERO_ID_INT = 0;
+    private static final boolean TRUE = true;
 
     @Autowired
     DataSource ds;
@@ -71,12 +79,15 @@ public class ResultJdbcDaoTest {
     private SimpleJdbcInsert jdbcInsertOrders;
     private SimpleJdbcInsert jdbcInsertMedics;
     private SimpleJdbcInsert jdbcInsertClinics;
-    private SimpleJdbcInsert jdbcInsertPatients;
     private SimpleJdbcInsert jdbcInsertStudies;
+    private SimpleJdbcInsert jdbcInsertUsers;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
+        jdbcInsertUsers = new SimpleJdbcInsert(ds)
+                .withTableName(USERS_TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
         jdbcInsertResults = new SimpleJdbcInsert(ds)
                 .withTableName(RESULTS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
@@ -84,23 +95,21 @@ public class ResultJdbcDaoTest {
                 .withTableName(ORDERS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
         jdbcInsertMedics = new SimpleJdbcInsert(ds)
-                .withTableName(MEDICS_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
+                .withTableName(MEDICS_TABLE_NAME);
         jdbcInsertClinics = new SimpleJdbcInsert(ds)
-                .withTableName(CLINICS_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-        jdbcInsertPatients = new SimpleJdbcInsert(ds)
-                .withTableName(PATIENTS_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
+                .withTableName(CLINICS_TABLE_NAME);
         jdbcInsertStudies = new SimpleJdbcInsert(ds)
                 .withTableName(STUDIES_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_RELATION_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_RELATION_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,STUDIES_TABLE_NAME);
     }
 
@@ -150,7 +159,7 @@ public class ResultJdbcDaoTest {
 
         final Result result = dao.register(order_id,DATA_TYPE,DATA,DATA_TYPE,DATA,DATE,MEDIC_NAME,MEDIC_LICENCE);
 
-        Assert.assertNotNull(result);
+        Assert.assertArrayEquals(DATA,result.getData());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,RESULTS_TABLE_NAME));
     }
 
@@ -180,16 +189,17 @@ public class ResultJdbcDaoTest {
     }
 
     private long insertTestOrder() {
-        int medic_id = insertTestMedic();
-        int clinic_id = insertTestClinic();
-        int patient_id = insertTestPatient();
+        int user_id = insertTestUser();
+        int medic_id = insertTestMedic(user_id);
+        int clinic_id = insertTestClinic(user_id);
         int study_id = insertTestStudy();
 
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("medic_id", medic_id);
         insertMap.put("date", DATE);
         insertMap.put("clinic_id", clinic_id);
-        insertMap.put("patient_id", patient_id);
+        insertMap.put("patient_name", PATIENT_NAME);
+        insertMap.put("patient_email", USER_EMAIL);
         insertMap.put("study_id", study_id);
         insertMap.put("identification_type", DATA_TYPE);
         insertMap.put("identification", DATA);
@@ -204,25 +214,36 @@ public class ResultJdbcDaoTest {
         return jdbcInsertStudies.executeAndReturnKey(insertMap).intValue();
     }
 
-    private int insertTestPatient() {
+    private int insertTestClinic(int user_id) {
         Map<String,Object> insertMap = new HashMap<>();
-        insertMap.put("name", PATIENT_NAME);
-        insertMap.put("email", PATIENT_EMAIL);
-        return jdbcInsertPatients.executeAndReturnKey(insertMap).intValue();
-    }
-
-    private int insertTestClinic() {
-        Map<String,Object> insertMap = new HashMap<>();
+        insertMap.put("user_id", user_id);
         insertMap.put("name", CLINIC_NAME);
         insertMap.put("email", CLINIC_EMAIL);
-        return jdbcInsertClinics.executeAndReturnKey(insertMap).intValue();
+        insertMap.put("verified", TRUE);
+        jdbcInsertClinics.execute(insertMap);
+        return user_id;
     }
 
-    private int insertTestMedic() {
+    private int insertTestMedic(int user_id) {
         Map<String,Object> insertMap = new HashMap<>();
+        insertMap.put("user_id", user_id);
         insertMap.put("name", MEDIC_NAME);
         insertMap.put("email", MEDIC_EMAIL);
         insertMap.put("licence_number", MEDIC_LICENCE);
-        return jdbcInsertMedics.executeAndReturnKey(insertMap).intValue();
+        insertMap.put("identification_type", DATA_TYPE);
+        insertMap.put("identification", DATA);
+        insertMap.put("verified", TRUE);
+        jdbcInsertMedics.execute(insertMap);
+        return user_id;
+
+    }
+
+    private int insertTestUser() {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("email", USER_EMAIL);
+        insertMap.put("password", PASSWORD);
+        insertMap.put("role", ROLE);
+        Number key = jdbcInsertUsers.executeAndReturnKey(insertMap);
+        return key.intValue();
     }
 }

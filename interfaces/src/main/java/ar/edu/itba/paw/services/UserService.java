@@ -2,7 +2,16 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
 
+import java.util.Optional;
+
 public interface UserService {
 
-    public User findById(long id);
+    Optional<User> findById(int id);
+
+    Optional<User> findByEmail(String email);
+
+    User register(String email, String password, int role);
+
+    User updateRole(User user, int role);
+
 }

@@ -2,17 +2,20 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.model.User;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public interface ClinicDao {
 
-    public Optional<Clinic> findById(int id);
+    Optional<Clinic> findByUserId(int user_id);
 
     Collection<Clinic> getAll();
 
-    Clinic register(String name, String email, String telephone, Collection<StudyType> available_studies);
+    Collection<Clinic> getAllUnverified();
+
+    Clinic register(User user, String name, String email, String telephone, boolean verified, Collection<StudyType> available_studies);
 
     StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
 }
