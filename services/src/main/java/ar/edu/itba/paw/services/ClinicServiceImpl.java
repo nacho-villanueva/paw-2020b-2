@@ -20,6 +20,11 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
+    public Collection<Clinic> getByStudyTypeId(int studyType_id) {
+        return clinicDao.getByStudyTypeId(studyType_id);
+    }
+
+    @Override
     public Optional<Clinic> findById(int id){
         return clinicDao.findById(id);
     }
