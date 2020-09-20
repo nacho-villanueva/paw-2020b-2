@@ -11,4 +11,9 @@ public class UserDaoImpl  implements UserDao{
     public User findById(long id) {
         return new User(id, "PAW from DAO for " + id);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return new User(1, username); //TODO: everything, basically
+    }
 }

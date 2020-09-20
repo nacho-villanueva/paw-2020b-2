@@ -16,8 +16,12 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public User findById(long id) {
+    public User findById(final long id) {
         return userDao.findById(id);
-        // TODO : Make 4 realz
+    }
+
+    @Override
+    public User findByUsername(final String username) {
+        return userDao.findByUsername(username);
     }
 }
