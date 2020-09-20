@@ -26,15 +26,14 @@ public class DataController {
         if(studyString == null || studyString.isEmpty())
             return clinicService.getAllClinics();
 
-        long studyId;
+        int studyType_id;
 
         try{
-            studyId = Long.parseLong(studyString);
+            studyType_id = Integer.parseInt(studyString);
         }catch (NumberFormatException e){
             return null;
         }
 
-        // TODO replace with actual function that searches based on variable id
-        return clinicService.getAllClinics();
+        return clinicService.getByStudyTypeId(studyType_id);
     }
 }
