@@ -21,7 +21,7 @@ body {
 
 .main-container {
     position: relative;
-    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.5) 0%, rgba(119, 119, 119, 0.3) 100%);
+    background: linear-gradient(to bottom, rgba(225, 225, 225, 0.6) 0%, rgba(220, 220, 220, 0.3) 100%);
     background-size: cover;
 
     height: 100vh;
@@ -58,6 +58,7 @@ body {
     width: 40rem;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
+    height: 43em;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;

@@ -27,7 +27,7 @@ public class ClinicJdbcDao implements ClinicDao {
     private SimpleJdbcInsert jdbcInsertStudies;
 
     @Autowired
-    StudyTypeDao studyTypeDao;
+    private StudyTypeDao studyTypeDao;
 
     @Autowired
     public ClinicJdbcDao(DataSource ds) {
@@ -65,6 +65,19 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     @Override
+    public Collection<Clinic> getByStudyTypeId(final int studyType_id) {
+        Collection<Clinic> clinics = jdbcTemplate.query("SELECT c.user_id, c.name, email, telephone, verified FROM clinics c" +    //TODO
+                " INNER JOIN clinic_available_studies cs " +
+                " ON clinic_id = c.user_id" +
+                " INNER JOIN medical_studies s" +
+                " ON study_id = s.id AND s.id = ? WHERE c.verified = true", new Object[]{studyType_id}, CLINIC_ROW_MAPPER);
+
+        clinics.forEach(clinic -> {
+            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
+        });
+        return clinics;
+    }
+
     public Clinic register(final User user, final String name, final String email, final String telephone, final boolean verified, final Collection<StudyType> available_studies) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());

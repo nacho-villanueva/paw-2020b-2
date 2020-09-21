@@ -38,6 +38,10 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public StudyType registerStudyToClinic(int clinic_id, StudyType studyType) {
-        return clinicDao.registerStudyToClinic(clinic_id,studyType);
+        return clinicDao.registerStudyToClinic(clinic_id, studyType);
+    }
+    @Override
+    public Collection<Clinic> getByStudyTypeId(int studyType_id) {
+        return clinicDao.getByStudyTypeId(studyType_id);
     }
 }

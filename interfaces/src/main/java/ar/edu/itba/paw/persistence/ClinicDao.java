@@ -17,5 +17,7 @@ public interface ClinicDao {
 
     Clinic register(User user, String name, String email, String telephone, boolean verified, Collection<StudyType> available_studies);
 
+    Collection<Clinic> getByStudyTypeId(int studyType_id);
+
     StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
 }

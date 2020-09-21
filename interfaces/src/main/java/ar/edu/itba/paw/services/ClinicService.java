@@ -19,4 +19,6 @@ public interface ClinicService {
 
     StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
 
+    Collection<Clinic> getByStudyTypeId(int studyType_id);
+
 }

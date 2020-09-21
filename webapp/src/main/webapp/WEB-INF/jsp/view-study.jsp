@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/viewstudy.css"/>">
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
-<c:url value="/assets/image/" var="imageAssets"/>
+<c:url value="/api/image" var="imageAssets"/>
 <body>
 <div class="main-container">
     <%@include file="fragments/navbar-fragment.jsp"%>
@@ -29,7 +29,7 @@
 
                         </div>
                     </div>
-                    <hr class="mt-3 mb-2"/>
+                    <hr class="mt-5 mb-4"/>
                     <div class="row justify-content-start">
                         <div class="col type"><p class="type-title">Patient:</p>${order.patient.name}</div>
                         <div class="col type"><p class="type-title">Medical clinic:</p>${order.clinic.name}</div>
@@ -37,7 +37,7 @@
                         <div class="col type"><p class="type-title">Patient insurance plan:</p>${order.patient_insurance_plan}</div>
                         <div class="col type"><p class="type-title">Patient insurance number:</p>${order.patient_insurance_number}</div>
                     </div>
-                    <hr class="mt-3 mb-4"/>
+                    <hr class="mt-3 mb-5"/>
                     <p class="card-text text-center h5">Study type: ${order.study.name}</p>
                     <c:choose>
                         <c:when test="${order.description != null}">
@@ -50,7 +50,7 @@
                             <h5 class="mt-0 mb-1 text-center">${order.medic.name}</h5>
                             <p class="text-center">M.N.:${order.medic.licence_number}</p>
                         </div>
-                        <img src="${imageAssets}/order/${encodedId}/identification" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
+                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                     </div>
                 </div>
             </div>
@@ -60,9 +60,9 @@
                 <div class="card-body">
                     <p class="card-title h4">Results</p>
                     <c:choose>
-                        <c:when test="${results eq null}">
+                        <c:when test="${results.size() < 1}">
                             <div class="align-items-end result-not">
-                                <h1 class="text-center mt-6 py-6">It seems there are no results to show yet!</h1>
+                                <h1 class="text-center mt-5 py-5">It seems there are no results to show yet!</h1>
                             </div>
                         </c:when>
                         <c:otherwise>
@@ -93,14 +93,14 @@
                                                             <div class="col type"><p class="type-title">Medical clinic:</p>${order.clinic.name}</div>
                                                         </div>
                                                         <hr class="mt-3 mb-4 text-center"/>
-                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}/result-data" class="align-self-end ml-3" alt="/assets/image/result/${id}/result-data" style="max-height:14em; max-width:20em">
+                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data" class="align-self-end ml-3" alt="We failed to retrieve image" style="max-height:14em; max-width:20em">
                                                         <hr class="mt-5 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-1 text-center">${result.responsible_name}</h5>
                                                                 <p class="text-center">M.N.:${result.responsible_licence_number}</p>
                                                             </div>
-                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}/identification" class="ml-1" alt="/assets/image/result/${id}/identification" style="max-height: 5em;">
+                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="We failed to retrieve image" style="max-height: 5em;">
                                                         </div>
                                                     </div>
                                                 </div>
