@@ -12,6 +12,8 @@ public interface UserService {
 
     User register(String email, String password, int role);
 
+    User register(String email, String password);
+
     User updateRole(User user, int role);
 
 }

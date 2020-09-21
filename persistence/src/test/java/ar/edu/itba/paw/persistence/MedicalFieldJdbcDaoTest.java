@@ -55,10 +55,10 @@ public class MedicalFieldJdbcDaoTest {
     private static final int ROLE = 2;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    MedicalFieldJdbcDao dao;
+    private MedicalFieldJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;

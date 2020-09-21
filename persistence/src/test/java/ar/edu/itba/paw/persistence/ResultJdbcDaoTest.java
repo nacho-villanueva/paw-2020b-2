@@ -69,10 +69,10 @@ public class ResultJdbcDaoTest {
     private static final boolean TRUE = true;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    ResultJdbcDao dao;
+    private ResultJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertResults;

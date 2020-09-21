@@ -109,9 +109,9 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(NEW_ROLE,newUser.getRole());
     }
 
-    /*@Test(expected = NullPointerException.class)
+    /*@Test
     public void testUpdateRoleInvalidUser() {
-        dao.updateRole(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_ROLE);
+        dao.updateRole(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_ROLE);  //Does not fail, it updates nothing
     }*/
 
     private int insertTestUser() {

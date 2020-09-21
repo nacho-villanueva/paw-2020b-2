@@ -14,9 +14,10 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final static int BASIC_ROLE = 1;        //1 is for regular users
+
     @Autowired
     private UserDao userDao;
-
 
     @Override
     public Optional<User> findById(int id) {
@@ -26,6 +27,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);
+    }
+
+    @Override
+    public User register(String email, String password) {
+        return userDao.register(email,password,BASIC_ROLE);
     }
 
     @Override

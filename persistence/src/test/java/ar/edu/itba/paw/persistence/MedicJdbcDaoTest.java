@@ -59,10 +59,10 @@ public class MedicJdbcDaoTest {
 
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    MedicJdbcDao dao;
+    private MedicJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;

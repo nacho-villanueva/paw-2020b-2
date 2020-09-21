@@ -69,10 +69,10 @@ public class OrderJdbcDaoTest {
     private static final boolean TRUE = true;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    OrderJdbcDao dao;
+    private OrderJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertOrders;

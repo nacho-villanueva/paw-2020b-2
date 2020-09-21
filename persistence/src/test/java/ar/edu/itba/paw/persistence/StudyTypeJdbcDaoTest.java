@@ -48,10 +48,10 @@ public class StudyTypeJdbcDaoTest {
     private static final int ROLE = 3;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
-    StudyTypeJdbcDao dao;
+    private StudyTypeJdbcDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertStudies;
