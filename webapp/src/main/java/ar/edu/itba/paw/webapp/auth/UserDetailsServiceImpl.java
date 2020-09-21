@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -18,6 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserService us;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -30,6 +34,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
 
-        return new org.springframework.security.core.userdetails.User(username, "user.getPassword()", authorities);
+        return new org.springframework.security.core.userdetails.User(username, encoder.encode("foobar"), authorities);
     }
 }

@@ -31,24 +31,24 @@
             <div class="tab-content">
                 <div id="login" class="tab-pane fade in show active">
 
-                    <c:url var="login"  value="/login"/>
-                    <f:form action="${login}" method="post" class="form-signin" >
+                    <c:url value="/login" var="loginUrl" />
+                    <form action="${loginUrl}" method="post" class="form-signin" enctype="application/x-www-form-urlencoded" >
                         <fieldset class="form-group">
                             <label for="loginEmail" class="bmd-label-static">Email Address</label>
-                            <input type="email" class="form-control" id="loginEmail" placeholder="Email Address" path="TODO:placeholder1" />
+                            <input name="login_email" type="email" class="form-control" id="loginEmail" placeholder="Email Address"  />
                         </fieldset>
                         <fieldset class="form-group">
                             <label for="loginPassword" class="bmd-label-static">Password</label>
-                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" path="TODO:placeholder2"/>
+                            <input name="login_password" type="password" class="form-control" id="loginPassword" placeholder="Password"/>
                         </fieldset>
 
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" path="TODO:placeholder3"/> Stay Logged In
+                                <input name="rememberme" type="checkbox"/> Stay Logged In
                             </label>
                         </div>
                         <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Sign in">
-                    </f:form>
+                    </form>
                 </div>
 
 
