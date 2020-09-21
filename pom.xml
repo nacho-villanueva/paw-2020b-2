@@ -26,6 +26,7 @@
     <org.slf4j.version>1.7.5</org.slf4j.version>
     <logback.version>1.1.2</logback.version>
     <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
+    <jackson-databind.version>2.11.0</jackson-databind.version>
   </properties>
 
   <dependencyManagement>
@@ -141,6 +142,11 @@
         <artifactId>mail</artifactId>
         <version>${mail.version}</version>
         </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson-databind.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

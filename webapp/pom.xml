@@ -90,6 +90,10 @@
       <artifactId>spring-context-support</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>services</artifactId>
       <version>${project.parent.version}</version>

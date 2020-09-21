@@ -1,65 +1,99 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!doctype html>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-
-
-    <title>Home</title>
+    <%@ include file="fragments/include-header.jsp"%>
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/homepage.css"/>">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand ml-4" href="#"> <i class="fas fa-laptop-medical fa-lg"></i> MedTransfer</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="<c:url value="/" />">Home <span class="sr-only">(current)</span></a>
-            </li    >
-            <li class="nav-item">
-                <a class="nav-link" href="<c:url value="/create-order" />">Create a new order</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">View studies (WIP)</a>
-            </li>
-        </ul>
-        <span class="navbar-text">
-            <!--space for future user profile icon-->
-        </span>
-    </div>
-</nav>
-<div class="container">
-    <div class="jumbotron mt-4 mx-auto">
-        <h2 class="display-4">Your medical records, in your hand.</h2>
-        <h1>Anywhere. Anytime. Always.</h1>
-        <p class="lead">Your medics can now fill in their orders or upload results to studies into MedTransfer, and you get it
-         in your computer, phone or tablet.</p>
-        <hr class="my-4">
-        <p>Get notified and never lose another important file just because a piece of paper went missing.</p>
-        <p class="lead align-items-center text-center mt-4 mb-0">
-            <a class="btn btn-outline-primary btn-lg" href="<c:url value="/create-order" />" role="button"><i class="fas fa-file-medical-alt"></i> Create a new Order</a>
-        </p>
-    </div>
+<div class="main-container">
+    <%@include file="fragments/navbar-fragment.jsp"%>
 
+    <div class="card main-card bg-light">
+        <div class="card-body">
+            <h1 class="text-center text-highlight">Your medical records</h1>
+            <h4 class="text-center text-highlight">Anywhere. Anytime. Always.</h4>
+            <hr class="divider my-4">
+            <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-item nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                </li>
+            </ul>
+
+            <hr class="divider my-4">
+
+            <div class="tab-content">
+                <div id="login" class="tab-pane fade in show active">
+
+                    <c:url var="login"  value="/login"/>
+                    <f:form action="${login}" method="post" class="form-signin" >
+                        <fieldset class="form-group">
+                            <label for="loginEmail" class="bmd-label-static">Email Address</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Email Address" path="TODO:placeholder1" />
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="loginPassword" class="bmd-label-static">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" path="TODO:placeholder2"/>
+                        </fieldset>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" path="TODO:placeholder3"/> Stay Logged In
+                            </label>
+                        </div>
+                        <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Sign in">
+                    </f:form>
+                </div>
+
+
+
+                <div id="register" class="tab-pane fade">
+                    <form class="form-signin">
+                        <div class="row">
+                            <div class="col-2 m-0 p-0">
+                                <p>I am a:</p>
+                            </div>
+                            <div class="mb-0 toggle_radio text-center">
+                                <input type="radio" class="toggle_option" id="first_toggle" name="toggle_option">
+                                <input type="radio" checked class="toggle_option" id="second_toggle" name="toggle_option">
+                                <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option">
+                                <label for="first_toggle">Patient</label>
+                                <label for="second_toggle">Doctor</label>
+                                <label for="third_toggle">Clinic</label>
+                                <div class="toggle_option_slider">
+                                </div>
+                            </div>
+                        </div>
+
+                        <fieldset class="form-group">
+                            <label for="registerEmail" class="bmd-label-static">Email Address</label>
+                            <input type="email" class="form-control" id="registerEmail" placeholder="Email Address">
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label for="registerPassword" class="bmd-label-static">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label for="registerPasswordConfirm" class="bmd-label-static">Confirm Password</label>
+                            <input type="password" class="form-control" id="registerPasswordConfirm" placeholder="Confirm Password">
+                        </fieldset>
+                        <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Register">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
+<%@ include file="fragments/include-scripts.jsp"%>
 
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 </html>
