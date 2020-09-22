@@ -440,7 +440,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private String replaceOrderInfo(String mail, Order order){
         String ret = mail;
 
-        ret = ret.replaceAll("<replace-order-url/>",address.toString()+"/view/study/"+urlEncoderService.encode(order.getOrder_id()));
+        ret = ret.replaceAll("<replace-order-url/>",address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrder_id()));
         ret = ret.replaceAll("<replace-order-id/>",String.valueOf(order.getOrder_id()));
 
         ret = ret.replaceAll("<replace-patient-name/>",order.getPatient_name());
