@@ -83,8 +83,11 @@
                                                     <h5 class="mb-1">Study type: ${pat_study.study.name}</h5>
                                                     <small>Date: ${pat_study.date}</small>
                                                 </div>
-                                                <p class="mb-1">Clinic: ${pat_study.clinic.name}</p>
-                                                <small>Medic: ${pat_study.medic.name}</small>
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <p class="mb-1">Clinic: ${pat_study.clinic.name}</p>
+                                                    <small>Medic: ${pat_study.medic.name}</small>
+                                                </div>
+
                                             </a>
                                         </c:forEach>
                                     </div>
@@ -98,19 +101,21 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a medic, here are your medical studies</p>
                                     <div class="list-group">
-                                        <c:forEach items="${medic_studies}" var="med_study" varStatus="counter">
-                                            <a href="${studyPath}/${medic_encodeds[counter.index]}" class="list-group-item list-group-item-action">
+                                        <c:forEach items="${medic_studies}" var="med_study">
+                                            <a href="${studyPath}${medic_encodeds.get(med_study.order_id)}" class="list-group-item list-group-item-action">
                                                     <div class="d-flex w-100 justify-content-between">
                                                         <h5 class="mb-1">Study type: ${med_study.study.name}</h5>
                                                         <small>Date: ${med_study.date}</small>
                                                     </div>
-                                                    <p class="mb-1">Clinic: ${med_study.clinic.name}</p>
-                                                    <small>Patient: ${med_study.patient_name}</small>
-                                                </a>
-                                            </c:forEach>
-                                        </div>
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <p class="mb-1">Clinic: ${med_study.clinic.name}</p>
+                                                        <small>Patient: ${med_study.patient_name}</small>
+                                                    </div>
+                                            </a>
+                                        </c:forEach>
                                     </div>
                                 </div>
+                            </div>
                         </div>
                     </c:if>
                     <c:if test="${loggedUser.role ge 3}">
@@ -119,14 +124,17 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a clinic, here are your medical studies</p>
                                     <div class="list-group">
-                                        <c:forEach items="${clinic_studies}" var="cli_study" varStatus="counter">
-                                            <a href="${studyPath}/${clinic_encodeds[counter.index]}" class="list-group-item list-group-item-action">
+                                        <c:forEach items="${clinic_studies}" var="cli_study">
+                                            <a href="${studyPath}${clinic_encodeds.get(cli_study.order_id)}" class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
                                                     <h5 class="mb-1">Study type: ${cli_study.study.name}</h5>
                                                     <small>Date: ${cli_study.date}</small>
                                                 </div>
-                                                <p class="mb-1">Clinic: ${cli_study.clinic.name}</p>
-                                                <small>Patient: ${cli_study.patient_name}</small>
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <p class="mb-1">Clinic: ${cli_study.clinic.name}</p>
+                                                    <small>Patient: ${cli_study.patient_name}</small>
+                                                </div>
+
                                             </a>
                                         </c:forEach>
                                     </div>
