@@ -11,7 +11,7 @@
 <head>
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
-    <!--link rel="stylesheet" href="< !--c:url value="/resources/css/home.css"/>"-->
+    <link rel="stylesheet" href="<c:url value="/resources/css/home.css"/>">
     <title>MedTransfer</title>
 </head>
 <c:url value="/create-order" var="createPath"/>
@@ -20,16 +20,37 @@
 <div class="main-container">
     <%@include file="fragments/navbar-fragment.jsp"%>
     <div class="row justify-content-center">
-        <div class="my-4">
-            <p class="h4 lead">Welcome back, </p><p class="h4">${loggedUser.username}</p>
+
+        <div class="col">
+            <div class="my-4 py-5  float-right">
+                <p class="h4 lead">Welcome back, </p><p class="h4">${loggedUser.email}</p>
+            </div>
         </div>
-        <c:choose>
-            <c:when test="${loggedUser.role != 1}">
-                <div>
-                    <a href="${createPath}" class="btn create-btn mb-4" role="button">Create a new order</a>
+        <c:if test="${loggedUser.role eq 1}">
+            <div class="col">
+                <div class="float-left py-2 mx-2" style="margin-top: 2.5em;">
+                    <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
+                        <div class="my-4 py-5">
+                            <div>
+                                <a href="${createPath}" class="btn create-btn mb-4" role="button">Create a new order</a>
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${loggedUser.role eq 1}">
+                        <div class="mt-2">
+                            <div>
+                                <a href="${createPath}" class="btn create-btn" role="button">Apply as a Medic</a>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div>
+                                <a href="${createPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
+                            </div>
+                        </div>
+                    </c:if>
                 </div>
-            </c:when>
-        </c:choose>
+            </div>
+        </c:if>
 
     </div>
 
@@ -42,8 +63,7 @@
         </c:when>
         <c:otherwise>
             <div class="row">
-                <c:choose>
-                    <c:when test="${loggedUser.role >= 1}">
+                    <c:if test="${has_studies != true}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
@@ -63,8 +83,8 @@
                                 </div>
                             </div>
                         </div>
-                    </c:when>
-                    <c:when test="${loggedUser.role >= 2}">
+                    </c:if>
+                    <c:if test="${false != true}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
@@ -84,8 +104,8 @@
                                     </div>
                                 </div>
                         </div>
-                    </c:when>
-                    <c:when test="${loggedUser.role >= 3}">
+                    </c:if>
+                    <c:if test="${loggedUser.role eq 1}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
@@ -105,8 +125,7 @@
                                 </div>
                             </div>
                         </div>
-                    </c:when>
-                </c:choose>
+                    </c:if>
             </div>
         </c:otherwise>
     </c:choose>

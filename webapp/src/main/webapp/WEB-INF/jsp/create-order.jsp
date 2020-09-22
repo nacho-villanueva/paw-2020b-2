@@ -89,6 +89,7 @@
                 <c:url var="post_createorder"  value="/create-order"/>
                 <f:form action="${post_createorder}" method="post" modelAttribute="orderForm" enctype="multipart/form-data">
 
+                    <!--ya no se usa, el logged user es el medic -->
                     <label>Medic's Name</label>
                     <f:select cssClass="selectpicker" data-live-search="true" path="medicId">
                         <f:option value="-1" label="Choose Medic"/>
@@ -122,6 +123,8 @@
 
                     <label> Order Description <f:textarea rows="4" cols="50" path="description" /> </label>
                     <f:errors path="description" cssClass="error" /> <br>
+
+                    <!--ya no va identificacion, se carga solo desde la cuenta -->
                     <label> Medic Identification <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/> </label> <br>
                     <input type="submit" value="Create Order"/>
 
