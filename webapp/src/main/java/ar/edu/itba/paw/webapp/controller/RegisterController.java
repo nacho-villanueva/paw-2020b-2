@@ -18,7 +18,7 @@ public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm){
-        ModelAndView mav = new ModelAndView("redirect:/login");
+        ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
         User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
         //TODO Service: Generate LoginUserForm

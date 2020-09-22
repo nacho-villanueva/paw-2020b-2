@@ -57,4 +57,11 @@ public class UserJdbcDao implements UserDao{
 
         return new User(user.getId(), user.getEmail(), user.getPassword(), role);
     }
+
+    @Override
+    public User updatePassword(User user, String password) {
+        jdbcTemplate.update("UPDATE users Set password = ? WHERE id = ?", password, user.getId());
+
+        return new User(user.getId(), user.getEmail(), password, user.getRole());
+    }
 }
