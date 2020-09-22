@@ -71,7 +71,7 @@
         </c:when>
         <c:otherwise>
             <div class="row">
-                    <c:if test="${has_studies != true}">
+                    <c:if test="${loggedUser.role ge 1}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${false != true}">
+                    <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
@@ -113,7 +113,7 @@
                                 </div>
                         </div>
                     </c:if>
-                    <c:if test="${loggedUser.role eq 1}">
+                    <c:if test="${loggedUser.role ge 3}">
                         <div class="col">
                             <div class="card bg-light">
                                 <div class="card-body">
