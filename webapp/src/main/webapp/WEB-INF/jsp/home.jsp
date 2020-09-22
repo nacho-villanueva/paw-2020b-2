@@ -64,7 +64,7 @@
 
 
     <c:choose>
-        <c:when test="${has_studies eq true}">
+        <c:when test="${has_studies != true}">
             <div class="align-items-end result-not">
                 <h1 class="text-center mt-5 py-5">It seems there are no studies linked to your account right now.</h1>
             </div>
@@ -77,8 +77,8 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a patient, here are your medical studies</p>
                                     <div class="list-group">
-                                        <c:forEach items="${patient_studies}" var="pat_study" varStatus="counter">
-                                            <a href="${studyPath}/${patient_encodeds[counter.index]}" class="list-group-item list-group-item-action">
+                                        <c:forEach items="${patient_studies}" var="pat_study">
+                                            <a href="${studyPath}${patient_encodeds.get(pat_study.order_id)}" class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
                                                     <h5 class="mb-1">Study type: ${pat_study.study.name}</h5>
                                                     <small>Date: ${pat_study.date}</small>

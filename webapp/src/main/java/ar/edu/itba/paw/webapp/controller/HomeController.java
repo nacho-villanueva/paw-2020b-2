@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Controller
@@ -63,7 +65,8 @@ public class HomeController {
 
     private ModelAndView homeSetup(ModelAndView mav){
         Collection<Order> patient_studies, medic_studies, clinic_studies;
-        Collection<String> patient_encodeds = null, medic_encodeds = null, clinic_encodeds = null;
+
+        HashMap<Long, String> patient_encodeds = new HashMap<>(), medic_encodeds = new HashMap<>(), clinic_encodeds = new HashMap<>();
         clinic_studies = os.getAllAsClinic(loggedUser());
         medic_studies = os.getAllAsMedic(loggedUser());
         patient_studies = os.getAllAsPatient(loggedUser());
@@ -85,9 +88,9 @@ public class HomeController {
 
     }
 
-    private Collection<String> encoder(Collection<Order> orders, Collection<String> encodeds){
+    private HashMap<Long, String> encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
         for(Order order : orders){
-            encodeds.add(urlEncoderService.encode(order.getOrder_id()));
+            encodeds.put(order.getOrder_id(), urlEncoderService.encode(order.getOrder_id()));
         }
         return encodeds;
     }
