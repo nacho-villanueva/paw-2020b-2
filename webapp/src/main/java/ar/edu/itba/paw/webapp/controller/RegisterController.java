@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.Medic;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.services.MedicService;
-import ar.edu.itba.paw.services.MedicalFieldService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.form.ApplyClinicForm;
 import ar.edu.itba.paw.webapp.form.ApplyMedicForm;
 import ar.edu.itba.paw.webapp.form.RegisterUserForm;
 import com.sun.org.apache.xpath.internal.operations.Mod;
@@ -32,7 +32,13 @@ public class RegisterController {
     private MedicService ms;
 
     @Autowired
+    private ClinicService cs;
+
+    @Autowired
     private MedicalFieldService mfs;
+
+    @Autowired
+    private StudyTypeService sts;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm){
@@ -66,6 +72,23 @@ public class RegisterController {
         } catch (IOException e) {
             return "redirect:/index"; //TODO: RETURN 500 EXCEPTION PAGE
         }
+    }
+
+    @RequestMapping("/register-as-clinic")
+    public ModelAndView registerAsClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
+        final ModelAndView mav = new ModelAndView("clinic-registration");
+        mav.addObject("applyClinicForm", applyClinicForm);
+        mav.addObject("studiesList", sts.getAll());
+        return mav;
+    }
+
+    @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
+    public String applyClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(),
+                loggedUser().getEmail(), applyClinicForm.getTelephone(),
+                true, applyClinicForm.getAvailable_studies());
+
+        return "redirect:/home";
     }
 
     @ModelAttribute

@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <%@ include file="fragments/include-header.jsp"%>
@@ -24,23 +26,26 @@
     <div class="row justify-content-center">
         <h3>We need a couple more details.</h3>
     </div>
-    <form>
+
+    <c:url var="apply" value="/apply-as-clinic"/>
+    <f:form action="${apply}" method="post" modelAttribute="applyClinicForm">
         <fieldset class="form-group">
             <label for="clinicName" class="bmd-label-floating">Clinic's Name</label>
-            <input type="text" class="form-control" id="clinicName">
+            <f:input type="text" class="form-control" id="clinicName" path="name"/>
         </fieldset>
         <fieldset class="form-group row">
             <label for="phoneNumber" class="bmd-label-floating">Phone Number</label>
-            <input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+">
+            <f:input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+" path="telephone"/>
             <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
         </fieldset>
-        <fieldset class="mt-4 form-group">
-            <label for="identificationFile" class="bmd-label-floating">Seal and Signature</label>
-            <input type="file" class="form-control-file" id="identificationFile">
-            <small class="text-muted">The seal and signature should be visible.</small>
-        </fieldset>
+
+        <label>Study Types </label>
+        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" >
+            <f:option value="-1" label="Choose your fields"/>
+            <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
+        </f:select>
         <input type="submit" value="Continue" class="row btn btn-lg btn-light  bg-primary btn-block">
-    </form>
+    </f:form>
 </div>
 
 
