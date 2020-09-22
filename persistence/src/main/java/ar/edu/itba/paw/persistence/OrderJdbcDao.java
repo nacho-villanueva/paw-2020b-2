@@ -52,7 +52,7 @@ public class OrderJdbcDao implements OrderDao {
    public Optional<Order> findById(long id) {
 
        //To make code less confusing, we name the sql query
-       String sqlQuery = "select o.id as order_id, date, patient_email, patient_name, medic_plan, medic_plan_number, identification_type, identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join medics m on o.medic_id = m.user_id inner join clinics c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id where o.id = ?" ;
+       String sqlQuery = "select o.id as order_id, o.date, patient_email, patient_name, medic_plan, medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join medics m on o.medic_id = m.user_id inner join clinics c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id where o.id = ?" ;
 
        Optional<Order> order = jdbcTemplate.query(sqlQuery, new Object[]{ id }, ORDER_ROW_MAPPER).stream().findFirst();
 
