@@ -5,6 +5,15 @@ delete from medic_medical_fields;
 delete from medics;
 delete from medical_fields;
 
+insert into users(email,password,role) values ('gjhonson@medtransfer.com','gjhonsonPass',1),
+                                              ('etawara@itba.edu.ar','etawaraPass',1),
+                                              ('crojas@itba.edu.ar','crojasPass',1),
+                                              ('ivillanueva@itba.edu.ar','ivillanuevaPass',1),
+                                              ('inclan@medtransfer.com','inclanPass',1),
+                                              ('unimed@medtransfer.com','unimedPass',1),
+                                              ('mricarte@itba.edu.ar','mricartePass',1);
+
+
 insert into medics(name,email,telephone,licence_number) values ('Gus Jhonson','gjhonson@medtransfer.com','+5491139588681','A28-674998236G');
 insert into medics(name,email,telephone,licence_number) values ('Henry Hakase','etawara@itba.edu.ar','+5491180247816','A47-79862417H');
 insert into medics(name,email,telephone,licence_number) values ('Zero Ullr', 'crojas@itba.edu.ar','+5491124000761','Z69-04200000U');

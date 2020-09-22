@@ -41,10 +41,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         String url = address.toString();
 
-        String patientMail  = order.getPatient().getEmail();
+        String patientMail  = order.getPatient_email();
         String doctorMail   = order.getMedic().getEmail();
         String clinicMail   = order.getClinic().getEmail();
-        String patientName  = order.getPatient().getName();
+        String patientName  = order.getPatient_name();
         String doctorName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
         String orderID      = String.valueOf(order.getOrder_id());
@@ -76,10 +76,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
             Order order = resultOrder.get();
 
-            String patientMail  = order.getPatient().getEmail();
+            String patientMail  = order.getPatient_email();
             String doctorMail   = order.getMedic().getEmail();
             String clinicMail   = order.getClinic().getEmail();
-            String patientName  = order.getPatient().getName();
+            String patientName  = order.getPatient_name();
             String doctorName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
             String orderID      = String.valueOf(order.getOrder_id());

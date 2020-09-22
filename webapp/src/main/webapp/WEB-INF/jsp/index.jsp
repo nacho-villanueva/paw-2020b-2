@@ -54,38 +54,23 @@
 
 
                 <div id="register" class="tab-pane fade">
-                    <form class="form-signin">
-                        <div class="row">
-                            <div class="col-2 m-0 p-0">
-                                <p>I am a:</p>
-                            </div>
-                            <div class="mb-0 toggle_radio text-center">
-                                <input type="radio" class="toggle_option" id="first_toggle" name="toggle_option">
-                                <input type="radio" checked class="toggle_option" id="second_toggle" name="toggle_option">
-                                <input type="radio" class="toggle_option" id="third_toggle" name="toggle_option">
-                                <label for="first_toggle">Patient</label>
-                                <label for="second_toggle">Doctor</label>
-                                <label for="third_toggle">Clinic</label>
-                                <div class="toggle_option_slider">
-                                </div>
-                            </div>
-                        </div>
-
+                    <c:url var="register"  value="/register"/>
+                    <f:form action="${register}" class="form-signin" modelAttribute="registerUserForm" method="post">
                         <fieldset class="form-group">
                             <label for="registerEmail" class="bmd-label-static">Email Address</label>
-                            <input type="email" class="form-control" id="registerEmail" placeholder="Email Address">
+                            <f:input type="email" path="email" cssClass="form-control" id="registerEmail" required="required" placeholder="Email Address" />
                         </fieldset>
 
                         <fieldset class="form-group">
                             <label for="registerPassword" class="bmd-label-static">Password</label>
-                            <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+                            <f:input type="password" path="password" cssClass="form-control" id="registerPassword" required="required" placeholder="Password" />
                         </fieldset>
                         <fieldset class="form-group">
                             <label for="registerPasswordConfirm" class="bmd-label-static">Confirm Password</label>
-                            <input type="password" class="form-control" id="registerPasswordConfirm" placeholder="Confirm Password">
+                            <f:input type="password" path="confirmPassword" cssClass="form-control" required="required" id="registerPasswordConfirm" placeholder="Confirm Password" />
                         </fieldset>
                         <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Register">
-                    </form>
+                    </f:form>
                 </div>
             </div>
         </div>

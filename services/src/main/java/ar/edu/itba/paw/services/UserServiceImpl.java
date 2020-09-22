@@ -8,20 +8,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final static int BASIC_ROLE = 1;        //1 is for regular users
 
     @Autowired
     private UserDao userDao;
 
     @Override
-    public User findById(final long id) {
+
+    public Optional<User> findById(int id) {
         return userDao.findById(id);
     }
 
     @Override
-    public User findByUsername(final String username) {
-        return userDao.findByUsername(username);
+    public Optional<User> findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
+    public User register(String email, String password) {
+        return userDao.register(email,password,BASIC_ROLE);
+    }
+
+    @Override
+    public User register(String email, String password, int role) {
+        return userDao.register(email,password,role);
+    }
+
+    @Override
+    public User updateRole(User user, int role) {
+        return userDao.updateRole(user,role);
     }
 }

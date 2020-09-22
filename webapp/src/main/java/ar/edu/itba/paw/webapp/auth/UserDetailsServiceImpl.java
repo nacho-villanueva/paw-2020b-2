@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,7 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final User user = us.findByUsername(username); //TODO: this should be an optional
+        final Optional<User> user = us.findByEmail(username); //TODO: this should be an optional
+
+        if(!user.isPresent()) {
+            //TODO see what to do
+        }
 
         //TODO: Assign roles based on the username data provided
         final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
@@ -34,6 +39,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
 
-        return new org.springframework.security.core.userdetails.User(username, encoder.encode("foobar"), authorities);
+        return new org.springframework.security.core.userdetails.User(username, encoder.encode(user.get().getPassword()), authorities);
     }
 }
