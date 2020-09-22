@@ -56,7 +56,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .defaultSuccessUrl("/home", false)
                     .loginPage("/")
                     .loginProcessingUrl("/login")
-                    .failureUrl("/?error=true")
+                    .failureUrl("/?error=true")         //TODO: see way to get more detailed information
                 .and().rememberMe()
                     .rememberMeParameter("rememberme")
                     .userDetailsService(userDetailsService)

@@ -14,7 +14,7 @@ public class ErrorController {
     public ModelAndView forbidden() {
         final ModelAndView mav = new ModelAndView("error");
         mav.addObject("errorNumber", HttpStatus.FORBIDDEN.value());
-        mav.addObject("errorText","Youuuuu shall not paaasssssss!\n-Angry Gandalf Noises-");
+        mav.addObject("errorText","You seem to not have the permission to enter this site, please enter with the proper user");
         return mav;
     }
 }
