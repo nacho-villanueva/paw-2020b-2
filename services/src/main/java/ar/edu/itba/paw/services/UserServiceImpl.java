@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,8 +20,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Override
+    @Autowired
+    private PasswordEncoder encoder;
 
+    @Override
     public Optional<User> findById(int id) {
         return userDao.findById(id);
     }
@@ -32,12 +35,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password) {
-        return userDao.register(email,password,BASIC_ROLE);
+        return userDao.register(email,encoder.encode(password),BASIC_ROLE);
     }
 
     @Override
     public User register(String email, String password, int role) {
-        return userDao.register(email,password,role);
+        return userDao.register(email,encoder.encode(password),role);
     }
 
     @Override

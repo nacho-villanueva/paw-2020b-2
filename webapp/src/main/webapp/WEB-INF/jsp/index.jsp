@@ -47,6 +47,10 @@
                                 <input name="rememberme" type="checkbox"/> Stay Logged In
                             </label>
                         </div>
+                        <div>
+                            <c:if test="${loginError}"><label>There was an error in the login process, please try again</label></c:if>
+                            <c:if test="${registrationSuccess}"><label>Registration successful, please log in</label></c:if>
+                        </div>
                         <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Sign in">
                     </form>
                 </div>

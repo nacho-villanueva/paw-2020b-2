@@ -11,12 +11,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
+
+    private static final int USER_ROLE_ID = 1;
+    private static final int MEDIC_ROLE_ID = 2;
+    private static final int CLINIC_ROLE_ID = 3;
+    private static final int CLINIC_MEDIC_ROLE_ID = 4;
+    private static final int ADMIN_ROLE_ID = 0;
 
     @Autowired
     private UserService us;
@@ -25,20 +29,34 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private PasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final Optional<User> user = us.findByEmail(username); //TODO: this should be an optional
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        final User user = us.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email + "not found"));
 
-        if(!user.isPresent()) {
-            //TODO see what to do
+        final Collection<GrantedAuthority> authorities = new HashSet<>();
+
+        switch (user.getRole()) {
+            case MEDIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
+                break;
+            case CLINIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
+                break;
+            case CLINIC_MEDIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
+                break;
+            case ADMIN_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                break;
+            case USER_ROLE_ID:
+            default:
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
         }
-
-        //TODO: Assign roles based on the username data provided
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"));//,
-                //new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
 
-        return new org.springframework.security.core.userdetails.User(username, encoder.encode(user.get().getPassword()), authorities);
+        return new org.springframework.security.core.userdetails.User(email, user.getPassword(), authorities);
     }
 }

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import ar.edu.itba.paw.webapp.form.RegisterUserForm;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.jws.WebParam;
@@ -26,9 +23,13 @@ public class HomeController {
     private UserService us;
 
     @RequestMapping("/")
-    public ModelAndView home(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm) {
+    public ModelAndView home(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm,
+                             @RequestParam(value = "error", required = false) boolean loginError,
+                             @RequestParam(value = "registrationSuccess", required = false) boolean registrationSuccess) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("registerUserForm", registerUserForm);
+        mav.addObject("loginError", loginError);
+        mav.addObject("registrationSuccess", registrationSuccess);
         return mav;
     }
 
