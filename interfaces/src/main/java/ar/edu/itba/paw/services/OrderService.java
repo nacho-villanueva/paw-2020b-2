@@ -8,14 +8,6 @@ import java.util.Optional;
 public interface OrderService {
     public Optional<Order> findById(long id);
 
-    public Order register(final Medic medic,
-                          final Date date,
-                          final Clinic clinic,
-                          final Patient patient,
-                          final StudyType studyType,
-                          final String description,
-                          final String identification_type,
-                          final byte[] identification,
-                          final String medic_plan,
-                          final String medic_plan_number);
+    Order register(Medic medic, Date date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identification_type, byte[] identification, String medic_plan, String medic_plan_number);
+
 }

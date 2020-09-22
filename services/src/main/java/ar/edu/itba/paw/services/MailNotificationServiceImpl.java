@@ -82,11 +82,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     public void sendOrderMail(Order order) {
 
-        String patientMail  = order.getPatient().getEmail();
-        String medicMail    = order.getMedic().getEmail();
+        String patientMail  = order.getPatient_email();
+        String medicMail   = order.getMedic().getEmail();
         String clinicMail   = order.getClinic().getEmail();
-        String patientName  = order.getPatient().getName();
-        String medicName    = order.getMedic().getName();
+        String patientName  = order.getPatient_name();
+        String medicName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
 
         if(this.useHTML){
@@ -196,11 +196,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         if(resultOrder.isPresent()){
 
             Order order = resultOrder.get();
-
-            String patientMail  = order.getPatient().getEmail();
+            String patientMail  = order.getPatient_email();
             String medicMail   = order.getMedic().getEmail();
             String clinicMail   = order.getClinic().getEmail();
-            String patientName  = order.getPatient().getName();
+            String patientName  = order.getPatient_name();
             String medicName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
 
@@ -324,7 +323,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         ret = ret.replaceAll("<replace-order-url/>",address.toString()+"/view/study/"+urlEncoderService.encode(order.getOrder_id()));
         ret = ret.replaceAll("<replace-order-id/>",String.valueOf(order.getOrder_id()));
-        ret = replacePatientInfo(ret, order.getPatient());
+
+        ret = ret.replaceAll("<replace-patient-name/>",order.getPatient_name());
+        ret = ret.replaceAll("<replace-patient-email/>",order.getPatient_email());
+
         ret = replaceMedicInfo(ret, order.getMedic());
         ret = replaceClinicInfo(ret, order.getClinic());
 
@@ -340,14 +342,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         return ret;
     }
 
-    private String replacePatientInfo(String mail, Patient patient){
-        String ret = mail;
-
-        ret = ret.replaceAll("<replace-patient-name/>",patient.getName());
-        ret = ret.replaceAll("<replace-patient-email/>",patient.getEmail());
-
-        return ret;
-    }
 
     private String replaceMedicInfo(String mail, Medic medic){
         String ret = mail;

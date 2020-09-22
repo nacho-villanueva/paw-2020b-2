@@ -27,7 +27,7 @@ public class DataController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
         if(studyString == null || studyString.isEmpty())
-            return new ResponseEntity<>(clinicService.getAllClinics(),headers,HttpStatus.OK);
+            return new ResponseEntity<>(clinicService.getAll(),headers,HttpStatus.OK);
 
         int studyType_id;
 
