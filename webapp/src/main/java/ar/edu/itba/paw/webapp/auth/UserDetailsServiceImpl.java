@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -27,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
@@ -56,7 +59,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
+        final String password;
+        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
+            User newUser = us.updatePassword(user, user.getPassword());
+            password = newUser.getPassword();
+        } else {
+            password = user.getPassword();
+        }
 
-        return new org.springframework.security.core.userdetails.User(email, user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(email, password, authorities);
     }
 }

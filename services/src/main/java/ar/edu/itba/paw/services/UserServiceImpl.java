@@ -47,4 +47,9 @@ public class UserServiceImpl implements UserService {
     public User updateRole(User user, int role) {
         return userDao.updateRole(user,role);
     }
+
+    @Override
+    public User updatePassword(User user, String password) {
+        return userDao.updatePassword(user,encoder.encode(password));
+    }
 }
