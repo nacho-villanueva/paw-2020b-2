@@ -16,41 +16,49 @@
 </head>
 <c:url value="/create-order" var="createPath"/>
 <c:url value="/view-study/" var="studyPath"/>
+<c:url value="/logout" var="logoutPath"/>
 <body>
 <div class="main-container">
     <%@include file="fragments/navbar-fragment.jsp"%>
     <div class="row justify-content-center">
 
-        <div class="col">
+        <div class="col-sm-3">
             <div class="my-4 py-5  float-right">
                 <p class="h4 lead">Welcome back, </p><p class="h4">${loggedUser.email}</p>
             </div>
         </div>
-        <c:if test="${loggedUser.role eq 1}">
-            <div class="col">
-                <div class="float-left py-2 mx-2" style="margin-top: 2.5em;">
-                    <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
-                        <div class="my-4 py-5">
-                            <div>
-                                <a href="${createPath}" class="btn create-btn mb-4" role="button">Create a new order</a>
-                            </div>
+        <div class="col-sm-1">
+            <div class="py-2 mx-2" style="margin-top: 2.5em;">
+                <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
+                    <div class=" mt-2 mb-3 pb-4">
+                        <div>
+                            <a href="${createPath}" class="btn create-btn mb-4" role="button">Create a new order</a>
                         </div>
-                    </c:if>
-                    <c:if test="${loggedUser.role eq 1}">
-                        <div class="mt-2">
-                            <div>
-                                <a href="${createPath}" class="btn create-btn" role="button">Apply as a Medic</a>
-                            </div>
+                    </div>
+                </c:if>
+                <c:if test="${loggedUser.role eq 1}">
+                    <div class="mt-2">
+                        <div>
+                            <a href="${createPath}" class="btn create-btn" role="button">Apply as a Medic</a>
                         </div>
-                        <div class="mb-2">
-                            <div>
-                                <a href="${createPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
-                            </div>
+                    </div>
+                    <div class="mb-2">
+                        <div>
+                            <a href="${createPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
                         </div>
-                    </c:if>
-                </div>
+                    </div>
+                </c:if>
             </div>
-        </c:if>
+        </div>
+        <div class="col-sm-3">
+            <div class="mx-5" style="margin-top: 3.5em;">
+                    <div class="ml-4">
+                        <div>
+                            <a href="${logoutPath}" class="btn create-btn mb-4" role="button">Logout</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
 
     </div>
 
