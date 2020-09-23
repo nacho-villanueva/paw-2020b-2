@@ -40,6 +40,9 @@ public class OrderController {
     @Autowired
     private UserService us;
 
+    @Autowired
+    private ValidationService vs;
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getOrderCreationForm() {
         final ModelAndView mav = new ModelAndView("create-order");
@@ -64,6 +67,13 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String createOrder(@ModelAttribute OrderForm orderForm, @RequestParam("orderAttach") MultipartFile file, BindingResult bindingResult) {
+        //TODO: change for proper validations
+        if(!vs.isValidEmail(orderForm.getPatientEmail())
+                || !vs.isValidMedicPlan(orderForm.getPatient_insurance_plan())
+                || !vs.isValidMedicPlanNumber(orderForm.getPatient_insurance_number())
+                || !vs.isValidName(orderForm.getPatientName())) {
+            return "/create-order";
+        }
 
         if (bindingResult.hasErrors() && !medicService.findByUserId(loggedUser().getId()).isPresent()) {
 
