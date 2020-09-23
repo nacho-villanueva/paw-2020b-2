@@ -32,7 +32,7 @@
         <div class="col-sm-1">
             <div class="py-2 mx-2" style="margin-top: 2.5em;">
                 <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
-                    <div class=" mt-2 mb-3 pb-4">
+                    <div class="mt-2">
                         <div>
                             <a href="${createPath}" class="btn create-btn mb-4" role="button">Create a new order</a>
                         </div>
