@@ -1,13 +1,22 @@
 package ar.edu.itba.paw.webapp.form;
 
-import javax.jws.soap.SOAPBinding;
+import ar.edu.itba.paw.webapp.form.validators.UserNotExist;
+import org.hibernate.validator.constraints.Email;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class RegisterUserForm {
 
     private Integer userType;
+
+    @UserNotExist
+    @Email
     private String email;
+
+    @NotNull
+    @Size(min = 6, max = 100)
     private String password;
-    private String confirmPassword;
 
     public RegisterUserForm(){
 
@@ -35,13 +44,5 @@ public class RegisterUserForm {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 }

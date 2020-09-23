@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 @Controller
 public class RegisterController {
@@ -42,7 +45,13 @@ public class RegisterController {
     private MailNotificationService mns;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm){
+    public ModelAndView register(@Valid @ModelAttribute("registerUserForm") RegisterUserForm registerUserForm, final BindingResult errors){
+        if(errors.hasErrors()){
+            ModelAndView registrationErrors = new ModelAndView("index");
+            registrationErrors.addObject("registration", true);
+            return registrationErrors;
+        }
+
         ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
         User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
