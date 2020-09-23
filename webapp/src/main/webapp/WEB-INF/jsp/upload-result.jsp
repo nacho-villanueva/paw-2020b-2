@@ -23,7 +23,7 @@
                 <hr class="mt-3 mb-4"/>
                 <div class="row justify-content-start">
                     <div class="col type"><p class="type-title">Order Number:</p>${id}</div>
-                    <div class="col type"><p class="type-title">Patient:</p>${order.patient.name}</div>
+                    <div class="col type"><p class="type-title">Patient:</p>${order.patient_name}</div>
                     <div class="w-100"></div>
                     <div class="col"><p class="type-title">Patient Insurance Plan:</p>${order.patient_insurance_plan}</div>
                     <div class="col"><p class="type-title">Patient Insurance Number:</p>${order.patient_insurance_number}</div>
