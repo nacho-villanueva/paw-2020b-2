@@ -5,6 +5,7 @@ import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.ResultForm;
 import ar.edu.itba.paw.services.OrderService;
+import ar.edu.itba.paw.services.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,9 @@ public class ResultUploadController {
 
     @Autowired
     private UrlEncoderService urlEncoderService;
+
+    @Autowired
+    private ValidationService vs;
 
     private long orderId;
 
@@ -57,6 +61,9 @@ public class ResultUploadController {
 
     @RequestMapping(value = "/result-uploaded", method = RequestMethod.POST)
     public String submit(@ModelAttribute ResultForm resultForm, @RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign, BindingResult bindingResult) {
+        if(!vs.isValidLicenceNumber(resultForm.getResponsible_licence_number()) || !vs.isValidName(resultForm.getResponsible_name())) {
+            return "index";
+        }
 
         if(bindingResult.hasErrors()){
             return "index"; //There should be a way to validate and show errors on the form...
