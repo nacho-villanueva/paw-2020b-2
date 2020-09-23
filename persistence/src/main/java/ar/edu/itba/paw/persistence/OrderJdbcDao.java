@@ -19,23 +19,17 @@ public class OrderJdbcDao implements OrderDao {
                     new Medic(rs.getInt("medic_id"),
                             rs.getString("medic_name"),
                             rs.getString("medic_email"),
-                            rs.getString("medic_telephone"),
-                            rs.getString("medic_licence_number")),
+                            rs.getString("licence_number")),
                     rs.getDate("date"),
                     new Clinic(rs.getInt("clinic_id"),
                             rs.getString("clinic_name"),
-                            rs.getString("clinic_email"),
-                            rs.getString("clinic_telephone")),
-                    new StudyType(rs.getInt("study_id"),
-                            rs.getString("study_name")),
+                            rs.getString("clinic_email")),
+                    new StudyType(rs.getInt("study_id"),rs.getString("study_name")),
                     rs.getString("description"),
                     rs.getString("identification_type"),
                     rs.getBytes("identification"),
-                    rs.getString("medic_plan"),
-                    rs.getString("medic_plan_number"),
-                    new Patient(rs.getInt("patient_id"),
-                            rs.getString("patient_email"),
-                            rs.getString("patient_name")));
+                    rs.getString("medic_plan"),rs.getString("medic_plan_number"),
+                    rs.getString("patient_email"),rs.getString("patient_name"));
 
    @Autowired
    ResultDao resultDao;
@@ -58,15 +52,7 @@ public class OrderJdbcDao implements OrderDao {
    public Optional<Order> findById(long id) {
 
        //To make code less confusing, we name the sql query
-       String sqlQuery = "select order_id, medic_id, medic_name, medic_email, medic_telephone, medic_licence_number, patient_id, patient_name, patient_email, clinic_id, clinic_name, clinic_email, clinic_telephone, medical_studies.name as study_name, study_id, date, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select clinics.name as clinic_name, clinics.email as clinic_email, clinics.telephone as clinic_telephone, medic_name, medic_email, medic_telephone, medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select medics.name as medic_name, medics.email as medic_email, medics.telephone as medic_telephone, medics.licence_number as medic_licence_number, order_id, patient_name, patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "(select medical_orders.id as order_id, patients.name as patient_name, patients.email as patient_email, medic_id, date, clinic_id, patient_id, study_id, description, identification_type, identification, medic_plan, medic_plan_number from " +
-               "medical_orders join patients " +
-               "on patient_id = patients.id and medical_orders.id = ?) as order_patient join medics " +
-               "on medic_id = medics.id) as order_medic join clinics " +
-               "on clinic_id = clinics.id) as order_clinic join medical_studies " +
-               "on study_id = medical_studies.id";
+       String sqlQuery = "select o.id as order_id, o.date, patient_email, patient_name, medic_plan, medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join medics m on o.medic_id = m.user_id inner join clinics c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id where o.id = ?" ;
 
        Optional<Order> order = jdbcTemplate.query(sqlQuery, new Object[]{ id }, ORDER_ROW_MAPPER).stream().findFirst();
 
@@ -82,15 +68,13 @@ public class OrderJdbcDao implements OrderDao {
    }
 
    @Override
-   public Order register(final Medic medic, final Date date, final Clinic clinic, final Patient patient, final StudyType studyType, final String description, final String identification_type, final byte[] identification, final String medic_plan, final String medic_plan_number) {
-       //When creating an order, all the info is guaranteed to already exist (since they are choosing from the list of available info) except for patient info, so lets see if patient exists already or not
-       Patient patientFromDB = patientDao.findOrRegister(patient.getEmail(), patient.getName());
-
+   public Order register(final Medic medic, final Date date, final Clinic clinic, final String patient_name, final String patient_email, final StudyType studyType, final String description, final String identification_type, final byte[] identification, final String medic_plan, final String medic_plan_number) {
        Map<String, Object> insertMap = new HashMap<>();
-       insertMap.put("medic_id", medic.getId());
+       insertMap.put("medic_id", medic.getUser_id());
        insertMap.put("date", date);
-       insertMap.put("clinic_id", clinic.getId());
-       insertMap.put("patient_id", patientFromDB.getId());
+       insertMap.put("clinic_id", clinic.getUser_id());
+       insertMap.put("patient_name", patient_name);
+       insertMap.put("patient_email", patient_email);
        insertMap.put("study_id", studyType.getId());
        insertMap.put("description", description);
        insertMap.put("identification_type", identification_type);
@@ -102,6 +86,6 @@ public class OrderJdbcDao implements OrderDao {
 
        //Todo: check success
 
-       return new Order(key.longValue(),medic, date, clinic, studyType,description,identification_type,identification,medic_plan,medic_plan_number,patientFromDB);
+       return new Order(key.longValue(),medic,date,clinic,studyType,description,identification_type,identification,medic_plan,medic_plan_number,patient_email,patient_name);
    }
 }

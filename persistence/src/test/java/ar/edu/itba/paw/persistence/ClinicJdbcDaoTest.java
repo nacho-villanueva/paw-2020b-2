@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,8 +24,16 @@ import java.util.*;
 @ContextConfiguration(classes = TestConfig.class)
 public class ClinicJdbcDaoTest {
 
-    private static final String TABLE_NAME = "clinics";
-    private static final String RELATION_TABLE_NAME = "clinic_available_studies";
+    //TABLE NAMES
+    private static final String USERS_TABLE_NAME = "users";
+    private static final String CLINICS_TABLE_NAME = "clinics";
+    private static final String CLINICS_RELATION_TABLE_NAME = "clinic_available_studies";
+    private static final String MEDICS_TABLE_NAME = "medics";
+    private static final String MEDICS_RELATION_TABLE_NAME = "medic_medical_fields";
+    private static final String PATIENTS_TABLE_NAME = "patients";
+    private static final String ORDERS_TABLE_NAME = "medical_orders";
+    private static final String RESULTS_TABLE_NAME = "results";
+
     private static final String NAME = "Zero's Clinic";
     private static final String NAME_ALT = "One's Clinic";
     private static final String EMAIL = "clinic@zero.com";
@@ -33,6 +42,13 @@ public class ClinicJdbcDaoTest {
     private static final String STUDY_NAME = "MRA";
     private static final String STUDY_NAME_ALT = "Colonoscopy";
     private static final int ZERO_ID = 0;
+    private static final boolean TRUE = true;
+
+    //USER INFO
+    private static final String USER_EMAIL = "patient@zero.com";
+    private static final String USER_EMAIL_ALT = "patient@one.com";
+    private static final String PASSWORD = "GroundZer0";
+    private static final int ROLE = 3;
 
 
     @Autowired
@@ -43,24 +59,33 @@ public class ClinicJdbcDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert jdbcInsertUsers;
     private Collection<StudyType> available_studies;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName(TABLE_NAME)
+                .withTableName(CLINICS_TABLE_NAME);
+        jdbcInsertUsers = new SimpleJdbcInsert(ds)
+                .withTableName(USERS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,RELATION_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_RELATION_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_RELATION_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);
     }
 
     @Test
-    public void testFindByIdExists() {
+    public void testFindByUserIdExists() {
         int dbkey = insertTestClinic();
 
-        final Optional<Clinic> maybeClinic = dao.findById(dbkey);
+        final Optional<Clinic> maybeClinic = dao.findByUserId(dbkey);
 
         Assert.assertNotNull(maybeClinic);
         Assert.assertTrue(maybeClinic.isPresent());
@@ -68,8 +93,8 @@ public class ClinicJdbcDaoTest {
     }
 
     @Test
-    public void testFindByIdNotExists() {
-        final Optional<Clinic> maybeClinic = dao.findById(ZERO_ID);
+    public void testFindByUserIdNotExists() {
+        final Optional<Clinic> maybeClinic = dao.findByUserId(ZERO_ID);
 
         Assert.assertNotNull(maybeClinic);
         Assert.assertFalse(maybeClinic.isPresent());
@@ -104,7 +129,7 @@ public class ClinicJdbcDaoTest {
 
         Assert.assertNotNull(study);
         Assert.assertEquals(STUDY_NAME, study.getName());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,RELATION_TABLE_NAME));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,CLINICS_RELATION_TABLE_NAME));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -116,39 +141,55 @@ public class ClinicJdbcDaoTest {
 
     @Test
     public void testRegisterValid() {
+        int userkey = insertTestUser(USER_EMAIL);
         available_studies = new ArrayList<>();
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME));
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME_ALT));
 
-        final Clinic clinic = dao.register(NAME,EMAIL,TELEPHONE,available_studies);
+        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,TRUE,available_studies);
 
-        Assert.assertNotNull(clinic);
-        Assert.assertEquals(NAME, clinic.getName());
         Assert.assertFalse(clinic.getMedical_studies().isEmpty());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, TABLE_NAME));
+        StudyType study = clinic.getMedical_studies().stream().findFirst().get();
+        Assert.assertTrue(study.getName().equals(STUDY_NAME) || study.getName().equals(STUDY_NAME_ALT));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
     }
 
     @Test(expected = DuplicateKeyException.class)
     public void testRegisterAlreadyExists() {
-        insertTestClinic();
+        int userkey = insertTestClinic();
 
-        dao.register(NAME, EMAIL, TELEPHONE, new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,TRUE,new ArrayList<>());
     }
 
-    private int insertClinic(String name, String email) {
+    private int insertClinic(int user_id, String name, String email) {
         Map<String,Object> insertMap = new HashMap<>();
+        insertMap.put("user_id", user_id);
         insertMap.put("name", name);
         insertMap.put("email", email);
         insertMap.put("telephone", TELEPHONE);
-        return jdbcInsert.executeAndReturnKey(insertMap).intValue();
+        insertMap.put("verified", TRUE);
+        jdbcInsert.execute(insertMap);
+        return user_id;
     }
 
     private int insertTestClinic() {
-        return insertClinic(NAME, EMAIL);
+        int userkey = insertTestUser(USER_EMAIL);
+        return insertClinic(userkey, NAME, EMAIL);
     }
 
     private void insertMultipleTestClinic() {
-        insertClinic(NAME, EMAIL);
-        insertClinic(NAME_ALT, EMAIL_ALT);
+        int userkey = insertTestUser(USER_EMAIL);
+        insertClinic(userkey, NAME, EMAIL);
+        userkey = insertTestUser(USER_EMAIL_ALT);
+        insertClinic(userkey, NAME_ALT, EMAIL_ALT);
+    }
+
+    private int insertTestUser(final String email) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("email", email);
+        insertMap.put("password", PASSWORD);
+        insertMap.put("role", ROLE);
+        Number key = jdbcInsertUsers.executeAndReturnKey(insertMap);
+        return key.intValue();
     }
 }

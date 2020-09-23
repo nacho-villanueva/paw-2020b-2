@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services.config;
 
 import ar.edu.itba.paw.exceptions.MailAsyncExceptionHandler;
+import ar.edu.itba.paw.services.MailNotificationService;
+import ar.edu.itba.paw.services.MailNotificationServiceImpl;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
