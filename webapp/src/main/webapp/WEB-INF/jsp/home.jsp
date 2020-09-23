@@ -21,7 +21,7 @@
 <c:url value="/register-as-clinic" var="applyClinicPath"/>
 <body>
 <div class="main-container">
-    <%@include file="fragments/navbar-fragment.jsp"%>
+    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
     <div class="row justify-content-center">
 
         <div class="col-sm-3">

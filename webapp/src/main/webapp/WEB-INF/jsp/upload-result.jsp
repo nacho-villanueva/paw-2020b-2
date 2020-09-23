@@ -13,7 +13,7 @@
 <body>
 <c:url value="/result-uploaded" var="postPath"/>
 <div class="main-container">
-    <%@include file="fragments/navbar-fragment.jsp"%>
+    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
     <div class="row justify-content-center pb-8 mt-4">
         <div class="card pb-8 mt-4" style="width: 40rem;">
             <div class="card-body">
