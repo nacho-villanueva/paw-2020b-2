@@ -90,11 +90,8 @@
                 <f:form action="${post_createorder}" method="post" modelAttribute="orderForm" enctype="multipart/form-data">
 
                     <label>Medic's Name</label>
-                    <f:select cssClass="selectpicker" data-live-search="true" path="medicId">
-                        <f:option value="-1" label="Choose Medic"/>
-                        <f:options items="${medicsList}" itemLabel="name" itemValue="id"/>
-                    </f:select>
-                    <f:errors path="medicId" cssClass="error" /><br>
+                    <p>${loggedMedic.name}</p>
+
 
                     <label>Medical Clinic </label>
                     <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" disabled="true">
