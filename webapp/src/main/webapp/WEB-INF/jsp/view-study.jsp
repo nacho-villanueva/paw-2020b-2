@@ -12,7 +12,7 @@
 <c:url value="/api/image" var="imageAssets"/>
 <body>
 <div class="main-container">
-    <%@include file="fragments/navbar-fragment.jsp"%>
+    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card order-card bg-light float-right">

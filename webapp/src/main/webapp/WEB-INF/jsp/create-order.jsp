@@ -60,7 +60,7 @@
 <body>
 
 <div class="main-container">
-    <%@include file="fragments/navbar-fragment.jsp"%>
+    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
     <div class="row justify-content-center">
         <div class="card" style="width: 40em; max-height: 50em; margin-top: 2em;">
             <div class="card-body">
