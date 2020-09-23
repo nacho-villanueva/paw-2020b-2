@@ -63,7 +63,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .rememberMeParameter("rememberme")
                     .userDetailsService(userDetailsService)
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                    .key(properties.getProperty("rememberme.key"))  //TODO: openssl 2048 key
+                    .key(properties.getProperty("rememberme.key"))
                 .and().logout()
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/")
