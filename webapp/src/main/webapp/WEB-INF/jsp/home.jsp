@@ -17,6 +17,8 @@
 <c:url value="/create-order" var="createPath"/>
 <c:url value="/view-study/" var="studyPath"/>
 <c:url value="/logout" var="logoutPath"/>
+<c:url value="/register-as-medic" var="applyMedicPath"/>
+<c:url value="/register-as-clinic" var="applyClinicPath"/>
 <body>
 <div class="main-container">
     <%@include file="fragments/navbar-fragment.jsp"%>
@@ -39,12 +41,12 @@
                 <c:if test="${loggedUser.role eq 1}">
                     <div class="mt-2">
                         <div>
-                            <a href="${createPath}" class="btn create-btn" role="button">Apply as a Medic</a>
+                            <a href="${applyMedicPath}" class="btn create-btn" role="button">Apply as a Medic</a>
                         </div>
                     </div>
                     <div class="mb-2">
                         <div>
-                            <a href="${createPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
+                            <a href="${applyClinicPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
                         </div>
                     </div>
                 </c:if>
@@ -54,7 +56,7 @@
             <div class="mx-5" style="margin-top: 3.5em;">
                     <div class="ml-4">
                         <div>
-                            <a href="${logoutPath}" class="btn create-btn mb-4" role="button">Logout</a>
+                            <a href="${logoutPath}" class="btn logout-btn mb-4" role="button">Logout</a>
                         </div>
                     </div>
             </div>
@@ -70,7 +72,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <div class="row">
+            <div class="row mx-2">
                     <c:if test="${loggedUser.role ge 1}">
                         <div class="col">
                             <div class="card bg-light">
