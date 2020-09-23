@@ -19,8 +19,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <p class="card-title h4">Order number: ${id}</p>
-                            <p class="card-subtitle text-muted lead">Date: ${order.date}</p>
+                            <p class="card-title h4">Order number: <c:out value="${id}" escapeXml="false"/> </p>
+                            <p class="card-subtitle text-muted lead">Date:  <c:out value="${order.date}" escapeXml="false"/></p>
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
@@ -31,24 +31,24 @@
                     </div>
                     <hr class="mt-5 mb-4"/>
                     <div class="row justify-content-start">
-                        <div class="col type"><p class="type-title">Patient:</p>${order.patient_name}</div>
-                        <div class="col type"><p class="type-title">Medical clinic:</p>${order.clinic.name}</div>
+                        <div class="col type"><p class="type-title">Patient:</p> <c:out value="${order.patient_name}"/></div>
+                        <div class="col type"><p class="type-title">Medical clinic:</p> <c:out value="${order.clinic.name}"/></div>
                         <div class="w-100"></div>
-                        <div class="col type"><p class="type-title">Patient insurance plan:</p>${order.patient_insurance_plan}</div>
-                        <div class="col type"><p class="type-title">Patient insurance number:</p>${order.patient_insurance_number}</div>
+                        <div class="col type"><p class="type-title">Patient insurance plan:</p><c:out value="${order.patient_insurance_plan}"/></div>
+                        <div class="col type"><p class="type-title">Patient insurance number:</p><c:out value="${order.patient_insurance_number}"/></div>
                     </div>
                     <hr class="mt-3 mb-5"/>
-                    <p class="card-text text-center h5">Study type: ${order.study.name}</p>
+                    <p class="card-text text-center h5">Study type: <c:out value="${order.study.name}"/></p>
                     <c:choose>
                         <c:when test="${order.description != null}">
-                            <p class="card-text text-center">${order.description}</p>
+                            <p class="card-text text-center"> <c:out value="${order.description}"/></p>
                             <hr class="mt-5 mb-4"/>
                         </c:when>
                     </c:choose>
                     <div class="media">
                         <div class="media-body">
-                            <h5 class="mt-0 mb-1 text-center">${order.medic.name}</h5>
-                            <p class="text-center">M.N.:${order.medic.licence_number}</p>
+                            <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
+                            <p class="text-center">M.N.: <c:out value="${order.medic.licence_number}"/></p>
                         </div>
                         <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
                     </div>
@@ -73,9 +73,9 @@
                                             <li class="nav-item">
                                                 <a class="nav-link" id="res-${result.id}-tab" data-toggle="tab" href="#res-${result.id}" role="tab" aria-controls="res-${result.id}" aria-selected="false">
                                                     <div class="d-flex w-100 justify-content-between">
-                                                        <p class="type-title">Date:</p> ${result.date}
+                                                        <p class="type-title">Date:</p> <c:out value="${result.date}"/>
                                                     </div>
-                                                    <p>${result.responsible_name}</p>
+                                                    <p><c:out value="${result.responsible_name}"/></p>
                                                 </a>
                                             </li>
                                             <br/>
@@ -89,16 +89,16 @@
                                                 <div class="card overflow-auto border-primary">
                                                     <div class="card-body">
                                                         <div class="row justify-content-start">
-                                                            <div class="col type"><p class="type-title">Date:</p>${result.date}</div>
-                                                            <div class="col type"><p class="type-title">Medical clinic:</p>${order.clinic.name}</div>
+                                                            <div class="col type"><p class="type-title">Date:</p><c:out value="${result.date}"/></div>
+                                                            <div class="col type"><p class="type-title">Medical clinic:</p><c:out value="${order.clinic.name}"/></div>
                                                         </div>
                                                         <hr class="mt-3 mb-4 text-center"/>
                                                         <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data" class="align-self-end ml-3" alt="We failed to retrieve image" style="max-height:14em; max-width:20em">
                                                         <hr class="mt-5 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
-                                                                <h5 class="mt-0 mb-1 text-center">${result.responsible_name}</h5>
-                                                                <p class="text-center">M.N.:${result.responsible_licence_number}</p>
+                                                                <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsible_name}"/></h5>
+                                                                <p class="text-center">M.N.:<c:out value="${result.responsible_licence_number}"/></p>
                                                             </div>
                                                             <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="We failed to retrieve image" style="max-height: 5em;">
                                                         </div>
