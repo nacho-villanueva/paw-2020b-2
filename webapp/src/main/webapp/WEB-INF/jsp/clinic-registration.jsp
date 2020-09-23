@@ -20,6 +20,7 @@
             margin-top: 5%;
         }
     </style>
+    <link rel="stylesheet" href="<c:url value="/resources/css/registration.css"/>">
 </head>
 <body>
 
@@ -48,7 +49,7 @@
         </fieldset>
 
         <label>Study Types </label>
-        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" data-style="btn-primary">
+        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" data-style="btn-custom">
             <f:option value="-1" label="Choose your fields"/>
             <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
         </f:select>

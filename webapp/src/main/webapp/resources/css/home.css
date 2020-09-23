@@ -67,3 +67,6 @@ body {
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
+.anim-content{
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}

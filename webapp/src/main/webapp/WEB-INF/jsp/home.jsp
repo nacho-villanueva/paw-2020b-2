@@ -26,7 +26,7 @@
 
         <div class="col-sm-3">
             <div class="my-4 py-5  float-right">
-                <p class="h4 lead">Welcome back, </p><p class="h4">${loggedUser.email}</p>
+                <p class="h5 lead anim-content">Welcome back, </p><p class="h4 anim-content">${loggedUser.email}</p>
             </div>
         </div>
         <div class="col-sm-1">
@@ -68,14 +68,14 @@
     <c:choose>
         <c:when test="${has_studies != true}">
             <div class="align-items-end result-not">
-                <h1 class="text-center mt-5 py-5">It seems there are no studies linked to your account right now.</h1>
+                <h1 class="text-center mt-5 py-5 anim-content">It seems there are no studies linked to your account right now.</h1>
             </div>
         </c:when>
         <c:otherwise>
             <div class="row mx-2">
                     <c:if test="${loggedUser.role ge 1}">
                         <div class="col">
-                            <div class="card bg-light">
+                            <div class="card bg-light anim-content">
                                 <div class="card-body">
                                     <p class="card-title h4">As a patient, here are your medical studies</p>
                                     <div class="list-group">
@@ -99,7 +99,7 @@
                     </c:if>
                     <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
                         <div class="col">
-                            <div class="card bg-light">
+                            <div class="card bg-light anim-content">
                                 <div class="card-body">
                                     <p class="card-title h4">As a medic, here are your medical studies</p>
                                     <div class="list-group">
@@ -122,7 +122,7 @@
                     </c:if>
                     <c:if test="${loggedUser.role ge 3}">
                         <div class="col">
-                            <div class="card bg-light">
+                            <div class="card bg-light anim-content">
                                 <div class="card-body">
                                     <p class="card-title h4">As a clinic, here are your medical studies</p>
                                     <div class="list-group">
