@@ -46,9 +46,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private String medicResultSubject;
     private String clinicResultSubject;
 
-    private BufferedReader mailTemplate;
+    private String mailTemplate;
     private boolean useHTML;
-    private Collection<String> mailInline;
 
     private String textTemplate;
 
@@ -66,11 +65,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         try {
             InputStream resourceInputStream = this.mailTemplateResource.getInputStream();
-            this.mailTemplate = new BufferedReader(new InputStreamReader(resourceInputStream));
+            this.mailTemplate = new BufferedReader(new InputStreamReader(resourceInputStream))
+                    .lines().collect(Collectors.joining("\n"));
             this.useHTML = true;
-            this.mailInline = new ArrayList<>();
-            this.mailInline.add("logo.png");
-            this.mailInline.add("envelope-regular.png");
         } catch (IOException e) {
             this.useHTML = false;
             e.printStackTrace();
@@ -88,6 +85,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String clinicName   = order.getClinic().getName();
 
         if(this.useHTML){
+
+            ArrayList<String> mailInline = new ArrayList<>();
+            mailInline.add("logo.png");
+            mailInline.add("envelope-regular.png");
 
             String basicMailContent = getMailTemplate();
 
@@ -133,7 +134,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ms.sendMimeMessage(patientMail,
                     replaceOrderInfo(patientOrderSubject,order),
                     replaceOrderInfo(mailContent,order),
-                    this.mailInline
+                    mailInline
             );
 
             // mail to medic
@@ -147,7 +148,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ms.sendMimeMessage(medicMail,
                     replaceOrderInfo(medicOrderSubject,order),
                     replaceOrderInfo(mailContent,order),
-                    this.mailInline
+                    mailInline
             );
 
             // mail to clinic
@@ -161,7 +162,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ms.sendMimeMessage(clinicMail,
                     replaceOrderInfo(clinicOrderSubject,order),
                     replaceOrderInfo(mailContent,order),
-                    this.mailInline
+                    mailInline
             );
 
         }else{
@@ -230,6 +231,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
                 String basicMailContent = getMailTemplate();
 
+                ArrayList<String> mailInline = new ArrayList<>();
+                mailInline.add("logo.png");
+                mailInline.add("envelope-regular.png");
+
                 String body =
                         "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
                                 "<tr><td><h2> See changes on our site </h2>\n" +
@@ -272,7 +277,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 ms.sendMimeMessage(patientMail,
                         replaceResultInfo(patientResultSubject,result,order),
                         replaceResultInfo(mailContent,result,order),
-                        this.mailInline
+                        mailInline
                 );
 
                 // mail to medic
@@ -286,7 +291,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 ms.sendMimeMessage(medicMail,
                         replaceResultInfo(medicResultSubject,result,order),
                         replaceResultInfo(mailContent,result,order),
-                        this.mailInline
+                        mailInline
                 );
 
                 // mail to clinic
@@ -300,7 +305,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 ms.sendMimeMessage(clinicMail,
                         replaceResultInfo(clinicResultSubject,result,order),
                         replaceResultInfo(mailContent,result,order),
-                        this.mailInline
+                        mailInline
                 );
 
             }else{
@@ -361,8 +366,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         if(this.useHTML){
             String basicMailContent = getMailTemplate();
 
+            ArrayList<String> mailInline = new ArrayList<>();
+            mailInline.add("logo.png");
+
             String body = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                    "<tr><td><h2> We are now processing your Medic Application Form\n" +
+                    "<tr><td><h2> We are now processing your Medic Application Form</h2>\n" +
                     "<p>We will notify you when the validation process finishes</p>\n"+
                     "</td></tr></table>";
 
@@ -371,7 +379,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ms.sendMimeMessage(medicMail,
                     replaceMedicInfo(mailSubject, medic),
                     replaceMedicInfo(mailContent, medic),
-                    this.mailInline
+                    mailInline
                     );
         }else{
             String basicMailContent = getTextTemplate();
@@ -396,8 +404,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         if(this.useHTML){
             String basicMailContent = getMailTemplate();
 
+            ArrayList<String> mailInline = new ArrayList<>();
+            mailInline.add("logo.png");
+
             String body = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                    "<tr><td><h2> We are now processing your Clinic Application Form\n" +
+                    "<tr><td><h2> We are now processing your Clinic Application Form</h2>\n" +
                     "<p>We will notify you when the validation process finishes</p>\n"+
                     "</td></tr></table>";
 
@@ -406,7 +417,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ms.sendMimeMessage(clinicMail,
                     replaceClinicInfo(mailSubject, clinic),
                     replaceClinicInfo(mailContent, clinic),
-                    this.mailInline
+                    mailInline
             );
         }else{
             String basicMailContent = getTextTemplate();
@@ -424,7 +435,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
     // replace functions
     private String getMailTemplate(){
-        String mailTemplateString = this.mailTemplate.lines().collect(Collectors.joining("\n"));
+        String mailTemplateString = this.mailTemplate;
         mailTemplateString = replaceURL(mailTemplateString);
         return mailTemplateString;
     }
