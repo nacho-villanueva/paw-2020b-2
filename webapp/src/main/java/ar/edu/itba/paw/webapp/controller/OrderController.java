@@ -66,7 +66,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createOrder(@ModelAttribute OrderForm orderForm, @RequestParam("orderAttach") MultipartFile file, BindingResult bindingResult) {
+    public String createOrder(@ModelAttribute OrderForm orderForm, BindingResult bindingResult) {
         //TODO: change for proper validations
         if(!vs.isValidEmail(orderForm.getPatientEmail())
                 || !vs.isValidMedicPlan(orderForm.getPatient_insurance_plan())
@@ -75,19 +75,27 @@ public class OrderController {
             return "/create-order";
         }
 
+
+
+        Medic m = null;
+        if(medicService.findByUserId(loggedUser().getId()).isPresent())
+            m = medicService.findByUserId(loggedUser().getId()).get();
+
+        orderForm.setMedicId(m.getUser_id());
+
         if (bindingResult.hasErrors() && !medicService.findByUserId(loggedUser().getId()).isPresent()) {
 
             return "/create-order"; // TODO: RETURN VALIDATION ERRORS
 
         } else {
-            try {
-                orderForm.setMedicId(medicService.findByUserId(loggedUser().getId()).get().getUser_id());
-                byte[] fileBytes = file.getBytes();
-                long id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType());
-                return "redirect:view-study/" + urlEncoderService.encode(id);
-            } catch (IOException e) {
-                return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
-            }
+
+            orderForm.setMedicId(m.getUser_id());
+
+            long id = orderFormService.HandleOrderForm(orderForm,
+                    m.getIdentification(),
+                    m.getIdentification_type());
+            return "redirect:view-study/" + urlEncoderService.encode(id);
+
 
         }
 

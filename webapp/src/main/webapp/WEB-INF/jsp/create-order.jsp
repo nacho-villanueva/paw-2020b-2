@@ -133,10 +133,6 @@
                         </div>
                     </div>
 
-                    <label> Medic Identification</label>
-                    <div>
-                        <input required type="file" name="orderAttach" accept="image/png, image/jpeg"/>
-                    </div>
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button">Cancel</a>
                     <button class="btn create-btn mt-4 mb-2 float-right" type="submit">Create Order</button>
 
