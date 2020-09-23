@@ -3,7 +3,11 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+
     <%@ include file="fragments/include-header.jsp"%>
+    <!-- bootstrap-select CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
     <style>
         body{
             display: flex;
@@ -33,6 +37,10 @@
             <label for="clinicName" class="bmd-label-floating">Clinic's Name</label>
             <f:input type="text" class="form-control" id="clinicName" path="name"/>
         </fieldset>
+        <fieldset class="form-group">
+            <label for="clinicEmail" class="bmd-label-floating">Clinic's Email</label>
+            <f:input type="text" class="form-control" id="clinicEmail" path="email"/>
+        </fieldset>
         <fieldset class="form-group row">
             <label for="phoneNumber" class="bmd-label-floating">Phone Number</label>
             <f:input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+" path="telephone"/>
@@ -40,7 +48,7 @@
         </fieldset>
 
         <label>Study Types </label>
-        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" >
+        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" data-style="btn-primary">
             <f:option value="-1" label="Choose your fields"/>
             <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
         </f:select>
@@ -48,7 +56,8 @@
     </f:form>
 </div>
 
-
 <%@ include file="fragments/include-scripts.jsp"%>
+<!-- bootstrap-select JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js" integrity="sha384-SfMwgGnc3UiUUZF50PsPetXLqH2HSl/FmkMW/Ja3N2WaJ/fHLbCHPUsXzzrM6aet" crossorigin="anonymous"></script>
 </body>
 </html>

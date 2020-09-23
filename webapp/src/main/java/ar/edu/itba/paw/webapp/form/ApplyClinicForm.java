@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.StudyType;
 
-import java.util.Collection;
 
 public class ApplyClinicForm {
-    private String name, telephone;
-    private Collection<StudyType> available_studies;
+    private String name, email, telephone;
+    private Integer[] available_studies;
 
     public ApplyClinicForm() {
 
@@ -14,6 +12,14 @@ public class ApplyClinicForm {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setName(String name) {
@@ -28,11 +34,11 @@ public class ApplyClinicForm {
         this.telephone = telephone;
     }
 
-    public Collection<StudyType> getAvailable_studies() {
+    public Integer[] getAvailable_studies() {
         return available_studies;
     }
 
-    public void setAvailable_studies(Collection<StudyType> available_studies) {
+    public void setAvailable_studies(Integer[] available_studies) {
         this.available_studies = available_studies;
     }
 }

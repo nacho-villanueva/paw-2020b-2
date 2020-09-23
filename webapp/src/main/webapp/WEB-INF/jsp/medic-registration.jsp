@@ -5,17 +5,8 @@
 <head>
 
     <%@ include file="fragments/include-header.jsp"%>
-
-
-    <!-- Latest compiled and minified CSS -->
+    <!-- bootstrap-select CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
-
 
     <style>
         body{
@@ -40,7 +31,7 @@
         <h3>We need a couple more details.</h3>
     </div>
     <c:url var="apply" value="/apply-as-medic"/>
-    <f:form action="${apply}" class="form-signin" method="post" modelAttribute="applyMedicForm">
+    <f:form action="${apply}" class="form-signin" method="post" modelAttribute="applyMedicForm" enctype="multipart/form-data">
         <div class="row">
             <fieldset class="form-group">
                 <label for="firstName" class="bmd-label-floating">First Name</label>
@@ -57,19 +48,22 @@
             <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
         </fieldset>
         <fieldset class="form-group row">
+            <label for="email" class="bmd-label-floating">email</label>
+            <f:input type="text" cssClass="form-control" required="required" id="email" path="email"/>
+        </fieldset>
+        <fieldset class="form-group row">
             <label for="licenseNumber" class="bmd-label-floating">License Number</label>
-            <f:input type="text" cssClass="form-control" required="required" pattern="[a-zA-Z0-9]" id="licenseNumber" path="licence_number"/>
+            <f:input type="text" cssClass="form-control" required="required" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number"/>
         </fieldset>
         <fieldset class="mt-4 form-group">
             <label for="identificationFile" class="bmd-label-floating">Seal and Signature</label>
-            <input required type="file" name="orderAttach" accept="image/png, image/jpeg" id="identificationFile"/>
+            <f:input required="required" type="file" path="identification" id="identificationFile"/>
             <small class="text-muted">The seal and signature should be visible.</small>
         </fieldset>
 
 
-        <label>Study Type </label>
-        <f:select id="medicalFields" class="selectpicker"  data-live-search="true" path="known_fields" >
-            <f:option value="-1" label="Choose your fields"/>
+        <label>Medical Fields </label>
+        <f:select id="medicalFields" class="selectpicker" title="Choose Medical Fields" data-live-search="true" path="known_fields" data-style="btn-primary">
             <f:options items="${fieldsList}" itemLabel="name" itemValue="id"/>
         </f:select>
 
@@ -78,7 +72,8 @@
     </f:form>
 </div>
 
-
 <%@ include file="fragments/include-scripts.jsp"%>
+<!-- bootstrap-select JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js" integrity="sha384-SfMwgGnc3UiUUZF50PsPetXLqH2HSl/FmkMW/Ja3N2WaJ/fHLbCHPUsXzzrM6aet" crossorigin="anonymous"></script>
 </body>
 </html>

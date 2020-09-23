@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Clinic;
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
 import ar.edu.itba.paw.webapp.form.ApplyClinicForm;
 import ar.edu.itba.paw.webapp.form.ApplyMedicForm;
 import ar.edu.itba.paw.webapp.form.RegisterUserForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -40,6 +38,9 @@ public class RegisterController {
     @Autowired
     private StudyTypeService sts;
 
+    @Autowired
+    private MailNotificationService mns;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm){
         ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
@@ -59,19 +60,32 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/apply-as-medic", method = RequestMethod.POST)
-    public String applyMedic(@ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm,
-                                   @RequestParam("orderAttach") MultipartFile file){
+    public String applyMedic(@ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm){
+        byte[] fileBytes;
         try {
-            byte[] fileBytes = file.getBytes();
-            Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(),
-                    loggedUser().getEmail(), applyMedicForm.getTelephone(),
-                    file.getContentType(), fileBytes, applyMedicForm.getLicence_number(),
-                    true, applyMedicForm.getKnown_fields());
-
-            return "redirect:/home";
+            fileBytes = applyMedicForm.getIdentification().getBytes();
         } catch (IOException e) {
-            return "redirect:/index"; //TODO: RETURN 500 EXCEPTION PAGE
+            throw new UploadedFileFailedToLoadException();
         }
+        ArrayList<MedicalField> knownFields = new ArrayList<>();
+        for(Integer i : applyMedicForm.getKnown_fields()){
+
+            Optional<MedicalField> mf = mfs.findById(i);
+
+            if(mf.isPresent())
+                knownFields.add(mf.get());
+            else
+                throw new StudyTypeNotFoundException();
+        }
+
+        Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(),
+                applyMedicForm.getEmail(), applyMedicForm.getTelephone(),
+                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(),
+                true, knownFields);
+
+        // TODO: sendMedicApplicationValidatingMail(newMedic);
+
+        return "redirect:/home";
     }
 
     @RequestMapping("/register-as-clinic")
@@ -84,9 +98,23 @@ public class RegisterController {
 
     @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
     public String applyClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
+
+        ArrayList<StudyType> availableStudies = new ArrayList<>();
+        for(Integer i : applyClinicForm.getAvailable_studies()){
+
+            Optional<StudyType> st = sts.findById(i);
+
+            if(st.isPresent())
+                availableStudies.add(st.get());
+            else
+                throw new StudyTypeNotFoundException();
+        }
+
         Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(),
-                loggedUser().getEmail(), applyClinicForm.getTelephone(),
-                true, applyClinicForm.getAvailable_studies());
+                applyClinicForm.getEmail(), applyClinicForm.getTelephone(),
+                true, availableStudies);
+
+        // TODO: sendClinicApplicationValidatingMail(newClinic);
 
         return "redirect:/home";
     }

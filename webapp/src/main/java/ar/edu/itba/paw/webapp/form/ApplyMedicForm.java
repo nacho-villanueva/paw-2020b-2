@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.MedicalField;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
 public class ApplyMedicForm {
     private String first_name, last_name;
+    private String email;
     private String telephone, licence_number;
-    private Collection<MedicalField> known_fields;
+    private Integer[] known_fields;
+    private MultipartFile identification;
 
     public ApplyMedicForm(){
 
@@ -33,6 +36,14 @@ public class ApplyMedicForm {
         this.last_name = last_name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getTelephone() {
         return telephone;
     }
@@ -41,11 +52,11 @@ public class ApplyMedicForm {
         this.telephone = telephone;
     }
 
-    public Collection<MedicalField> getKnown_fields() {
+    public Integer[] getKnown_fields() {
         return known_fields;
     }
 
-    public void setKnown_fields(Collection<MedicalField> known_fields) {
+    public void setKnown_fields(Integer[] known_fields) {
         this.known_fields = known_fields;
     }
 
@@ -55,5 +66,13 @@ public class ApplyMedicForm {
 
     public void setLicence_number(String licence_number) {
         this.licence_number = licence_number;
+    }
+
+    public MultipartFile getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(MultipartFile identification) {
+        this.identification = identification;
     }
 }
