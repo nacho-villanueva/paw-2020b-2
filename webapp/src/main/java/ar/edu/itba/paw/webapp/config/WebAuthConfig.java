@@ -46,9 +46,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()//TODO: revise ant matchers
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/create-order").hasRole("MEDIC")
-                    .antMatchers("/upload-result/**").hasRole("CLINIC")
-                    .antMatchers("/home","/view-study/**","/api/image/study/**","api/image/result/**").authenticated()
-                    .antMatchers("/login").anonymous()
+                    .antMatchers("/upload-result/**","/result-uploaded").hasRole("CLINIC")
+                    .antMatchers("/home","/view-study/**","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
+                    .antMatchers("/register-as-medic","/apply-as-medic").hasRole("USER")
+                    .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("USER")
+                    .antMatchers("/login","/register").anonymous()
                     .antMatchers("/**").permitAll()
                 .and().formLogin()
                     .usernameParameter("login_email")
@@ -73,6 +75,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/403");
+                .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/favicon.ico", "/403");
     }
 }
