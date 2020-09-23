@@ -40,12 +40,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         switch (user.getRole()) {
             case MEDIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
                 break;
             case CLINIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
                 break;
             case CLINIC_MEDIC_ROLE_ID:
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
                 break;
