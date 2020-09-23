@@ -38,12 +38,14 @@
                         </div>
                     </div>
                 </c:if>
-                <c:if test="${loggedUser.role eq 1}">
+                <c:if test="${loggedUser.role eq 1 || loggedUser.role eq 3}">
                     <div class="mt-2">
                         <div>
                             <a href="${applyMedicPath}" class="btn create-btn" role="button">Apply as a Medic</a>
                         </div>
                     </div>
+                </c:if>
+                <c:if test="${loggedUser.role eq 1 || loggedUser.role eq 2}">
                     <div class="mb-2">
                         <div>
                             <a href="${applyClinicPath}" class="btn create-btn" role="button">Apply as a Clinic</a>
