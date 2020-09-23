@@ -20,6 +20,7 @@
             margin-top: 5%;
         }
     </style>
+    <link rel="stylesheet" href="<c:url value="/resources/css/registration.css"/>">
 </head>
 <body>
 
@@ -63,7 +64,7 @@
 
 
         <label>Medical Fields </label>
-        <f:select id="medicalFields" class="selectpicker" title="Choose Medical Fields" data-live-search="true" path="known_fields" data-style="btn-primary">
+        <f:select id="medicalFields" cssClass="selectpicker" title="Choose Medical Fields" data-live-search="true" path="known_fields" data-style="btn-custom">
             <f:options items="${fieldsList}" itemLabel="name" itemValue="id"/>
         </f:select>
 
