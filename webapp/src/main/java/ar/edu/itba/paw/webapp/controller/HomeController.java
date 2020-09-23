@@ -4,6 +4,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,10 @@ public class HomeController {
     public ModelAndView home(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm,
                              @RequestParam(value = "error", required = false) boolean loginError,
                              @RequestParam(value = "registrationSuccess", required = false) boolean registrationSuccess) {
+        if(isLoggedUser()) {
+            return new ModelAndView("redirect:/home");
+        }
+
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("registerUserForm", registerUserForm);
         mav.addObject("loginError", loginError);
@@ -35,6 +40,11 @@ public class HomeController {
         final ModelAndView mav = new ModelAndView("home");
         mav.addObject("loggedUser",loggedUser());
         return mav;
+    }
+
+    private boolean isLoggedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     @ModelAttribute

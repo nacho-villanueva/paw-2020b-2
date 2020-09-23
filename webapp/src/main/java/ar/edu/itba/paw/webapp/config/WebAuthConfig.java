@@ -48,7 +48,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/create-order").hasRole("MEDIC")
                     .antMatchers("/upload-result/**").hasRole("CLINIC")
                     .antMatchers("/home","/view-study/**","/api/image/study/**","api/image/result/**").authenticated()
-                    .antMatchers("/","/login").anonymous()
+                    .antMatchers("/login").anonymous()
                     .antMatchers("/**").permitAll()
                 .and().formLogin()
                     .usernameParameter("login_email")
