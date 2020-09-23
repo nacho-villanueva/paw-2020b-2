@@ -35,7 +35,7 @@
                         let clinicList = '<option value="-1">Choose Clinic</option>';
                         let clinicLen = response.length;
                         for(let i =0; i<clinicLen;i++){
-                            clinicList += '<option value="' + response[i].user_id + '">' + response[i].name + '</option>';
+                            clinicList += '<option value="' + response[i].user_id + '">' + sanitize(response[i].name) + '</option>';
                         }
                         clinicList += '</option>';
 
@@ -50,6 +50,21 @@
                 }
             });
         });
+
+        // temporal string sanitizer, from https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
+        // based on https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
+        function sanitize(string) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#x27;',
+                "/": '&#x2F;',
+            };
+            const reg = /[&<>"'/]/ig;
+            return string.replace(reg, (match)=>(map[match]));
+        }
     </script>
 
     <%@ include file="fragments/include-header.jsp"%>
@@ -75,7 +90,7 @@
                         <div class="col">
                             <label>Medic</label>
                             <div>
-                                <input type="text" disabled placeholder="${loggedMedic.name}"/>
+                                <input type="text" disabled placeholder="<c:out value="${loggedMedic.name}"/>"/>
                             </div>
                         </div>
                         <div class="col">
@@ -123,7 +138,7 @@
                         <div class="col">
                             <label>Medical Clinic </label>
                             <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" disabled="true" data-style="btn-primary">
-                                <f:option value="-1">Choose Study first</f:option>
+                                <f:option value="-1" label="Choose Study first"/>
                             </f:select>
                             <f:errors path="clinicId" cssClass="error" /><br>
                         </div>
