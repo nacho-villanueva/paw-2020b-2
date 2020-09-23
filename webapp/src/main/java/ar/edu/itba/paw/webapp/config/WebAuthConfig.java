@@ -54,7 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/create-order").hasRole("MEDIC")
                     .antMatchers("/upload-result/**","/result-uploaded").hasRole("CLINIC")
-                    .antMatchers("/home","/view-study/**","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
+                    .antMatchers("/home","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("USER")
                     .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("USER")
                     .antMatchers("/login","/register").anonymous()
