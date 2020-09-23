@@ -83,7 +83,7 @@ public class RegisterController {
                 applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(),
                 true, knownFields);
 
-        // TODO: sendMedicApplicationValidatingMail(newMedic);
+        mns.sendMedicApplicationValidatingMail(newMedic);
 
         return "redirect:/home";
     }
@@ -114,7 +114,7 @@ public class RegisterController {
                 applyClinicForm.getEmail(), applyClinicForm.getTelephone(),
                 true, availableStudies);
 
-        // TODO: sendClinicApplicationValidatingMail(newClinic);
+        mns.sendClinicApplicationValidatingMail(newClinic);
 
         return "redirect:/home";
     }
