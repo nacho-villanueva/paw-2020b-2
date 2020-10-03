@@ -81,6 +81,9 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a patient, here are your medical studies</p>
                                     <div class="list-group">
+                                        <c:if test="${patient_studies.size() eq 0}">
+                                            <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
+                                        </c:if>
                                         <c:forEach items="${patient_studies}" var="pat_study">
                                             <a href="${studyPath}${patient_encodeds.get(pat_study.order_id)}" class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
@@ -105,6 +108,9 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a medic, here are your medical studies</p>
                                     <div class="list-group">
+                                        <c:if test="${medic_studies.size() eq 0}">
+                                            <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
+                                        </c:if>
                                         <c:forEach items="${medic_studies}" var="med_study">
                                             <a href="${studyPath}${medic_encodeds.get(med_study.order_id)}" class="list-group-item list-group-item-action">
                                                     <div class="d-flex w-100 justify-content-between">
@@ -128,6 +134,9 @@
                                 <div class="card-body">
                                     <p class="card-title h4">As a clinic, here are your medical studies</p>
                                     <div class="list-group">
+                                        <c:if test="${clinic_studies.size() eq 0}">
+                                            <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
+                                        </c:if>
                                         <c:forEach items="${clinic_studies}" var="cli_study">
                                             <a href="${studyPath}${clinic_encodeds.get(cli_study.order_id)}" class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
