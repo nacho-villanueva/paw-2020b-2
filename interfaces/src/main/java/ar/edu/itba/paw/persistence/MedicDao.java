@@ -15,7 +15,7 @@ public interface MedicDao {
 
     Collection<Medic> getAllUnverified();
 
-    Medic register(User user, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, boolean verified, Collection<MedicalField> known_fields);
+    Medic register(User user, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
 
     MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
 }

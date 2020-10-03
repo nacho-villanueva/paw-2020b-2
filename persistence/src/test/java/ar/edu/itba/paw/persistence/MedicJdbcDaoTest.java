@@ -133,7 +133,7 @@ public class MedicJdbcDaoTest {
         known_fields.add(new MedicalField(ZERO_ID,FIELD_NAME));
         known_fields.add(new MedicalField(ZERO_ID,FIELD_NAME_ALT));
 
-        final Medic medic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME, MEDIC_EMAIL, MEDIC_TELEPHONE, MEDIC_IDENTIFICATION_TYPE, MEDIC_IDENTIFICATION, MEDIC_LICENCE, TRUE, known_fields);
+        final Medic medic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME, MEDIC_EMAIL, MEDIC_TELEPHONE, MEDIC_IDENTIFICATION_TYPE, MEDIC_IDENTIFICATION, MEDIC_LICENCE, known_fields);
 
         Assert.assertNotNull(medic);
         MedicalField field = medic.getMedical_fields().stream().findFirst().get();
@@ -145,7 +145,7 @@ public class MedicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestMedic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME,MEDIC_EMAIL,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,TRUE,new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME,MEDIC_EMAIL,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,new ArrayList<>());
     }
 
     @Test

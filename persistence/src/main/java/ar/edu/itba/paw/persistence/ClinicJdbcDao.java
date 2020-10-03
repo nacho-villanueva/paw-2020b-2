@@ -78,13 +78,13 @@ public class ClinicJdbcDao implements ClinicDao {
         return clinics;
     }
 
-    public Clinic register(final User user, final String name, final String email, final String telephone, final boolean verified, final Collection<StudyType> available_studies) {
+    public Clinic register(final User user, final String name, final String email, final String telephone, final Collection<StudyType> available_studies) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
         insertMap.put("email", email);
         insertMap.put("telephone", telephone);
-        insertMap.put("verified", verified);
+        insertMap.put("verified", false);
 
         jdbcInsertClinic.execute(insertMap);
         //Todo: Check success
@@ -96,7 +96,7 @@ public class ClinicJdbcDao implements ClinicDao {
             available_studiesDB.add(studyTypeFromDB);
         });
 
-        return new Clinic(user.getId(),name,email,telephone,available_studiesDB,verified);
+        return new Clinic(user.getId(),name,email,telephone,available_studiesDB,false);
     }
 
     @Override

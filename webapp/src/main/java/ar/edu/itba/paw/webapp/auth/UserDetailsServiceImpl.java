@@ -14,22 +14,15 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static ar.edu.itba.paw.model.User.*;
+
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-    private static final int USER_ROLE_ID = 1;
-    private static final int MEDIC_ROLE_ID = 2;
-    private static final int CLINIC_ROLE_ID = 3;
-    private static final int CLINIC_MEDIC_ROLE_ID = 4;
-    private static final int ADMIN_ROLE_ID = 0;
 
     @Autowired
     private UserService us;
 
-    @Autowired
-    private PasswordEncoder encoder;
-
-    private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
+    private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
@@ -61,7 +54,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 break;
         }
 
-        //TODO: update database password to encrypted, maybe, i think it doesnt apply to us
         final String password;
         if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
             User newUser = us.updatePassword(user, user.getPassword());
