@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 @Service
 public class ValidationServiceImpl implements ValidationService {
 
-    private static final int[] VALID_ROLES = {0,1,2,3,4};
     private static final String[] VALID_IDENTIFICATION_TYPES = {"image/png","image/jpg","image/jpeg"};
     private static final String[] VALID_DATA_TYPES = {"image/png","image/jpg","image/jpeg","application/pdf","application/zip","application/rar", "text/plain","text/csv","text/html"};
 
@@ -205,11 +204,15 @@ public class ValidationServiceImpl implements ValidationService {
     @Override
     public boolean isValidRole(int role) {
         boolean isValid = false;
-        for(int validRole : VALID_ROLES) {
-            if (role == validRole) {
+        switch (role) {
+            case User.ADMIN_ROLE_ID:
+            case User.MEDIC_ROLE_ID:
+            case User.USER_ROLE_ID:
+            case User.CLINIC_ROLE_ID:
+            case User.CLINIC_MEDIC_ROLE_ID:
                 isValid = true;
                 break;
-            }
+            default:
         }
         return isValid;
     }

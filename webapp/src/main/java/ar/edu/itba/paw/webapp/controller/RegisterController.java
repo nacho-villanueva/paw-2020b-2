@@ -89,8 +89,7 @@ public class RegisterController {
 
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(),
                 applyMedicForm.getEmail(), applyMedicForm.getTelephone(),
-                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(),
-                true, knownFields);
+                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
 
         mns.sendMedicApplicationValidatingMail(newMedic);
 
@@ -120,8 +119,7 @@ public class RegisterController {
         }
 
         Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(),
-                applyClinicForm.getEmail(), applyClinicForm.getTelephone(),
-                true, availableStudies);
+                applyClinicForm.getEmail(), applyClinicForm.getTelephone(), availableStudies);
 
         mns.sendClinicApplicationValidatingMail(newClinic);
 
