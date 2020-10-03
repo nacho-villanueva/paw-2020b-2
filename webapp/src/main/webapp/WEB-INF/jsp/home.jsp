@@ -79,7 +79,7 @@
                         <div class="col">
                             <div class="card bg-light anim-content">
                                 <div class="card-body">
-                                    <p class="card-title h4">As a patient, here are your medical studies</p>
+                                    <p class="card-title h4">Your medical studies</p>
                                     <div class="list-group">
                                         <c:if test="${patient_studies.size() eq 0}">
                                             <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
@@ -106,7 +106,7 @@
                         <div class="col">
                             <div class="card bg-light anim-content">
                                 <div class="card-body">
-                                    <p class="card-title h4">As a medic, here are your medical studies</p>
+                                    <p class="card-title h4">Patient's medical studies</p>
                                     <div class="list-group">
                                         <c:if test="${medic_studies.size() eq 0}">
                                             <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
@@ -132,7 +132,7 @@
                         <div class="col">
                             <div class="card bg-light anim-content">
                                 <div class="card-body">
-                                    <p class="card-title h4">As a clinic, here are your medical studies</p>
+                                    <p class="card-title h4">Patient's appointments</p>
                                     <div class="list-group">
                                         <c:if test="${clinic_studies.size() eq 0}">
                                             <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
