@@ -66,6 +66,18 @@
 
     </div>
 
+    <c:if test="${loggedUser.isVerifyingMedic() eq true || loggedUser.isVerifyingClinic() eq true}">
+        <div class="row justify-content-center mt-0 mb-4 anim-content">
+            <div class="alert alert-info pb-3" role="alert">
+                <h4 class="alert-heading">Verification in progress</h4>
+                <p>We have received your application and our administrators will begin the
+                verification process. <br/> We'll send you an alert to your email the process ends.</p>
+                <hr>
+                <p class="mb-0">You may continue to use your account as usual.</p>
+            </div>
+        </div>
+    </c:if>
+
 
     <c:choose>
         <c:when test="${has_studies != true}">
