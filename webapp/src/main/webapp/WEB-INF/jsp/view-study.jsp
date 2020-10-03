@@ -24,7 +24,10 @@
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
-                                <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button">Upload results</a>
+                                <c:if test="${loggedUser.role eq 3 || loggedUser.role eq 4}">
+                                    <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button">Upload results</a>
+                                </c:if>
+
                             </div>
 
                         </div>
