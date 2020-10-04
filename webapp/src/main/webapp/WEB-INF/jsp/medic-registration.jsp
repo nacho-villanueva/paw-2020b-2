@@ -49,21 +49,22 @@
             <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
         </fieldset>
         <fieldset class="form-group row">
-            <label for="email" class="bmd-label-floating">email</label>
+            <label for="email" class="bmd-label-floating">Email Address</label>
             <f:input type="text" cssClass="form-control" required="required" id="email" path="email"/>
         </fieldset>
         <fieldset class="form-group row">
             <label for="licenseNumber" class="bmd-label-floating">License Number</label>
             <f:input type="text" cssClass="form-control" required="required" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number"/>
+            <small class="text-muted">Please enter your license number only with numbers and letters.</small>
         </fieldset>
         <fieldset class="mt-4 form-group">
-            <label for="identificationFile" class="bmd-label-floating">Seal and Signature</label>
-            <f:input required="required" type="file" path="identification" id="identificationFile"/>
-            <small class="text-muted">The seal and signature should be visible.</small>
+            <label for="identificationFile">Seal and Signature</label><br/>
+            <f:input required="required" type="file" path="identification" id="identificationFile"/><br/>
+            <small class="text-muted">Please upload a photo of your seal and signature</small>
         </fieldset>
 
 
-        <label>Medical Fields </label>
+        <label class="mb-4">Medical Fields</label>
         <f:select id="medicalFields" cssClass="selectpicker" title="Choose Medical Fields" data-live-search="true" path="known_fields" data-style="btn-custom">
             <f:options items="${fieldsList}" itemLabel="name" itemValue="id"/>
         </f:select>

@@ -32,7 +32,8 @@
                 <form:form method="POST" action="${postPath}" enctype="multipart/form-data" modelAttribute="resultForm">
                     <div class="form-inline">
                         <label for="resultFiles" class="select-label">Select files to upload</label>
-                        <input multiple required type="file" class="form-control-file" id="resultFiles" name="files" accept="image/png, image/jpeg">
+                        <input multiple required type="file" class="form-control-file mt-2" id="resultFiles" name="files" accept="image/png, image/jpeg">
+                        <small class="text-muted">Please upload the results as images.</small>
                     </div>
                     <hr class="mt-3 mb-4"/>
                     <div class="form-row">
@@ -52,8 +53,9 @@
                         </div>
                     </div>
                     <div class="form-inline mt-3 signature">
-                        <label for="exampleFormControlFile2">Upload signature</label>
-                        <input required type="file" class="form-control-file" id="exampleFormControlFile2" name="sign" accept="image/png, image/jpeg">
+                        <label for="exampleFormControlFile2" class="select-label">Upload signature</label>
+                        <input required type="file" class="form-control-file mt-2" id="exampleFormControlFile2" name="sign" accept="image/png, image/jpeg">
+                        <small class="text-muted">Please upload a photo of your seal and signature</small>
                     </div>
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button">Cancel</a>
                     <button class="btn submit-btn mt-4 mb-2 float-right" type="submit">Submit results</button>
