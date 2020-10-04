@@ -69,8 +69,9 @@ body {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     border-radius: 100px;
-    background-color: var(--primary);
-    color: white;
+    border:solid 1px var(--primary);
+    background-color: transparent;
+    color: var(--primary);
 }
 
 .toggle_radio{
@@ -140,4 +141,11 @@ body {
     background: rgba(25, 176, 200, 0.3);
     color: white;
     left: 215px;
+}
+
+.action-btn{
+    background: var(--primary);
+    color: white;
+    margin-top: 4%;
+    width: 50%;
 }
