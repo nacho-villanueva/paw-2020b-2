@@ -4,9 +4,11 @@ import ar.edu.itba.paw.exceptions.MailAsyncExceptionHandler;
 import ar.edu.itba.paw.services.MailNotificationService;
 import ar.edu.itba.paw.services.MailNotificationServiceImpl;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -36,7 +39,7 @@ public class MailConfig implements AsyncConfigurer {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "false");
+        props.put("mail.debug", "true");
 
         return mailSender;
     }
