@@ -77,57 +77,44 @@
 <div class="main-container">
     <%@include file="fragments/navbar-alternative-fragment.jsp"%>
     <div class="row justify-content-center">
-        <div class="card" style="width: 40em; max-height: 50em; margin-top: 2em;">
+        <div class="card" style="width: 40em; margin-top: 2em;">
             <div class="card-body">
                 <div class="row">
                     <p class="card-title h4 mx-auto mt-3">Create New Medical Order</p>
                 </div>
 
                 <c:url var="post_createorder"  value="/create-order"/>
-                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm" enctype="multipart/form-data">
-
-                    <div class="row">
-                        <div class="col">
-                            <label>Medic</label>
-                            <div>
-                                <input type="text" disabled placeholder="<c:out value="${loggedMedic.name}"/>"/>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label>Study Type </label>
-                            <f:select id="medicalStudy" cssClass="selectpicker" data-live-search="true" path="studyId" data-style="btn-primary">
-                                <f:option value="-1" label="Choose Study"/>
-                                <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
-                            </f:select>
-                            <f:errors path="studyId" cssClass="error" />
-                        </div>
-                    </div>
-                    <hr class="mt-3 mb-2"/>
+                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm">
+                    <fieldset class="form-group col-7">
+                        <label for="medicName" class="bmd-label-static">Medic</label>
+                        <input id="medicName" class="form-control" type="text" disabled placeholder="<c:out value="${loggedMedic.name}"/>"/>
+                    </fieldset>
+                    <hr class="divider"/>
 
                     <div class="row justify-content-center">
                         <div class="col">
-                            <label>Patient's name</label>
-                            <div class="input-group mb-3">
-                                <f:input type="text" path="patientName" required="required"/>
-                                <f:errors path="patientName" cssClass="error" />
-                            </div>
-                            <label>Patient's insurance plan</label>
-                            <div class="input-group mb-3">
-                                <f:input type="text" path="patient_insurance_plan" required="required"/>
-                                <f:errors path="patient_insurance_plan" cssClass="error" />
-                            </div>
+                            <fieldset class="form-group">
+                                <label class="bmd-label-floating">Patient's name</label>
+                                <f:input type="text" path="patientName" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                                <f:errors path="patientName" cssClass="invalid-feedback" element="small" />
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <label class="bmd-label-floating">Patient's insurance plan</label>
+                                <f:input type="text" path="patient_insurance_plan" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                                <f:errors path="patient_insurance_plan" cssClass="invalid-feedback" element="small" />
+                            </fieldset>
                         </div>
                         <div class="col">
-                            <label>Patient's email</label>
-                            <div class="input-group mb-3">
-                                <f:input type="email" path="patientEmail" required="required"/>
-                                <f:errors path="patientEmail" cssClass="error" />
-                            </div>
-                            <label>Patient's insurance number</label>
-                            <div class="input-group mb-3">
-                                <f:input type="text" path="patient_insurance_number" required="required"/>
-                                <f:errors path="patient_insurance_number" cssClass="error" />
-                            </div>
+                            <fieldset class="form-group">
+                                <label class="bmd-label-floating">Patient's email</label>
+                                <f:input type="email" path="patientEmail" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                                <f:errors path="patientEmail" cssClass="invalid-feedback" element="small" />
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <label class="bmd-label-floating">Patient's insurance number</label>
+                                <f:input type="text" path="patient_insurance_number" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                                <f:errors path="patient_insurance_number" cssClass="invalid-feedback" element="small" />
+                            </fieldset>
 
                         </div>
                     </div>
@@ -136,17 +123,33 @@
 
                     <div class="row">
                         <div class="col">
-                            <label>Medical Clinic </label>
-                            <f:select id="clinic" cssClass="selectpicker" data-live-search="true" path="clinicId" disabled="true" data-style="btn-primary">
-                                <f:option value="-1" label="Choose Study first"/>
-                            </f:select>
-                            <f:errors path="clinicId" cssClass="error" /><br>
+                            <fieldset class="form-group">
+                                <label class="bmd-label-static">Study Type </label>
+                                <f:select cssErrorClass="selectpicker form-control is-invalid" id="medicalStudy" cssClass="selectpicker form-control" data-live-search="true" path="studyId" data-style="btn-primary">
+                                    <f:option value="-1" label="Choose Study" />
+                                    <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
+                                </f:select>
+                                <f:errors path="studyId" cssClass="invalid-feedback" element="small" />
+                            </fieldset>
                         </div>
                         <div class="col">
-                            <label class="my-2"> Order Description <f:textarea rows="4" cols="50" path="description" class="mt-1"/> </label>
-                            <f:errors path="description" cssClass="error" />
+                            <fieldset class="form-group">
+                                <label class="bmd-label-static">Medical Clinic </label>
+                                <f:select id="clinic" cssClass="selectpicker" cssErrorClass="selectpicker is-invalid" data-live-search="true" path="clinicId" disabled="true" data-style="btn-primary">
+                                    <f:option value="-1" label="Choose Study first"/>
+                                </f:select>
+                                <f:errors path="clinicId" cssClass="invalid-feedback" element="small" /><br>
+                            </fieldset>
                         </div>
                     </div>
+                    <div class="row form-group">
+                        <label class="bmd-label-static">Order Description</label>
+                        <f:textarea path="description" cssStyle="resize: none" cssClass="form-control" cssErrorClass="form-control is-invalid" rows="10"/>
+                        <f:errors path="description" cssClass="invalid-feedback" element="small" />
+                    </div>
+
+
+                    <hr class="mt-3 mb-2"/>
 
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button">Cancel</a>
                     <button class="btn create-btn mt-4 mb-2 float-right" type="submit">Create Order</button>

@@ -55,7 +55,9 @@
                             <c:if test="${loginError}"><div class="alert alert-danger" role="alert">There was an error in the login process, please try again</div></c:if>
                             <c:if test="${registrationSuccess}"><div class="alert alert-success" role="alert">Registration Successful! Please login.</div></c:if>
                         </div>
-                        <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Sign in">
+                        <div class="row justify-content-center">
+                            <input type="submit" class="row btn btn-lg action-btn" value="Sign in">
+                        </div>
                     </form>
                 </div>
 
@@ -79,7 +81,9 @@
                             <label for="registerPasswordConfirm" class="bmd-label-static">Confirm Password</label>
                             <input type="password" class="form-control" required id="registerPasswordConfirm" placeholder="Confirm Password" />
                         </fieldset>
-                        <input type="submit" class="row btn btn-lg btn-primary btn-block" value="Register">
+                        <div class="row justify-content-center">
+                            <input type="submit" class="row btn btn-lg action-btn" value="Register">
+                        </div>
                     </f:form>
                 </div>
             </div>

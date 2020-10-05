@@ -16,7 +16,7 @@
     <div class="text-center">
         <div class="error mx-auto" data-text="<c:out value="${errorNumber}"/>"><c:out value="${errorNumber}"/></div>
         <p class="lead text-gray-800 mb-5"><c:out value="${errorText}"/></p>
-        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+        
         <a href="${indexPath}">&larr; Back to Safety</a>
     </div>
 </div>>

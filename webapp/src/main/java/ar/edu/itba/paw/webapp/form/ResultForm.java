@@ -1,7 +1,11 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.webapp.form;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 public class ResultForm {
+    @NotBlank
     private String responsible_name;
+    @NotBlank
     private String responsible_licence_number;
 
     public ResultForm(String responsible_name, String responsible_licence_number){

@@ -146,7 +146,7 @@ public class ClinicJdbcDaoTest {
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME));
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME_ALT));
 
-        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,TRUE,available_studies);
+        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,available_studies);
 
         Assert.assertFalse(clinic.getMedical_studies().isEmpty());
         StudyType study = clinic.getMedical_studies().stream().findFirst().get();
@@ -158,7 +158,7 @@ public class ClinicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestClinic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,TRUE,new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,new ArrayList<>());
     }
 
     private int insertClinic(int user_id, String name, String email) {
