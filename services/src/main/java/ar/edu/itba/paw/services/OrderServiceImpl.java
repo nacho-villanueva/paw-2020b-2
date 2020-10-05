@@ -13,6 +13,9 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
+    private MailNotificationService mailNotificationService;
+
+    @Autowired
     private OrderDao orderDao;
 
 
@@ -23,7 +26,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order register(Medic medic, Date date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identification_type, byte[] identification, String medic_plan, String medic_plan_number) {
-        return orderDao.register(medic,date,clinic,patient_name,patient_email,studyType,description,identification_type,identification,medic_plan,medic_plan_number);
+        Order order = orderDao.register(medic,date,clinic,patient_name,patient_email,studyType,description,identification_type,identification,medic_plan,medic_plan_number);
+        mailNotificationService.sendOrderMail(order);
+        return order;
     }
 
     @Override
