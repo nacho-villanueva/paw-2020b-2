@@ -110,6 +110,7 @@
 
 </body>
 <!-- Query: Get Orders from filters -->
+<c:url value="/my-studies" var="filterLink"/>
 <c:url var="getOrderBy" value="/api/data/orders/get-order-by"/>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -123,8 +124,9 @@
             let studyId = $('#medicalStudy').val();
             let date = $('#date').val();
             if(clinicId >= -1 && medicId >= -1 && patientId >= -1 && studyId >= -1) {
-                $.getJSON('${getOrderBy}',
+                $.getJSON('${filterLink}',
                     filterCleaner(clinicId, medicId, patientId, studyId, date),
+                    //todo este codigo... se va creo
                     function(response){
                         let results;
                         if(response.length == 0){
