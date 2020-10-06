@@ -40,15 +40,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateRole(User user, int role) {
-        if(vs.isValidRole(role)) {
-            return userDao.updateRole(user,role);
-        }
-
-        return null;
-    }
-
-    @Override
     public User updatePassword(User user, String password) {
         return userDao.updatePassword(user,encoder.encode(password));
     }

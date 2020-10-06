@@ -11,7 +11,5 @@ public interface UserDao {
 
     User register(String email, String password, int role);
 
-    User updateRole(User user, int role);
-
     User updatePassword(User user, String password);
 }
