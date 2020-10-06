@@ -3,13 +3,12 @@ CREATE TABLE IF NOT EXISTS users (
     id serial primary key,
     email text not null unique,
     password text not null,
-    role int not null                                   --Should be 1 for only PATIENT, 2 for MEDIC, 3 for CLINIC, 4 for MEDIC AND CLINIC, 0 for ADMIN
+    role int not null                                   --Should be 0 for ADMIN, 1 for only PATIENT, 2 for MEDIC, 3 for CLINIC
 );
 
 CREATE TABLE IF NOT EXISTS clinics (
     user_id int not null unique,
     name text not null,
-    email text not null unique,                --This is not necessarily the same email they use to login
     telephone text,
     verified boolean not null default false,        --Until verified by humans, it should remain false
     foreign key(user_id) references users
@@ -32,7 +31,6 @@ CREATE TABLE IF NOT EXISTS clinic_available_studies (
 CREATE TABLE IF NOT EXISTS medics (
     user_id int not null unique,
     name text not null,         --Secretary might handle the medic info and use same account as a patient, so we keep the separate
-    email text not null unique,        --Business email might not be same used to login
     telephone text,
     identification_type text not null,
     identification bytea not null,

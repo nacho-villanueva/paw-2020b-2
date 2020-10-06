@@ -35,12 +35,12 @@ public class PatientJdbcDao implements PatientDao {
 
     @Override
     public Optional<Patient> findByUser_id(final int user_id) {
-        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id AND u.id = ?", new Object[] { user_id }, PATIENT_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id WHERE u.id = ?", new Object[] { user_id }, PATIENT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<Patient> findByEmail(final String email) {
-        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id AND u.email = ?", new Object[]{ email }, PATIENT_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id WHERE u.email = ?", new Object[]{ email }, PATIENT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override

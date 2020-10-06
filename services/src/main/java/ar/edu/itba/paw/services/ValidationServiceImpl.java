@@ -207,9 +207,8 @@ public class ValidationServiceImpl implements ValidationService {
         switch (role) {
             case User.ADMIN_ROLE_ID:
             case User.MEDIC_ROLE_ID:
-            case User.USER_ROLE_ID:
+            case User.PATIENT_ROLE_ID:
             case User.CLINIC_ROLE_ID:
-            case User.CLINIC_MEDIC_ROLE_ID:
                 isValid = true;
                 break;
             default:

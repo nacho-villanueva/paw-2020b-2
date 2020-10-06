@@ -35,11 +35,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String password) {
-        return userDao.register(email,encoder.encode(password),User.USER_ROLE_ID);
-    }
-
-    @Override
     public User register(String email, String password, int role) {
         return userDao.register(email,encoder.encode(password),role);
     }

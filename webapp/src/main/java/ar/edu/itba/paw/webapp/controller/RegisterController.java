@@ -54,7 +54,7 @@ public class RegisterController {
 
         ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
-        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
+        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(),User.ADMIN_ROLE_ID);  //TODO: Change admin role for form input
         //TODO Service: Generate LoginUserForm
         //TODO mav.addObject(loginUserForm);
         return mav;
@@ -87,8 +87,7 @@ public class RegisterController {
                 throw new StudyTypeNotFoundException();
         }
 
-        Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(),
-                applyMedicForm.getEmail(), applyMedicForm.getTelephone(),
+        Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
                 applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
 
         mns.sendMedicApplicationValidatingMail(newMedic);
@@ -118,8 +117,7 @@ public class RegisterController {
                 throw new StudyTypeNotFoundException();
         }
 
-        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(),
-                applyClinicForm.getEmail(), applyClinicForm.getTelephone(), availableStudies);
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
 
         mns.sendClinicApplicationValidatingMail(newClinic);
 

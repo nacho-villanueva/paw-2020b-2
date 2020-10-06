@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService us;
 
-    private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
+    //private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
@@ -33,35 +33,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         switch (user.getRole()) {
             case MEDIC_ROLE_ID:
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
                 break;
             case CLINIC_ROLE_ID:
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
-                break;
-            case CLINIC_MEDIC_ROLE_ID:
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
                 break;
             case ADMIN_ROLE_ID:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 break;
-            case USER_ROLE_ID:
+            case PATIENT_ROLE_ID:
             default:
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_PATIENT"));
                 break;
         }
 
-        final String password;
-        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
-            User newUser = us.updatePassword(user, user.getPassword());
-            password = newUser.getPassword();
-        } else {
-            password = user.getPassword();
-        }
+//        final String password;
+//        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
+//            User newUser = us.updatePassword(user, user.getPassword());
+//            password = newUser.getPassword();
+//        } else {
+//            password = user.getPassword();
+//        }
 
-        return new org.springframework.security.core.userdetails.User(email, password, authorities);
+        return new org.springframework.security.core.userdetails.User(email, user.getPassword(), authorities);
     }
 }
