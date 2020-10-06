@@ -9,7 +9,7 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    User register(String email, String password, int role);
+    User register(String email, String password, int role, String locale);
 
     User updateRole(User user, int role);
 

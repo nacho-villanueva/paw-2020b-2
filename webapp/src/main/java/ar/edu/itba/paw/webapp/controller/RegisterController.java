@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -45,7 +46,7 @@ public class RegisterController {
     private MailNotificationService mns;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@Valid @ModelAttribute("registerUserForm") RegisterUserForm registerUserForm, final BindingResult errors){
+    public ModelAndView register(@Valid @ModelAttribute("registerUserForm") RegisterUserForm registerUserForm, final BindingResult errors, Locale locale){
         if(errors.hasErrors()){
             ModelAndView registrationErrors = new ModelAndView("index");
             registrationErrors.addObject("registration", true);
@@ -54,7 +55,7 @@ public class RegisterController {
 
         ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
-        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
+        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(),locale.toLanguageTag());
         //TODO Service: Generate LoginUserForm
         //TODO mav.addObject(loginUserForm);
         return mav;

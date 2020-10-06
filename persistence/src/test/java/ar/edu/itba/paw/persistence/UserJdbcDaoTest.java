@@ -40,6 +40,7 @@ public class UserJdbcDaoTest {
     private static final int ROLE = 2;
     private static final int NEW_ROLE = 4;
     private static final int ZERO_ID = 0;
+    private static final String DEFAULT_LOCALE = "en-US";
 
     @Autowired
     private DataSource ds;
@@ -69,7 +70,7 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testRegisterValid() {
-        final User user = dao.register(EMAIL,PASSWORD,ROLE);
+        final User user = dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
 
         Assert.assertNotNull(user);
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
@@ -79,7 +80,7 @@ public class UserJdbcDaoTest {
     public void testRegisterInvalid() {
         insertTestUser();
 
-        dao.register(EMAIL,PASSWORD,ROLE);
+        dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
     }
 
     @Test
