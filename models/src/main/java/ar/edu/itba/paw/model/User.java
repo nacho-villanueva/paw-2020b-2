@@ -6,6 +6,7 @@ public class User {
     public static final int PATIENT_ROLE_ID = 1;
     public static final int MEDIC_ROLE_ID = 2;
     public static final int CLINIC_ROLE_ID = 3;
+    public static final int UNDEFINED_ROLE_ID = 4;
 
     private int id;
     private String email;
@@ -77,6 +78,8 @@ public class User {
     }
 
     public boolean isPatient() { return this.role == PATIENT_ROLE_ID; }
+
+    public boolean isUndefined() { return this.role == UNDEFINED_ROLE_ID; }
 
     public boolean isRegistered() {
         return isRegistered;

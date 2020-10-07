@@ -10,7 +10,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String email);
 
-    User register(String email, String password, int role);
+    User register(String email, String password);
 
     User updatePassword(User user, String password);
 

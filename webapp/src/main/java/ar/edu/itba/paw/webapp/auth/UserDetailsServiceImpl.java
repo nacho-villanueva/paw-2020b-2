@@ -42,9 +42,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 break;
             case PATIENT_ROLE_ID:
-            default:
                 authorities.add(new SimpleGrantedAuthority("ROLE_PATIENT"));
                 break;
+            case UNDEFINED_ROLE_ID:
+            default:
+                authorities.add(new SimpleGrantedAuthority("ROLE_UNDEFINED"));
         }
 
 //        final String password;

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     id serial primary key,
     email text not null unique,
     password text not null,
-    role int not null                                   --Should be 0 for ADMIN, 1 for only PATIENT, 2 for MEDIC, 3 for CLINIC
+    role int not null                                   --Should be 0 for ADMIN, 1 for only PATIENT, 2 for MEDIC, 3 for CLINIC, 4 for UNDEFINED
 );
 
 CREATE TABLE IF NOT EXISTS clinics (

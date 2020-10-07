@@ -68,6 +68,10 @@ public class UserJdbcDao implements UserDao{
                 Optional<Patient> maybePatient = pdao.findByUserId(user.getId());
                 user.setRegistered(maybePatient.isPresent());
                 break;
+            case User.UNDEFINED_ROLE_ID:
+                user.setRegistered(false);
+                user.setVerifying(false);
+                break;
             case User.ADMIN_ROLE_ID:
             default:
         }

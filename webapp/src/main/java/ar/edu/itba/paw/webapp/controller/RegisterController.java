@@ -54,7 +54,7 @@ public class RegisterController {
 
         ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
-        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(),User.ADMIN_ROLE_ID);  //TODO: Change admin role for form input
+        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
         //TODO Service: Generate LoginUserForm
         //TODO mav.addObject(loginUserForm);
         return mav;
