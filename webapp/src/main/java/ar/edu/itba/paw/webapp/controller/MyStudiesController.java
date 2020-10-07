@@ -111,19 +111,32 @@ public class MyStudiesController {
         //date sea un string yyyy-mm-dd
         //studytype sea el type id
         if(parameters.containsKey("c")){
-            orders.removeIf(order -> order.getClinic().getUser_id() != Integer.parseInt(parameters.get("c")));
+            int aux = Integer.parseInt(parameters.get("c"));
+            if(clinicService.findByUserId(aux).isPresent())
+                orders.removeIf(order -> order.getClinic().getUser_id() != aux);
         }
         if(parameters.containsKey("m")){
-            orders.removeIf(order -> order.getMedic().getUser_id() != Integer.parseInt(parameters.get("m")));
+            int aux = Integer.parseInt(parameters.get("m"));
+            if(medicService.findByUserId(aux).isPresent())
+                orders.removeIf(order -> order.getMedic().getUser_id() != aux);
         }
         if(parameters.containsKey("p")){
             orders.removeIf(order -> !order.getPatient_name().equals(parameters.get("p")));
         }
         if(parameters.containsKey("d")){
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.setLenient(false);
+            try{
+                dateFormat.parse(parameters.get("d").trim());
+            }catch (ParseException pe){
+                //what are you doing
+            }
             orders.removeIf(order -> !order.getDate().equals(Date.valueOf(parameters.get("d"))));
         }
         if(parameters.containsKey("s")){
-            orders.removeIf(order -> order.getStudy().getId() != Integer.parseInt(parameters.get("s")));
+            int aux = Integer.parseInt(parameters.get("s"));
+            if(studyService.findById(aux).isPresent())
+                orders.removeIf(order -> order.getStudy().getId() != Integer.parseInt(parameters.get("s")));
         }
 
         HashMap<Long, String> encodeds = new HashMap<>();

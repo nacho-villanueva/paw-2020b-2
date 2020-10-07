@@ -31,6 +31,7 @@
             <div class="card results-card bg-light anim-content float-right">
                 <div class="card-body">
                     <p class="card-title h4">Results</p>
+                    <hr/>
                     <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
                         <c:if test="${ordersList.size() eq 0}">
                             <h3 class="text-center py-5 lead">It seems there are no studies matching with the filter criteria.</h3>
@@ -54,7 +55,8 @@
         <div class="col-sm-5">
             <div class="card filters-card bg-light float-left">
                 <div class="card-body">
-                    <p class="card-title h4 mb-4">Filters</p>
+                    <p class="card-title h4">Filters</p>
+                    <hr/>
                     <c:url var="filter" value="/filter-search"/>
                     <f:form action="${filter}" method="post" modelAttribute="filterForm">
                         <fieldset>
