@@ -87,3 +87,10 @@ body {
     margin-top: 4%;
     width: 50%;
 }
+.reset-btn{
+    background: slategrey;
+    color: white;
+
+    margin-top: 4%;
+    width: 50%;
+}
