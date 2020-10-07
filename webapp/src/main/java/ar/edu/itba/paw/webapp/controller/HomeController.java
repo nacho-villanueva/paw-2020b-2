@@ -41,19 +41,24 @@ public class HomeController {
         }
 
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("registerUserForm", registerUserForm);
         mav.addObject("loginError", loginError);
         mav.addObject("registrationSuccess", registrationSuccess);
+
+        mav.addObject("registerUserForm", registerUserForm);
+        mav.addObject("patientRoleID",User.PATIENT_ROLE_ID);
+        mav.addObject("medicRoleID",User.MEDIC_ROLE_ID);
+        mav.addObject("clinicRoleID",User.CLINIC_ROLE_ID);
         return mav;
     }
 
     @RequestMapping("/home")
     public ModelAndView dashboard() {
+        if(!loggedUser().isRegistered())
+            return new ModelAndView("redirect:/complete-registration");
+
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("loggedUser",loggedUser());
-
         mav = homeSetup(mav);
-
         return mav;
     }
 
