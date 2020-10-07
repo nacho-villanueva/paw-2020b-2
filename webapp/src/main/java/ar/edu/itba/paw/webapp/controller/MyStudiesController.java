@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -121,7 +123,7 @@ public class MyStudiesController {
                 orders.removeIf(order -> order.getMedic().getUser_id() != aux);
         }
         if(parameters.containsKey("p")){
-            orders.removeIf(order -> !order.getPatient_name().equals(parameters.get("p")));
+            orders.removeIf(order -> !order.getPatient_email().equals(parameters.get("p")));
         }
         if(parameters.containsKey("d")){
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -155,35 +157,39 @@ public class MyStudiesController {
     }
 
     @RequestMapping(value = "/filter-search", method = RequestMethod.POST)
-    public String filterSearch(@ModelAttribute("filterForm") FilterForm filterForm){
-        String out = "redirect:/my-studies?";
-        if(filterForm.getDate() != null && !filterForm.getDate().isEmpty()){
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            try{
-                dateFormat.parse(filterForm.getDate().trim());
-            }catch (ParseException pe){
-                //what are you doing
+    public String filterSearch(@Valid @ModelAttribute("filterForm") FilterForm filterForm, final BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "my-studies";
+        }else{
+            String out = "redirect:/my-studies?";
+            if(filterForm.getDate() != null && !filterForm.getDate().isEmpty()){
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.setLenient(false);
+                try{
+                    dateFormat.parse(filterForm.getDate().trim());
+                }catch (ParseException pe){
+                    return "my-studies";
+                }
+                out += "date=" + filterForm.getDate() + "&";
             }
-            out += "date=" + filterForm.getDate() + "&";
-        }
-        if(filterForm.getClinic_id() != null && filterForm.getClinic_id() != -1){
-            if(clinicService.findByUserId(filterForm.getClinic_id()).isPresent())
-                out += "clinic=" + filterForm.getClinic_id().toString() + "&";
-        }
-        if(filterForm.getMedic_id() != null && filterForm.getMedic_id() != -1){
-            if(medicService.findByUserId(filterForm.getMedic_id()).isPresent())
-                out += "medic=" + filterForm.getMedic_id().toString() + "&";
-        }
-        if(filterForm.getPatient_name() != null && !filterForm.getPatient_name().isEmpty()){
-            out += "patient=" + filterForm.getPatient_name() + "&";
-        }
-        if(filterForm.getStudy_id() != null && filterForm.getStudy_id() != -1){
-            if(studyService.findById(filterForm.getStudy_id()).isPresent())
-                out += "study=" + filterForm.getStudy_id().toString();
-        }
+            if(filterForm.getClinic_id() != null && filterForm.getClinic_id() != -1){
+                if(clinicService.findByUserId(filterForm.getClinic_id()).isPresent())
+                    out += "clinic=" + filterForm.getClinic_id().toString() + "&";
+            }
+            if(filterForm.getMedic_id() != null && filterForm.getMedic_id() != -1){
+                if(medicService.findByUserId(filterForm.getMedic_id()).isPresent())
+                    out += "medic=" + filterForm.getMedic_id().toString() + "&";
+            }
+            if(filterForm.getPatient_email() != null && !filterForm.getPatient_email().isEmpty()){
+                out += "patient=" + filterForm.getPatient_email() + "&";
+            }
+            if(filterForm.getStudy_id() != null && filterForm.getStudy_id() != -1){
+                if(studyService.findById(filterForm.getStudy_id()).isPresent())
+                    out += "study=" + filterForm.getStudy_id().toString();
+            }
 
-        return out;
+            return out;
+        }
     }
 
 }

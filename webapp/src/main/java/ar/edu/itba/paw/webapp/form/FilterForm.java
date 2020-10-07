@@ -1,23 +1,35 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.Email;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Min;
+
 public class FilterForm {
-    private String patient_name, date;
+
+    @Email
+    private String patient_email;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private String date;
+
+    @Min(-1)
     private Integer study_id, clinic_id, medic_id;
 
     public FilterForm() {
     }
 
-    public FilterForm(Integer study_id, Integer clinic_id, Integer medic_id, String patient_name, String date){
+    public FilterForm(Integer study_id, Integer clinic_id, Integer medic_id, String patient_email, String date){
         this.date = date;
-        this.patient_name = patient_name;
+        this.patient_email = patient_email;
         this.medic_id = medic_id;
         this.clinic_id = clinic_id;
         this.study_id = study_id;
     }
 
-    public String getPatient_name() { return patient_name; }
-    public void setPatient_name(String s){
-        patient_name = s;
+    public String getPatient_email() { return patient_email; }
+    public void setPatient_email(String s){
+        patient_email = s;
     }
 
     public String getDate(){ return date; }

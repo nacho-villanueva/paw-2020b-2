@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/mystudies.css"/>">
     <title>MedTransfer</title>
 </head>
-<c:url value="/my-studies" var="relaodPath"/>
+<c:url value="?" var="reloadPath"/>
 <c:url value="/view-study/" var="studyPath"/>
 <body>
 <div class="main-container">
@@ -60,21 +60,21 @@
                     <c:url var="filter" value="/filter-search"/>
                     <f:form action="${filter}" method="post" modelAttribute="filterForm">
                         <fieldset>
-                            <label class="mb-1">Study Type</label><br/>
+                            <label class="bmd-label-static">Study Type</label>
                             <f:select id="studyTypes" cssClass="selectpicker" title="Choose a study type" data-live-search="true" path="study_id" data-style="btn-custom">
                                 <f:option value="-1" label="Any medical study"/>
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                             </f:select>
                         </fieldset>
                         <fieldset>
-                            <label class="mb-1">Clinic</label><br/>
+                            <label class="bmd-label-static">Clinic</label>
                             <f:select id="medicalClinic" cssClass="selectpicker" title="Choose a clinic" data-live-search="true" path="clinic_id" data-style="btn-custom">
                                 <f:option value="-1" label="Any medical clinic"/>
                                 <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
                         </fieldset>
                         <fieldset>
-                            <label class="mb-1">Medic</label><br/>
+                            <label class="bmd-label-static">Medic</label>
                             <f:select id="medicalFields" cssClass="selectpicker" title="Choose a medic" data-live-search="true" path="medic_id" data-style="btn-custom">
                                 <f:option value="-1" label="Any medic"/>
                                 <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
@@ -82,15 +82,17 @@
                         </fieldset>
                         <fieldset>
                             <fieldset class="form-group">
-                                <label for="patientName" class="bmd-label-floating">Patient's Name</label>
-                                <f:input type="text" class="form-control" id="patientName" path="patient_name"/>
+                                <label for="patientEmail" class="bmd-label-floating">Patient's Email Address</label>
+                                <f:input type="email" class="form-control" id="patientEmail" path="patient_email"/>
+                                <f:errors path="patient_email"/>
                             </fieldset>
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="bmd-label-floating" for="date">Date</label>
+                            <label class="bmd-label-static" for="date">Date</label>
                             <div class="input-group date">
                                 <f:input type="date" class="form-control" id="date" path="date"/>
+                                <f:errors path="date"/>
                             </div>
                         </fieldset>
                         <div class="row justify-content-center">
