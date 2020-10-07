@@ -15,6 +15,9 @@ import java.util.*;
 @Repository
 public class MedicJdbcDao implements MedicDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Medic> MEDIC_ROW_MAPPER = (rs, rowNum) ->
             new Medic(rs.getInt("user_id"),
                     rs.getString("name"),
@@ -86,6 +89,8 @@ public class MedicJdbcDao implements MedicDao {
             MedicalField medicalFieldDB = this.registerFieldToMedic(user.getId(),medicalField);
             known_fieldsDB.add(medicalFieldDB);
         });
+
+        userDao.updateRole(user, User.MEDIC_ROLE_ID);
 
         return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,false,known_fieldsDB);
     }

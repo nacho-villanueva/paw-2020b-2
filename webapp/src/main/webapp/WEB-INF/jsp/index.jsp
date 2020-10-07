@@ -66,27 +66,6 @@
                 <div id="register" class="tab-pane fade<c:if test="${registration}">show active</c:if>">
                     <c:url var="register"  value="/register"/>
                     <f:form action="${register}" class="form-signin" modelAttribute="registerUserForm" method="post">
-                        <div class="container">
-                            <div class="row">
-                                <h6 class="justify-content-center align-self-center">I'm a: </h6>
-                                <div class="col">
-                                    <div class="btn-toolbar d-flex justify-content-center" data-toggle="buttons">
-                                        <label class="btn btn-primary mr-3 active">Patient
-                                            <f:radiobutton path="userType" value="${patientRoleID}" cssClass="radio-toggle m-2"/>
-                                        </label>
-
-                                        <label class="btn btn-primary mr-3">Medic
-                                            <f:radiobutton path="userType" value="${medicRoleID}" cssClass="radio-toggle mr-2" />
-                                        </label>
-
-                                        <label class="btn btn-primary mr-3">Clinic
-                                            <f:radiobutton path="userType" value="${clinicRoleID}" cssClass="radio-toggle mr-2" />
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <fieldset class="form-group">
                             <label for="registerEmail" class="bmd-label-static">Email Address</label>
                             <f:input type="email" path="email" cssClass="form-control" cssErrorClass="form-control is-invalid" id="registerEmail" required="required" placeholder="Email Address" />

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
 import ar.edu.itba.paw.webapp.form.ApplyClinicForm;
 import ar.edu.itba.paw.webapp.form.ApplyMedicForm;
+import ar.edu.itba.paw.webapp.form.RegisterPatientForm;
 import ar.edu.itba.paw.webapp.form.RegisterUserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.soap.SOAPBinding;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +40,9 @@ public class RegisterController {
 
     @Autowired
     private ClinicService cs;
+
+    @Autowired
+    private PatientService ps;
 
     @Autowired
     private MedicalFieldService mfs;
@@ -71,72 +74,68 @@ public class RegisterController {
 
     @RequestMapping(value = "/complete-registration", method = RequestMethod.GET)
     public ModelAndView completeRegistration(){
-        switch (loggedUser().getRole()){
-            case User.PATIENT_ROLE_ID:
-                ModelAndView patientRegistration = new ModelAndView("patient-registration");
-                //patientRegistration.addObject("registerPatientForm", new RegisterPatientForm());
-                return patientRegistration;
-            case User.MEDIC_ROLE_ID:
-                ModelAndView medicRegistration = new ModelAndView("medic-registration");
-                medicRegistration.addObject("applyMedicForm", new ApplyMedicForm());
-                medicRegistration.addObject("fieldsList", mfs.getAll());
-                return medicRegistration;
-            case User.CLINIC_ROLE_ID:
-                final ModelAndView clinicRegistration = new ModelAndView("clinic-registration");
-                clinicRegistration.addObject("applyClinicForm", new ApplyClinicForm());
-                clinicRegistration.addObject("studiesList", sts.getAll());
-                return clinicRegistration;
-        }
-        return new ModelAndView("redirect:/logout");
+        final ModelAndView mav = new ModelAndView("complete-registration");
+        mav.addObject("registerPatientForm", new RegisterPatientForm());
+        mav.addObject("applyMedicForm", new ApplyMedicForm());
+        mav.addObject("applyClinicForm", new ApplyClinicForm());
+
+        mav.addObject("fieldsList", mfs.getAll());
+        mav.addObject("studiesList", sts.getAll());
+        return mav;
     }
 
     @RequestMapping(value = "/apply-as-medic", method = RequestMethod.POST)
     public String applyMedic(@ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm){
-        if(loggedUser().getRole() == User.MEDIC_ROLE_ID) {
-            byte[] fileBytes;
-            try {
-                fileBytes = applyMedicForm.getIdentification().getBytes();
-            } catch (IOException e) {
-                throw new UploadedFileFailedToLoadException();
-            }
-            ArrayList<MedicalField> knownFields = new ArrayList<>();
-            for (Integer i : applyMedicForm.getKnown_fields()) {
-
-                Optional<MedicalField> mf = mfs.findById(i);
-
-                if (mf.isPresent())
-                    knownFields.add(mf.get());
-                else
-                    throw new StudyTypeNotFoundException();
-            }
-
-            Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
-                    applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
-
-            mns.sendMedicApplicationValidatingMail(newMedic);
+        byte[] fileBytes;
+        try {
+            fileBytes = applyMedicForm.getIdentification().getBytes();
+        } catch (IOException e) {
+            throw new UploadedFileFailedToLoadException();
         }
+        ArrayList<MedicalField> knownFields = new ArrayList<>();
+        for (Integer i : applyMedicForm.getKnown_fields()) {
+
+            Optional<MedicalField> mf = mfs.findById(i);
+
+            if (mf.isPresent())
+                knownFields.add(mf.get());
+            else
+                throw new StudyTypeNotFoundException();
+        }
+
+        Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
+                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
+
+        mns.sendMedicApplicationValidatingMail(newMedic);
         return "redirect:/home";
     }
 
     @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
     public String applyClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
-        if(loggedUser().getRole() == User.CLINIC_ROLE_ID) {
-            ArrayList<StudyType> availableStudies = new ArrayList<>();
-            for (Integer i : applyClinicForm.getAvailable_studies()) {
+        ArrayList<StudyType> availableStudies = new ArrayList<>();
 
-                Optional<StudyType> st = sts.findById(i);
+        for (Integer i : applyClinicForm.getAvailable_studies()) {
 
-                if (st.isPresent())
-                    availableStudies.add(st.get());
-                else
-                    throw new StudyTypeNotFoundException();
-            }
+            Optional<StudyType> st = sts.findById(i);
 
-            Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
-
-            mns.sendClinicApplicationValidatingMail(newClinic);
+            if (st.isPresent())
+                availableStudies.add(st.get());
+            else
+                throw new StudyTypeNotFoundException();
         }
+
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
+
+        mns.sendClinicApplicationValidatingMail(newClinic);
+
         return "redirect:/home";
+    }
+
+    @RequestMapping(value = "/register-patient", method = RequestMethod.POST)
+    public ModelAndView registerPatient(@ModelAttribute("registerPatientForm") RegisterPatientForm registerPatientForm){
+        ps.register(loggedUser(), registerPatientForm.getFullname(),
+                registerPatientForm.getMedical_insurance_plan(), registerPatientForm.getMedical_insurance_number());
+        return new ModelAndView("redirect:/home");
     }
 
     @ModelAttribute

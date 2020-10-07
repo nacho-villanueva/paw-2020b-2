@@ -15,6 +15,9 @@ import java.util.*;
 @Repository
 public class ClinicJdbcDao implements ClinicDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Clinic> CLINIC_ROW_MAPPER = (rs, rowNum) ->
             new Clinic(rs.getInt("user_id"),
                     rs.getString("name"),
@@ -98,6 +101,8 @@ public class ClinicJdbcDao implements ClinicDao {
             StudyType studyTypeFromDB = this.registerStudyToClinic(user.getId(), studyType);
             available_studiesDB.add(studyTypeFromDB);
         });
+
+        userDao.updateRole(user, User.CLINIC_ROLE_ID);
 
         return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,false);
     }

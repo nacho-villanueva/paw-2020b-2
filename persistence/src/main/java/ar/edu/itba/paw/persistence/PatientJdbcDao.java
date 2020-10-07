@@ -16,6 +16,9 @@ import java.util.Optional;
 @Repository
 public class PatientJdbcDao implements PatientDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Patient> PATIENT_ROW_MAPPER = (rs, rowNum) ->
             new Patient(rs.getInt("user_id"),
                     rs.getString("email"),
@@ -63,6 +66,8 @@ public class PatientJdbcDao implements PatientDao {
         insertMap.put("medic_plan_number", medic_plan_number);
 
         jdbcInsert.execute(insertMap);
+
+        userDao.updateRole(user, User.PATIENT_ROLE_ID);
 
         return new Patient(user.getId(),user.getEmail(),name,medic_plan,medic_plan_number);
     }

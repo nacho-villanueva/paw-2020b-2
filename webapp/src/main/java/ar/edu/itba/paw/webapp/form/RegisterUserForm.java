@@ -10,11 +10,6 @@ import javax.validation.constraints.Size;
 
 public class RegisterUserForm {
 
-
-    @Min(1)
-    @Max(3)
-    private Integer userType;
-
     @UserNotExist
     @Email
     private String email;
@@ -27,10 +22,6 @@ public class RegisterUserForm {
 
     }
 
-    public Integer getUserType() {
-        return userType;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -41,10 +32,6 @@ public class RegisterUserForm {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setUserType(Integer userType) {
-        this.userType = userType;
     }
 
     public void setPassword(String password) {
