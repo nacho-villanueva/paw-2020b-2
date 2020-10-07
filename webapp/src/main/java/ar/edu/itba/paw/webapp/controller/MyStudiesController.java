@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Date;
 import java.util.*;
 
 @Controller
@@ -31,9 +32,6 @@ public class MyStudiesController {
     @Autowired
     private ClinicService clinicService;
 
-    @Autowired
-    private PatientService patientService;  //TO DO: Los medicos pueden filtrar por pacientes?
-                                            // entonces necesitamos un pt.getAll()
     @Autowired
     private UrlEncoderService urlEncoderService;
 
@@ -61,7 +59,7 @@ public class MyStudiesController {
         if(patientString != null && !patientString.isEmpty())
             parameters.put("p", patientString);
 
-        mav = listingSetup(mav, parameters);
+        listingSetup(mav, parameters);
 
         return mav;
     }
@@ -78,61 +76,63 @@ public class MyStudiesController {
 
     //we can use loggedUser to check if they are medic or clinic or patient
     //now that a user can only be one of these
-    private ModelAndView listingSetup(ModelAndView mav, HashMap<String, String> parameters){
+    private void listingSetup(ModelAndView mav, HashMap<String, String> parameters){
         User user = loggedUser();
-        if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
-            Collection<Clinic> onlyUser = new ArrayList<>();
-            onlyUser.add(clinicService.findByUserId(user.getId()).get());
-            mav.addObject("clinicsList", onlyUser);
+        Collection<Order> orders;
+        Collection<Clinic> clinicsList = new ArrayList<>();
+        Collection<Medic> medicsList = new ArrayList<>();
+
+        //aca se estan haciendo cosas del estilo "cual es el dominio de este user"
+        //capaz volar esta seccion a userservice
+        if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
+            orders = orderService.getAllAsMedic(user);
+            orders.forEach(order -> clinicsList.add(order.getClinic()));
+            medicsList.add(medicService.findByUserId(user.getId()).get());
+        }else if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
+            orders = orderService.getAllAsClinic(user);
+            orders.forEach(order -> medicsList.add(order.getMedic()));
+            clinicsList.add(clinicService.findByUserId(user.getId()).get());
         }else{
-            mav.addObject("clinicsList", clinicService.getAll());
+            orders = orderService.getAllAsPatient(user);
+            orders.forEach(order -> clinicsList.add(order.getClinic()));
+            orders.forEach(order -> medicsList.add(order.getMedic()));
         }
 
-        if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
-            Collection<Medic> onlyUser = new ArrayList<>();
-            onlyUser.add(medicService.findByUserId(user.getId()).get());
-            mav.addObject("medicsList", onlyUser);
-        }else{
-            mav.addObject("medicsList", medicService.getAll());
-        }
-        /*
-        **  FUTURE CODE
-        **
-        if(!user.isClinic() && !user.isMedic()){
-            Collection<Patient> onlyUser = new ArrayList<>();
-            onlyUser.add(patientService.findByUserId(user.getId()).get());
-            mav.addObject("patientsList", onlyUser);
-        }else{
-            mav.addObject("patientsList", patientService.getAll());
-        }
-        */
         mav.addObject("studiesList", studyService.getAll());
 
-        Collection<Order> orders;
+        //clinic sea el user id
+        //medic sea el user id
+        //patient sea el patient_name
+        //date sea un string yyyy-mm-dd
+        //studytype sea el type id
+        if(parameters.containsKey("c")){
+            orders.removeIf(order -> order.getClinic().getUser_id() != Integer.parseInt(parameters.get("c")));
+        }
+        if(parameters.containsKey("m")){
+            orders.removeIf(order -> order.getMedic().getUser_id() != Integer.parseInt(parameters.get("m")));
+        }
+        if(parameters.containsKey("p")){
+            orders.removeIf(order -> !order.getPatient_name().equals(parameters.get("p")));
+        }
+        if(parameters.containsKey("d")){
+            orders.removeIf(order -> !order.getDate().equals(Date.valueOf(parameters.get("d"))));
+        }
+        if(parameters.containsKey("s")){
+            orders.removeIf(order -> order.getStudy().getId() != Integer.parseInt(parameters.get("s")));
+        }
+
         HashMap<Long, String> encodeds = new HashMap<>();
-        List<String> params = new ArrayList<>();
-        params.add(parameters.getOrDefault("d", null));
-        params.add(parameters.getOrDefault("c", null));
-        params.add(parameters.getOrDefault("m", null));
-        params.add(parameters.getOrDefault("s", null));
-        params.add(parameters.getOrDefault("p", null));
-        /*
-        ** FUTURE CODE
-        **
-        orders = orderService.getAllDCMSP(params);
-         */
-        encodeds = encoder(orders, encodeds);
+
+        encoder(orders, encodeds);
 
         mav.addObject("ordersList", orders);
         mav.addObject("encodedList", encodeds);
 
-        return mav;
     }
 
-    private HashMap<Long, String> encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
+    private void encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
         for(Order order : orders){
             encodeds.put(order.getOrder_id(), urlEncoderService.encode(order.getOrder_id()));
         }
-        return encodeds;
     }
 }

@@ -30,11 +30,11 @@
                 <div class="card-body">
                     <p class="card-title h4">Results</p>
                     <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
-                        <c:if test="${studies.size() eq 0}">
+                        <c:if test="${ordersList.size() eq 0}">
                             <h3 class="text-center py-5 lead">It seems there are no studies matching with the filter criteria.</h3>
                         </c:if>
-                        <c:forEach items="${studies}" var="order">
-                            <a href="${studyPath}${encodeds.get(order.order_id)}" class="list-group-item list-group-item-action">
+                        <c:forEach items="${ordersList}" var="order">
+                            <a href="${studyPath}${encodedList.get(order.order_id)}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">Study type: <c:out value="${order.study.name}" /></h5>
                                     <small>Date: <c:out value="${order.date}" /></small>
@@ -80,11 +80,9 @@
                         </fieldset>
                         <fieldset class="row form-group">
                             <label class="bmd-label-floating" for="patient">Patient </label>
-                            <select cssErrorClass="selectpicker form-control is-invalid" id="patient" cssClass="selectpicker form-control" data-live-search="true" path="patientId" data-style="btn-primary">
-                                <option value="-1" label="Any patient"></option>
-                                <options items="${patientsList}" itemLabel="name" itemValue="id"/>
-                            </select>
-                            <errors path="patientId" cssClass="invalid-feedback" element="small" />
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="patient">
+                            </div>
                         </fieldset>
                         <fieldset class="row form-group">
                             <label class="bmd-label-floating" for="date">Date</label>
@@ -111,7 +109,6 @@
 </body>
 <!-- Query: Get Orders from filters -->
 <c:url value="/my-studies" var="filterLink"/>
-<c:url var="getOrderBy" value="/api/data/orders/get-order-by"/>
 <script type="text/javascript">
     $(document).ready(function(){
 
@@ -124,35 +121,8 @@
             let studyId = $('#medicalStudy').val();
             let date = $('#date').val();
             if(clinicId >= -1 && medicId >= -1 && patientId >= -1 && studyId >= -1) {
-                $.getJSON('${filterLink}',
-                    filterCleaner(clinicId, medicId, patientId, studyId, date),
-                    //todo este codigo... se va creo
-                    function(response){
-                        let results;
-                        if(response.length == 0){
-                            results += '<h3 class="text-center py-5 lead">It seems there are no studies matching with the filter criteria.</h3>';
-                        }else{
-                            for(Map.Entry<Order, String> entry : response.entrySet()){
-                                let orderEntry = entry.getKey();
-                                let encEntry = entry.getValue();
-                                results += '<a href="' + ${studyPath} + encEntry + '"class="list-group-item list-group-item-action">' +
-                                    '<div class="d-flex w-100 justify-content-between">' +
-                                    '<h5 class="mb-1">Study type: ' + sanitize(orderEntry.study.name) + '</h5>' +
-                                    '<small>Date: ' + sanitize(orderEntry.date) + '</small>' +
-                                    '</div>' +
-                                    '<div class="d-flex w-100 justify-content-between">' +
-                                    '<p class="mb-1">Clinic: ' + sanitize(orderEntry.clinic.name) + '</p>' +
-                                    '<small>Medic: ' + sanitize(orderEntry.medic.name) + '</small>' +
-                                    '</div>' +
-                                    '</a>';
-                            }
-                            resultsContainer.html(results);
-                            resultsContainer.refresh();
-                    }
-                });
-            }else{
-                resultsContainer.html('<h3 class="text-center py-5 lead">It seems there are no studies matching with the filter criteria.</h3>');
-                resultsContainer.refresh();
+                //let out = '?';
+                //if(!date.isEmpty())
             }
     });
 
