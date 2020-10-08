@@ -25,8 +25,8 @@
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <div class="col-sm-4">
-            <div class="my-4 py-5  float-right">
+        <div class="pl-5">
+            <div class="my-4 py-5">
                 <p class="h5 lead anim-content">Welcome back, </p><p class="h4 anim-content"><c:out value="${loggedUser.email}" /></p>
             </div>
         </div>
@@ -40,77 +40,28 @@
             </c:when>
             <c:otherwise>
                 <div class="row mx-2">
-                    <c:if test="${loggedUser.role ge 1}">
-                        <div class="col">
-                            <div class="card bg-light anim-content">
-                                <div class="card-body">
-                                    <p class="card-title h4">As a patient, here are your medical studies</p>
-                                    <div class="list-group">
-                                        <c:forEach items="${patient_studies}" var="pat_study">
-                                            <a href="${studyPath}${patient_encodeds.get(pat_study.order_id)}" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1">Study type: <c:out value="${pat_study.study.name}" /></h5>
-                                                    <small>Date: <c:out value="${pat_study.date}" /></small>
-                                                </div>
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <p class="mb-1">Clinic: <c:out value="${pat_study.clinic.name}" /></p>
-                                                    <small>Medic: <c:out value="${pat_study.medic.name}" /></small>
-                                                </div>
+                    <div class="col">
+                        <div class="card bg-light anim-content">
+                            <div class="card-body">
+                                <p class="card-title h4">Your Orders</p>
+                                <div class="list-group">
+                                    <c:forEach items="${orders}" var="o">
+                                        <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">Study type: <c:out value="${o.study.name}" /></h5>
+                                                <small>Date: <c:out value="${o.date}" /></small>
+                                            </div>
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <p class="mb-1">Clinic: <c:out value="${o.clinic.name}" /></p>
+                                                <small>Medic: <c:out value="${o.medic.name}" /></small>
+                                            </div>
 
-                                            </a>
-                                        </c:forEach>
-                                    </div>
+                                        </a>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>
-                    </c:if>
-                    <c:if test="${loggedUser.role eq 2 || loggedUser.role eq 4}">
-                        <div class="col">
-                            <div class="card bg-light anim-content">
-                                <div class="card-body">
-                                    <p class="card-title h4">As a medic, here are your medical studies</p>
-                                    <div class="list-group">
-                                        <c:forEach items="${medic_studies}" var="med_study">
-                                            <a href="${studyPath}${medic_encodeds.get(med_study.order_id)}" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1">Study type: <c:out value="${med_study.study.name}"/></h5>
-                                                    <small>Date: <c:out value="${med_study.date}"/></small>
-                                                </div>
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <p class="mb-1">Clinic: <c:out value="${med_study.clinic.name}"/></p>
-                                                    <small>Patient: <c:out value="${med_study.patient_name}"/></small>
-                                                </div>
-                                            </a>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-                    <c:if test="${loggedUser.role ge 3}">
-                        <div class="col">
-                            <div class="card bg-light anim-content">
-                                <div class="card-body">
-                                    <p class="card-title h4">As a clinic, here are your medical studies</p>
-                                    <div class="list-group">
-                                        <c:forEach items="${clinic_studies}" var="cli_study">
-                                            <a href="${studyPath}${clinic_encodeds.get(cli_study.order_id)}" class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1">Study type: <c:out value="${cli_study.study.name}"/></h5>
-                                                    <small>Date: ${cli_study.date}</small>
-                                                </div>
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <p class="mb-1">Clinic: <c:out value="${cli_study.clinic.name}"/></p>
-                                                    <small>Patient: <c:out value="${cli_study.patient_name}"/></small>
-                                                </div>
-
-                                            </a>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
+                    </div>
                 </div>
             </c:otherwise>
         </c:choose>

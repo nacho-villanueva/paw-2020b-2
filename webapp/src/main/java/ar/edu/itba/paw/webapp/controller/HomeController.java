@@ -79,26 +79,14 @@ public class HomeController {
 
 
     private ModelAndView homeSetup(ModelAndView mav){
-        Collection<Order> patient_studies, medic_studies, clinic_studies;
+        Collection<Order> orders = os.getAllUserOrders(loggedUser());;
 
-        HashMap<Long, String> patient_encodeds = new HashMap<>(), medic_encodeds = new HashMap<>(), clinic_encodeds = new HashMap<>();
-        clinic_studies = os.getAllAsClinic(loggedUser());
-        medic_studies = os.getAllAsMedic(loggedUser());
-        patient_studies = os.getAllAsPatient(loggedUser());
-        patient_encodeds = encoder(patient_studies, patient_encodeds);
-        medic_encodeds = encoder(medic_studies, medic_encodeds);
-        clinic_encodeds = encoder(clinic_studies, clinic_encodeds);
-        mav.addObject("patient_studies", patient_studies);
-        mav.addObject("medic_studies", medic_studies);
-        mav.addObject("clinic_studies", clinic_studies);
-        mav.addObject("patient_encodeds", patient_encodeds);
-        mav.addObject("medic_encodeds", medic_encodeds);
-        mav.addObject("clinic_encodeds", clinic_encodeds);
-        boolean has_studies = false;
-        if(patient_studies.size() + clinic_studies.size() + medic_studies.size() > 0){
-            has_studies = true;
-        }
-        mav.addObject("has_studies", has_studies);
+        HashMap<Long, String> orders_encoded = new HashMap<>();
+        encoder(orders, orders_encoded);
+        mav.addObject("orders", orders);
+        mav.addObject("orders_encoded", orders_encoded);
+        mav.addObject("has_studies", !orders.isEmpty());
+
         return mav;
 
     }
