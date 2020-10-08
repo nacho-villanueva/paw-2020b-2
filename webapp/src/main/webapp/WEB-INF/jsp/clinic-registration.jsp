@@ -26,34 +26,35 @@
 
 <div class="p-5 col-auto card main-container mx-auto" >
     <div class="row justify-content-center">
-        <h2>Before we let you through...</h2>
+        <h2><spring:message code="clinic-registration.body.form.title1"/></h2>
     </div>
     <div class="row justify-content-center">
-        <h3>We need a couple more details.</h3>
+        <h3><spring:message code="clinic-registration.body.form.title2"/></h3>
     </div>
 
     <c:url var="apply" value="/apply-as-clinic"/>
     <f:form action="${apply}" method="post" modelAttribute="applyClinicForm">
         <fieldset class="form-group">
-            <label for="clinicName" class="bmd-label-floating">Clinic's Name</label>
+            <label for="clinicName" class="bmd-label-floating"><spring:message code="clinic-registration.body.form.name.label"/></label>
             <f:input type="text" class="form-control" id="clinicName" path="name"/>
         </fieldset>
         <fieldset class="form-group">
-            <label for="clinicEmail" class="bmd-label-floating">Clinic's Email</label>
+            <label for="clinicEmail" class="bmd-label-floating"><spring:message code="clinic-registration.body.form.email.label"/></label>
             <f:input type="text" class="form-control" id="clinicEmail" path="email"/>
         </fieldset>
         <fieldset class="form-group row">
-            <label for="phoneNumber" class="bmd-label-floating">Phone Number</label>
+            <label for="phoneNumber" class="bmd-label-floating"><spring:message code="clinic-registration.body.form.telephone.label"/></label>
             <f:input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+" path="telephone"/>
-            <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
+            <small class="text-muted"><spring:message code="clinic-registration.body.form.telephone.format"/> </small>
         </fieldset>
 
-        <label>Study Types </label>
-        <f:select id="studyFields" class="selectpicker"  data-live-search="true" path="available_studies" data-style="btn-custom">
-            <f:option value="-1" label="Choose your fields"/>
+        <label><spring:message code="clinic-registration.body.form.available_studies.label"/> </label>
+        <spring:message code="clinic-registration.body.form.available_studies.placeholder" var="available_studiesPlaceholder"/>
+        <f:select id="studyFields" class="selectpicker" title="${available_studiesPlaceholder}"  data-live-search="true" path="available_studies" data-style="btn-custom">
             <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
         </f:select>
-        <input type="submit" value="Continue" class="row btn btn-lg btn-light  bg-primary btn-block">
+        <spring:message code="clinic-registration.body.form.submit" var="clinicSubmit"/>
+        <input type="submit" value="${clinicSubmit}" class="row btn btn-lg btn-light  bg-primary btn-block">
     </f:form>
 </div>
 
