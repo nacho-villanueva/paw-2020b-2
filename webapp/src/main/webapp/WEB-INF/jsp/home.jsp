@@ -4,15 +4,9 @@
 <html lang="en">
 
 <head>
-
-    <link href="<c:url value="/resources/css/sbadmin.css" />" rel="stylesheet">
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/home.css"/>">
     <title>MedTransfer</title>
-
-    <!-- Custom styles for this template-->
-
-
 </head>
 
 <body id="page-top">
@@ -192,8 +186,6 @@
 </div>
 
 <%@ include file="fragments/include-scripts.jsp"%>
-<!-- Custom scripts for all pages-->
-<script src="<c:url value="/resources/js/sbadmin.js" />"></script>
 
 </body>
 </html>

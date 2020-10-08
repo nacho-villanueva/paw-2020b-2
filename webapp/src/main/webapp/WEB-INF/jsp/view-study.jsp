@@ -5,14 +5,16 @@
 <html lang="en">
 <head>
     <%@ include file="fragments/include-header.jsp"%>
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/viewstudy.css"/>">
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
 <body>
-<div class="main-container">
-    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+
+<div id="wrapper">
+<jsp:include page="fragments/sidebar-fragment.jsp" />
+
+<div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card order-card bg-light float-right">
@@ -118,7 +120,7 @@
             </div>
         </div>
     </div>
-
+</div>
 </div>
 <%@ include file="fragments/include-scripts.jsp"%>
 </body>
