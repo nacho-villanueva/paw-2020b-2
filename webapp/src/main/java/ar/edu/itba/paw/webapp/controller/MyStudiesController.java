@@ -109,7 +109,7 @@ public class MyStudiesController {
 
         //clinic sea el user id
         //medic sea el user id
-        //patient sea el patient_name
+        //patient sea el user id
         //date sea un string yyyy-mm-dd
         //studytype sea el type id
         if(parameters.containsKey("c")){
@@ -123,7 +123,8 @@ public class MyStudiesController {
                 orders.removeIf(order -> order.getMedic().getUser_id() != aux);
         }
         if(parameters.containsKey("p")){
-            orders.removeIf(order -> !order.getPatient_email().equals(parameters.get("p")));
+            orders.removeIf(order -> userService.findByEmail(order.getPatient_email()).isPresent() && userService.findByEmail(order.getPatient_email()).get().getId() != Integer.parseInt(parameters.get("p")));
+
         }
         if(parameters.containsKey("d")){
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -181,7 +182,9 @@ public class MyStudiesController {
                     out += "medic=" + filterForm.getMedic_id().toString() + "&";
             }
             if(filterForm.getPatient_email() != null && !filterForm.getPatient_email().isEmpty()){
-                out += "patient=" + filterForm.getPatient_email() + "&";
+                if(userService.findByEmail(filterForm.getPatient_email()).isPresent()) {
+                    out += "patient=" + userService.findByEmail(filterForm.getPatient_email()).get().getId() + "&";
+                }
             }
             if(filterForm.getStudy_id() != null && filterForm.getStudy_id() != -1){
                 if(studyService.findById(filterForm.getStudy_id()).isPresent())
