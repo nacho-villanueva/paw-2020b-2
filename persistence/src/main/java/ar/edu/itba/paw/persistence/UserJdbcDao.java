@@ -19,7 +19,7 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao{
 
     private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
-            new User(rs.getInt("id"),rs.getString("email"),rs.getString("password"),rs.getInt("role"));
+            new User(rs.getInt("id"),rs.getString("email"),rs.getString("password"),rs.getInt("role"),rs.getString("locale"));
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -85,26 +85,27 @@ public class UserJdbcDao implements UserDao{
     }
 
     @Override
-    public User register(String email, String password, int role) {
+    public User register(String email, String password, int role, String locale) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email",email);
         insertMap.put("password",password);
         insertMap.put("role",role);
+        insertMap.put("locale",locale);
         Number key = jdbcInsert.executeAndReturnKey(insertMap);
         //TODO: verify success
-        return new User(key.intValue(),email,password,role,false,false);        //It was just created, its has yet to apply and therefore not verifying
+        return new User(key.intValue(),email,password,role,false,false,locale);        //It was just created, its has yet to apply and therefore not verifying
     }
 
     @Override
     public User updateRole(User user, int role){
         jdbcTemplate.update("UPDATE users Set role = ? WHERE id = ?", role, user.getId());
-        return new User(user.getId(), user.getEmail(), user.getPassword(), role);
+        return new User(user.getId(), user.getEmail(), user.getPassword(), role, user.getLocale());
     }
 
     @Override
     public User updatePassword(User user, String password) {
         jdbcTemplate.update("UPDATE users Set password = ? WHERE id = ?", password, user.getId());
 
-        return new User(user.getId(), user.getEmail(), password, user.getRole());
+        return new User(user.getId(), user.getEmail(), password, user.getRole(), user.getLocale());
     }
 }

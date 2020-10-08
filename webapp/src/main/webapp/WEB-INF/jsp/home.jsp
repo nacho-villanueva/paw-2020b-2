@@ -6,7 +6,7 @@
 <head>
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/home.css"/>">
-    <title>MedTransfer</title>
+    <title><spring:message code="appname"/></title>
 </head>
 
 <body id="page-top">
@@ -21,7 +21,6 @@
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="orders"/>
     </jsp:include>
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -31,34 +30,31 @@
             </div>
         </div>
 
-
         <c:choose>
             <c:when test="${has_studies != true}">
                 <div class="align-items-end result-not">
-                    <h1 class="text-center mt-5 py-5 anim-content">It seems there are no studies linked to your account right now.</h1>
+                    <h1 class="text-center mt-5 py-5 anim-content"><spring:message code="home.body.noStudies"/></h1>
                 </div>
             </c:when>
-            <c:otherwise>
-                <div class="row mx-2">
-                    <div class="col">
-                        <div class="card bg-light anim-content">
-                            <div class="card-body">
-                                <p class="card-title h4">Your Orders</p>
-                                <div class="list-group">
-                                    <c:forEach items="${orders}" var="o">
-                                        <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1">Study type: <c:out value="${o.study.name}" /></h5>
-                                                <small>Date: <c:out value="${o.date}" /></small>
-                                            </div>
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <p class="mb-1">Clinic: <c:out value="${o.clinic.name}" /></p>
-                                                <small>Medic: <c:out value="${o.medic.name}" /></small>
-                                            </div>
-
-                                        </a>
-                                    </c:forEach>
-                                </div>
+        <c:otherwise>
+            <div class="row mx-2">
+                <div class="col">
+                    <div class="card bg-light anim-content">
+                        <div class="card-body">
+                            <p class="card-title h4">Your Orders</p>
+                            <div class="list-group">
+                                <c:forEach items="${orders}" var="o">
+                                    <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1"><spring:message code="home.body.card.studies.studyType" arguments="${o.study.name}" /></h5>
+                                            <small><spring:message code="home.body.card.studies.date" arguments="${o.date}" /></small>
+                                        </div>
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <p class="mb-1"><spring:message code="home.body.card.studies.clinic" arguments="${o.clinic.name}" /></p>
+                                            <small><spring:message code="home.body.card.studies.medic" arguments="${o.medic.name}" /></small>
+                                        </div>
+                                    </a>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>

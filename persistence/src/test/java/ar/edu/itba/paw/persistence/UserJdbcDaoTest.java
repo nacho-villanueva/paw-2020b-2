@@ -37,7 +37,9 @@ public class UserJdbcDaoTest {
 
     private static final String EMAIL = "patient@zero.com";
     private static final String PASSWORD = "GroundZer0";
+    private static final int ROLE = 4;
     private static final int ZERO_ID = 0;
+    private static final String DEFAULT_LOCALE = "en-US";
 
     private static final String MEDIC_IDENTIFICATION_TYPE = "image/png";
     private static final byte[] MEDIC_IDENTIFICATION = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
@@ -78,7 +80,7 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testRegisterValid() {
-        final User user = dao.register(EMAIL,PASSWORD,User.PATIENT_ROLE_ID);
+        final User user = dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
 
         Assert.assertNotNull(user);
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
@@ -87,8 +89,7 @@ public class UserJdbcDaoTest {
     @Test(expected = DuplicateKeyException.class)
     public void testRegisterInvalid() {
         insertTestUser(User.PATIENT_ROLE_ID);
-
-        dao.register(EMAIL,PASSWORD,User.PATIENT_ROLE_ID);
+        dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
     }
 
     @Test

@@ -12,10 +12,10 @@
 <div class="background"></div>
 <div class="p-5 col-auto card main-container mx-auto" >
     <div class="row justify-content-center">
-        <h2>Before we let you through...</h2>
+        <h2><spring:message code="medic-registration.body.form.title1"/></h2>
     </div>
     <div class="row justify-content-center">
-        <h3>We need a couple more details.</h3>
+        <h3><spring:message code="medic-registration.body.form.title2"/></h3>
     </div>
 
     <div class="container">
@@ -40,8 +40,6 @@
             </div>
 
             <div class="tab-content">
-
-
                 <!-- PATIENT REGISTRATION -->
                 <div id="patient" class="tab-pane fade in show active">
                     <c:url value="/register-patient" var="register" />
@@ -67,7 +65,6 @@
                         <input type="submit" value="Continue" name="submit_1" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
                 </div>
-
                 <!-- MEDIC REGISTRATION -->
                 <div id="medic" class="tab-pane fade in">
                     <c:url var="registerMedic" value="/apply-as-medic"/>

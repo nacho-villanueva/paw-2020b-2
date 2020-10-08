@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -55,7 +56,7 @@ public class RegisterController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@Valid @ModelAttribute("registerUserForm") RegisterUserForm registerUserForm, final BindingResult errors){
+    public ModelAndView register(@Valid @ModelAttribute("registerUserForm") RegisterUserForm registerUserForm, final BindingResult errors, Locale locale){
         if(errors.hasErrors()){
             ModelAndView registrationErrors = new ModelAndView("index");
             registrationErrors.addObject("registration", true);
@@ -64,11 +65,9 @@ public class RegisterController {
 
         ModelAndView mav = new ModelAndView("redirect:/home");
 
-        //User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(), registerUserForm.getUserType());
-        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword());
+        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(), locale.toLanguageTag());
 
         authWithoutPassword(newUser);
-
         return mav;
     }
 

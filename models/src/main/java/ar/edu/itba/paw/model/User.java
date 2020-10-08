@@ -8,24 +8,28 @@ public class User {
     public static final int CLINIC_ROLE_ID = 3;
     public static final int UNDEFINED_ROLE_ID = 4;
 
+    private static final String DEFAULT_LOCALE = "en-US";
+
     private int id;
     private String email;
     private String password;
     private int role;
     private boolean isRegistered;
     private boolean isVerifying;
+    private String locale;
 
     public User() {
 
     }
 
-    public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying) {
+    public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying, final String locale) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.isRegistered = isRegistered;
         this.isVerifying = isVerifying;
+        this.locale = locale;
     }
 
     public User(final int id, final String email, final String password, final int role) {
@@ -35,6 +39,17 @@ public class User {
         this.role = role;
         this.isRegistered = true;
         this.isVerifying = false;
+        this.locale = DEFAULT_LOCALE;
+    }
+
+    public User(final int id, final String email, final String password, final int role, final String locale) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.isRegistered = true;
+        this.isVerifying = false;
+        this.locale = locale;
     }
 
     public int getId() {
@@ -95,5 +110,13 @@ public class User {
 
     public void setVerifying(boolean verifying) {
         isVerifying = verifying;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }
