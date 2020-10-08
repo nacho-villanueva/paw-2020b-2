@@ -106,6 +106,7 @@ public class RegisterController {
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
                 applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
 
+        authWithoutPassword(loggedUser());
         mns.sendMedicApplicationValidatingMail(newMedic);
         return "redirect:/home";
     }
@@ -126,6 +127,7 @@ public class RegisterController {
 
         Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
 
+        authWithoutPassword(loggedUser());
         mns.sendClinicApplicationValidatingMail(newClinic);
 
         return "redirect:/home";
@@ -135,6 +137,7 @@ public class RegisterController {
     public ModelAndView registerPatient(@ModelAttribute("registerPatientForm") RegisterPatientForm registerPatientForm){
         ps.register(loggedUser(), registerPatientForm.getFullname(),
                 registerPatientForm.getMedical_insurance_plan(), registerPatientForm.getMedical_insurance_number());
+        authWithoutPassword(loggedUser());
         return new ModelAndView("redirect:/home");
     }
 

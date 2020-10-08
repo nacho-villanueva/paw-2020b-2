@@ -71,8 +71,7 @@
                         <div class="col">
                             <fieldset class="form-group">
                                 <label class="bmd-label-static">Study Type </label>
-                                <f:select cssErrorClass="selectpicker form-control is-invalid" id="medicalStudy" cssClass="selectpicker form-control" data-live-search="true" path="studyId" data-style="btn-primary">
-                                    <f:option value="-1" label="Choose Study" />
+                                <f:select id="medicalStudy" cssClass="selectpicker" cssErrorClass="selectpicker is-invalid" title="Choose Study Type" data-live-search="true" path="studyId" data-style="text-primary">
                                     <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                                 </f:select>
                                 <f:errors path="studyId" cssClass="invalid-feedback" element="small" />
@@ -81,9 +80,7 @@
                         <div class="col">
                             <fieldset class="form-group">
                                 <label class="bmd-label-static">Medical Clinic </label>
-                                <f:select id="clinic" cssClass="selectpicker form-control" cssErrorClass="selectpicker form-control is-invalid" data-live-search="true" path="clinicId" disabled="true" data-style="btn-primary">
-                                    <f:option value="-1" label="Choose Study first"/>
-                                </f:select>
+                                <f:select id="clinic" class="selectpicker" title="Choose Study First" data-live-search="true" data-style="text-primary" path="clinicId" disabled="true"/>
                                 <f:errors path="clinicId" cssClass="invalid-feedback" element="small" /><br>
                             </fieldset>
                         </div>
@@ -124,7 +121,7 @@
                 $.getJSON('${getClinicByMedicalStudy}',{
                     study : studyId
                 }, function(response) {
-                    let clinicList = '<option value="-1">Choose Clinic</option>';
+                    let clinicList = '';
                     let clinicLen = response.length;
                     for(let i =0; i<clinicLen;i++){
                         clinicList += '<option value="' + response[i].user_id + '">' + sanitize(response[i].name) + '</option>';
@@ -136,7 +133,6 @@
                     clinicSelect.selectpicker('refresh');
                 });
             }else{
-                clinicSelect.html('<option value="-1">Choose Study first</option>');
                 clinicSelect.attr('disabled',true);
                 clinicSelect.selectpicker('refresh');
             }
