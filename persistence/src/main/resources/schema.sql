@@ -7,12 +7,6 @@ CREATE TABLE IF NOT EXISTS users (
     locale varchar(10) default 'en-US'
 );
 
-CREATE TABLE IF NOT EXISTS users (
-    id serial primary key,
-    email text not null unique,
-    password text not null
-);
-
 CREATE TABLE IF NOT EXISTS clinics (
     user_id int not null unique,
     name text not null,
