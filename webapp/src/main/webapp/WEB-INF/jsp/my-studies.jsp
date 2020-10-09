@@ -58,7 +58,7 @@
                     <p class="card-title h4">Filters</p>
                     <hr/>
                     <c:url var="filter" value="/filter-search"/>
-                    <f:form action="${filter}" method="post" modelAttribute="filterForm">
+                    <f:form action="${filter}" method="get" modelAttribute="filterForm">
                         <fieldset>
                             <label class="bmd-label-static">Study Type</label>
                             <f:select id="studyTypes" cssClass="selectpicker" title="Choose a study type" data-live-search="true" path="study_id" data-style="btn-custom">

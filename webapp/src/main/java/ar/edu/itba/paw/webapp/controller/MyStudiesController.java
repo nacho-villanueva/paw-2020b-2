@@ -51,18 +51,18 @@ public class MyStudiesController {
         ModelAndView mav = new ModelAndView("my-studies");
 
         mav.addObject("filterForm", filterForm);
-        HashMap<String, String> parameters = new HashMap<>();
 
+        HashMap<OrderService.Parameters, String> parameters = new HashMap<>();
         if(dateString != null && !dateString.isEmpty())
-            parameters.put("d", dateString);
+            parameters.put(OrderService.Parameters.DATE, dateString);
         if(clinicString != null && !clinicString.isEmpty())
-            parameters.put("c", clinicString);
+            parameters.put(OrderService.Parameters.CLINIC, clinicString);
         if(medicString != null && !medicString.isEmpty())
-            parameters.put("m", medicString);
+            parameters.put(OrderService.Parameters.MEDIC, medicString);
         if(studyString != null && !studyString.isEmpty())
-            parameters.put("s", studyString);
+            parameters.put(OrderService.Parameters.STUDYTYPE, studyString);
         if(patientString != null && !patientString.isEmpty())
-            parameters.put("p", patientString);
+            parameters.put(OrderService.Parameters.PATIENT, patientString);
 
         listingSetup(mav, parameters);
 
@@ -79,68 +79,50 @@ public class MyStudiesController {
         return user.orElse(null);
     }
 
-    //we can use loggedUser to check if they are medic or clinic or patient
-    //now that a user can only be one of these
-    private void listingSetup(ModelAndView mav, HashMap<String, String> parameters){
+
+    private void listingSetup(ModelAndView mav, HashMap<OrderService.Parameters, String> parameters){
         User user = loggedUser();
-        Collection<Order> orders;
-        Collection<Clinic> clinicsList = new ArrayList<>();
-        Collection<Medic> medicsList = new ArrayList<>();
-
-        //aca se estan haciendo cosas del estilo "cual es el dominio de este user"
-        //capaz volar esta seccion a userservice
-        if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
-            orders = orderService.getAllAsMedic(user);
-            orders.forEach(order -> clinicsList.add(order.getClinic()));
-            medicsList.add(medicService.findByUserId(user.getId()).get());
-        }else if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
-            orders = orderService.getAllAsClinic(user);
-            orders.forEach(order -> medicsList.add(order.getMedic()));
-            clinicsList.add(clinicService.findByUserId(user.getId()).get());
-        }else{
-            orders = orderService.getAllAsPatient(user);
-            orders.forEach(order -> clinicsList.add(order.getClinic()));
-            orders.forEach(order -> medicsList.add(order.getMedic()));
-        }
-
-        mav.addObject("medicsList", medicsList);
-        mav.addObject("clinicsList", clinicsList);
-        mav.addObject("studiesList", studyService.getAll());
 
         //clinic sea el user id
         //medic sea el user id
         //patient sea el user id
         //date sea un string yyyy-mm-dd
         //studytype sea el type id
-        if(parameters.containsKey("c")){
-            int aux = Integer.parseInt(parameters.get("c"));
-            if(clinicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getClinic().getUser_id() != aux);
-        }
-        if(parameters.containsKey("m")){
-            int aux = Integer.parseInt(parameters.get("m"));
-            if(medicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getMedic().getUser_id() != aux);
-        }
-        if(parameters.containsKey("p")){
-            orders.removeIf(order -> userService.findByEmail(order.getPatient_email()).isPresent() && userService.findByEmail(order.getPatient_email()).get().getId() != Integer.parseInt(parameters.get("p")));
 
-        }
-        if(parameters.containsKey("d")){
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            try{
-                dateFormat.parse(parameters.get("d").trim());
-            }catch (ParseException pe){
-                //what are you doing
+        Collection<Order> orders = orderService.filterOrders(user, parameters);
+        Collection<Clinic> clinicsList = new ArrayList<>();
+        Collection<Medic> medicsList = new ArrayList<>();
+
+        if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
+            for (Order order: orders) {
+                if(!clinicsList.contains(order.getClinic())){
+                    clinicsList.add(order.getClinic());
+                }
             }
-            orders.removeIf(order -> !order.getDate().equals(Date.valueOf(parameters.get("d"))));
+            medicsList.add(medicService.findByUserId(user.getId()).get());
+        }else if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
+            orders.forEach(order -> medicsList.add(order.getMedic()));
+            for (Order order: orders) {
+                if(!medicsList.contains(order.getMedic())){
+                    medicsList.add(order.getMedic());
+                }
+            }
+            clinicsList.add(clinicService.findByUserId(user.getId()).get());
+        }else{
+            for (Order order: orders) {
+                if(!medicsList.contains(order.getMedic())){
+                    medicsList.add(order.getMedic());
+                }
+                if(!clinicsList.contains(order.getClinic())){
+                    clinicsList.add(order.getClinic());
+                }
+
+            }
         }
-        if(parameters.containsKey("s")){
-            int aux = Integer.parseInt(parameters.get("s"));
-            if(studyService.findById(aux).isPresent())
-                orders.removeIf(order -> order.getStudy().getId() != Integer.parseInt(parameters.get("s")));
-        }
+
+        mav.addObject("medicsList", medicsList);
+        mav.addObject("clinicsList", clinicsList);
+        mav.addObject("studiesList", studyService.getAll());
 
         HashMap<Long, String> encodeds = new HashMap<>();
 
@@ -157,7 +139,7 @@ public class MyStudiesController {
         }
     }
 
-    @RequestMapping(value = "/filter-search", method = RequestMethod.POST)
+    @RequestMapping(value = "/filter-search", method = RequestMethod.GET)
     public String filterSearch(@Valid @ModelAttribute("filterForm") FilterForm filterForm, final BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return "my-studies";
@@ -174,12 +156,14 @@ public class MyStudiesController {
                 out += "date=" + filterForm.getDate() + "&";
             }
             if(filterForm.getClinic_id() != null && filterForm.getClinic_id() != -1){
-                if(clinicService.findByUserId(filterForm.getClinic_id()).isPresent())
+                if(clinicService.findByUserId(filterForm.getClinic_id()).isPresent()) {
                     out += "clinic=" + filterForm.getClinic_id().toString() + "&";
+                }
             }
             if(filterForm.getMedic_id() != null && filterForm.getMedic_id() != -1){
-                if(medicService.findByUserId(filterForm.getMedic_id()).isPresent())
+                if(medicService.findByUserId(filterForm.getMedic_id()).isPresent()) {
                     out += "medic=" + filterForm.getMedic_id().toString() + "&";
+                }
             }
             if(filterForm.getPatient_email() != null && !filterForm.getPatient_email().isEmpty()){
                 if(userService.findByEmail(filterForm.getPatient_email()).isPresent()) {
@@ -187,8 +171,9 @@ public class MyStudiesController {
                 }
             }
             if(filterForm.getStudy_id() != null && filterForm.getStudy_id() != -1){
-                if(studyService.findById(filterForm.getStudy_id()).isPresent())
+                if(studyService.findById(filterForm.getStudy_id()).isPresent()) {
                     out += "study=" + filterForm.getStudy_id().toString();
+                }
             }
 
             return out;
