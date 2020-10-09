@@ -39,10 +39,18 @@ public class UserJdbcDaoTest {
     private static final String NEW_EMAIL = "patient@one.com";
     private static final String PASSWORD = "GroundZer0";
     private static final String NEW_PASSWORD = "GroundZer1";
-    private static final int ROLE = 2;
-    private static final int NEW_ROLE = 4;
+    private static final int ROLE = 4;
+    private static final int NEW_ROLE = 2;
     private static final int ZERO_ID = 0;
     private static final String DEFAULT_LOCALE = "en-US";
+
+    private static final String MEDIC_IDENTIFICATION_TYPE = "image/png";
+    private static final byte[] MEDIC_IDENTIFICATION = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+            0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+            0x30, 0x30, (byte)0x9d };
+    private static final String MEDIC_NAME = "Jhon William";
+    private static final String MEDIC_TELEPHONE = "1111111111";
+    private static final String MEDIC_LICENCE = "A21-B15";
 
     @Autowired
     private DataSource ds;
@@ -52,6 +60,7 @@ public class UserJdbcDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert jdbcInsertMedic;
 
     @Before
     public void setUp() {
@@ -59,6 +68,8 @@ public class UserJdbcDaoTest {
         jdbcInsert = new SimpleJdbcInsert(ds)
                 .withTableName(USERS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
+        jdbcInsertMedic = new SimpleJdbcInsert(ds)
+                .withTableName(MEDICS_TABLE_NAME);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
@@ -80,19 +91,20 @@ public class UserJdbcDaoTest {
 
     @Test(expected = DuplicateKeyException.class)
     public void testRegisterInvalid() {
-        insertTestUser();
-
+        insertTestUser(User.PATIENT_ROLE_ID);
         dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
     }
 
     @Test
     public void testFindByIdExists() {
-        int dbkey = insertTestUser();
+        int dbkey = insertTestUser(User.PATIENT_ROLE_ID);
 
         Optional<User> maybeUser = dao.findById(dbkey);
 
         Assert.assertTrue(maybeUser.isPresent());
         Assert.assertEquals(EMAIL,maybeUser.get().getEmail());
+        Assert.assertFalse(maybeUser.get().isRegistered());
+        Assert.assertEquals(User.PATIENT_ROLE_ID,maybeUser.get().getRole());
     }
 
     @Test
@@ -103,8 +115,32 @@ public class UserJdbcDaoTest {
     }
 
     @Test
+    public void testFlagsRegisteredNotVerified() {
+        int dbkey = insertTestUser(User.MEDIC_ROLE_ID);
+        insertTestMedic(dbkey,false);
+
+        Optional<User> maybeUser = dao.findById(dbkey);
+
+        Assert.assertTrue(maybeUser.isPresent());
+        Assert.assertTrue(maybeUser.get().isRegistered());
+        Assert.assertTrue(maybeUser.get().isVerifying());
+    }
+
+    @Test
+    public void testFlagsRegisteredVerified() {
+        int dbkey = insertTestUser(User.MEDIC_ROLE_ID);
+        insertTestMedic(dbkey,true);
+
+        Optional<User> maybeUser = dao.findById(dbkey);
+
+        Assert.assertTrue(maybeUser.isPresent());
+        Assert.assertTrue(maybeUser.get().isRegistered());
+        Assert.assertFalse(maybeUser.get().isVerifying());
+    }
+
+    @Test
     public void testUpdateRoleValidUser() {
-        int dbkey = insertTestUser();
+        int dbkey = insertTestUser(ROLE);
 
         User newUser = dao.updateRole(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_ROLE);
 
@@ -121,7 +157,7 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testUpdatePassword() {
-        int dbkey = insertTestUser();
+        int dbkey = insertTestUser(ROLE);
 
         dao.updatePassword(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_PASSWORD);
 
@@ -137,7 +173,7 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testUpdateEmail() {
-        int dbkey = insertTestUser();
+        int dbkey = insertTestUser(ROLE);
 
         dao.updateEmail(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_EMAIL);
 
@@ -151,12 +187,25 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
     }
 
-    private int insertTestUser() {
+    private int insertTestUser(int role) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email", EMAIL);
         insertMap.put("password", PASSWORD);
-        insertMap.put("role", ROLE);
+        insertMap.put("role", role);
         Number key = jdbcInsert.executeAndReturnKey(insertMap);
         return key.intValue();
+    }
+
+    private void insertTestMedic(int user_id, boolean verified) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("user_id",user_id);
+        insertMap.put("name", MEDIC_NAME);
+        insertMap.put("telephone", MEDIC_TELEPHONE);
+        insertMap.put("identification_type",MEDIC_IDENTIFICATION_TYPE);
+        insertMap.put("identification",MEDIC_IDENTIFICATION);
+        insertMap.put("licence_number", MEDIC_LICENCE);
+        insertMap.put("verified", verified);
+
+        jdbcInsertMedic.execute(insertMap);
     }
 }

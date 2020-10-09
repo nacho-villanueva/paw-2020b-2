@@ -44,18 +44,18 @@ public class OrderJdbcDaoTest {
 
     //Test Medic Info
     private static final String MEDIC_NAME = "Jhon William";
-    private static final String MEDIC_EMAIL = "jhon@medic.com";
+    //private static final String MEDIC_EMAIL = "jhon@medic.com";
     private static final String MEDIC_LICENCE = "A21-B15";
 
     //Test Clinic Info
     private static final String CLINIC_NAME = "Zero's Clinic";
-    private static final String CLINIC_EMAIL = "clinic@zero.com";
+    //private static final String CLINIC_EMAIL = "clinic@zero.com";
 
     //Test Study Info
     private static final String STUDY_NAME = "MRA";
 
     //Test Patient Info
-    private static final String PATIENT_EMAIL = "patient@zero.com";
+    //private static final String PATIENT_EMAIL = "patient@zero.com";
     private static final String PATIENT_NAME = "Patient Zero";
 
     //USER INFO
@@ -117,7 +117,7 @@ public class OrderJdbcDaoTest {
 
         Assert.assertTrue(maybeOrder.isPresent());
         Assert.assertEquals(MEDIC_NAME,maybeOrder.get().getMedic().getName());
-        Assert.assertEquals(CLINIC_EMAIL,maybeOrder.get().getClinic().getEmail());
+        Assert.assertEquals(CLINIC_NAME,maybeOrder.get().getClinic().getName());
         Assert.assertEquals(STUDY_NAME,maybeOrder.get().getStudy().getName());
         Assert.assertEquals(PATIENT_NAME,maybeOrder.get().getPatient_name());
         Assert.assertEquals(ORDER_DATE,maybeOrder.get().getDate());
@@ -136,11 +136,11 @@ public class OrderJdbcDaoTest {
         int medic_id = insertTestMedic(user_id);
         int clinic_id = insertTestClinic(user_id);
         int study_id = insertTestStudy();
-        Medic medic = new Medic(medic_id,MEDIC_NAME,MEDIC_EMAIL,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,MEDIC_LICENCE,TRUE);
-        Clinic clinic = new Clinic(clinic_id,CLINIC_NAME,CLINIC_EMAIL,"",TRUE);
+        Medic medic = new Medic(medic_id,MEDIC_NAME,USER_EMAIL,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,MEDIC_LICENCE,TRUE);
+        Clinic clinic = new Clinic(clinic_id,CLINIC_NAME,USER_EMAIL,"",TRUE);
         StudyType studyType = new StudyType(study_id,STUDY_NAME);
 
-        final Order order = dao.register(medic,ORDER_DATE,clinic,PATIENT_NAME,PATIENT_EMAIL,studyType,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,"","");
+        final Order order = dao.register(medic,ORDER_DATE,clinic,PATIENT_NAME,USER_EMAIL,studyType,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,"","");
 
         Assert.assertEquals(PATIENT_NAME,order.getPatient_name());
         Assert.assertArrayEquals(ORDER_IDENTIFICATION,order.getIdentification());
@@ -149,11 +149,11 @@ public class OrderJdbcDaoTest {
 
     @Test (expected = DataIntegrityViolationException.class)
     public void testRegisterInvalid() {
-        Medic medic = new Medic(ZERO_ID_INT,MEDIC_NAME,MEDIC_EMAIL,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,MEDIC_LICENCE,TRUE);
-        Clinic clinic = new Clinic(ZERO_ID_INT,CLINIC_NAME,CLINIC_EMAIL,"",TRUE);
+        Medic medic = new Medic(ZERO_ID_INT,MEDIC_NAME,USER_EMAIL,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,MEDIC_LICENCE,TRUE);
+        Clinic clinic = new Clinic(ZERO_ID_INT,CLINIC_NAME,USER_EMAIL,"",TRUE);
         StudyType studyType = new StudyType(ZERO_ID_INT,STUDY_NAME);
 
-        dao.register(medic,ORDER_DATE,clinic,PATIENT_NAME,PATIENT_EMAIL,studyType,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,"","");
+        dao.register(medic,ORDER_DATE,clinic,PATIENT_NAME,USER_EMAIL,studyType,"",ORDER_IDENTIFICATION_TYPE,ORDER_IDENTIFICATION,"","");
     }
 
     private long insertTestOrder() {
@@ -167,7 +167,7 @@ public class OrderJdbcDaoTest {
         insertMap.put("date", ORDER_DATE);
         insertMap.put("clinic_id", clinic_id);
         insertMap.put("patient_name", PATIENT_NAME);
-        insertMap.put("patient_email", PATIENT_EMAIL);
+        insertMap.put("patient_email", USER_EMAIL);
         insertMap.put("study_id", study_id);
         insertMap.put("identification_type", ORDER_IDENTIFICATION_TYPE);
         insertMap.put("identification", ORDER_IDENTIFICATION);
@@ -186,7 +186,6 @@ public class OrderJdbcDaoTest {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user_id);
         insertMap.put("name", CLINIC_NAME);
-        insertMap.put("email", CLINIC_EMAIL);
         insertMap.put("verified", TRUE);
         jdbcInsertClinics.execute(insertMap);
         return user_id;
@@ -196,7 +195,6 @@ public class OrderJdbcDaoTest {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user_id);
         insertMap.put("name", MEDIC_NAME);
-        insertMap.put("email", MEDIC_EMAIL);
         insertMap.put("identification_type", ORDER_IDENTIFICATION_TYPE);
         insertMap.put("identification", ORDER_IDENTIFICATION);
         insertMap.put("licence_number", MEDIC_LICENCE);

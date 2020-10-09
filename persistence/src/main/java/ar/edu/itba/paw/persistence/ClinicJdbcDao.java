@@ -15,6 +15,9 @@ import java.util.*;
 @Repository
 public class ClinicJdbcDao implements ClinicDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Clinic> CLINIC_ROW_MAPPER = (rs, rowNum) ->
             new Clinic(rs.getInt("user_id"),
                     rs.getString("name"),
@@ -41,7 +44,7 @@ public class ClinicJdbcDao implements ClinicDao {
     @Override
     public Optional<Clinic> findByUserId(int user_id) {
         //We get the basic clinic info
-        Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics WHERE user_id = ?", new Object[] { user_id }, CLINIC_ROW_MAPPER).stream().findFirst();
+        Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics INNER JOIN users u ON user_id = u.id WHERE u.id = ?", new Object[] { user_id }, CLINIC_ROW_MAPPER).stream().findFirst();
         clinic.ifPresent(value -> value.setMedical_studies(studyTypeDao.findByClinicId(user_id)));
         return clinic;
     }
@@ -57,7 +60,7 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     private Collection<Clinic> getAll(final boolean verified) {
-        Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics WHERE verified = ?", new Object[]{verified}, CLINIC_ROW_MAPPER);
+        Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics INNER JOIN users u ON user_id = u.id WHERE verified = ?", new Object[]{verified}, CLINIC_ROW_MAPPER);
         clinics.forEach(clinic -> {
             clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
         });
@@ -66,7 +69,9 @@ public class ClinicJdbcDao implements ClinicDao {
 
     @Override
     public Collection<Clinic> getByStudyTypeId(final int studyType_id) {
-        Collection<Clinic> clinics = jdbcTemplate.query("SELECT c.user_id, c.name, email, telephone, verified FROM clinics c" +    //TODO
+        Collection<Clinic> clinics = jdbcTemplate.query("SELECT c.user_id, c.name, u.email, telephone, verified FROM clinics c" +
+                " INNER JOIN users u" +
+                " ON c.user_id = u.id" +
                 " INNER JOIN clinic_available_studies cs " +
                 " ON clinic_id = c.user_id" +
                 " INNER JOIN medical_studies s" +
@@ -78,11 +83,12 @@ public class ClinicJdbcDao implements ClinicDao {
         return clinics;
     }
 
-    public Clinic register(final User user, final String name, final String email, final String telephone, final Collection<StudyType> available_studies) {
+    @Override
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
-        insertMap.put("email", email);
+        insertMap.put("email", user.getEmail());
         insertMap.put("telephone", telephone);
         insertMap.put("verified", false);
 
@@ -91,16 +97,18 @@ public class ClinicJdbcDao implements ClinicDao {
 
         Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,user.getId());
 
-        return new Clinic(user.getId(),name,email,telephone,available_studiesDB,false);
+        userDao.updateRole(user, User.CLINIC_ROLE_ID);
+
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,false);
     }
 
     @Override
-    public Clinic updateClinicInfo(final int clinic_id, final String name, final String email, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
-        jdbcTemplate.update("UPDATE clinics Set name = ?, email = ?, telephone = ? WHERE user_id = ?", name, email, telephone, clinic_id);
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
+        jdbcTemplate.update("UPDATE clinics Set name = ?, telephone = ? WHERE user_id = ?", name, telephone, user.getId());
 
-        Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,clinic_id);
+        Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,user.getId());
 
-        return new Clinic(clinic_id,name,email,telephone,available_studiesDB,verified);
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,verified);
     }
 
     @Override

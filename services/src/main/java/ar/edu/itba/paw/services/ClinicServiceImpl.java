@@ -32,13 +32,13 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Clinic register(User user, String name, String email, String telephone, Collection<StudyType> available_studies) {
-        return clinicDao.register(user,name,email,telephone,available_studies);
+    public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies) {
+        return clinicDao.register(user,name,telephone,available_studies);
     }
 
     @Override
-    public Clinic updateClinicInfo(int clinic_id, String name, String email, String telephone, Collection<StudyType> available_studies, boolean verified) {
-        return clinicDao.updateClinicInfo(clinic_id,name,email,telephone,available_studies,verified);
+    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, boolean verified) {
+        return clinicDao.updateClinicInfo(user,name,telephone,available_studies,verified);
     }
 
     @Override

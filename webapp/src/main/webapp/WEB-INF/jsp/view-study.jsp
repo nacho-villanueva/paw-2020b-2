@@ -5,14 +5,16 @@
 <html lang="en">
 <head>
     <%@ include file="fragments/include-header.jsp"%>
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/viewstudy.css"/>">
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
 <body>
-<div class="main-container">
-    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+
+<div id="wrapper">
+<jsp:include page="fragments/sidebar-fragment.jsp" />
+
+<div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card order-card bg-light float-right">
@@ -24,7 +26,7 @@
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
-                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifyingClinic() eq false}">
+                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
                                     <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
                                 </c:if>
 
@@ -118,7 +120,7 @@
             </div>
         </div>
     </div>
-
+</div>
 </div>
 <%@ include file="fragments/include-scripts.jsp"%>
 </body>

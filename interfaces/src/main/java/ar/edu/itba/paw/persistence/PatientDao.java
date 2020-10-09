@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PatientDao {
 
-    Optional<Patient> findByUser_id(int user_id);
+    Optional<Patient> findByUserId(int user_id);
 
     Optional<Patient> findByEmail(String email);
 

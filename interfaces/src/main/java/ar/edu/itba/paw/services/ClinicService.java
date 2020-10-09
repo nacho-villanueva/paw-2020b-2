@@ -15,9 +15,9 @@ public interface ClinicService {
 
     Collection<Clinic> getAllUnverified();
 
-    Clinic register(User user, String name, String email, String telephone, Collection<StudyType> available_studies);
+    Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies);
 
-    Clinic updateClinicInfo(int clinic_id, String name, String email, String telephone, Collection<StudyType> available_studies, boolean verified);
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, boolean verified);
 
     boolean hasStudy(int clinic_id, int studyType_id);
 

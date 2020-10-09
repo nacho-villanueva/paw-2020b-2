@@ -28,8 +28,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic register(User user, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields) {
-        return medicDao.register(user,name,email,telephone,identification_type,identification,licence_number,known_fields);
+    public Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields) {
+        return medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic updateMedicInfo(int medic_id, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified) {
-        return medicDao.updateMedicInfo(medic_id,name,email,telephone,identification_type,identification,licence_number,known_fields,verified);
+    public Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified) {
+        return medicDao.updateMedicInfo(user,name,telephone,identification_type,identification,licence_number,known_fields,verified);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.*;
 @Repository
 public class OrderJdbcDao implements OrderDao {
 
-    private static final String sqlQuerySkeleton = "select o.id as order_id, date, patient_email, patient_name, o.medic_plan, o.medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join medics m on o.medic_id = m.user_id inner join clinics c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id";
+    private static final String sqlQuerySkeleton = "select o.id as order_id, date, patient_email, patient_name, o.medic_plan, o.medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join (select * from medics inner join users on medics.user_id = users.id) m on o.medic_id = m.user_id inner join (select * from clinics inner join users on clinics.user_id = users.id) c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id";
 
     private static final RowMapper<Order> ORDER_ROW_MAPPER = (rs, rowNum) ->
             new Order(rs.getLong("order_id"),
@@ -55,18 +55,16 @@ public class OrderJdbcDao implements OrderDao {
 
        Optional<Order> order = jdbcTemplate.query(sqlQuerySkeleton + " where o.id = ?", new Object[]{ id }, ORDER_ROW_MAPPER).stream().findFirst();
 
-       setResults(order);
+       order.ifPresent(this::setResults);
 
        return order;
    }
 
-    private void setResults(Optional<Order> order) {
-        if(order.isPresent()) {
-            Collection<Result> results = resultDao.findByOrderId(order.get().getOrder_id());
+    private void setResults(Order order) {
+        Collection<Result> results = resultDao.findByOrderId(order.getOrder_id());
 
-            if(!results.isEmpty()) {
-                order.get().setStudy_results(results);
-            }
+        if(!results.isEmpty()) {
+            order.setStudy_results(results);
         }
     }
 
@@ -90,6 +88,11 @@ public class OrderJdbcDao implements OrderDao {
        //Todo: check success
 
        return new Order(key.longValue(),medic,date,clinic,studyType,description,identification_type,identification,medic_plan,medic_plan_number,patient_email,patient_name);
+   }
+
+   @Override
+   public Collection<Order> getAllUserOrders(User user){
+       return jdbcTemplate.query(sqlQuerySkeleton + " where o.clinic_id = ? or o.medic_id = ? or o.patient_email = ?", new Object[]{user.getId(), user.getId(), user.getEmail()},ORDER_ROW_MAPPER);
    }
 
     @Override

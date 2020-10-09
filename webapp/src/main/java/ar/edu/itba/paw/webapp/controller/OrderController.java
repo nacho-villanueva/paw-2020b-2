@@ -77,7 +77,7 @@ public class OrderController {
 
         } else {
 
-            Optional<Medic> medic = medicService.findByUserId(orderForm.getMedicId());
+            Optional<Medic> medic = medicService.findByUserId(loggedUser().getId());
             if(!medic.isPresent())
                 throw new MedicNotFoundException();
 

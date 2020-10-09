@@ -32,6 +32,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Collection<Order> getAllUserOrders(User user) { return orderDao.getAllUserOrders(user); }
+
+    @Override
     public Collection<Order> getAllAsClinic(User user) {
         return orderDao.getAllAsClinic(user);
     }

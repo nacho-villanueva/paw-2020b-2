@@ -37,8 +37,6 @@ public class ClinicJdbcDaoTest {
 
     private static final String NAME = "Zero's Clinic";
     private static final String NAME_ALT = "One's Clinic";
-    private static final String EMAIL = "clinic@zero.com";
-    private static final String EMAIL_ALT = "clinic@one.com";
     private static final String TELEPHONE = "+011-00000000";
     private static final String STUDY_NAME = "MRA";
     private static final String STUDY_NAME_ALT = "Colonoscopy";
@@ -118,7 +116,7 @@ public class ClinicJdbcDaoTest {
         Assert.assertNotNull(clinics);
         Assert.assertEquals(2,clinics.size());
         Clinic clinic = clinics.stream().findFirst().get();
-        Assert.assertTrue(clinic.getEmail().equals(EMAIL) || clinic.getEmail().equals(EMAIL_ALT));
+        Assert.assertTrue(clinic.getEmail().equals(USER_EMAIL) || clinic.getEmail().equals(USER_EMAIL_ALT));
     }
 
     @Test
@@ -155,7 +153,7 @@ public class ClinicJdbcDaoTest {
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME));
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME_ALT));
 
-        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,available_studies);
+        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,available_studies);
 
         Assert.assertFalse(clinic.getMedical_studies().isEmpty());
         StudyType study = clinic.getMedical_studies().stream().findFirst().get();
@@ -167,7 +165,7 @@ public class ClinicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestClinic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,EMAIL,TELEPHONE,new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,new ArrayList<>());
     }
 
     @Test
@@ -201,19 +199,19 @@ public class ClinicJdbcDaoTest {
         available_studies.add(new StudyType(studykey, STUDY_NAME));
         available_studies.add(new StudyType(studykeyalt, STUDY_NAME_ALT));
 
-        Clinic clinic = dao.updateClinicInfo(userkey,NAME_ALT,EMAIL_ALT,TELEPHONE,available_studies,TRUE);
+        Clinic clinic = dao.updateClinicInfo(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME_ALT,TELEPHONE,available_studies,TRUE);
 
         Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ALT.replace("'","''") + "' AND email = '" + EMAIL_ALT + "' AND telephone = '" + TELEPHONE + "'"));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ALT.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykey));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykeyalt));
     }
 
-    private int insertClinic(int user_id, String name, String email) {
+
+    private int insertClinic(int user_id, String name) {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user_id);
         insertMap.put("name", name);
-        insertMap.put("email", email);
         insertMap.put("telephone", TELEPHONE);
         insertMap.put("verified", TRUE);
         jdbcInsert.execute(insertMap);
@@ -222,14 +220,14 @@ public class ClinicJdbcDaoTest {
 
     private int insertTestClinic() {
         int userkey = insertTestUser(USER_EMAIL);
-        return insertClinic(userkey, NAME, EMAIL);
+        return insertClinic(userkey, NAME);
     }
 
     private void insertMultipleTestClinic() {
         int userkey = insertTestUser(USER_EMAIL);
-        insertClinic(userkey, NAME, EMAIL);
+        insertClinic(userkey, NAME);
         userkey = insertTestUser(USER_EMAIL_ALT);
-        insertClinic(userkey, NAME_ALT, EMAIL_ALT);
+        insertClinic(userkey, NAME_ALT);
     }
 
     private int insertTestUser(final String email) {
