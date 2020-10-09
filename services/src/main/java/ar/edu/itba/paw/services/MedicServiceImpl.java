@@ -41,4 +41,14 @@ public class MedicServiceImpl implements MedicService {
     public MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField) {
         return medicDao.registerFieldToMedic(medic_id,medicalField);
     }
+
+    @Override
+    public Medic updateMedicInfo(int medic_id, String name, String email, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified) {
+        return medicDao.updateMedicInfo(medic_id,name,email,telephone,identification_type,identification,licence_number,known_fields,verified);
+    }
+
+    @Override
+    public boolean knowsField(int medic_id, int field_id) {
+        return medicDao.knowsField(medic_id,field_id);
+    }
 }

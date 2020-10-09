@@ -54,6 +54,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateEmail(User user, String email) {
+        //TODO: Verification of email
+        return userDao.updateEmail(user,email);
+    }
+
+    @Override
     public User updatePassword(User user, String password) {
         return userDao.updatePassword(user,encoder.encode(password));
     }

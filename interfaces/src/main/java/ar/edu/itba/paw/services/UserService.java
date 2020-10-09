@@ -16,6 +16,8 @@ public interface UserService {
 
     User updateRole(User user, int role);
 
+    User updateEmail(User user, String email);
+
     User updatePassword(User user, String password);
 
 }

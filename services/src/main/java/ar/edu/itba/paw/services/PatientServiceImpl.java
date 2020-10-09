@@ -35,6 +35,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public Patient updatePatientInfo(User user, String name, String medic_plan, String medic_plan_number) {
+        return dao.updatePatientInfo(user,name,medic_plan,medic_plan_number);
+    }
+
+    @Override
     public Patient updateMedicPlan(Patient patient, String medic_plan, String medic_plan_number) {
         return dao.updateMedicPlan(patient,medic_plan,medic_plan_number);
     }

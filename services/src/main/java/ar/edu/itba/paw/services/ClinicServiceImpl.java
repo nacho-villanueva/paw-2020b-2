@@ -37,6 +37,16 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
+    public Clinic updateClinicInfo(int clinic_id, String name, String email, String telephone, Collection<StudyType> available_studies, boolean verified) {
+        return clinicDao.updateClinicInfo(clinic_id,name,email,telephone,available_studies,verified);
+    }
+
+    @Override
+    public boolean hasStudy(int clinic_id, int studyType_id) {
+        return clinicDao.hasStudy(clinic_id,studyType_id);
+    }
+
+    @Override
     public StudyType registerStudyToClinic(int clinic_id, StudyType studyType) {
         return clinicDao.registerStudyToClinic(clinic_id, studyType);
     }
