@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.webapp.controller.api;
 
+import ar.edu.itba.paw.model.Image;
+import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.services.UrlEncoderService;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.services.OrderService;
-import ar.edu.itba.paw.services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -23,10 +21,7 @@ public class ImageController {
     private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private ResultService resultService;
+    private ImageService imageService;
 
     @RequestMapping(value = "/study/{encodedId}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getOrderIdentification(@PathVariable("encodedId") final String encodedId, @RequestParam(value = "attr", required = false) final String attribute) {
@@ -45,21 +40,15 @@ public class ImageController {
 
         long id = urlEncoderService.decode(encodedId);
 
-        Optional<Order> orderOpt = orderService.findById(id);
+        Optional<Image> imageOptional = imageService.getOrderImage(id,attribute);
 
-        if(orderOpt.isPresent()){
+        if(imageOptional.isPresent()){
             // image present
-            Order order = orderOpt.get();
+            Image image = imageOptional.get();
 
-            switch (attribute){
-                case "identification":
-                    headers.setContentType(MediaType.parseMediaType(order.getIdentification_type()));
-                    media = order.getIdentification();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                default:
-                    responseStatus = HttpStatus.BAD_REQUEST;
-            }
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getImage();
+            responseStatus = HttpStatus.OK;
 
         }else{
             // not present
@@ -86,28 +75,17 @@ public class ImageController {
         if(attribute==null)
             return new ResponseEntity<>(null,headers,HttpStatus.BAD_REQUEST);
 
-        Optional<Result> resultOpt = resultService.findById(resultId);
-
         long id = urlEncoderService.decode(encodedId);
 
-        if(resultOpt.isPresent() && resultOpt.get().getOrder_id()==id){
-            // image present
-            Result result = resultOpt.get();
+        Optional<Image> imageOptional = imageService.getResultImage(resultId,id,attribute);
 
-            switch (attribute){
-                case "identification":
-                    headers.setContentType(MediaType.parseMediaType(result.getIdentification_type()));
-                    media = result.getIdentification();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                case "result-data":
-                    headers.setContentType(MediaType.parseMediaType(result.getData_type()));
-                    media = result.getData();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                default:
-                    responseStatus = HttpStatus.BAD_REQUEST;
-            }
+        if(imageOptional.isPresent()){
+            // image present
+            Image image = imageOptional.get();
+
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getImage();
+            responseStatus = HttpStatus.OK;
 
         }else{
             // not present
