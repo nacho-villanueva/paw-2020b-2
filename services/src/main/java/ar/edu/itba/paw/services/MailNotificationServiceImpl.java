@@ -70,6 +70,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     }
 
+    @Override
     public void sendOrderMail(Order order) {
 
         if(this.useHTML){
@@ -79,6 +80,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
+    @Override
     public void sendResultMail(Result result){
 
         if(this.useHTML){
@@ -88,6 +90,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
+    @Override
     public void sendMedicApplicationValidatingMail(Medic medic){
         if(this.useHTML){
             sendMedicApplicationValidatingMailHtml(medic);
@@ -96,6 +99,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
+    @Override
     public void sendClinicApplicationValidatingMail(Clinic clinic){
         if(this.useHTML){
             sendClinicApplicationValidatingMailHtml(clinic);
