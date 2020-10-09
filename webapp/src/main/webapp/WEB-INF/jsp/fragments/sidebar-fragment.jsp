@@ -1,5 +1,6 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!-- Sidebar -->
 <ul class="navbar-nav sidebar sidebar-dark bg-gradient-primary accordion" id="accordionSidebar">
 
@@ -26,7 +27,7 @@
     <li class="nav-item <c:if test='${param.current == "orders"}'>active</c:if>">
         <a class="nav-link" href="<c:url value='/home' />">
             <i class="fas fa-fw fa-table"></i>
-            <span>My Orders</span></a>
+            <span><spring:message key="fragments.sidebar.myorders"></span></a>
     </li>
 
     <sec:authorize access="hasRole('ROLE_MEDIC')">
@@ -34,7 +35,7 @@
     <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
         <a class="nav-link" href="<c:url value='/create-order' />">
             <i class="fas fa-fw fa-plus"></i>
-            <span>Create Order</span></a>
+            <span><spring:message key="fragments.sidebar.createorder"></span></a>
     </li>
     </sec:authorize>
 
@@ -49,13 +50,13 @@
     <li class="nav-item <c:if test='${param.current == "modify-information"}'>active</c:if>">
         <a class="nav-link" href="<c:url value='/modify-information' />">
             <i class="fas fa-fw fa-sliders-h"></i>
-            <span>Modify Information</span></a>
+            <span><spring:message key="fragments.sidebar.modifyinformation"></span></a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link" href="<c:url value='/logout' />">
             <i class="fas fa fa-sign-out "></i>
-            <span>Logout</span></a>
+            <span><spring:message key="fragments.sidebar.logout"></span></a>
     </li>
 
     <!-- Divider -->
