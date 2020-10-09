@@ -34,9 +34,11 @@ public class MedicJdbcDaoTest {
     private static final String PATIENTS_TABLE_NAME = "patients";
     private static final String ORDERS_TABLE_NAME = "medical_orders";
     private static final String RESULTS_TABLE_NAME = "results";
+    private static final String MEDICAL_FIELDS_TABLE_NAME = "medical_fields";
 
 
     private static final String MEDIC_NAME = "Jhon William";
+    private static final String MEDIC_NAME_ALT = "Ron Weasly";
     private static final String MEDIC_EMAIL = "jhon@medic.com";
     private static final String MEDIC_EMAIL_ALT = "gus@medic.com";
     private static final String MEDIC_TELEPHONE = "1111111111";
@@ -67,6 +69,8 @@ public class MedicJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private SimpleJdbcInsert jdbcInsertUsers;
+    private SimpleJdbcInsert jdbcInsertMedicalField;
+    private SimpleJdbcInsert jdbcInsertRelation;
     Collection<MedicalField> known_fields;
 
     @Before
@@ -77,6 +81,11 @@ public class MedicJdbcDaoTest {
         jdbcInsertUsers = new SimpleJdbcInsert(ds)
                 .withTableName(USERS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
+        jdbcInsertMedicalField = new SimpleJdbcInsert(ds)
+                .withTableName(MEDICAL_FIELDS_TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
+        jdbcInsertRelation = new SimpleJdbcInsert(ds)
+                .withTableName(MEDICS_RELATION_TABLE_NAME);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
@@ -86,6 +95,7 @@ public class MedicJdbcDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICAL_FIELDS_TABLE_NAME);
     }
 
     @Test
@@ -165,6 +175,60 @@ public class MedicJdbcDaoTest {
         MedicalField medicalField = new MedicalField(ZERO_ID,FIELD_NAME);
 
         dao.registerFieldToMedic(ZERO_ID,medicalField);
+    }
+
+    @Test
+    public void testKnowsField() {
+        int userkey = insertTestMedic();
+        int fieldkey = insertTestMedicalField(FIELD_NAME);
+        insertTestRelation(userkey,fieldkey);
+
+        boolean ret = dao.knowsField(userkey,fieldkey);
+
+        Assert.assertTrue(ret);
+    }
+
+    @Test
+    public void testKnowsFieldFalse() {
+        int userkey = insertTestMedic();
+        int fieldkey = insertTestMedicalField(FIELD_NAME);
+
+        boolean ret = dao.knowsField(userkey,fieldkey);
+
+        Assert.assertFalse(ret);
+    }
+
+    @Test
+    public void testUpdateMedicInfo() {
+        int userkey = insertTestMedic();
+        int fieldkey = insertTestMedicalField(FIELD_NAME);
+        int fieldkeyalt = insertTestMedicalField(FIELD_NAME_ALT);
+        insertTestRelation(userkey,fieldkey);
+
+        known_fields = new ArrayList<>();
+        known_fields.add(new MedicalField(fieldkey,FIELD_NAME));
+        known_fields.add(new MedicalField(fieldkeyalt, FIELD_NAME_ALT));
+
+        Medic medic = dao.updateMedicInfo(userkey,MEDIC_NAME_ALT, MEDIC_EMAIL_ALT,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,known_fields,TRUE);
+
+        Assert.assertEquals(known_fields.size(), medic.getMedical_fields().size());
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"name = '" + MEDIC_NAME_ALT + "' AND email = '" + MEDIC_EMAIL_ALT + "' AND licence_number = '" + MEDIC_LICENCE + "' AND user_id = " + userkey));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_RELATION_TABLE_NAME, "medic_id = " + userkey + " AND field_id = " + fieldkey));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_RELATION_TABLE_NAME, "medic_id = " + userkey + " AND field_id = " + fieldkeyalt));
+    }
+
+    private int insertTestMedicalField(final String fieldName) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("name", fieldName);
+        Number key = jdbcInsertMedicalField.executeAndReturnKey(insertMap);
+        return key.intValue();
+    }
+
+    private void insertTestRelation(final int medic_id, final int field_id) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("medic_id", medic_id);
+        insertMap.put("field_id",field_id);
+        jdbcInsertRelation.execute(insertMap);
     }
 
     private int insertTestMedic() {

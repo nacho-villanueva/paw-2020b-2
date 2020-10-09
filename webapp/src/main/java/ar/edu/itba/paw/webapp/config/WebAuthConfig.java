@@ -75,7 +75,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/")
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")       //TODO: check for new exception handling error.jsp view
+                    .accessDeniedPage("/403")       //TODO: use .accessDeniedHandler(accessDeniedHandler)
                 .and().csrf().disable();
     }
 

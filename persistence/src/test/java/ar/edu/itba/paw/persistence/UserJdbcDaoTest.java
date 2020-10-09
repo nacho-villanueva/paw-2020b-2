@@ -105,7 +105,7 @@ public class UserJdbcDaoTest {
 
         User newUser = dao.updateRole(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_ROLE);
 
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"role = 4"));
         Assert.assertEquals(NEW_ROLE,newUser.getRole());
     }
 
