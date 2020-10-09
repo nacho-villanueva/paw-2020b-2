@@ -29,7 +29,7 @@ public class MedicServiceImpl implements MedicService {
 
     @Override
     public Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields) {
-        return medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields);
+        return medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields, false);
     }
 
     @Override

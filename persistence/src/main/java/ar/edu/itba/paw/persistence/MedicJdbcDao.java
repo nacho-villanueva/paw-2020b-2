@@ -68,7 +68,7 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields) {
+    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
@@ -77,7 +77,7 @@ public class MedicJdbcDao implements MedicDao {
         insertMap.put("identification_type", identification_type);
         insertMap.put("identification", identification);
         insertMap.put("licence_number", licence_number);
-        insertMap.put("verified", false);
+        insertMap.put("verified", verified);
 
         jdbcInsertMedic.execute(insertMap);
         //TODO: verify success
@@ -85,7 +85,7 @@ public class MedicJdbcDao implements MedicDao {
 
         userDao.updateRole(user, User.MEDIC_ROLE_ID);
 
-        return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,false,known_fieldsDB);
+        return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,verified,known_fieldsDB);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface MedicDao {
 
     Collection<Medic> getAllUnverified();
 
-    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
+    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
 
     Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
 

@@ -33,7 +33,7 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies) {
-        return clinicDao.register(user,name,telephone,available_studies);
+        return clinicDao.register(user,name,telephone,available_studies,false);
     }
 
     @Override

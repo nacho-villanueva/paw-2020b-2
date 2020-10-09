@@ -84,13 +84,13 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
         insertMap.put("email", user.getEmail());
         insertMap.put("telephone", telephone);
-        insertMap.put("verified", false);
+        insertMap.put("verified", verified);
 
         jdbcInsertClinic.execute(insertMap);
         //Todo: Check success
@@ -99,12 +99,12 @@ public class ClinicJdbcDao implements ClinicDao {
 
         userDao.updateRole(user, User.CLINIC_ROLE_ID);
 
-        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,false);
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,verified);
     }
 
     @Override
     public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
-        jdbcTemplate.update("UPDATE clinics Set name = ?, telephone = ? WHERE user_id = ?", name, telephone, user.getId());
+        jdbcTemplate.update("UPDATE clinics Set name = ?, telephone = ?, verified = ? WHERE user_id = ?", name, telephone, verified, user.getId());
 
         Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,user.getId());
 
