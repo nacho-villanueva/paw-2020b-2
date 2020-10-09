@@ -80,13 +80,15 @@
                                 <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
                         </fieldset>
-                        <fieldset>
-                            <fieldset class="form-group">
-                                <label for="patientEmail" class="bmd-label-floating">Patient's Email Address</label>
-                                <f:input type="email" class="form-control" id="patientEmail" path="patient_email"/>
-                                <f:errors path="patient_email"/>
+                        <c:if test="${(loggedUser.isMedic() == true && loggedUser.isVerifyingMedic() == false )||(loggedUser.isClinic() == true && loggedUser.isVerifyingClinic() == false)}">
+                            <fieldset>
+                                <fieldset class="form-group">
+                                    <label for="patientEmail" class="bmd-label-floating">Patient's Email Address</label>
+                                    <f:input type="email" class="form-control" id="patientEmail" path="patient_email"/>
+                                    <f:errors path="patient_email"/>
+                                </fieldset>
                             </fieldset>
-                        </fieldset>
+                        </c:if>
 
                         <fieldset class="form-group">
                             <label class="bmd-label-static" for="date">Date</label>

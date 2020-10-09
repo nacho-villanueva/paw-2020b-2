@@ -119,7 +119,7 @@ public class MyStudiesController {
 
             }
         }
-
+        mav.addObject("loggedUser", user);
         mav.addObject("medicsList", medicsList);
         mav.addObject("clinicsList", clinicsList);
         mav.addObject("studiesList", studyService.getAll());
