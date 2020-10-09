@@ -81,4 +81,8 @@ public class User {
     public void setVerifyingClinic(boolean verifyingClinic) {
         isVerifyingClinic = verifyingClinic;
     }
+
+    public boolean isPatient() {
+        return this.role == USER_ROLE_ID;
+    }
 }

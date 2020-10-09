@@ -108,12 +108,12 @@ public class MyStudiesController {
                 }
             }
             clinicsList.add(clinicService.findByUserId(user.getId()).get());
-        }else{
-            for (Order order: orders) {
-                if(!medicsList.contains(order.getMedic())){
+        }else if(user.isPatient()) {
+            for (Order order : orders) {
+                if (!medicsList.contains(order.getMedic())) {
                     medicsList.add(order.getMedic());
                 }
-                if(!clinicsList.contains(order.getClinic())){
+                if (!clinicsList.contains(order.getClinic())) {
                     clinicsList.add(order.getClinic());
                 }
 

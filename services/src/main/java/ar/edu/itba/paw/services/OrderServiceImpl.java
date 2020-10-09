@@ -67,8 +67,10 @@ public class OrderServiceImpl implements OrderService {
             return getAllAsMedic(user);
         }else if(user.isClinic() && !user.isVerifyingClinic()){
             return getAllAsClinic(user);
-        }else {
+        }else if(user.isPatient()){
             return getAllAsPatient(user);
+        }else{
+            return null;
         }
     }
 
