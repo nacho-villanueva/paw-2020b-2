@@ -3,29 +3,32 @@ package ar.edu.itba.paw.model;
 public class User {
 
     public static final int ADMIN_ROLE_ID = 0;
-    public static final int USER_ROLE_ID = 1;
+    public static final int PATIENT_ROLE_ID = 1;
     public static final int MEDIC_ROLE_ID = 2;
     public static final int CLINIC_ROLE_ID = 3;
-    public static final int CLINIC_MEDIC_ROLE_ID = 4;
+    public static final int UNDEFINED_ROLE_ID = 4;
+
     private static final String DEFAULT_LOCALE = "en-US";
 
     private int id;
     private String email;
     private String password;
     private int role;
-    private boolean isVerifyingMedic;
-    private boolean isVerifyingClinic;
+    private boolean isRegistered;
+    private boolean isVerifying;
     private String locale;
 
     public User() {
 
     }
 
-    public User(final int id, final String email, final String password, final int role, final String locale) {
+    public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying, final String locale) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.isRegistered = isRegistered;
+        this.isVerifying = isVerifying;
         this.locale = locale;
     }
 
@@ -34,7 +37,19 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.isRegistered = true;
+        this.isVerifying = false;
         this.locale = DEFAULT_LOCALE;
+    }
+
+    public User(final int id, final String email, final String password, final int role, final String locale) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.isRegistered = true;
+        this.isVerifying = false;
+        this.locale = locale;
     }
 
     public int getId() {
@@ -70,27 +85,31 @@ public class User {
     }
 
     public boolean isMedic() {
-        return this.role == MEDIC_ROLE_ID || this.role == CLINIC_MEDIC_ROLE_ID;
+        return this.role == MEDIC_ROLE_ID;
     }
 
     public boolean isClinic() {
-        return this.role == CLINIC_ROLE_ID || this.role == CLINIC_MEDIC_ROLE_ID;
+        return this.role == CLINIC_ROLE_ID;
     }
 
-    public boolean isVerifyingMedic() {
-        return isVerifyingMedic;
+    public boolean isPatient() { return this.role == PATIENT_ROLE_ID; }
+
+    public boolean isUndefined() { return this.role == UNDEFINED_ROLE_ID; }
+
+    public boolean isRegistered() {
+        return isRegistered;
     }
 
-    public void setVerifyingMedic(boolean verifyingMedic) {
-        isVerifyingMedic = verifyingMedic;
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
     }
 
-    public boolean isVerifyingClinic() {
-        return isVerifyingClinic;
+    public boolean isVerifying() {
+        return isVerifying;
     }
 
-    public void setVerifyingClinic(boolean verifyingClinic) {
-        isVerifyingClinic = verifyingClinic;
+    public void setVerifying(boolean verifying) {
+        isVerifying = verifying;
     }
 
     public String getLocale() {

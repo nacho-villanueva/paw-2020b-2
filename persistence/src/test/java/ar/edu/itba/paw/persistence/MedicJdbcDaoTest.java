@@ -37,8 +37,6 @@ public class MedicJdbcDaoTest {
 
 
     private static final String MEDIC_NAME = "Jhon William";
-    private static final String MEDIC_EMAIL = "jhon@medic.com";
-    private static final String MEDIC_EMAIL_ALT = "gus@medic.com";
     private static final String MEDIC_TELEPHONE = "1111111111";
     private static final String MEDIC_LICENCE = "A21-B15";
     private static final String FIELD_NAME = "Oncology";
@@ -95,7 +93,7 @@ public class MedicJdbcDaoTest {
         final Optional<Medic> maybeMedic = dao.findByUserId(dbkey);
 
         Assert.assertTrue(maybeMedic.isPresent());
-        Assert.assertEquals(MEDIC_EMAIL,maybeMedic.get().getEmail());
+        Assert.assertEquals(USER_EMAIL,maybeMedic.get().getEmail());
     }
 
     @Test
@@ -133,7 +131,7 @@ public class MedicJdbcDaoTest {
         known_fields.add(new MedicalField(ZERO_ID,FIELD_NAME));
         known_fields.add(new MedicalField(ZERO_ID,FIELD_NAME_ALT));
 
-        final Medic medic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME, MEDIC_EMAIL, MEDIC_TELEPHONE, MEDIC_IDENTIFICATION_TYPE, MEDIC_IDENTIFICATION, MEDIC_LICENCE, known_fields);
+        final Medic medic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME, MEDIC_TELEPHONE, MEDIC_IDENTIFICATION_TYPE, MEDIC_IDENTIFICATION, MEDIC_LICENCE, known_fields);
 
         Assert.assertNotNull(medic);
         MedicalField field = medic.getMedical_fields().stream().findFirst().get();
@@ -145,7 +143,7 @@ public class MedicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestMedic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME,MEDIC_EMAIL,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,new ArrayList<>());
     }
 
     @Test
@@ -169,22 +167,21 @@ public class MedicJdbcDaoTest {
 
     private int insertTestMedic() {
         int userkey = insertTestUser(USER_EMAIL);
-        insertMedic(MEDIC_EMAIL, userkey);
+        insertMedic(userkey);
         return userkey;
     }
 
     private void insertMultipleTestMedics() {
         int userkey = insertTestUser(USER_EMAIL);
-        insertMedic(MEDIC_EMAIL, userkey);
+        insertMedic(userkey);
         userkey = insertTestUser(USER_EMAIL_ALT);
-        insertMedic(MEDIC_EMAIL_ALT, userkey);
+        insertMedic(userkey);
     }
 
-    private void insertMedic(String email, int user_id) {
+    private void insertMedic(int user_id) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id",user_id);
         insertMap.put("name", MEDIC_NAME);
-        insertMap.put("email", email);
         insertMap.put("telephone", MEDIC_TELEPHONE);
         insertMap.put("identification_type",MEDIC_IDENTIFICATION_TYPE);
         insertMap.put("identification",MEDIC_IDENTIFICATION);

@@ -74,73 +74,8 @@ body {
     color: var(--primary);
 }
 
-.toggle_radio{
-    position: relative;
-    background: rgba(255,255,255,.1);
-    overflow: hidden;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    border-radius: 50px;
-    border-top: 0;
-    margin: 0;
-    padding: 0 !important;
-    height: 26px;
-    width: 318px;
-}
-.toggle_radio > * {
-    float: left;
-}
-.toggle_radio input[type=radio]{
+.radio-toggle {
     display: none;
-    /*position: fixed;*/
-}
-.toggle_radio label{
-    font-size: 1rem;
-    color: var(--primary);
-    display: block;
-    width: 100px;
-    height: 65px;
-    margin: 3px 3px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    border-radius: 50px;
-    cursor: pointer;
-    z-index: 1;
-    /*background: rgba(0,0,0,.1);*/
-    text-align: center;
-    /*margin: 0 2px;*/
-    /*background: blue;*/ /*make it blue*/
-}
-.toggle_option_slider{
-    /*display: none;*/
-    /*background: red;*/
-    width: 100px;
-    height: 20px;
-    position: absolute;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    border-radius: 50px;
-    -webkit-transition: all .4s ease;
-    -moz-transition: all .4s ease;
-    -o-transition: all .4s ease;
-    -ms-transition: all .4s ease;
-    transition: all .4s ease;
-}
-
-#first_toggle:checked ~ .toggle_option_slider{
-    background: rgba(40, 165, 68, 0.3);
-    color: white;
-    left: 3px;
-}
-#second_toggle:checked ~ .toggle_option_slider{
-    background: rgba(30, 195, 145, 0.3);
-    color: white;
-    left: 109px;
-}
-#third_toggle:checked ~ .toggle_option_slider{
-    background: rgba(25, 176, 200, 0.3);
-    color: white;
-    left: 215px;
 }
 
 .action-btn{
