@@ -1,5 +1,6 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <meta charset="UTF-8">
-<title>MedTransfer</title>
+<title><spring:message code="appname"/></title>
 
 <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">

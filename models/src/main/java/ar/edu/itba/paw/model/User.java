@@ -7,6 +7,7 @@ public class User {
     public static final int MEDIC_ROLE_ID = 2;
     public static final int CLINIC_ROLE_ID = 3;
     public static final int CLINIC_MEDIC_ROLE_ID = 4;
+    private static final String DEFAULT_LOCALE = "en-US";
 
     private int id;
     private String email;
@@ -14,9 +15,18 @@ public class User {
     private int role;
     private boolean isVerifyingMedic;
     private boolean isVerifyingClinic;
+    private String locale;
 
     public User() {
 
+    }
+
+    public User(final int id, final String email, final String password, final int role, final String locale) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.locale = locale;
     }
 
     public User(final int id, final String email, final String password, final int role) {
@@ -24,6 +34,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.locale = DEFAULT_LOCALE;
     }
 
     public int getId() {
@@ -80,5 +91,13 @@ public class User {
 
     public void setVerifyingClinic(boolean verifyingClinic) {
         isVerifyingClinic = verifyingClinic;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

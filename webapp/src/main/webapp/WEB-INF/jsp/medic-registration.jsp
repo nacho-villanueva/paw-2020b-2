@@ -26,51 +26,52 @@
 
 <div class="p-5 col-auto card main-container mx-auto" >
     <div class="row justify-content-center">
-        <h2>Before we let you through...</h2>
+        <h2><spring:message code="medic-registration.body.form.title1"/></h2>
     </div>
     <div class="row justify-content-center">
-        <h3>We need a couple more details.</h3>
+        <h3><spring:message code="medic-registration.body.form.title2"/></h3>
     </div>
     <c:url var="apply" value="/apply-as-medic"/>
     <f:form action="${apply}" class="form-signin" method="post" modelAttribute="applyMedicForm" enctype="multipart/form-data">
         <div class="row">
             <fieldset class="form-group">
-                <label for="firstName" class="bmd-label-floating">First Name</label>
+                <label for="firstName" class="bmd-label-floating"><spring:message code="medic-registration.body.form.first_name.label"/></label>
                 <f:input type="text" cssClass="form-control" required="required" id="firstName"  path="first_name"/>
             </fieldset>
             <fieldset class="form-group">
-                <label for="lastName" class="bmd-label-floating">Last Name</label>
+                <label for="lastName" class="bmd-label-floating"><spring:message code="medic-registration.body.form.last_name.label"/> </label>
                 <f:input type="text" cssClass="form-control" required="required" id="lastName" path="last_name"/>
             </fieldset>
         </div>
         <fieldset class="form-group row">
-            <label for="phoneNumber" class="bmd-label-floating">Phone Number</label>
+            <label for="phoneNumber" class="bmd-label-floating"><spring:message code="medic-registration.body.form.telephone.label"/></label>
             <f:input type="tel" cssClass="form-control" required="required" id="phoneNumber" pattern="\+?[0-9\-]+" path="telephone"/>
-            <small class="text-muted">+[Country Code][Area Code][Phone Number]</small>
+            <small class="text-muted"><spring:message code="medic-registration.body.form.telephone.format"/></small>
         </fieldset>
         <fieldset class="form-group row">
-            <label for="email" class="bmd-label-floating">Email Address</label>
+            <label for="email" class="bmd-label-floating"><spring:message code="medic-registration.body.form.email.label"/></label>
             <f:input type="text" cssClass="form-control" required="required" id="email" path="email"/>
         </fieldset>
         <fieldset class="form-group row">
-            <label for="licenseNumber" class="bmd-label-floating">License Number</label>
+            <label for="licenseNumber" class="bmd-label-floating"><spring:message code="medic-registration.body.form.licence_number.label"/></label>
             <f:input type="text" cssClass="form-control" required="required" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number"/>
-            <small class="text-muted">Please enter your license number only with numbers and letters.</small>
+            <small class="text-muted"><spring:message code="medic-registration.body.form.licence_number.format"/> </small>
         </fieldset>
         <fieldset class="mt-4 form-group">
-            <label for="identificationFile">Seal and Signature</label><br/>
+            <label for="identificationFile"><spring:message code="medic-registration.body.form.identification.label"/></label><br/>
             <f:input required="required" type="file" path="identification" id="identificationFile"/><br/>
-            <small class="text-muted">Please upload a photo of your seal and signature</small>
+            <small class="text-muted"><spring:message code="medic-registration.body.form.identification.format"/></small>
         </fieldset>
 
 
-        <label class="mb-4">Medical Fields</label>
-        <f:select id="medicalFields" cssClass="selectpicker" title="Choose Medical Fields" data-live-search="true" path="known_fields" data-style="btn-custom">
+        <label class="mb-4"><spring:message code="medic-registration.body.form.known_fields.label"/></label>
+        <spring:message code="medic-registration.body.form.known_fields.placeholder" var="known_fieldsPlaceholder"/>
+        <f:select id="medicalFields" cssClass="selectpicker" title="${known_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
             <f:options items="${fieldsList}" itemLabel="name" itemValue="id"/>
         </f:select>
 
-
-        <input type="submit" value="Continue" class="row btn btn-lg btn-light  bg-primary btn-block">
+        <spring:message code="medic-registration.body.form.submit" var="medicSubmit"/>
+        <input type="submit" value="${medicSubmit}" class="row btn btn-lg btn-light  bg-primary btn-block">
     </f:form>
 </div>
 

@@ -22,6 +22,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender emailSender;
 
     @Async
+    @Override
     public void sendSimpleMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("MedTransfer");
@@ -32,6 +33,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Async
+    @Override
     public void sendMimeMessage(String to, String subject, String htmlText, Collection<String> inline){
         emailSender.send(mimeMessage -> {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
