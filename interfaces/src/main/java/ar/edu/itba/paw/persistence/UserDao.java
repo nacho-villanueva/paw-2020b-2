@@ -16,4 +16,6 @@ public interface UserDao {
     User updateEmail(User user, String email);
 
     User updatePassword(User user, String password);
+
+    boolean checkPassword(int user_id, String password);
 }

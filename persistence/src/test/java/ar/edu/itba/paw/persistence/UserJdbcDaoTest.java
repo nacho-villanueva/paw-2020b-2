@@ -187,6 +187,31 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
     }
 
+    @Test
+    public void testCheckPasswordValid() {
+        int dbkey = insertTestUser(ROLE);
+
+        boolean ret = dao.checkPassword(dbkey,PASSWORD);
+
+        Assert.assertTrue(ret);
+    }
+
+    @Test
+    public void testCheckPasswordInvalid() {
+        int dbkey = insertTestUser(ROLE);
+
+        boolean ret = dao.checkPassword(dbkey, NEW_PASSWORD);
+
+        Assert.assertFalse(ret);
+    }
+
+    @Test
+    public void testCheckPasswordNoUser() {
+        boolean ret = dao.checkPassword(ZERO_ID, PASSWORD);
+
+        Assert.assertFalse(ret);
+    }
+
     private int insertTestUser(int role) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email", EMAIL);
