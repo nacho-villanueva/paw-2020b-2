@@ -15,8 +15,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <%@ include file="fragments/include-header.jsp"%>
 
-    <link rel="stylesheet" href="<c:url value="/resources/css/registration.css"/>">
-
     <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/mystudies.css"/>">
 
@@ -26,7 +24,7 @@
 <body>
 
 <!-- Page Wrapper -->
-<div id="wrapper" style="width: 100%;">
+<div id="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="orders"/>
@@ -83,7 +81,7 @@
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.studytype"/></label>
                             <spring:message code="my-studies.filters-card.select.title.studytype" var="selectStudyTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.studytype" var="selectStudyOption"/>
-                            <f:select id="studyTypes" cssClass="selectpicker" title="${selectStudyTitle}" data-live-search="true" path="study_id" data-style="btn-custom">
+                            <f:select id="studyTypes" cssClass="selectpicker" title="${selectStudyTitle}" data-live-search="true" path="study_id" data-style="text-primary">
                                 <f:option value="-1" label="${selectStudyOption}"/>
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                             </f:select>
@@ -92,7 +90,7 @@
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
                             <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
-                            <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="btn-custom">
+                            <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
                                 <f:option value="-1" label="${selectClinicOption}"/>
                                 <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
@@ -101,7 +99,7 @@
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
                             <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
-                            <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="btn-custom">
+                            <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
                                 <f:option value="-1" label="${selectMedicOption}"/>
                                 <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
