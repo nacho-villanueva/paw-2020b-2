@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.*;
 
 import java.sql.Date;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 public interface OrderService {
@@ -18,4 +19,16 @@ public interface OrderService {
     Collection<Order> getAllAsMedic(User user);
 
     Collection<Order> getAllAsPatient(User user);
+
+    enum Parameters{
+        DATE,
+        CLINIC,
+        MEDIC,
+        PATIENT,
+        STUDYTYPE;
+    }
+
+    Collection<Order> filterOrders(User user, HashMap<Parameters, String> parameters);
+
+    Collection<Order> getAllAsUser(User user);
 }
