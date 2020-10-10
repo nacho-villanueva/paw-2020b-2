@@ -83,31 +83,26 @@ public class MyStudiesController {
     private void listingSetup(ModelAndView mav, HashMap<OrderService.Parameters, String> parameters){
         User user = loggedUser();
 
-        //clinic sea el user id
-        //medic sea el user id
-        //patient sea el user id
-        //date sea un string yyyy-mm-dd
-        //studytype sea el type id
-
         Collection<Order> orders = orderService.filterOrders(user, parameters);
         Collection<Clinic> clinicsList = new ArrayList<>();
         Collection<Medic> medicsList = new ArrayList<>();
 
         if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
+            medicsList.add(medicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
                 if(!clinicsList.contains(order.getClinic())){
                     clinicsList.add(order.getClinic());
                 }
             }
-            medicsList.add(medicService.findByUserId(user.getId()).get());
+
         }else if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
-            orders.forEach(order -> medicsList.add(order.getMedic()));
+            clinicsList.add(clinicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
                 if(!medicsList.contains(order.getMedic())){
                     medicsList.add(order.getMedic());
                 }
             }
-            clinicsList.add(clinicService.findByUserId(user.getId()).get());
+
         }else if(user.isPatient()) {
             for (Order order : orders) {
                 if (!medicsList.contains(order.getMedic())) {
