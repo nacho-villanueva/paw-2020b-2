@@ -43,8 +43,20 @@
                                     <small>Date: <c:out value="${order.date}" /></small>
                                 </div>
                                 <div class="d-flex w-100 justify-content-between">
-                                    <p class="mb-1">Clinic: <c:out value="${order.clinic.name}" /></p>
-                                    <small>Medic: <c:out value="${order.medic.name}" /></small>
+                                    <c:choose>
+                                        <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifyingMedic() == false}">
+                                            <p class="mb-1">Clinic: <c:out value="${order.clinic.name}"/></p>
+                                            <small>Patient: <c:out value="${order.patient_name}" /></small>
+                                        </c:when>
+                                        <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifyingClinic() == false}">
+                                            <p class="mb-1">Patient: <c:out value="${order.patient_name}" /></p>
+                                            <small>Medic: <c:out value="${order.medic.name}" /></small>
+                                        </c:when>
+                                        <c:when test="${loggedUser.isPatient() == true}">
+                                            <p class="mb-1">Clinic: <c:out value="${order.clinic.name}"/></p>
+                                            <small>Medic: <c:out value="${order.medic.name}" /></small>
+                                        </c:when>
+                                    </c:choose>
                                 </div>
                             </a>
                         </c:forEach>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
         }else if(user.isPatient()){
             return getAllAsPatient(user);
         }else{
-            return null;
+            return new ArrayList<>();
         }
     }
 
