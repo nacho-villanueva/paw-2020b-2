@@ -44,11 +44,11 @@
                                 </div>
                                 <div class="d-flex w-100 justify-content-between">
                                     <c:choose>
-                                        <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifyingMedic() == false}">
+                                        <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifying() == false}">
                                             <p class="mb-1">Clinic: <c:out value="${order.clinic.name}"/></p>
                                             <small>Patient: <c:out value="${order.patient_name}" /></small>
                                         </c:when>
-                                        <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifyingClinic() == false}">
+                                        <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifying() == false}">
                                             <p class="mb-1">Patient: <c:out value="${order.patient_name}" /></p>
                                             <small>Medic: <c:out value="${order.medic.name}" /></small>
                                         </c:when>
@@ -92,7 +92,7 @@
                                 <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
                         </fieldset>
-                        <c:if test="${(loggedUser.isMedic() == true && loggedUser.isVerifyingMedic() == false )||(loggedUser.isClinic() == true && loggedUser.isVerifyingClinic() == false)}">
+                        <c:if test="${(loggedUser.isMedic() == true || loggedUser.isClinic() == true ) && loggedUser.isVerifying() == false}">
                             <fieldset>
                                 <fieldset class="form-group">
                                     <label for="patientEmail" class="bmd-label-floating">Patient's Email Address</label>

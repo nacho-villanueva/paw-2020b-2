@@ -87,7 +87,7 @@ public class MyStudiesController {
         Collection<Clinic> clinicsList = new ArrayList<>();
         Collection<Medic> medicsList = new ArrayList<>();
 
-        if(user.isMedic() && !user.isVerifyingMedic() && medicService.findByUserId(user.getId()).isPresent()){
+        if(user.isMedic() && !user.isVerifying() && medicService.findByUserId(user.getId()).isPresent()){
             medicsList.add(medicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
                 if(!clinicsList.contains(order.getClinic())){
@@ -95,7 +95,7 @@ public class MyStudiesController {
                 }
             }
 
-        }else if(user.isClinic() && !user.isVerifyingClinic() && clinicService.findByUserId(user.getId()).isPresent()){
+        }else if(user.isClinic() && !user.isVerifying() && clinicService.findByUserId(user.getId()).isPresent()){
             clinicsList.add(clinicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
                 if(!medicsList.contains(order.getMedic())){

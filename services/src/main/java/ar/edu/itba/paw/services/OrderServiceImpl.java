@@ -64,9 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Collection<Order> getAllAsUser(User user){
-        if(user.isMedic() && !user.isVerifyingMedic()){
+        if(user.isMedic() && !user.isVerifying()){
             return getAllAsMedic(user);
-        }else if(user.isClinic() && !user.isVerifyingClinic()){
+        }else if(user.isClinic() && !user.isVerifying()){
             return getAllAsClinic(user);
         }else if(user.isPatient()){
             return getAllAsPatient(user);
