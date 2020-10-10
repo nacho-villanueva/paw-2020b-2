@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-public class MyStudiesController {
+public class MyOrdersController {
 
     @Autowired
     private UserService userService;
@@ -41,8 +41,8 @@ public class MyStudiesController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping("/my-studies")
-    public ModelAndView myStudies(@RequestParam(value = "date", required = false) String dateString,
+    @RequestMapping("/my-orders")
+    public ModelAndView myOrders(@RequestParam(value = "date", required = false) String dateString,
                                   @RequestParam(value = "clinic", required = false) String clinicString,
                                   @RequestParam(value = "medic", required = false) String medicString,
                                   @RequestParam(value = "study", required = false) String studyString,
@@ -137,16 +137,16 @@ public class MyStudiesController {
     @RequestMapping(value = "/filter-search", method = RequestMethod.GET)
     public String filterSearch(@Valid @ModelAttribute("filterForm") FilterForm filterForm, final BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return "my-studies";
+            return "my-orders";
         }else{
-            String out = "redirect:/my-studies?";
+            String out = "redirect:/my-orders?";
             if(filterForm.getDate() != null && !filterForm.getDate().isEmpty()){
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 dateFormat.setLenient(false);
                 try{
                     dateFormat.parse(filterForm.getDate().trim());
                 }catch (ParseException pe){
-                    return "my-studies";
+                    return "my-orders";
                 }
                 out += "date=" + filterForm.getDate() + "&";
             }

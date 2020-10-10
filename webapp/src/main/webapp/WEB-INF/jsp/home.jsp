@@ -19,7 +19,7 @@
 <div id="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
-        <jsp:param name="current" value="orders"/>
+        <jsp:param name="current" value="home"/>
     </jsp:include>
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">

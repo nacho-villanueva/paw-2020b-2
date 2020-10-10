@@ -58,7 +58,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
                     .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("UNDEFINED")
                     .antMatchers("/register-as-patient","/apply-as-patient").hasRole("UNDEFINED")
-                    .antMatchers("/home","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
+                    .antMatchers("/home","/my-orders","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
                     .antMatchers("/login","/register").anonymous()
                     .antMatchers("/**").permitAll()
                 .and().formLogin()

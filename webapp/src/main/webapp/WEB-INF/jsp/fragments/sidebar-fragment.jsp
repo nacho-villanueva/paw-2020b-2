@@ -18,6 +18,13 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item <c:if test='${param.current == "home"}'>active</c:if>">
+        <a class="nav-link" href="<c:url value='/home' />">
+            <i class="fas fa-fw fa-table"></i>
+            <span><spring:message key="fragments.sidebar.home" /></span></a>
+    </li>
+
     <!-- Heading -->
     <div class="sidebar-heading">
         Orders
@@ -25,7 +32,7 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item <c:if test='${param.current == "orders"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/home' />">
+        <a class="nav-link" href="<c:url value='/my-orders' />">
             <i class="fas fa-fw fa-table"></i>
             <span><spring:message key="fragments.sidebar.myorders" /></span></a>
     </li>
