@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.model;
 
-public class Image {
+public class Media {
 
     private String name;
-    private byte[] image;
+    private byte[] file;
     private String contentType;
 
-    public Image(){
+    public Media(){
 
     }
 
-    public Image(String name, byte[] image, String contentType) {
+    public Media(String name, byte[] image, String contentType) {
         this.name = name;
-        this.image = image;
+        this.file = image;
         this.contentType = contentType;
     }
 
@@ -24,12 +24,12 @@ public class Image {
         this.name = name;
     }
 
-    public byte[] getImage() {
-        return image;
+    public byte[] getFile() {
+        return file;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setFile(byte[] image) {
+        this.file = image;
     }
 
     public String getContentType() {

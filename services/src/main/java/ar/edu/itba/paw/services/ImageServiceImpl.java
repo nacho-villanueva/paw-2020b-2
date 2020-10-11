@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Image;
+import ar.edu.itba.paw.model.Media;
 import ar.edu.itba.paw.model.Medic;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
@@ -24,9 +24,9 @@ public class ImageServiceImpl implements ImageService {
     private ResultService resultService;
 
     @Override
-    public Optional<Image> getMedicImage(int medicId, String attribute) {
+    public Optional<Media> getMedicImage(int medicId, String attribute) {
 
-        Optional<Image> ret = Optional.empty();
+        Optional<Media> ret = Optional.empty();
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
 
@@ -34,13 +34,13 @@ public class ImageServiceImpl implements ImageService {
 
             Medic medic = medicOptional.get();
 
-            Image image = new Image();
+            Media image = new Media();
 
             switch (attribute){
                 case "identification":
                     image.setName("medicIdentification");
                     image.setContentType(medic.getIdentification_type());
-                    image.setImage(medic.getIdentification());
+                    image.setFile(medic.getIdentification());
                     ret = Optional.of(image);
                     break;
             }
@@ -50,9 +50,9 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getOrderImage(long orderId, String attribute) {
+    public Optional<Media> getOrderImage(long orderId, String attribute) {
 
-        Optional<Image> ret = Optional.empty();
+        Optional<Media> ret = Optional.empty();
 
         Optional<Order> orderOptional = orderService.findById(orderId);
 
@@ -60,13 +60,13 @@ public class ImageServiceImpl implements ImageService {
 
             Order order = orderOptional.get();
 
-            Image image = new Image();
+            Media image = new Media();
 
             switch (attribute){
                 case "identification":
                     image.setName("orderIdentification");
                     image.setContentType(order.getIdentification_type());
-                    image.setImage(order.getIdentification());
+                    image.setFile(order.getIdentification());
                     ret = Optional.of(image);
                     break;
             }
@@ -76,8 +76,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getResultImage(long resultId, long orderId, String attribute) {
-        Optional<Image> ret = Optional.empty();
+    public Optional<Media> getResultImage(long resultId, long orderId, String attribute) {
+        Optional<Media> ret = Optional.empty();
 
         Optional<Result> resultOptional = resultService.findById(resultId);
 
@@ -85,19 +85,19 @@ public class ImageServiceImpl implements ImageService {
 
             Result result = resultOptional.get();
 
-            Image image = new Image();
+            Media image = new Media();
 
             switch (attribute){
                 case "identification":
                     image.setName("resultIdentification");
                     image.setContentType(result.getIdentification_type());
-                    image.setImage(result.getIdentification());
+                    image.setFile(result.getIdentification());
                     ret = Optional.of(image);
                     break;
                 case "result-data":
                     image.setName("resultData");
                     image.setContentType(result.getData_type());
-                    image.setImage(result.getData());
+                    image.setFile(result.getData());
                     ret = Optional.of(image);
                     break;
             }

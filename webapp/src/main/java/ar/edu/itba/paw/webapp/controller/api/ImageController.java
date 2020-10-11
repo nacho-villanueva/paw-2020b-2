@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller.api;
 
-import ar.edu.itba.paw.model.Image;
+import ar.edu.itba.paw.model.Media;
 import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,43 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
+    @RequestMapping(value = "/medic/{medicId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getMedicImage(@PathVariable("medicId") final int medicId, @RequestParam(value = "attr", required = false) final String attribute) {
+
+        ResponseEntity<byte[]> responseEntity;
+
+        byte[] media = null;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        HttpStatus responseStatus;
+
+        if(attribute==null)
+            return new ResponseEntity<>(null,headers,HttpStatus.BAD_REQUEST);
+
+        Optional<Media> imageOptional = imageService.getMedicImage(medicId,attribute);
+
+        if(imageOptional.isPresent()){
+            // image present
+            Media image = imageOptional.get();
+
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getFile();
+            responseStatus = HttpStatus.OK;
+
+        }else{
+            // not present
+            responseStatus = HttpStatus.NOT_FOUND;
+        }
+
+        responseEntity = new ResponseEntity<>(media, headers, responseStatus);
+
+        return responseEntity;
+    }
+
     @RequestMapping(value = "/study/{encodedId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getOrderIdentification(@PathVariable("encodedId") final String encodedId, @RequestParam(value = "attr", required = false) final String attribute) {
+    public ResponseEntity<byte[]> getOrderImage(@PathVariable("encodedId") final String encodedId, @RequestParam(value = "attr", required = false) final String attribute) {
 
         ResponseEntity<byte[]> responseEntity;
 
@@ -40,14 +75,14 @@ public class ImageController {
 
         long id = urlEncoderService.decode(encodedId);
 
-        Optional<Image> imageOptional = imageService.getOrderImage(id,attribute);
+        Optional<Media> imageOptional = imageService.getOrderImage(id,attribute);
 
         if(imageOptional.isPresent()){
             // image present
-            Image image = imageOptional.get();
+            Media image = imageOptional.get();
 
             headers.setContentType(MediaType.parseMediaType(image.getContentType()));
-            media = image.getImage();
+            media = image.getFile();
             responseStatus = HttpStatus.OK;
 
         }else{
@@ -61,7 +96,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/result/{encodedId}/{resultId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getResultIdentification(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId, @RequestParam(value = "attr", required = false) final String attribute) {
+    public ResponseEntity<byte[]> getResultImage(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId, @RequestParam(value = "attr", required = false) final String attribute) {
 
         ResponseEntity<byte[]> responseEntity;
 
@@ -77,14 +112,14 @@ public class ImageController {
 
         long id = urlEncoderService.decode(encodedId);
 
-        Optional<Image> imageOptional = imageService.getResultImage(resultId,id,attribute);
+        Optional<Media> imageOptional = imageService.getResultImage(resultId,id,attribute);
 
         if(imageOptional.isPresent()){
             // image present
-            Image image = imageOptional.get();
+            Media image = imageOptional.get();
 
             headers.setContentType(MediaType.parseMediaType(image.getContentType()));
-            media = image.getImage();
+            media = image.getFile();
             responseStatus = HttpStatus.OK;
 
         }else{
