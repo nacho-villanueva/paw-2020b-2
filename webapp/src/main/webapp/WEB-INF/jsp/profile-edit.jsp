@@ -90,6 +90,10 @@
                             </c:when>
                         </c:choose>
 
+                        <div class="row justify-content-center">
+                            <c:if test="${not empty errorAlert}"><div class="alert alert-danger" role="alert"><c:out value="${errorAlert}"/></div></c:if>
+                        </div>
+
                     </div>
                 </div>
             </div>

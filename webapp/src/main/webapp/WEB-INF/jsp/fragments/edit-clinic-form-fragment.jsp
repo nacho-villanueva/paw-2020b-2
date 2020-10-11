@@ -77,8 +77,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            let studyTypeData = '${selectedStudies}'.split(",").map(item => parseInt(item, 10));
-            $('#studyTypes').selectpicker('val',studyTypeData);
+            $('#studyTypes').selectpicker('val',${selectedStudies});
         });
     </script>
 </f:form>

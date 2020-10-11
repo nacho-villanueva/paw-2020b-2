@@ -14,16 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/profile")
@@ -109,6 +104,8 @@ public class ProfileController {
             mav.addObject("loggedUser",loggedUser());
             addUserRole(mav);
 
+            mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
+
             return mav;
         }
 
@@ -116,7 +113,7 @@ public class ProfileController {
 
         ModelAndView mav = new ModelAndView("redirect:/profile");
 
-        mav.addObject("editSuccess",messageSource.getMessage("role.user",null,locale));
+        mav.addObject("editSuccess",User.UNDEFINED_ROLE_ID);
 
         return mav;
     }
@@ -141,6 +138,8 @@ public class ProfileController {
             mav.addObject("loggedUser",loggedUser());
             addUserRole(mav);
 
+            mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
+
             return mav;
         }
 
@@ -158,9 +157,6 @@ public class ProfileController {
 
         User user = loggedUser();
 
-        if(user.getRole() != User.PATIENT_ROLE_ID)
-            return new ModelAndView("redirect:/403");
-
         final ModelAndView mav = new ModelAndView("profile-edit");
 
         mav.addObject("role","patient");
@@ -173,7 +169,7 @@ public class ProfileController {
             editPatientForm.setMedical_plan(patient.getMedic_plan());
             editPatientForm.setMedical_plan_number(patient.getMedic_plan_number());
         }else{
-            throw new MedicNotFoundException();
+            throw new PatientNotFoundException();
         }
 
         return mav;
@@ -186,6 +182,8 @@ public class ProfileController {
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("role","patient");
             addUserRole(mav);
+
+            mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
 
             return mav;
         }
@@ -203,9 +201,6 @@ public class ProfileController {
     public ModelAndView editProfileMedicGet(@ModelAttribute("editMedicForm") EditMedicForm editMedicForm){
 
         User user = loggedUser();
-
-        if(user.getRole() != User.MEDIC_ROLE_ID)
-            return new ModelAndView("redirect:/403");
 
         final ModelAndView mav = new ModelAndView("profile-edit");
 
@@ -226,7 +221,7 @@ public class ProfileController {
             Integer[] knownFields = knownFieldsList.toArray(new Integer[knownFieldsList.size()]);
             editMedicForm.setKnown_fields(knownFields);
 
-            mav.addObject("selectedFields",integerArrayToString(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()).mapToInt(Integer::intValue).toArray());
             mav.addObject("fieldsList",medicalFieldService.getAll());
         }else{
             throw new MedicNotFoundException();
@@ -236,15 +231,17 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/edit/medic",method = RequestMethod.POST)
-    public ModelAndView editProfileMedicPost(@Valid @ModelAttribute("editMedicForm") final EditMedicForm editMedicForm, final BindingResult errors){
+    public ModelAndView editProfileMedicPost(@Valid @ModelAttribute("editMedicForm") final EditMedicForm editMedicForm, final BindingResult errors, Locale locale){
         if(errors.hasErrors()){
 
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("role","medic");
             addUserRole(mav);
 
-            mav.addObject("selectedFields",integerArrayToString(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()).mapToInt(Integer::intValue).toArray());
             mav.addObject("fieldsList",medicalFieldService.getAll());
+
+            mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
 
             return mav;
         }
@@ -294,9 +291,6 @@ public class ProfileController {
 
         User user = loggedUser();
 
-        if(user.getRole() != User.CLINIC_ROLE_ID)
-            return new ModelAndView("redirect:/403");
-
         final ModelAndView mav = new ModelAndView("profile-edit");
 
         mav.addObject("role","clinic");
@@ -315,7 +309,7 @@ public class ProfileController {
             Integer[] availableStudies = availableStudiesList.toArray(new Integer[availableStudiesList.size()]);
             editClinicForm.setAvailable_studies(availableStudies);
 
-            mav.addObject("selectedStudies",integerArrayToString(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()).mapToInt(Integer::intValue).toArray());
             mav.addObject("studiesList",studyTypeService.getAll());
         }else{
             throw new ClinicNotFoundException();
@@ -325,15 +319,17 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/edit/clinic",method = RequestMethod.POST)
-    public ModelAndView editProfileClinicPost(@Valid @ModelAttribute("editClinicForm") final EditClinicForm editClinicForm, final BindingResult errors){
+    public ModelAndView editProfileClinicPost(@Valid @ModelAttribute("editClinicForm") final EditClinicForm editClinicForm, final BindingResult errors, Locale locale){
         if(errors.hasErrors()){
 
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("role","clinic");
             addUserRole(mav);
 
-            mav.addObject("selectedStudies",integerArrayToString(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()).mapToInt(Integer::intValue).toArray());
             mav.addObject("studiesList",studyTypeService.getAll());
+
+            mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
 
             return mav;
         }
@@ -429,22 +425,6 @@ public class ProfileController {
                     //
             }
         }
-    }
-
-    private String integerArrayToString(Integer[] arr){
-
-        if(arr==null || arr.length ==0)
-            return "";
-
-        StringBuilder selected = new StringBuilder();
-        String prefix = "";
-        for (Integer i : arr) {
-            selected.append(prefix);
-            prefix = ",";
-            selected.append(Integer.toString(i));
-        }
-
-        return selected.toString();
     }
 
 }

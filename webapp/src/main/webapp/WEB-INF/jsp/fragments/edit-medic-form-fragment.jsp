@@ -98,8 +98,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            let medicalFieldsData = '${selectedFields}'.split(",").map(item => parseInt(item, 10));
-            $('#medicalFields').selectpicker('val',medicalFieldsData);
+            $('#medicalFields').selectpicker('val',${selectedFields});
         });
     </script>
 </f:form>
