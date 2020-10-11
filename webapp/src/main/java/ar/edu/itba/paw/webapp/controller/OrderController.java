@@ -1,21 +1,23 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.model.OrderForm;
+import ar.edu.itba.paw.webapp.exceptions.ClinicNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.MedicNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
+import ar.edu.itba.paw.webapp.form.OrderForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
+import javax.validation.Valid;
+import java.sql.Date;
 import java.util.Optional;
 
 @Controller
@@ -26,7 +28,7 @@ public class OrderController {
     private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private OrderFormService orderFormService;
+    private OrderService orderService;
 
     @Autowired
     private StudyTypeService studyService;
@@ -40,8 +42,11 @@ public class OrderController {
     @Autowired
     private UserService us;
 
+    @Autowired
+    private ValidationService vs;
+
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getOrderCreationForm() {
+    public ModelAndView getOrderCreationForm(@ModelAttribute("orderForm") OrderForm orderForm) {
         final ModelAndView mav = new ModelAndView("create-order");
         Medic m = null;
         if(medicService.findByUserId(loggedUser().getId()).isPresent())
@@ -49,7 +54,7 @@ public class OrderController {
         mav.addObject("loggedMedic", m);
         mav.addObject("studiesList", studyService.getAll());
         mav.addObject("clinicsList", clinicService.getAll());
-        mav.addObject("orderForm", new OrderForm());
+        mav.addObject("orderForm", orderForm);
         return mav;
     }
 
@@ -63,30 +68,45 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createOrder(@ModelAttribute OrderForm orderForm, @RequestParam("orderAttach") MultipartFile file, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors() && !medicService.findByUserId(loggedUser().getId()).isPresent()) {
-
-            return "/create-order"; // TODO: RETURN VALIDATION ERRORS
+    public ModelAndView createOrder(@Valid @ModelAttribute("orderForm") OrderForm orderForm, final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ModelAndView errorMav = new ModelAndView("create-order");
+            if(medicService.findByUserId(loggedUser().getId()).isPresent())
+                errorMav.addObject("loggedMedic", medicService.findByUserId(loggedUser().getId()).get());
+            return errorMav;
 
         } else {
-            try {
-                orderForm.setMedicId(medicService.findByUserId(loggedUser().getId()).get().getUser_id());
-                byte[] fileBytes = file.getBytes();
-                long id = orderFormService.HandleOrderForm(orderForm, fileBytes, file.getContentType());
-                return "redirect:view-study/" + urlEncoderService.encode(id);
-            } catch (IOException e) {
-                return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
-            }
+
+            Optional<Medic> medic = medicService.findByUserId(loggedUser().getId());
+            if(!medic.isPresent())
+                throw new MedicNotFoundException();
+
+            Optional<Clinic> clinic = clinicService.findByUserId(orderForm.getClinicId());
+            if(!clinic.isPresent())
+                throw new ClinicNotFoundException();
+            Optional<StudyType> studyType = studyService.findById(orderForm.getStudyId());
+            if(!studyType.isPresent())
+                throw new StudyTypeNotFoundException();
+
+            Order order = orderService.register(
+                    medic.get(),
+                    new Date(System.currentTimeMillis()),
+                    clinic.get(),
+                    orderForm.getPatientName(),
+                    orderForm.getPatientEmail(),
+                    studyType.get(),
+                    orderForm.getDescription(),
+                    medic.get().getIdentification_type(),
+                    medic.get().getIdentification(),
+                    orderForm.getPatient_insurance_plan(),
+                    orderForm.getPatient_insurance_number());
+
+            return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(order.getOrder_id()));
+
 
         }
 
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handle(Exception e) {
-        System.out.println("Returning HTTP 400 Bad Request" + e.getMessage());
-    }
 
 }

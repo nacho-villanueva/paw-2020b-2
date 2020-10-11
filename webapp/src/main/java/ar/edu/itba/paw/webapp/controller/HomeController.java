@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.services.OrderService;
+import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -12,6 +15,9 @@ import ar.edu.itba.paw.webapp.form.RegisterUserForm;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Controller
@@ -19,6 +25,12 @@ public class HomeController {
 
     @Autowired
     private UserService us;
+
+    @Autowired
+    private OrderService os;
+
+    @Autowired
+    private UrlEncoderService urlEncoderService;
 
     @RequestMapping("/")
     public ModelAndView home(@ModelAttribute("registerUserForm") RegisterUserForm registerUserForm,
@@ -29,16 +41,24 @@ public class HomeController {
         }
 
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("registerUserForm", registerUserForm);
         mav.addObject("loginError", loginError);
         mav.addObject("registrationSuccess", registrationSuccess);
+
+        mav.addObject("registerUserForm", registerUserForm);
+        mav.addObject("patientRoleID",User.PATIENT_ROLE_ID);
+        mav.addObject("medicRoleID",User.MEDIC_ROLE_ID);
+        mav.addObject("clinicRoleID",User.CLINIC_ROLE_ID);
         return mav;
     }
 
     @RequestMapping("/home")
     public ModelAndView dashboard() {
-        final ModelAndView mav = new ModelAndView("home");
+        if(!loggedUser().isRegistered())
+            return new ModelAndView("redirect:/complete-registration");
+
+        ModelAndView mav = new ModelAndView("home");
         mav.addObject("loggedUser",loggedUser());
+        mav = homeSetup(mav);
         return mav;
     }
 
@@ -54,5 +74,27 @@ public class HomeController {
         //LOGGER.debug("Logged user is {}", user);
         //TODO: see more elegant solution
         return user.orElse(null);
+    }
+
+
+
+    private ModelAndView homeSetup(ModelAndView mav){
+        Collection<Order> orders = os.getAllUserOrders(loggedUser());;
+
+        HashMap<Long, String> orders_encoded = new HashMap<>();
+        encoder(orders, orders_encoded);
+        mav.addObject("orders", orders);
+        mav.addObject("orders_encoded", orders_encoded);
+        mav.addObject("has_studies", !orders.isEmpty());
+
+        return mav;
+
+    }
+
+    private HashMap<Long, String> encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
+        for(Order order : orders){
+            encodeds.put(order.getOrder_id(), urlEncoderService.encode(order.getOrder_id()));
+        }
+        return encodeds;
     }
 }

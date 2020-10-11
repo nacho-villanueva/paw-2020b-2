@@ -15,6 +15,9 @@ import java.util.*;
 @Repository
 public class MedicJdbcDao implements MedicDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Medic> MEDIC_ROW_MAPPER = (rs, rowNum) ->
             new Medic(rs.getInt("user_id"),
                     rs.getString("name"),
@@ -43,7 +46,7 @@ public class MedicJdbcDao implements MedicDao {
 
     @Override
     public Optional<Medic> findByUserId(int user_id) {
-        Optional<Medic> medic = jdbcTemplate.query("SELECT * FROM medics WHERE user_id = ?", new Object[] { user_id }, MEDIC_ROW_MAPPER).stream().findFirst();
+        Optional<Medic> medic = jdbcTemplate.query("SELECT * FROM medics INNER JOIN users ON user_id = id WHERE id = ?", new Object[] { user_id }, MEDIC_ROW_MAPPER).stream().findFirst();
         medic.ifPresent(value -> value.setMedical_fields(medicalFieldDao.findByMedicId(user_id)));
         return medic;
     }
@@ -59,7 +62,7 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     private Collection<Medic> getAll(final boolean verified) {
-        Collection<Medic> medics = jdbcTemplate.query("SELECT * FROM medics WHERE verified = ?", new Object[]{verified}, MEDIC_ROW_MAPPER);
+        Collection<Medic> medics = jdbcTemplate.query("SELECT * FROM medics INNER JOIN users ON user_id = id WHERE verified = ?", new Object[]{verified}, MEDIC_ROW_MAPPER);
         medics.forEach(medic -> {
             medic.setMedical_fields(medicalFieldDao.findByMedicId(medic.getUser_id()));
         });
@@ -67,16 +70,16 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String email, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> known_fields) {
+    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
-        insertMap.put("email", email);
+        insertMap.put("email", user.getEmail());
         insertMap.put("telephone", telephone);
         insertMap.put("identification_type", identification_type);
         insertMap.put("identification", identification);
         insertMap.put("licence_number", licence_number);
-        insertMap.put("verified", verified);
+        insertMap.put("verified", false);
 
         jdbcInsertMedic.execute(insertMap);
         //TODO: verify success
@@ -87,7 +90,9 @@ public class MedicJdbcDao implements MedicDao {
             known_fieldsDB.add(medicalFieldDB);
         });
 
-        return new Medic(user.getId(),name,email,telephone,identification_type,identification,licence_number,verified,known_fieldsDB);
+        userDao.updateRole(user, User.MEDIC_ROLE_ID);
+
+        return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,false,known_fieldsDB);
     }
 
     @Override

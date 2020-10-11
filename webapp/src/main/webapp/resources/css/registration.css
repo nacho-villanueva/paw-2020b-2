@@ -1,0 +1,37 @@
+body{
+    display: flex;
+    justify-content: center;
+    background: rgba(240, 239, 239, 1)
+}
+
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    background-color: var(--primary);
+    box-shadow: 0px 10px 25px -10px rgba(100,100,100,0.75);
+}
+.main-container {
+    position: relative;
+    width: 35vw;
+    margin-top: 5%;
+}
+
+.btn-custom, .btn-custom:hover, .btn-custom:active, .btn-custom:visited {
+    color: #009688 !important;
+}
+
+.radio-toggle {
+    display: none;
+}
+
+.nav-item > .active {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-radius: 100px;
+}
+
+.nav-link {
+    padding: 5px !important;
+}

@@ -21,7 +21,7 @@ body {
 
 .main-container {
     position: relative;
-    background: linear-gradient(to bottom, rgba(225, 225, 225, 0.8) 0%, rgba(220, 220, 220, 0.5) 100%);
+    background: white;
     background-size: cover;
 
     height: 100vh;

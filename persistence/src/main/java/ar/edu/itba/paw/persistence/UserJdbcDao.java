@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.Clinic;
+import ar.edu.itba.paw.model.Medic;
+import ar.edu.itba.paw.model.Patient;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +19,19 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao{
 
     private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
-            new User(rs.getInt("id"),rs.getString("email"),rs.getString("password"),rs.getInt("role"));
+            new User(rs.getInt("id"),rs.getString("email"),rs.getString("password"),rs.getInt("role"),rs.getString("locale"));
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+
+    @Autowired
+    private MedicDao mdao;
+
+    @Autowired
+    private ClinicDao cdao;
+
+    @Autowired
+    private PatientDao pdao;
 
     @Autowired
     public UserJdbcDao(final DataSource ds) {
@@ -32,36 +44,68 @@ public class UserJdbcDao implements UserDao{
 
     @Override
     public Optional<User> findById(final int id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new Object[]{ id }, USER_ROW_MAPPER).stream().findFirst();
+        Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new Object[]{ id }, USER_ROW_MAPPER).stream().findFirst();
+
+        maybeUser.ifPresent(this::setFlags);
+
+        return maybeUser;
+    }
+
+    private void setFlags(User user) {
+
+        switch (user.getRole()) {
+            case User.CLINIC_ROLE_ID:
+                Optional<Clinic> maybeClinic = cdao.findByUserId(user.getId());
+                user.setRegistered(maybeClinic.isPresent());
+                maybeClinic.ifPresent(clinic -> user.setVerifying(!clinic.isVerified()));
+                break;
+            case User.MEDIC_ROLE_ID:
+                Optional<Medic> maybeMedic = mdao.findByUserId(user.getId());
+                user.setRegistered(maybeMedic.isPresent());
+                maybeMedic.ifPresent(medic -> user.setVerifying(!medic.isVerified()));
+                break;
+            case User.PATIENT_ROLE_ID:
+                Optional<Patient> maybePatient = pdao.findByUserId(user.getId());
+                user.setRegistered(maybePatient.isPresent());
+                break;
+            case User.UNDEFINED_ROLE_ID:
+                user.setRegistered(false);
+                user.setVerifying(false);
+                break;
+            case User.ADMIN_ROLE_ID:
+            default:
+        }
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{ email }, USER_ROW_MAPPER).stream().findFirst();
+        Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new Object[]{ email }, USER_ROW_MAPPER).stream().findFirst();
+        maybeUser.ifPresent(this::setFlags);
+        return maybeUser;
     }
 
     @Override
-    public User register(String email, String password, int role) {
+    public User register(String email, String password, int role, String locale) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("email",email);
         insertMap.put("password",password);
         insertMap.put("role",role);
+        insertMap.put("locale",locale);
         Number key = jdbcInsert.executeAndReturnKey(insertMap);
         //TODO: verify success
-        return new User(key.intValue(),email,password,role);
+        return new User(key.intValue(),email,password,role,false,false,locale);        //It was just created, its has yet to apply and therefore not verifying
     }
 
     @Override
-    public User updateRole(User user, int role) {
+    public User updateRole(User user, int role){
         jdbcTemplate.update("UPDATE users Set role = ? WHERE id = ?", role, user.getId());
-
-        return new User(user.getId(), user.getEmail(), user.getPassword(), role);
+        return new User(user.getId(), user.getEmail(), user.getPassword(), role, user.getLocale());
     }
 
     @Override
     public User updatePassword(User user, String password) {
         jdbcTemplate.update("UPDATE users Set password = ? WHERE id = ?", password, user.getId());
 
-        return new User(user.getId(), user.getEmail(), password, user.getRole());
+        return new User(user.getId(), user.getEmail(), password, user.getRole(), user.getLocale());
     }
 }

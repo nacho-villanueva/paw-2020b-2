@@ -14,6 +14,8 @@ import java.util.*;
 @Repository
 public class OrderJdbcDao implements OrderDao {
 
+    private static final String sqlQuerySkeleton = "select o.id as order_id, date, patient_email, patient_name, o.medic_plan, o.medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join (select * from medics inner join users on medics.user_id = users.id) m on o.medic_id = m.user_id inner join (select * from clinics inner join users on clinics.user_id = users.id) c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id";
+
     private static final RowMapper<Order> ORDER_ROW_MAPPER = (rs, rowNum) ->
             new Order(rs.getLong("order_id"),
                     new Medic(rs.getInt("medic_id"),
@@ -37,8 +39,8 @@ public class OrderJdbcDao implements OrderDao {
    @Autowired
    PatientDao patientDao;
 
-   private JdbcTemplate jdbcTemplate;
-   private SimpleJdbcInsert jdbcInsert;
+   private final JdbcTemplate jdbcTemplate;
+   private final SimpleJdbcInsert jdbcInsert;
 
    @Autowired
    public OrderJdbcDao(DataSource ds) {
@@ -51,23 +53,22 @@ public class OrderJdbcDao implements OrderDao {
    @Override
    public Optional<Order> findById(long id) {
 
-       //To make code less confusing, we name the sql query
-       String sqlQuery = "select o.id as order_id, o.date, patient_email, patient_name, medic_plan, medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join medics m on o.medic_id = m.user_id inner join clinics c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id where o.id = ?" ;
+       Optional<Order> order = jdbcTemplate.query(sqlQuerySkeleton + " where o.id = ?", new Object[]{ id }, ORDER_ROW_MAPPER).stream().findFirst();
 
-       Optional<Order> order = jdbcTemplate.query(sqlQuery, new Object[]{ id }, ORDER_ROW_MAPPER).stream().findFirst();
-
-       if(order.isPresent()) {
-           Collection<Result> results = resultDao.findByOrderId(id);
-
-           if(!results.isEmpty()) {
-               order.get().setStudy_results(results);
-           }
-       }
+       order.ifPresent(this::setResults);
 
        return order;
    }
 
-   @Override
+    private void setResults(Order order) {
+        Collection<Result> results = resultDao.findByOrderId(order.getOrder_id());
+
+        if(!results.isEmpty()) {
+            order.setStudy_results(results);
+        }
+    }
+
+    @Override
    public Order register(final Medic medic, final Date date, final Clinic clinic, final String patient_name, final String patient_email, final StudyType studyType, final String description, final String identification_type, final byte[] identification, final String medic_plan, final String medic_plan_number) {
        Map<String, Object> insertMap = new HashMap<>();
        insertMap.put("medic_id", medic.getUser_id());
@@ -88,4 +89,24 @@ public class OrderJdbcDao implements OrderDao {
 
        return new Order(key.longValue(),medic,date,clinic,studyType,description,identification_type,identification,medic_plan,medic_plan_number,patient_email,patient_name);
    }
+
+   @Override
+   public Collection<Order> getAllUserOrders(User user){
+       return jdbcTemplate.query(sqlQuerySkeleton + " where o.clinic_id = ? or o.medic_id = ? or o.patient_email = ?", new Object[]{user.getId(), user.getId(), user.getEmail()},ORDER_ROW_MAPPER);
+   }
+
+    @Override
+    public Collection<Order> getAllAsClinic(User user) {
+        return jdbcTemplate.query(sqlQuerySkeleton + " where o.clinic_id = ?", new Object[]{user.getId()},ORDER_ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Order> getAllAsMedic(User user) {
+        return jdbcTemplate.query(sqlQuerySkeleton + " where o.medic_id = ?", new Object[]{user.getId()},ORDER_ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Order> getAllAsPatient(User user) {
+        return jdbcTemplate.query(sqlQuerySkeleton + " where o.patient_email = ?", new Object[]{user.getEmail()},ORDER_ROW_MAPPER);
+    }
 }

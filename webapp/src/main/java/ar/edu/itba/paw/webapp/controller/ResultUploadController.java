@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.services.ResultFormService;
+import ar.edu.itba.paw.model.Result;
+import ar.edu.itba.paw.services.ResultService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.ResultForm;
+import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
+import ar.edu.itba.paw.webapp.form.ResultForm;
 import ar.edu.itba.paw.services.OrderService;
+import ar.edu.itba.paw.services.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.Optional;
 
 @Controller
@@ -24,10 +29,14 @@ public class ResultUploadController {
     private OrderService os;
 
     @Autowired
-    private ResultFormService resultFormService;
+    private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private UrlEncoderService urlEncoderService;
+    private ValidationService vs;
+
+    @Autowired
+    private ResultService resultService;
+
 
     private long orderId;
 
@@ -56,21 +65,29 @@ public class ResultUploadController {
     //
 
     @RequestMapping(value = "/result-uploaded", method = RequestMethod.POST)
-    public String submit(@ModelAttribute ResultForm resultForm, @RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign, BindingResult bindingResult) {
-
-        if(bindingResult.hasErrors()){
-            return "index"; //There should be a way to validate and show errors on the form...
-        }else{
+    public ModelAndView submit(@Valid @ModelAttribute ResultForm resultForm, BindingResult bindingResult, @RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign) {
+        if(bindingResult.hasErrors()) {
+            return new ModelAndView("index");
+        }
+        else{
             try{
                 byte[] signBytes = sign.getBytes();
                 //for each of the files uploaded as results, it registers a different result in the db
                 for(MultipartFile file: files){
                     byte[] fileBytes = file.getBytes();
-                    resultFormService.HandleOrderForm(resultForm, signBytes, sign.getContentType(), fileBytes, file.getContentType(), orderId);
+
+                    Result result = resultService.register(orderId,
+                            file.getContentType(),
+                            fileBytes,
+                            sign.getContentType(),
+                            signBytes,
+                            new Date(System.currentTimeMillis()),
+                            resultForm.getResponsible_name(),
+                            resultForm.getResponsible_licence_number());
                 }
-                return "redirect:view-study/" + urlEncoderService.encode(orderId);
-            }catch (IOException e){
-                return "redirect:index"; //TODO: RETURN 500 EXCEPTION PAGE
+                return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(orderId));
+            } catch (IOException e){
+                throw new UploadedFileFailedToLoadException();
             }
         }
     }

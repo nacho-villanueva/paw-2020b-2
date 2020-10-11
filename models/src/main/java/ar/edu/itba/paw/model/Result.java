@@ -3,6 +3,8 @@ package ar.edu.itba.paw.model;
 import java.sql.Date;
 
 public class Result {
+
+
     private long id;
     private long order_id;
     private Date date;

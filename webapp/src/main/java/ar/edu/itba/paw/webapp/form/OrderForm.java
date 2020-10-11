@@ -1,13 +1,34 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.webapp.form;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 public class OrderForm {
+
+    @Min(0)
     private Integer medicId;
+
+    @Min(0)
     private Integer clinicId;
+
+    @Min(1)
     private Integer studyId;
+
     private String description;
+
+    @NotBlank
     private String patient_insurance_plan;
+    @NotNull
     private String patient_insurance_number;
+
+    @NotBlank
+    @Email
     private String patientEmail;
+    @NotBlank
     private String patientName;
 
     public OrderForm(Integer medicId, Integer clinicId, Integer studyId, String description, String patient_insurance_plan, String patient_insurance_number, String patientEmail) {

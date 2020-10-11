@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.webapp.controller.api;
 
+import ar.edu.itba.paw.model.Media;
+import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.services.UrlEncoderService;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.services.OrderService;
-import ar.edu.itba.paw.services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -23,13 +21,45 @@ public class ImageController {
     private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private OrderService orderService;
+    private ImageService imageService;
 
-    @Autowired
-    private ResultService resultService;
+    @RequestMapping(value = "/medic/{medicId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getMedicImage(@PathVariable("medicId") final int medicId, @RequestParam(value = "attr", required = false) final String attribute) {
+
+        ResponseEntity<byte[]> responseEntity;
+
+        byte[] media = null;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        HttpStatus responseStatus;
+
+        if(attribute==null)
+            return new ResponseEntity<>(null,headers,HttpStatus.BAD_REQUEST);
+
+        Optional<Media> imageOptional = imageService.getMedicImage(medicId,attribute);
+
+        if(imageOptional.isPresent()){
+            // image present
+            Media image = imageOptional.get();
+
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getFile();
+            responseStatus = HttpStatus.OK;
+
+        }else{
+            // not present
+            responseStatus = HttpStatus.NOT_FOUND;
+        }
+
+        responseEntity = new ResponseEntity<>(media, headers, responseStatus);
+
+        return responseEntity;
+    }
 
     @RequestMapping(value = "/study/{encodedId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getOrderIdentification(@PathVariable("encodedId") final String encodedId, @RequestParam(value = "attr", required = false) final String attribute) {
+    public ResponseEntity<byte[]> getOrderImage(@PathVariable("encodedId") final String encodedId, @RequestParam(value = "attr", required = false) final String attribute) {
 
         ResponseEntity<byte[]> responseEntity;
 
@@ -45,21 +75,15 @@ public class ImageController {
 
         long id = urlEncoderService.decode(encodedId);
 
-        Optional<Order> orderOpt = orderService.findById(id);
+        Optional<Media> imageOptional = imageService.getOrderImage(id,attribute);
 
-        if(orderOpt.isPresent()){
+        if(imageOptional.isPresent()){
             // image present
-            Order order = orderOpt.get();
+            Media image = imageOptional.get();
 
-            switch (attribute){
-                case "identification":
-                    headers.setContentType(MediaType.parseMediaType(order.getIdentification_type()));
-                    media = order.getIdentification();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                default:
-                    responseStatus = HttpStatus.BAD_REQUEST;
-            }
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getFile();
+            responseStatus = HttpStatus.OK;
 
         }else{
             // not present
@@ -72,7 +96,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/result/{encodedId}/{resultId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getResultIdentification(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId, @RequestParam(value = "attr", required = false) final String attribute) {
+    public ResponseEntity<byte[]> getResultImage(@PathVariable("encodedId") final String encodedId, @PathVariable("resultId") final long resultId, @RequestParam(value = "attr", required = false) final String attribute) {
 
         ResponseEntity<byte[]> responseEntity;
 
@@ -86,28 +110,17 @@ public class ImageController {
         if(attribute==null)
             return new ResponseEntity<>(null,headers,HttpStatus.BAD_REQUEST);
 
-        Optional<Result> resultOpt = resultService.findById(resultId);
-
         long id = urlEncoderService.decode(encodedId);
 
-        if(resultOpt.isPresent() && resultOpt.get().getOrder_id()==id){
-            // image present
-            Result result = resultOpt.get();
+        Optional<Media> imageOptional = imageService.getResultImage(resultId,id,attribute);
 
-            switch (attribute){
-                case "identification":
-                    headers.setContentType(MediaType.parseMediaType(result.getIdentification_type()));
-                    media = result.getIdentification();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                case "result-data":
-                    headers.setContentType(MediaType.parseMediaType(result.getData_type()));
-                    media = result.getData();
-                    responseStatus = HttpStatus.OK;
-                    break;
-                default:
-                    responseStatus = HttpStatus.BAD_REQUEST;
-            }
+        if(imageOptional.isPresent()){
+            // image present
+            Media image = imageOptional.get();
+
+            headers.setContentType(MediaType.parseMediaType(image.getContentType()));
+            media = image.getFile();
+            responseStatus = HttpStatus.OK;
 
         }else{
             // not present

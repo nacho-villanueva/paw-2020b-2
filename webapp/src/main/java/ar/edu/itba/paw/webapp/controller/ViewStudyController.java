@@ -1,10 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.services.OrderService;
+import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +18,9 @@ import java.util.Optional;
 
 @Controller
 public class ViewStudyController {
+
+    @Autowired
+    private UserService us;
 
     @Autowired
     private OrderService os;
@@ -33,6 +41,8 @@ public class ViewStudyController {
             mav.addObject("id", id);
             mav.addObject("order", aux);
             mav.addObject("results", aux.getStudy_results());
+            mav.addObject("loggedUser",loggedUser());
+
         }else{
             mav = new ModelAndView("redirect:/404");
             // 404 go to
@@ -40,5 +50,16 @@ public class ViewStudyController {
 
         return mav;
     }
+
+
+    @ModelAttribute
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        final Optional<User> user = us.findByEmail(auth.getName());
+        //LOGGER.debug("Logged user is {}", user);
+        //TODO: see more elegant solution
+        return user.orElse(null);
+    }
+
 
 }

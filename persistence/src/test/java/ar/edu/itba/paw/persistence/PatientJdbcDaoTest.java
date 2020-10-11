@@ -101,7 +101,7 @@ public class PatientJdbcDaoTest {
     public void testFindByUserIdExists() {
         int userkey = insertTestPatient();
 
-        final Optional<Patient> maybePatient = patientDao.findByUser_id(userkey);
+        final Optional<Patient> maybePatient = patientDao.findByUserId(userkey);
 
         Assert.assertTrue(maybePatient.isPresent());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,PATIENTS_TABLE_NAME));
@@ -112,7 +112,7 @@ public class PatientJdbcDaoTest {
     public void testFindByUserIdPatientNotExists() {
         int userkey = insertTestUser(); //Not test patient, test user
 
-        final Optional<Patient> maybePatient = patientDao.findByUser_id(userkey);
+        final Optional<Patient> maybePatient = patientDao.findByUserId(userkey);
 
         Assert.assertFalse(maybePatient.isPresent());
     }

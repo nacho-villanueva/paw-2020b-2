@@ -15,7 +15,7 @@ public interface ClinicDao {
 
     Collection<Clinic> getAllUnverified();
 
-    Clinic register(User user, String name, String email, String telephone, boolean verified, Collection<StudyType> available_studies);
+    Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies);
 
     Collection<Clinic> getByStudyTypeId(int studyType_id);
 

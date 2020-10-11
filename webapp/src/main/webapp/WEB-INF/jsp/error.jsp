@@ -9,15 +9,17 @@
 </head>
 <body>
 <c:url value="/" var="indexPath"/>
+<c:set value="500" var="defaultErrorNumber"/>
+<spring:message code="error.500" var="defaultErrorText"/>
 <c:set value="${empty errorNumber?500:errorNumber}" var="errorNumber"/>
-<c:set value="${empty errorText?'Internal Error':errorText}" var="errorText"/>
+<c:set value="${empty errorText?defaultErrorText:errorText}" var="errorText"/>
 <%@include file="fragments/navbar-fragment.jsp"%>
 <div class="main-container">
     <div class="text-center">
         <div class="error mx-auto" data-text="<c:out value="${errorNumber}"/>"><c:out value="${errorNumber}"/></div>
         <p class="lead text-gray-800 mb-5"><c:out value="${errorText}"/></p>
-        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-        <a href="${indexPath}">&larr; Back to Safety</a>
+        
+        <a href="${indexPath}"><spring:message code="error.back"/> </a>
     </div>
 </div>>
 </body>

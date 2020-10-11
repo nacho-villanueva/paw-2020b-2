@@ -9,13 +9,15 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.Optional;
 
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final static int BASIC_ROLE = 1;        //1 is for regular users
+    @Autowired
+    private ValidationService vs;
 
     @Autowired
     private UserDao userDao;
@@ -34,18 +36,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String password) {
-        return userDao.register(email,encoder.encode(password),BASIC_ROLE);
-    }
-
-    @Override
-    public User register(String email, String password, int role) {
-        return userDao.register(email,encoder.encode(password),role);
+    public User register(String email, String password, String locale) {
+        return userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
     }
 
     @Override
     public User updateRole(User user, int role) {
-        return userDao.updateRole(user,role);
+        if(vs.isValidRole(role)) {
+            return userDao.updateRole(user,role);
+        }
+
+        return null;
     }
 
     @Override

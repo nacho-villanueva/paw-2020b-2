@@ -13,6 +13,7 @@ public class UrlEncoderServiceImpl implements UrlEncoderService {
     private int num2 = 37;
     private int num3 = 17;
 
+    @Override
     public String encode(long id){
 
         BigInteger pathBigInteger = BigInteger.valueOf(id);
@@ -22,6 +23,7 @@ public class UrlEncoderServiceImpl implements UrlEncoderService {
         return pathBigInteger.toString(num3);
     }
 
+    @Override
     public long decode(String path){
 
         long ret = -1;
