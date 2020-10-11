@@ -53,6 +53,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()//TODO: revise ant matchers
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/create-order").hasRole("MEDIC")
+                    .antMatchers("/create-type").hasAnyRole("MEDIC","CLINIC")
                     .antMatchers("/upload-result/**","/result-uploaded").hasRole("CLINIC")
                     .antMatchers("/complete-register").hasRole("UNDEFINED")
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
