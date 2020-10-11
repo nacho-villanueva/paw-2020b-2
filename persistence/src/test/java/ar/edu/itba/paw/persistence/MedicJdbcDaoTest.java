@@ -204,14 +204,13 @@ public class MedicJdbcDaoTest {
         insertTestRelation(userkey,fieldkey);
 
         known_fields = new ArrayList<>();
-        known_fields.add(new MedicalField(fieldkey,FIELD_NAME));
         known_fields.add(new MedicalField(fieldkeyalt, FIELD_NAME_ALT));
 
         Medic medic = dao.updateMedicInfo(new User(userkey,USER_EMAIL,PASSWORD,ROLE),MEDIC_NAME_ALT,MEDIC_TELEPHONE,MEDIC_IDENTIFICATION_TYPE,MEDIC_IDENTIFICATION,MEDIC_LICENCE,known_fields,TRUE);
 
         Assert.assertEquals(known_fields.size(), medic.getMedical_fields().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"name = '" + MEDIC_NAME_ALT + "' AND licence_number = '" + MEDIC_LICENCE + "' AND user_id = " + userkey));
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_RELATION_TABLE_NAME, "medic_id = " + userkey + " AND field_id = " + fieldkey));
+        Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_RELATION_TABLE_NAME, "medic_id = " + userkey + " AND field_id = " + fieldkey));
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_RELATION_TABLE_NAME, "medic_id = " + userkey + " AND field_id = " + fieldkeyalt));
     }
 

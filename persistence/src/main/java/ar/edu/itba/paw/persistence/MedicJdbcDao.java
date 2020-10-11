@@ -124,6 +124,7 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     private Collection<MedicalField> registerFieldsToMedic(final Collection<MedicalField> known_fields, final int medic_id) {
+        Collection<MedicalField> old_fields = medicalFieldDao.findByMedicId(medic_id);
         Collection<MedicalField> known_fieldsDB = new ArrayList<>();
 
         known_fields.forEach(medicalField -> {
@@ -131,6 +132,16 @@ public class MedicJdbcDao implements MedicDao {
             known_fieldsDB.add(medicalFieldDB);
         });
 
+        old_fields.forEach(field -> {
+            if(!known_fieldsDB.contains(field)) {
+                unregisterFieldToMedic(medic_id,field.getId());
+            }
+        });
+
         return known_fieldsDB;
+    }
+
+    private void unregisterFieldToMedic(int medic_id, int field_id) {
+        jdbcTemplate.update("DELETE FROM medic_medical_fields WHERE medic_id = ? AND field_id = ?", medic_id, field_id);
     }
 }

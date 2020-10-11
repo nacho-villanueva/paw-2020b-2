@@ -196,14 +196,13 @@ public class ClinicJdbcDaoTest {
         int studykeyalt = insertTestStudyType(STUDY_NAME_ALT);
         insertTestRelation(userkey,studykey);
         available_studies = new ArrayList<>();
-        available_studies.add(new StudyType(studykey, STUDY_NAME));
         available_studies.add(new StudyType(studykeyalt, STUDY_NAME_ALT));
 
         Clinic clinic = dao.updateClinicInfo(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME_ALT,TELEPHONE,available_studies,TRUE);
 
         Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ALT.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykey));
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykey));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykeyalt));
     }
 

@@ -139,13 +139,25 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     private Collection<StudyType> registerStudiesToClinic(final Collection<StudyType> available_studies, final int clinic_id) {
+        Collection<StudyType> old_studies = studyTypeDao.findByClinicId(clinic_id);
         Collection<StudyType> available_studiesDB = new ArrayList<>();
 
         available_studies.forEach(studyType -> {
             StudyType studyTypeFromDB = this.registerStudyToClinic(clinic_id, studyType);
             available_studiesDB.add(studyTypeFromDB);
         });
+        
+        //We delete the ones that are not in the new list but are still on database
+        old_studies.forEach(studyType -> {
+            if(!available_studiesDB.contains(studyType)) {
+                unregisterStudyToClinic(clinic_id,studyType.getId());
+            }
+        });
 
         return available_studiesDB;
+    }
+
+    private void unregisterStudyToClinic(int clinic_id, int study_id) {
+        jdbcTemplate.update("DELETE FROM clinic_available_studies WHERE clinic_id = ? AND study_id = ?", clinic_id, study_id);
     }
 }
