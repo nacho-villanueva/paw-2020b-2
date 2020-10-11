@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkPassword(int user_id, String password) {
-        return userDao.checkPassword(user_id,encoder.encode(password));
+        Optional<User> maybeUser = findById(user_id);
+        return maybeUser.filter(user -> encoder.matches(password, user.getPassword())).isPresent();
     }
 }

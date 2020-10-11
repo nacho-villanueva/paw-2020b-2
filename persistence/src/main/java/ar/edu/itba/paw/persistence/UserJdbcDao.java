@@ -115,11 +115,4 @@ public class UserJdbcDao implements UserDao{
 
         return new User(user.getId(), user.getEmail(), password, user.getRole(), user.getLocale());
     }
-
-    @Override
-    public boolean checkPassword(final int user_id, final String password) {
-        Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new Object[]{ user_id }, USER_ROW_MAPPER).stream().findFirst();
-
-        return maybeUser.filter(user -> password.equals(user.getPassword())).isPresent();
-    }
 }
