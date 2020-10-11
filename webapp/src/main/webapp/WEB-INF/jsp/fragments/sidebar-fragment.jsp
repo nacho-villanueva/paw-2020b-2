@@ -46,6 +46,17 @@
     </li>
     </sec:authorize>
 
+
+    <sec:authorize access="hasAnyRole('ROLE_MEDIC','ROLE_CLINIC')">
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/create-type' />">
+                <i class="fas fa-fw fa-layer-group"></i>
+                <span><spring:message key="fragments.sidebar.createdatatype" /></span></a>
+        </li>
+    </sec:authorize>
+
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
