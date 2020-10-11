@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.exceptions.MedicalFieldNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
 import ar.edu.itba.paw.webapp.form.ApplyClinicForm;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -99,7 +101,7 @@ public class RegisterController {
             if (mf.isPresent())
                 knownFields.add(mf.get());
             else
-                throw new StudyTypeNotFoundException();
+                throw new MedicalFieldNotFoundException();
         }
 
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),

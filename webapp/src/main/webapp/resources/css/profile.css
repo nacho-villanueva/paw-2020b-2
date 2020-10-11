@@ -1,0 +1,36 @@
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    border-radius: 100px;
+    border:solid 1px var(--primary);
+    background-color: transparent;
+    color: var(--primary);
+}
+
+/* borderless tables, from https://stackoverflow.com/questions/18075794/bootstrap-table-without-stripe-borders */
+.table-borderless > tbody > tr > td,
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > td,
+.table-borderless > tfoot > tr > th,
+.table-borderless > thead > tr > td,
+.table-borderless > thead > tr > th {
+    border: none;
+}
+
+.output {
+    min-width: 100px;
+    max-width: 25em;
+}
+
+.fa-check {
+    color: green;
+}
+
+.fa-times {
+    color: red;
+}
+
+.action-btn{
+    background: var(--primary);
+    color: white;
+    margin-top: 4%;
+    width: 50%;
+}
