@@ -21,12 +21,14 @@ body {
 
 .main-container {
     position: relative;
-    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%), url("../img/background.jpg");
+    background: white;
     background-size: cover;
 
     height: 100vh;
+    top: 0;
     padding-top: 4.5rem;
 }
+
 
 @keyframes fadeIn {
     0% {
@@ -50,37 +52,46 @@ body {
     }
 }
 
-.main-card {
-    margin-top: 5%;
-    margin-left: 10%;
+.filters-card {
+    left: 1em;
+    margin-top: 2em;
+
+    width: 25em;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
-    width: 25%;
+    height: 40em;
+
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
-
-@media (max-width: 1085px) {
-    .main-card {
-        width: 80%;
-        margin-top: 15%;
-    }
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
 }
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    border-radius: 100px;
-    border:solid 1px var(--primary);
-    background-color: transparent;
-    color: var(--primary);
+.type {
+    margin-bottom: 0.75rem;
 }
+.results-card {
+    right: 1em;
+    margin-top: 2em;
+    width: 48em;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+    height:43em;
 
-.radio-toggle {
-    display: none;
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
-
 .action-btn{
     background: var(--primary);
     color: white;
+    margin-top: 4%;
+    width: 50%;
+}
+.reset-btn{
+    background: slategrey;
+    color: white;
+
     margin-top: 4%;
     width: 50%;
 }

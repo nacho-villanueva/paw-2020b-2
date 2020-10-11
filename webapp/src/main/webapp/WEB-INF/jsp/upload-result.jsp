@@ -10,8 +10,9 @@
 </head>
 <body>
 <c:url value="/result-uploaded" var="postPath"/>
-<div class="main-container">
-    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<div id="wrapper">
+    <jsp:include page="fragments/sidebar-fragment.jsp" />
+    <div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center pb-8 mt-4">
         <div class="card pb-8 mt-4" style="width: 40rem;">
             <div class="card-body">
@@ -60,7 +61,7 @@
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button"><spring:message code="upload-result.body.form.cancel"/></a>
                     <button class="btn submit-btn mt-4 mb-2 float-right" type="submit"><spring:message code="upload-result.body.form.submit"/> </button>
                 </form:form>
-
+                </div>
             </div>
         </div>
     </div>

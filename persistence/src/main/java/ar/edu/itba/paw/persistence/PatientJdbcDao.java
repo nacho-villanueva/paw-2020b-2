@@ -16,6 +16,9 @@ import java.util.Optional;
 @Repository
 public class PatientJdbcDao implements PatientDao {
 
+    @Autowired
+    private UserDao userDao;
+
     private static final RowMapper<Patient> PATIENT_ROW_MAPPER = (rs, rowNum) ->
             new Patient(rs.getInt("user_id"),
                     rs.getString("email"),
@@ -34,13 +37,13 @@ public class PatientJdbcDao implements PatientDao {
     }
 
     @Override
-    public Optional<Patient> findByUser_id(final int user_id) {
-        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id AND u.id = ?", new Object[] { user_id }, PATIENT_ROW_MAPPER).stream().findFirst();
+    public Optional<Patient> findByUserId(final int user_id) {
+        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id WHERE u.id = ?", new Object[] { user_id }, PATIENT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<Patient> findByEmail(final String email) {
-        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id AND u.email = ?", new Object[]{ email }, PATIENT_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM patients p INNER JOIN users u ON p.user_id = u.id WHERE u.email = ?", new Object[]{ email }, PATIENT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -63,6 +66,8 @@ public class PatientJdbcDao implements PatientDao {
         insertMap.put("medic_plan_number", medic_plan_number);
 
         jdbcInsert.execute(insertMap);
+
+        userDao.updateRole(user, User.PATIENT_ROLE_ID);
 
         return new Patient(user.getId(),user.getEmail(),name,medic_plan,medic_plan_number);
     }

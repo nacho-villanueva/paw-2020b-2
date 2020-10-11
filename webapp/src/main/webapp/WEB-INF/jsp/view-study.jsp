@@ -5,14 +5,16 @@
 <html lang="en">
 <head>
     <%@ include file="fragments/include-header.jsp"%>
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/viewstudy.css"/>">
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
 <body>
-<div class="main-container">
-    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+
+<div id="wrapper">
+<jsp:include page="fragments/sidebar-fragment.jsp" />
+
+<div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div class="card order-card bg-light float-right">
@@ -24,7 +26,7 @@
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
-                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifyingClinic() eq false}">
+                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
                                     <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
                                 </c:if>
 
@@ -53,7 +55,7 @@
                             <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
                             <p class="text-center"><spring:message code="view-study.body.card.order.licence_number.prefix" arguments="${order.medic.licence_number}"/></p>
                         </div>
-                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="the medic's signature" style="width: 5rem;">
+                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem;">
                     </div>
                 </div>
             </div>
@@ -96,14 +98,14 @@
                                                             <div class="col type"><p><spring:message code="view-study.body.card.results.result.clinic.label" arguments="${order.clinic.name}"/></p></div>
                                                         </div>
                                                         <hr class="mt-3 mb-4 text-center"/>
-                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data" class="align-self-end ml-3" alt="We failed to retrieve image" style="max-height:14em; max-width:20em">
+                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.result.result.alt"/>" style="max-height:14em; max-width:20em">
                                                         <hr class="mt-5 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsible_name}"/></h5>
                                                                 <p class="text-center"><spring:message code="view-study.body.card.results.result.responsible_licence_number.prefix" arguments="${result.responsible_licence_number}"/></p>
                                                             </div>
-                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="We failed to retrieve image" style="max-height: 5em;">
+                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="<spring:message code="view-study.body.card.result.signature.alt"/>" style="max-height: 5em;">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -118,7 +120,7 @@
             </div>
         </div>
     </div>
-
+</div>
 </div>
 <%@ include file="fragments/include-scripts.jsp"%>
 </body>

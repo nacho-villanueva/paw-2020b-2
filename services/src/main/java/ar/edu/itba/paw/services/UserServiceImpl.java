@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.Optional;
 
 @Primary
@@ -36,12 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password, String locale) {
-        return userDao.register(email,encoder.encode(password),User.USER_ROLE_ID, locale);
-    }
-
-    @Override
-    public User register(String email, String password, int role, String locale) {
-        return userDao.register(email,encoder.encode(password),role, locale);
+        return userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
     }
 
     @Override
