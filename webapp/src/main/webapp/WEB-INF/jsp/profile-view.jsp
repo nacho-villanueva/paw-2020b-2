@@ -135,7 +135,10 @@
                                     </tr>
                                     <tr>
                                         <td><spring:message code="profile-view.body.tab.medic.identification.label"/></td>
-                                        <td class="output"><!-- TODO get image from medic --></td>
+                                        <td class="output">
+                                            <img src="${imageAssets}/medic/${loggedUser.id}?attr=identification" class="align-self-end ml-3"
+                                                 alt="<spring:message code="profile-view.body.tab.medic.identification.altText"/>" style="width: 10rem;"/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>

@@ -108,10 +108,5 @@ public class OrderController {
 
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handle(Exception e) {
-        System.out.println("Returning HTTP 400 Bad Request" + e.getMessage());
-    }
 
 }

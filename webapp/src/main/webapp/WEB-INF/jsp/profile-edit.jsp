@@ -10,7 +10,6 @@
 </head>
 <body>
 <c:url value="/api/image" var="imageAssets"/>
-<c:set var="showAlert" value="${false}"/>
 
 <div id="wrapper">
 
@@ -98,13 +97,6 @@
     </div>
 
 </div>
-
-<spring:message code="profile-edit.alert.message" var="alertMessage"/>
-<script type='text/javascript'>
-    //  Script to alert user that is trying to leave the page
-    // TODO use spring message for text
-    window.onbeforeunload = s => ${showAlert} ? "${alertMessage}" : null;
-</script>
 
 <%@ include file="fragments/include-scripts.jsp"%>
 <!-- bootstrap-select JS -->
