@@ -1,15 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Result;
-import ar.edu.itba.paw.services.ResultService;
-import ar.edu.itba.paw.services.UrlEncoderService;
+import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
 import ar.edu.itba.paw.webapp.form.ResultForm;
-import ar.edu.itba.paw.services.OrderService;
-import ar.edu.itba.paw.services.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,8 @@ public class ResultUploadController {
     @Autowired
     private ResultService resultService;
 
+    @Autowired
+    private UserService userService;
 
     private long orderId;
 
@@ -46,13 +49,16 @@ public class ResultUploadController {
         long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
         Order aux;
-        if(o.isPresent()) {
+        User user = loggedUser();
+        if(o.isPresent() && user.isClinic() && !user.isVerifying()) {
             mav = new ModelAndView("upload-result");
             aux = o.get();
             mav.addObject("id", id);
             mav.addObject("order", aux);
             mav.addObject("resultForm", new ResultForm());
             orderId = id;
+        }else if(user.isClinic() && user.isVerifying()){
+            mav = new ModelAndView("redirect:/home");
         }else{
             mav = new ModelAndView("redirect:/404");
             // 404 go to
@@ -92,4 +98,12 @@ public class ResultUploadController {
         }
     }
 
+    @ModelAttribute
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        final Optional<User> user = userService.findByEmail(auth.getName());
+        //LOGGER.debug("Logged user is {}", user);
+        //TODO: see more elegant solution
+        return user.orElse(null);
+    }
 }
