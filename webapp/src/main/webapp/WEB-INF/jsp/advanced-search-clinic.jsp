@@ -23,7 +23,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
 
         <div class="row justify-content-center">
-            <div>
+            <div class="col-sm-5">
                 <div class="card filters-card bg-light anim-content float-right">
                     <div class="card-body">
                         <c:choose>
@@ -150,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="col-sm-7">
                 <div class="card results-card bg-light float-left">
                     <div class="card-body">
                         <p class="card-title h4"><spring:message code="advanced-search-clinic.results.title"/></p>

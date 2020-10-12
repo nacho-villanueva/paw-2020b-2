@@ -6,7 +6,7 @@
 html, body {
     margin: 0;
     height: 100%;
-    overflow: hidden
+    overflow: auto;
 }
 
 body {
@@ -52,10 +52,8 @@ body {
 }
 
 .order-card {
-    right: 1em;
     margin-top: 2em;
-
-    width: 40rem;
+    width: 35em;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
     height: 43em;
@@ -79,7 +77,7 @@ body {
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
 .results-card {
-    left: 2em;
+    left: 0;
     margin-top: 2em;
     width: 42em;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);

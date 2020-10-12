@@ -172,7 +172,6 @@ public class OrderController {
                                     @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm){
         if(bindingResult.hasErrors()){
 
-            System.out.println("Errors are: "+bindingResult.getAllErrors());
             // passing all the data
             advancedSearchClinicForm.setMedicId(orderForm.getMedicId());
             advancedSearchClinicForm.setStudyId(orderForm.getStudyId());
