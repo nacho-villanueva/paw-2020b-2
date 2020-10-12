@@ -54,7 +54,7 @@ body {
 
 .filters-card {
     margin-top: 2em;
-
+    margin-bottom: 2em;
     width: 30em;
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
@@ -67,11 +67,12 @@ body {
     overflow-y: auto;
 }
 .type-title {
-    font-weight: bolder;
-    margin-bottom: 0%;
+    font-weight: normal;
+    margin-bottom: 0;
 }
 .type {
     margin-bottom: 0.75rem;
+    font-weight: lighter;
 }
 .results-card {
     margin-top: 2em;
@@ -79,7 +80,7 @@ body {
     box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
     min-height:42em;
-
+    margin-bottom: 2em;
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
@@ -88,12 +89,13 @@ body {
 }
 .data-section {
     width: 30em;
+    margin-left: 2em;
 }
 .time-input {
     width: 80px;
 }
 .action-btn{
-    background: var(--primary);
+    background: #009688;
     color: white;
     margin-top: 4%;
     width: 50%;

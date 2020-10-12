@@ -6,10 +6,12 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="<c:url value="/resources/css/advanced-search-clinic.css"/>">
+
     <%@ include file="fragments/include-header.jsp"%>
 
+    <link rel="stylesheet" href="<c:url value="/resources/css/advanced-search-clinic.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/callout.css"/>">
 </head>
 <body>
 
@@ -42,6 +44,25 @@
                                 <f:input path="patient_insurance_number" type="hidden" id="patient_insurance_number"/>
                                 <f:input path="patientEmail" type="hidden" id="patientEmail"/>
                                 <f:input path="patientName" type="hidden" id="studyId"/>
+                            </c:if>
+                            <c:if test="${not empty orderForm}">
+                                <div class="row justify-content-center">
+                                    <a class="btn btn-outline" data-toggle="collapse" href="#collapseInfo" role="button" aria-expanded="false" aria-controls="collapseInfo">
+                                        See Order info
+                                    </a>
+
+                                    <div class="collapse" id="collapseInfo">
+                                        <div class="bs-callout bs-callout-med">
+                                            <div class="row justify-content-start">
+                                                <div class="col type"><p class="type-title">Patient's name: </p> jose</div>
+                                                <div class="col type"><p class="type-title">Study type:</p>rehab</div>
+                                                <div class="w-100"></div>
+                                                <div class="col type"><p class="type-title">Patient's insurance plan: </p> galerA AZUL</div>
+                                                <div class="col type"><p class="type-title">Patient's insurance number: </p> 15215521</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </c:if>
 
                             <fieldset class="form-group">
@@ -135,7 +156,7 @@
                             </fieldset>
 
                             <div class="row justify-content-center">
-                                <f:button type="submit" name="submit" value="search" id="searchButton" class="row btn btn-lg action-btn">
+                                <f:button type="submit" name="submit" value="search" id="searchButton" class="btn action-btn mt-4 mb-2">
                                     <spring:message code="advanced-search-clinic.form.button.search"/>
                                 </f:button>
                             </div>
@@ -220,13 +241,15 @@
                                         <f:input path="patientName" type="hidden" id="studyId"/>
 
                                         <div class="row justify-content-center">
-                                            <f:button class="btn create-btn mt-4 mb-2 float-right" type="submit" name="submit" value="create-order"><spring:message code="create-order.body.form.button.submit"/></f:button>
+                                            <f:button class="row btn btn-lg action-btn" type="submit" name="submit" value="create-order"><spring:message code="create-order.body.form.button.submit"/></f:button>
                                         </div>
                                         <div class="row justify-content-center">
                                             <f:button type="submit" name="submit" formmethod="get" value="back" id="backButton" class="row btn btn-outline-secondary">
                                                 <spring:message code="create-order.body.form.button.back"/>
                                             </f:button>
                                         </div>
+
+
                                         <c:if test="${clinicUnselected}"><div class="alert alert-danger" role="alert"><spring:message code="profile-edit.form.clinic.clinicUnselected"/></div></c:if>
                                     </f:form>
                                 </c:if>
