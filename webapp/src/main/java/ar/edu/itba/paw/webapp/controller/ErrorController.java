@@ -24,4 +24,13 @@ public class ErrorController {
         mav.addObject("errorText",messageSource.getMessage("error.403",null,locale));
         return mav;
     }
+
+    @RequestMapping("/404")
+    @ResponseStatus(code=HttpStatus.NOT_FOUND)
+    public ModelAndView notFound(Locale locale) {
+        final ModelAndView mav = new ModelAndView("error");
+        mav.addObject("errorNumber", HttpStatus.NOT_FOUND.value());
+        mav.addObject("errorText",messageSource.getMessage("error.404",null,locale));
+        return mav;
+    }
 }

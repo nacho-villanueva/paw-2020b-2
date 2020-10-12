@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.MedicalField;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,7 +31,7 @@ public class MedicJdbcDao implements MedicDao {
     private SimpleJdbcInsert jdbcInsertField;
 
     @Autowired
-    MedicalFieldDao medicalFieldDao;
+    private MedicalFieldDao medicalFieldDao;
 
     @Autowired
     public MedicJdbcDao(DataSource ds) {
@@ -70,7 +68,7 @@ public class MedicJdbcDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields) {
+    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
@@ -79,20 +77,31 @@ public class MedicJdbcDao implements MedicDao {
         insertMap.put("identification_type", identification_type);
         insertMap.put("identification", identification);
         insertMap.put("licence_number", licence_number);
-        insertMap.put("verified", false);
+        insertMap.put("verified", verified);
 
         jdbcInsertMedic.execute(insertMap);
         //TODO: verify success
-        Collection<MedicalField> known_fieldsDB = new ArrayList<>();
-
-        known_fields.forEach(medicalField -> {
-            MedicalField medicalFieldDB = this.registerFieldToMedic(user.getId(),medicalField);
-            known_fieldsDB.add(medicalFieldDB);
-        });
+        Collection<MedicalField> known_fieldsDB = registerFieldsToMedic(known_fields,user.getId());
 
         userDao.updateRole(user, User.MEDIC_ROLE_ID);
 
-        return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,false,known_fieldsDB);
+        return new Medic(user.getId(),name,user.getEmail(),telephone,identification_type,identification,licence_number,verified,known_fieldsDB);
+    }
+
+    @Override
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+        jdbcTemplate.update("UPDATE medics Set name = ?, telephone = ?, identification_type = ?, identification = ?, licence_number = ? WHERE user_id = ?", name, telephone, identification_type,  identification, licence_number, user.getId());
+
+        Collection<MedicalField> known_fieldsDB = registerFieldsToMedic(known_fields,user.getId());
+
+        return new Medic(user.getId(),user.getEmail(),name,telephone,identification_type,identification,licence_number,verified,known_fieldsDB);
+    }
+
+    @Override
+    public boolean knowsField(int medic_id, int field_id) {
+        Integer cnt = jdbcTemplate.queryForObject("SELECT count(*) FROM medic_medical_fields WHERE medic_id = ? AND field_id = ?", Integer.class, medic_id, field_id);
+
+        return cnt != null && cnt > 0;
     }
 
     @Override
@@ -100,15 +109,39 @@ public class MedicJdbcDao implements MedicDao {
         //We check if it exists
         MedicalField medicalFieldFromDB = medicalFieldDao.findOrRegister(medicalField.getName());
 
-        //Now that we made sure it exist, we add the relation
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("medic_id", medic_id);
-        insertMap.put("field_id", medicalFieldFromDB.getId());
+        if(!knowsField(medic_id,medicalFieldFromDB.getId())) {
+            //Now that we made sure it exist and it is not registered already, we add the relation
+            Map<String, Object> insertMap = new HashMap<>();
+            insertMap.put("medic_id", medic_id);
+            insertMap.put("field_id", medicalFieldFromDB.getId());
 
-        int rowsAffected = jdbcInsertField.execute(insertMap);
+            jdbcInsertField.execute(insertMap);
+        }
 
         //Todo: Verify success
 
         return medicalFieldFromDB;
+    }
+
+    private Collection<MedicalField> registerFieldsToMedic(final Collection<MedicalField> known_fields, final int medic_id) {
+        Collection<MedicalField> old_fields = medicalFieldDao.findByMedicId(medic_id);
+        Collection<MedicalField> known_fieldsDB = new ArrayList<>();
+
+        known_fields.forEach(medicalField -> {
+            MedicalField medicalFieldDB = this.registerFieldToMedic(medic_id, medicalField);
+            known_fieldsDB.add(medicalFieldDB);
+        });
+
+        old_fields.forEach(field -> {
+            if(!known_fieldsDB.contains(field)) {
+                unregisterFieldToMedic(medic_id,field.getId());
+            }
+        });
+
+        return known_fieldsDB;
+    }
+
+    private void unregisterFieldToMedic(int medic_id, int field_id) {
+        jdbcTemplate.update("DELETE FROM medic_medical_fields WHERE medic_id = ? AND field_id = ?", medic_id, field_id);
     }
 }

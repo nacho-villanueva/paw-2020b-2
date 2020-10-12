@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.MedicalField;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -15,7 +13,11 @@ public interface MedicDao {
 
     Collection<Medic> getAllUnverified();
 
-    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
+    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
+
+    Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
+
+    boolean knowsField(int medic_id, int field_id);
 
     MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
 }

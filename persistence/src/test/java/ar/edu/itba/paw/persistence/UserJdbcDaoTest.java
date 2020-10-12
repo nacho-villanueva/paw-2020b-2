@@ -38,8 +38,11 @@ public class UserJdbcDaoTest {
 
 
     private static final String EMAIL = "patient@zero.com";
+    private static final String NEW_EMAIL = "patient@one.com";
     private static final String PASSWORD = "GroundZer0";
+    private static final String NEW_PASSWORD = "GroundZer1";
     private static final int ROLE = 4;
+    private static final int NEW_ROLE = 2;
     private static final int ZERO_ID = 0;
     private static final String DEFAULT_LOCALE = "en-US";
 
@@ -139,10 +142,54 @@ public class UserJdbcDaoTest {
         Assert.assertFalse(maybeUser.get().isVerifying());
     }
 
-    /*@Test
+    @Test
+    public void testUpdateRoleValidUser() {
+        int dbkey = insertTestUser(ROLE);
+
+        User newUser = dao.updateRole(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_ROLE);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"role = " + NEW_ROLE));
+        Assert.assertEquals(NEW_ROLE,newUser.getRole());
+    }
+
+    @Test
     public void testUpdateRoleInvalidUser() {
         dao.updateRole(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_ROLE);  //Does not fail, it updates nothing
-    }*/
+
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
+    }
+
+    @Test
+    public void testUpdatePassword() {
+        int dbkey = insertTestUser(ROLE);
+
+        dao.updatePassword(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_PASSWORD);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"password = '" + NEW_PASSWORD + "'"));
+    }
+
+    @Test
+    public void testUpdatePasswordInvalidUser() {
+        dao.updatePassword(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_PASSWORD);  //Does not fail, it updates nothing
+
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
+    }
+
+    @Test
+    public void testUpdateEmail() {
+        int dbkey = insertTestUser(ROLE);
+
+        dao.updateEmail(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_EMAIL);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + NEW_EMAIL + "'"));
+    }
+
+    @Test
+    public void testUpdateEmailInvalidUser() {
+        dao.updateEmail(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_EMAIL);  //Does not fail, it updates nothing
+
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
+    }
 
     private int insertTestUser(int role) {
         Map<String, Object> insertMap = new HashMap<>();

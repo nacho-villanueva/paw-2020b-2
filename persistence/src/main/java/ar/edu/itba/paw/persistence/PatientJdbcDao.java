@@ -73,6 +73,13 @@ public class PatientJdbcDao implements PatientDao {
     }
 
     @Override
+    public Patient updatePatientInfo(final User user, final String name, final String medic_plan, final String medic_plan_number) {
+        jdbcTemplate.update("UPDATE patients Set name = ?, medic_plan = ?, medic_plan_number = ? WHERE user_id = ?",name,medic_plan,medic_plan_number,user.getId());
+
+        return new Patient(user.getId(), user.getEmail(), name, medic_plan, medic_plan_number);
+    }
+
+    @Override
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
         jdbcTemplate.update("UPDATE patients Set medic_plan = ?, medic_plan_number = ? WHERE user_id = ?", medic_plan, medic_plan_number, patient.getUser_id());
 

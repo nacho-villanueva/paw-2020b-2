@@ -46,6 +46,17 @@
     </li>
     </sec:authorize>
 
+
+    <sec:authorize access="hasAnyRole('ROLE_MEDIC','ROLE_CLINIC')">
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/create-type' />">
+                <i class="fas fa-fw fa-layer-group"></i>
+                <span><spring:message key="fragments.sidebar.createdatatype" /></span></a>
+        </li>
+    </sec:authorize>
+
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -54,10 +65,10 @@
         Settings
     </div>
 
-    <li class="nav-item <c:if test='${param.current == "modify-information"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/modify-information' />">
+    <li class="nav-item <c:if test='${param.current == "profile"}'>active</c:if>">
+        <a class="nav-link" href="<c:url value='/profile' />">
             <i class="fas fa-fw fa-sliders-h"></i>
-            <span><spring:message key="fragments.sidebar.modifyinformation" /></span></a>
+            <span><spring:message key="fragments.sidebar.profile" /></span></a>
     </li>
 
     <li class="nav-item">

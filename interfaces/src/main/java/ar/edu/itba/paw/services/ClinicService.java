@@ -19,6 +19,10 @@ public interface ClinicService {
 
     Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours);
 
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours, boolean verified);
+
+    boolean hasStudy(int clinic_id, int studyType_id);
+
     StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
 
     Collection<Clinic> getByStudyTypeId(int studyType_id);
