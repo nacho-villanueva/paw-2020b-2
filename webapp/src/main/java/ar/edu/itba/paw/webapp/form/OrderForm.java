@@ -1,21 +1,20 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validators.ValidStudyTypeId;
+import ar.edu.itba.paw.webapp.form.validators.ValidClinicId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderForm {
 
-    @Min(0)
-    private Integer medicId;
-
-    @Min(0)
+    @NotNull
+    @ValidClinicId
     private Integer clinicId;
 
-    @Min(1)
+    @NotNull
+    @ValidStudyTypeId
     private Integer studyId;
 
     private String description;
@@ -31,21 +30,7 @@ public class OrderForm {
     @NotBlank
     private String patientName;
 
-    public OrderForm(Integer medicId, Integer clinicId, Integer studyId, String description, String patient_insurance_plan, String patient_insurance_number, String patientEmail) {
-        this.medicId = medicId;
-        this.clinicId = clinicId;
-        this.studyId = studyId;
-        this.description = description;
-        this.patient_insurance_plan = patient_insurance_plan;
-        this.patient_insurance_number = patient_insurance_number;
-        this.patientEmail = patientEmail;
-    }
-
     public OrderForm(){ }
-
-    public Integer getMedicId() {
-        return medicId;
-    }
 
     public Integer getClinicId() {
         return clinicId;
@@ -73,10 +58,6 @@ public class OrderForm {
 
     public String getPatientName() {
         return patientName;
-    }
-
-    public void setMedicId(Integer medicId) {
-        this.medicId = medicId;
     }
 
     public void setClinicId(Integer clinicId) {

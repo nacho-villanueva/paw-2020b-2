@@ -73,6 +73,8 @@ public class OrderController {
             ModelAndView errorMav = new ModelAndView("create-order");
             if(medicService.findByUserId(loggedUser().getId()).isPresent())
                 errorMav.addObject("loggedMedic", medicService.findByUserId(loggedUser().getId()).get());
+            errorMav.addObject("studiesList", studyService.getAll());
+            errorMav.addObject("clinicsList", clinicService.getAll());
             return errorMav;
 
         } else {
