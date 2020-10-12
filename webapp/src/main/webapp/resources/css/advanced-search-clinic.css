@@ -1,0 +1,109 @@
+:root {
+    --main-font: Roboto, sans-serif;
+}
+
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
+}
+
+body {
+    font-family: var(--main-font);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #212121;
+}
+
+.main-container {
+    position: relative;
+    background: white;
+    background-size: cover;
+
+    height: 100vh;
+    top: 0;
+    padding-top: 4.5rem;
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        font-size: 1.5rem;
+    }
+    100% {
+        opacity: 1;
+        font-size: 1.25rem;
+    }
+}
+
+@keyframes slideInFromDown {
+    0% {
+        opacity: 0;
+        transform: translateY(15%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.filters-card {
+    left: 1em;
+    margin-top: 2em;
+
+    width: 30em;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.table-scrollable {
+    height: 100px;
+    overflow-y: auto;
+}
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
+}
+.type {
+    margin-bottom: 0.75rem;
+}
+.results-card {
+    right: 1em;
+    margin-top: 2em;
+    width: 50em;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+    min-height:42em;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.result-section {
+    width: 20em;
+}
+.data-section {
+    width: 30em;
+}
+.time-input {
+    width: 80px;
+}
+.action-btn{
+    background: var(--primary);
+    color: white;
+    margin-top: 4%;
+    width: 50%;
+}
+.reset-btn{
+    background: slategrey;
+    color: white;
+
+    margin-top: 4%;
+    width: 50%;
+}
