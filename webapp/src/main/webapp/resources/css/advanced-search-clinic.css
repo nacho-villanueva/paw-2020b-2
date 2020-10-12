@@ -86,6 +86,7 @@ body {
 }
 .result-section {
     width: 20em;
+    max-height: 32em;
 }
 .data-section {
     width: 30em;
