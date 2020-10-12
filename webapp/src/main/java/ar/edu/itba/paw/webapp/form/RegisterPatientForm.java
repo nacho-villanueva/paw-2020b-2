@@ -10,10 +10,8 @@ public class RegisterPatientForm {
     @NotBlank
     private String last_name;
 
-    @NotBlank
     private String medical_insurance_plan;
 
-    @NotBlank
     private String medical_insurance_number;
 
 

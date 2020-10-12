@@ -9,19 +9,16 @@ import javax.validation.constraints.NotNull;
 
 public class OrderForm {
 
-    @NotNull
     @ValidClinicId
     private Integer clinicId;
 
-    @NotNull
     @ValidStudyTypeId
     private Integer studyId;
 
     private String description;
 
-    @NotBlank
     private String patient_insurance_plan;
-    @NotNull
+
     private String patient_insurance_number;
 
     @NotBlank

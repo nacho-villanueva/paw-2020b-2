@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validators.UserNotExist;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -14,8 +15,8 @@ public class RegisterUserForm {
     @Email
     private String email;
 
-    @NotNull
-    @Size(min = 6, max = 100)
+    @NotBlank
+    @Size(min = 8)
     private String password;
 
     public RegisterUserForm(){

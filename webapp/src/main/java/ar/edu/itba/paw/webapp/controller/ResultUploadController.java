@@ -86,6 +86,7 @@ public class ResultUploadController {
         long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
         Order aux;
+        
         if(!o.isPresent())
             throw new OrderNotFoundException();
 
