@@ -46,6 +46,8 @@
     </li>
     </sec:authorize>
 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
 
     <sec:authorize access="hasAnyRole('ROLE_MEDIC','ROLE_CLINIC')">
         <!-- Nav Item - Utilities Collapse Menu -->
@@ -56,6 +58,12 @@
         </li>
     </sec:authorize>
 
+    <!-- Nav Item -->
+    <li class="nav-item <c:if test='${param.current == "search"}'>active</c:if>">
+        <a class="nav-link" href="<c:url value='/advanced-search/clinic' />">
+            <i class="fas fa-fw fa-search"></i>
+            <span><spring:message key="fragments.sidebar.search" /></span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">

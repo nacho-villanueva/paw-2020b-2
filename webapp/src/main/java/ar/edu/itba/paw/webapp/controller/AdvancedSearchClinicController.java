@@ -2,10 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Clinic;
 import ar.edu.itba.paw.model.ClinicHours;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.StudyTypeService;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.AdvancedSearchClinicForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,10 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.sql.Time;
 import java.util.Collection;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value="advanced-search/clinic")
 public class AdvancedSearchClinicController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private StudyTypeService studyTypeService;
@@ -37,6 +45,9 @@ public class AdvancedSearchClinicController {
 
         mav.addObject("clinicsList",clinicService.getAll());
 
+        if(loggedUser() == null){
+            mav.addObject("notLogged", "we don't know who this person is");
+        }
         return mav;
     }
 
@@ -70,6 +81,10 @@ public class AdvancedSearchClinicController {
 
         mav.addObject("clinicsList",clinicsList);
 
+        if(loggedUser() == null){
+            mav.addObject("notLogged", "we don't know who this person is");
+        }
+
         return mav;
     }
 
@@ -94,5 +109,15 @@ public class AdvancedSearchClinicController {
 
         return ret;
     }
+
+    @ModelAttribute
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        final Optional<User> user = userService.findByEmail(auth.getName());
+        //LOGGER.debug("Logged user is {}", user);
+        //TODO: see more elegant solution
+        return user.orElse(null);
+    }
+
 
 }

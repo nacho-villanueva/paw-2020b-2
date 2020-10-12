@@ -18,11 +18,26 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-    <jsp:include page="fragments/sidebar-fragment.jsp" >
-        <jsp:param name="current" value="orders"/>
-    </jsp:include>
+    <c:if test="${empty notLogged}">
+        <c:choose>
+            <c:when test="${not empty orderForm}">
+                <jsp:include page="fragments/sidebar-fragment.jsp" >
+                    <jsp:param name="current" value="orders"/>
+                </jsp:include>
+            </c:when>
+            <c:otherwise>
+                <jsp:include page="fragments/sidebar-fragment.jsp" >
+                    <jsp:param name="current" value="search"/>
+                </jsp:include>
+            </c:otherwise>
+        </c:choose>
+    </c:if>
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper" class="d-flex flex-column main-container">
+
+        <c:if test="${not empty notLogged}">
+            <%@include file="fragments/navbar-fragment.jsp"%>
+        </c:if>
 
         <div class="row justify-content-center">
             <div class="col-sm-5">
