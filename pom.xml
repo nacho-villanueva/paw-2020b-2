@@ -30,6 +30,7 @@
     <maven-war-plugin.version>2.6</maven-war-plugin.version>
     <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
     <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
+    <commons-beanutils.version>1.7.0</commons-beanutils.version>
   </properties>
 
   <dependencyManagement>
@@ -159,6 +160,11 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${org.hibernate.validator}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>${commons-beanutils.version}</version>
       </dependency>
 
     </dependencies>

@@ -65,10 +65,10 @@
         Settings
     </div>
 
-    <li class="nav-item <c:if test='${param.current == "modify-information"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/modify-information' />">
+    <li class="nav-item <c:if test='${param.current == "profile"}'>active</c:if>">
+        <a class="nav-link" href="<c:url value='/profile' />">
             <i class="fas fa-fw fa-sliders-h"></i>
-            <span><spring:message key="fragments.sidebar.modifyinformation" /></span></a>
+            <span><spring:message key="fragments.sidebar.profile" /></span></a>
     </li>
 
     <li class="nav-item">

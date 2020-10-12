@@ -10,21 +10,23 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
-public class UserNotExistValidator implements ConstraintValidator<UserNotExist, String> {
+public class PasswordIsCorrectValidator implements ConstraintValidator<PasswordIsCorrect, String> {
 
     @Autowired
     private UserService us;
 
     @Override
-    public void initialize(UserNotExist userNotExist) {
+    public void initialize(PasswordIsCorrect passwordIsCorrect) {
 
     }
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
+
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         final Optional<User> user = us.findByEmail(auth.getName());
 
-        return (user.isPresent() && user.get().getEmail().equals(email)) || !us.findByEmail(email).isPresent();
+        return user.filter(user1 -> us.checkPassword(user1.getId(), s)).isPresent();
+
     }
 }

@@ -33,6 +33,7 @@ public class ClinicJdbcDaoTest {
     private static final String PATIENTS_TABLE_NAME = "patients";
     private static final String ORDERS_TABLE_NAME = "medical_orders";
     private static final String RESULTS_TABLE_NAME = "results";
+    private static final String STUDIES_TABLE_NAME = "medical_studies";
 
     private static final String NAME = "Zero's Clinic";
     private static final String NAME_ALT = "One's Clinic";
@@ -58,6 +59,8 @@ public class ClinicJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
     private SimpleJdbcInsert jdbcInsertUsers;
+    private SimpleJdbcInsert jdbcInsertRelation;
+    private SimpleJdbcInsert jdbcInsertStudyType;
     private Collection<StudyType> available_studies;
 
     @Before
@@ -68,6 +71,11 @@ public class ClinicJdbcDaoTest {
         jdbcInsertUsers = new SimpleJdbcInsert(ds)
                 .withTableName(USERS_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
+        jdbcInsertRelation = new SimpleJdbcInsert(ds)
+                .withTableName(CLINICS_RELATION_TABLE_NAME);
+        jdbcInsertStudyType = new SimpleJdbcInsert(ds)
+                .withTableName(STUDIES_TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
@@ -77,6 +85,7 @@ public class ClinicJdbcDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,STUDIES_TABLE_NAME);
     }
 
     @Test
@@ -144,7 +153,7 @@ public class ClinicJdbcDaoTest {
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME));
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME_ALT));
 
-        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,available_studies);
+        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,available_studies,false);
 
         Assert.assertFalse(clinic.getMedical_studies().isEmpty());
         StudyType study = clinic.getMedical_studies().stream().findFirst().get();
@@ -156,8 +165,47 @@ public class ClinicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestClinic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,new ArrayList<>());
+        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,new ArrayList<>(), false);
     }
+
+    @Test
+    public void testHasStudy() {
+        int userkey = insertTestClinic();
+        int studykey = insertTestStudyType(STUDY_NAME);
+        insertTestRelation(userkey,studykey);
+
+        boolean ret = dao.hasStudy(userkey,studykey);
+
+        Assert.assertTrue(ret);
+    }
+
+    @Test
+    public void testHasStudyFalse() {
+        int userkey = insertTestClinic();
+        int studykey = insertTestStudyType(STUDY_NAME);
+
+        boolean ret = dao.hasStudy(userkey,studykey);
+
+        Assert.assertFalse(ret);
+    }
+
+    @Test
+    public void testUpdateClinicInfo() {
+        int userkey = insertTestClinic();
+        int studykey = insertTestStudyType(STUDY_NAME);
+        int studykeyalt = insertTestStudyType(STUDY_NAME_ALT);
+        insertTestRelation(userkey,studykey);
+        available_studies = new ArrayList<>();
+        available_studies.add(new StudyType(studykeyalt, STUDY_NAME_ALT));
+
+        Clinic clinic = dao.updateClinicInfo(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME_ALT,TELEPHONE,available_studies,TRUE);
+
+        Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ALT.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykey));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykeyalt));
+    }
+
 
     private int insertClinic(int user_id, String name) {
         Map<String,Object> insertMap = new HashMap<>();
@@ -187,6 +235,20 @@ public class ClinicJdbcDaoTest {
         insertMap.put("password", PASSWORD);
         insertMap.put("role", ROLE);
         Number key = jdbcInsertUsers.executeAndReturnKey(insertMap);
+        return key.intValue();
+    }
+
+    private void insertTestRelation(final int clinic_id, final int study_id) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id", clinic_id);
+        insertMap.put("study_id", study_id);
+        jdbcInsertRelation.execute(insertMap);
+    }
+
+    private int insertTestStudyType(final String name) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("name", name);
+        Number key = jdbcInsertStudyType.executeAndReturnKey(insertMap);
         return key.intValue();
     }
 }

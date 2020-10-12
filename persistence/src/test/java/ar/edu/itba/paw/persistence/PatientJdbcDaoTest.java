@@ -42,6 +42,9 @@ public class PatientJdbcDaoTest {
 
     //PATIENT INFO
     private static final String NAME = "Patient Zero";
+    private static final String NAME_ALT = "Patient One";
+    private static final String MEDIC_PLAN = "OSDE";
+    private static final String MEDIC_PLAN_NUMBER = "24 1 12315";
     private static final int ZERO_ID = 0;
 
     @Autowired
@@ -133,6 +136,16 @@ public class PatientJdbcDaoTest {
         final Optional<Patient> maybePatient = patientDao.findByEmail(EMAIL);
 
         Assert.assertFalse(maybePatient.isPresent());
+    }
+
+    @Test
+    public void testUpdatePatientInfo() {
+        int dbkey = insertTestPatient();
+
+        patientDao.updatePatientInfo(new User(dbkey,EMAIL,PASSWORD,ROLE),NAME_ALT,MEDIC_PLAN,MEDIC_PLAN_NUMBER);
+
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"name = '" + NAME_ALT + "' AND medic_plan = '" + MEDIC_PLAN + "' AND medic_plan_number = '" + MEDIC_PLAN_NUMBER + "' AND user_id = " + dbkey));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,PATIENTS_TABLE_NAME));
     }
 
     private int insertTestPatient() {

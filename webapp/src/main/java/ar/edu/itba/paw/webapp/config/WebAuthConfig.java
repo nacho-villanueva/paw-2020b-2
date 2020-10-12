@@ -52,14 +52,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .invalidSessionUrl("/")
                 .and().authorizeRequests()//TODO: revise ant matchers
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/create-order").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
+                    .antMatchers("/profile/edit/patient").hasRole("PATIENT")
+                    .antMatchers("/create-order","/profile/edit/medic").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
                     .antMatchers("/create-type").hasAnyRole("MEDIC","CLINIC")
-                    .antMatchers("/upload-result/**","/result-uploaded").access("hasRole('ROLE_CLINIC') and hasRole('ROLE_VERIFIED')")
+                    .antMatchers("/upload-result/**","/result-uploaded","/profile/edit/clinic").access("hasRole('ROLE_CLINIC') and hasRole('ROLE_VERIFIED')")
                     .antMatchers("/complete-register").hasRole("UNDEFINED")
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
                     .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("UNDEFINED")
                     .antMatchers("/register-as-patient","/apply-as-patient").hasRole("UNDEFINED")
-                    .antMatchers("/home","/my-orders","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
+                    .antMatchers("/home","/profile","/edit/user/**","/my-orders","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
                     .antMatchers("/login","/register").anonymous()
                     .antMatchers("/**").permitAll()
                 .and().formLogin()
@@ -78,7 +79,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/")
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")       //TODO: check for new exception handling error.jsp view
+                    .accessDeniedPage("/403")       //TODO: use .accessDeniedHandler(accessDeniedHandler)
                 .and().csrf().disable();
     }
 

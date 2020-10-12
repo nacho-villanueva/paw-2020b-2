@@ -84,27 +84,38 @@ public class ClinicJdbcDao implements ClinicDao {
     }
 
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
         insertMap.put("email", user.getEmail());
         insertMap.put("telephone", telephone);
-        insertMap.put("verified", false);
+        insertMap.put("verified", verified);
 
         jdbcInsertClinic.execute(insertMap);
         //Todo: Check success
-        Collection<StudyType> available_studiesDB = new ArrayList<>();
 
-        //Adds studies that dont exist in our database //TODO: Think of more elegant solution, prone to duplication under misspellings
-        available_studies.forEach(studyType -> {
-            StudyType studyTypeFromDB = this.registerStudyToClinic(user.getId(), studyType);
-            available_studiesDB.add(studyTypeFromDB);
-        });
+        Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,user.getId());
 
         userDao.updateRole(user, User.CLINIC_ROLE_ID);
 
-        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,false);
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,verified);
+    }
+
+    @Override
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final boolean verified) {
+        jdbcTemplate.update("UPDATE clinics Set name = ?, telephone = ?, verified = ? WHERE user_id = ?", name, telephone, verified, user.getId());
+
+        Collection<StudyType> available_studiesDB = registerStudiesToClinic(available_studies,user.getId());
+
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,verified);
+    }
+
+    @Override
+    public boolean hasStudy(final int clinic_id, final int studyType_id) {
+        Integer cnt = jdbcTemplate.queryForObject("SELECT count(*) FROM clinic_available_studies WHERE clinic_id = ? AND study_id = ?", Integer.class, clinic_id, studyType_id);
+
+        return cnt != null && cnt > 0;
     }
 
     @Override
@@ -112,15 +123,41 @@ public class ClinicJdbcDao implements ClinicDao {
         //We check if it exists
         StudyType studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
 
-        //Now that we made sure it exist, we add the relation
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("clinic_id", clinic_id);
-        insertMap.put("study_id", studyTypeFromDB.getId());
+        //We check if it was already registered
+        if(!hasStudy(clinic_id, studyTypeFromDB.getId())) {
+            //Now that we made sure it exist and it is not registered already, we add the relation
+            Map<String, Object> insertMap = new HashMap<>();
+            insertMap.put("clinic_id", clinic_id);
+            insertMap.put("study_id", studyTypeFromDB.getId());
 
-        jdbcInsertStudies.execute(insertMap);
+            jdbcInsertStudies.execute(insertMap);
+        }
 
         //Todo: verify success
 
         return studyTypeFromDB;
+    }
+
+    private Collection<StudyType> registerStudiesToClinic(final Collection<StudyType> available_studies, final int clinic_id) {
+        Collection<StudyType> old_studies = studyTypeDao.findByClinicId(clinic_id);
+        Collection<StudyType> available_studiesDB = new ArrayList<>();
+
+        available_studies.forEach(studyType -> {
+            StudyType studyTypeFromDB = this.registerStudyToClinic(clinic_id, studyType);
+            available_studiesDB.add(studyTypeFromDB);
+        });
+        
+        //We delete the ones that are not in the new list but are still on database
+        old_studies.forEach(studyType -> {
+            if(!available_studiesDB.contains(studyType)) {
+                unregisterStudyToClinic(clinic_id,studyType.getId());
+            }
+        });
+
+        return available_studiesDB;
+    }
+
+    private void unregisterStudyToClinic(int clinic_id, int study_id) {
+        jdbcTemplate.update("DELETE FROM clinic_available_studies WHERE clinic_id = ? AND study_id = ?", clinic_id, study_id);
     }
 }
