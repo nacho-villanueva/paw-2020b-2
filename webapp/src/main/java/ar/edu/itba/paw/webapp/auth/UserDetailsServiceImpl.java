@@ -49,6 +49,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 authorities.add(new SimpleGrantedAuthority("ROLE_UNDEFINED"));
         }
 
+        if(!user.isVerifying()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_VERIFIED"));
+        }
+
 //        final String password;
 //        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
 //            User newUser = us.updatePassword(user, user.getPassword());

@@ -52,9 +52,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .invalidSessionUrl("/")
                 .and().authorizeRequests()//TODO: revise ant matchers
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/create-order").hasRole("MEDIC")
+                    .antMatchers("/create-order").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
                     .antMatchers("/create-type").hasAnyRole("MEDIC","CLINIC")
-                    .antMatchers("/upload-result/**","/result-uploaded").hasRole("CLINIC")
+                    .antMatchers("/upload-result/**","/result-uploaded").access("hasRole('ROLE_CLINIC') and hasRole('ROLE_VERIFIED')")
                     .antMatchers("/complete-register").hasRole("UNDEFINED")
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
                     .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("UNDEFINED")
