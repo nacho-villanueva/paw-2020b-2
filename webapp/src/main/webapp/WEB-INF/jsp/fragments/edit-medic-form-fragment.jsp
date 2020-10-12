@@ -5,7 +5,7 @@
 <c:url var="post_edit_profile_user" value="/profile/edit/medic"/>
 <f:form action="${post_edit_profile_user}" method="post" modelAttribute="editMedicForm" enctype="multipart/form-data">
 
-    <table class="table table-borderless table-responsive">
+    <table class="table table-borderless table-responsive" style="overflow: hidden;">
         <tbody>
 
         <tr>
@@ -54,7 +54,7 @@
             <td class="output">
                 <fieldset>
                     <spring:message code="profile-edit.form.medic.medical_fields.placeholder" var="medical_fieldsPlaceholder"/>
-                    <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
+                    <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom" data-container="body">
                         <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
                     </f:select>
                     <f:errors path="known_fields" cssClass="text-danger" element="small"/>
