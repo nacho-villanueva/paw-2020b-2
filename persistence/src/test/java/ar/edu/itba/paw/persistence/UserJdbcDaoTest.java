@@ -33,6 +33,8 @@ public class UserJdbcDaoTest {
     private static final String PATIENTS_TABLE_NAME = "patients";
     private static final String ORDERS_TABLE_NAME = "medical_orders";
     private static final String RESULTS_TABLE_NAME = "results";
+    private static final String CLINIC_HOURS_TABLE_NAME = "clinic_hours";
+    private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
 
 
     private static final String EMAIL = "patient@zero.com";
@@ -68,6 +70,8 @@ public class UserJdbcDaoTest {
         jdbcInsertMedic = new SimpleJdbcInsert(ds)
                 .withTableName(MEDICS_TABLE_NAME);
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_HOURS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_PLANS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);

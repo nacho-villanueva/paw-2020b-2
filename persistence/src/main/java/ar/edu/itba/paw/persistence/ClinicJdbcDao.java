@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Clinic;
+import ar.edu.itba.paw.model.ClinicHours;
 import ar.edu.itba.paw.model.StudyType;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,17 @@ public class ClinicJdbcDao implements ClinicDao {
                     rs.getString("telephone"),
                     rs.getBoolean("verified"));
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertClinic;
-    private SimpleJdbcInsert jdbcInsertStudies;
+    private static final RowMapper<String> PLAN_ROW_MAPPER = (rs, rowNum) ->
+            rs.getString("medic_plan");
+
+    private static final RowMapper<DayHours> DAY_HOURS_ROW_MAPPER = (rs, rowNum) ->
+            new DayHours(rs.getInt("day_of_week"),rs.getTime("open_time"),rs.getTime("close_time"));
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsertClinic;
+    private final SimpleJdbcInsert jdbcInsertStudies;
+    private final SimpleJdbcInsert jdbcInsertPlans;
+    private final SimpleJdbcInsert jdbcInsertHours;
 
     @Autowired
     private StudyTypeDao studyTypeDao;
@@ -39,13 +48,17 @@ public class ClinicJdbcDao implements ClinicDao {
                 .withTableName("clinics");
         jdbcInsertStudies = new SimpleJdbcInsert(ds)
                 .withTableName("clinic_available_studies");
+        jdbcInsertPlans = new SimpleJdbcInsert(ds)
+                .withTableName("clinic_accepted_plans");
+        jdbcInsertHours = new SimpleJdbcInsert(ds)
+                .withTableName("clinic_hours");
     }
 
     @Override
     public Optional<Clinic> findByUserId(int user_id) {
         //We get the basic clinic info
         Optional<Clinic> clinic = jdbcTemplate.query("SELECT * FROM clinics INNER JOIN users u ON user_id = u.id WHERE u.id = ?", new Object[] { user_id }, CLINIC_ROW_MAPPER).stream().findFirst();
-        clinic.ifPresent(value -> value.setMedical_studies(studyTypeDao.findByClinicId(user_id)));
+        clinic.ifPresent(this::loadClinicInfo);
         return clinic;
     }
 
@@ -61,9 +74,7 @@ public class ClinicJdbcDao implements ClinicDao {
 
     private Collection<Clinic> getAll(final boolean verified) {
         Collection<Clinic> clinics = jdbcTemplate.query("SELECT * FROM clinics INNER JOIN users u ON user_id = u.id WHERE verified = ?", new Object[]{verified}, CLINIC_ROW_MAPPER);
-        clinics.forEach(clinic -> {
-            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
-        });
+        clinics.forEach(this::loadClinicInfo);
         return clinics;
     }
 
@@ -77,14 +88,43 @@ public class ClinicJdbcDao implements ClinicDao {
                 " INNER JOIN medical_studies s" +
                 " ON study_id = s.id AND s.id = ? WHERE c.verified = true", new Object[]{studyType_id}, CLINIC_ROW_MAPPER);
 
-        clinics.forEach(clinic -> {
-            clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
-        });
+        clinics.forEach(this::loadClinicInfo);
+
         return clinics;
     }
 
+    private void loadClinicInfo(Clinic clinic) {
+        //Load available studies
+        clinic.setMedical_studies(studyTypeDao.findByClinicId(clinic.getUser_id()));
+
+        //Load medical plans
+        clinic.setAccepted_plans(getAcceptedPlans(clinic.getUser_id()));
+
+        //Load clinic hours
+        clinic.setHours(getClinicHours(clinic.getUser_id()));
+    }
+
+    private ClinicHours getClinicHours(int clinic_id) {
+        ClinicHours clinicHours = new ClinicHours();
+
+        Collection<DayHours> clinicDayHours = jdbcTemplate.query("SELECT * FROM clinic_hours WHERE clinic_id = ?", new Object[]{clinic_id},DAY_HOURS_ROW_MAPPER);
+
+        clinicDayHours.forEach(day -> {
+            clinicHours.setDayHour(day.getDay_of_week(),day.getOpen_time(),day.getClose_time());
+        });
+
+        return clinicHours;
+    }
+
+    private Set<String> getAcceptedPlans(int clinic_id) {
+        Collection<String> plans = jdbcTemplate.query("SELECT * FROM clinic_accepted_plans WHERE clinic_id = ?", new Object[]{clinic_id}, PLAN_ROW_MAPPER);
+
+        return new HashSet<>(plans);
+    }
+
+    //TODO: when moving to aspect oriented programming make this function transactional
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies,final Set<String> medic_plans, final ClinicHours hours) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("user_id", user.getId());
         insertMap.put("name", name);
@@ -102,9 +142,39 @@ public class ClinicJdbcDao implements ClinicDao {
             available_studiesDB.add(studyTypeFromDB);
         });
 
+        //Add plans to database
+        registerMedicPlans(user.getId(), medic_plans);
+
+        //Add hours to database
+        registerHours(user.getId(), hours);
+
         userDao.updateRole(user, User.CLINIC_ROLE_ID);
 
-        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,false);
+        return new Clinic(user.getId(),name,user.getEmail(),telephone,available_studiesDB,hours,medic_plans,false);
+    }
+
+    private void registerHours(int clinic_id, ClinicHours hours) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id", clinic_id);
+
+        for(int i = 0; i < hours.getDays().length; i++) {
+            if(hours.getDays()[i]) {
+                insertMap.put("day_of_week",i);
+                insertMap.put("open_time",hours.getOpen_hours()[i]);
+                insertMap.put("close_time",hours.getClose_hours()[i]);
+                jdbcInsertHours.execute(insertMap);
+            }
+        }
+    }
+
+    private void registerMedicPlans(int clinic_id, Set<String> medic_plans) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id", clinic_id);
+
+        medic_plans.forEach(plan -> {
+            insertMap.put("medic_plan", plan);
+            jdbcInsertPlans.execute(insertMap);
+        });
     }
 
     @Override

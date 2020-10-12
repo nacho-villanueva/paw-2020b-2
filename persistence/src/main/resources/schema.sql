@@ -21,6 +21,22 @@ CREATE TABLE IF NOT EXISTS medical_studies (
     unique(name)
 );
 
+CREATE TABLE IF NOT EXISTS clinic_hours (
+    clinic_id int not null,
+    day_of_week int not null,                   --0 Sunday to 6 Saturday
+    open_time time not null,
+    close_time time not null,
+    primary key(clinic_id,day_of_week),
+    foreign key(clinic_id) references clinics(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS clinic_accepted_plans (
+    clinic_id int not null,
+    medic_plan text not null,
+    primary key(clinic_id,medic_plan),
+    foreign key(clinic_id) references clinics(user_id)
+);
+
 CREATE TABLE IF NOT EXISTS clinic_available_studies (
     clinic_id int not null,
     study_id int not null,

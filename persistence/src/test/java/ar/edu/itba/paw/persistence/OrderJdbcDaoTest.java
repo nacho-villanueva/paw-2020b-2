@@ -34,6 +34,8 @@ public class OrderJdbcDaoTest {
     private static final String ORDERS_TABLE_NAME = "medical_orders";
     private static final String RESULTS_TABLE_NAME = "results";
     private static final String STUDIES_TABLE_NAME = "medical_studies";
+    private static final String CLINIC_HOURS_TABLE_NAME = "clinic_hours";
+    private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
 
     //Test Order Info
     private static final Date ORDER_DATE = Date.valueOf("2020-10-05");
@@ -98,6 +100,8 @@ public class OrderJdbcDaoTest {
                 .withTableName(STUDIES_TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_HOURS_TABLE_NAME);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_PLANS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);

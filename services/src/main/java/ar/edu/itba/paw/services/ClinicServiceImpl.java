@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Clinic;
+import ar.edu.itba.paw.model.ClinicHours;
 import ar.edu.itba.paw.model.StudyType;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.persistence.ClinicDao;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ClinicServiceImpl implements ClinicService {
@@ -32,8 +34,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies) {
-        return clinicDao.register(user,name,telephone,available_studies);
+    public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours) {
+        return clinicDao.register(user,name,telephone,available_studies,medic_plans,hours);
     }
 
     @Override

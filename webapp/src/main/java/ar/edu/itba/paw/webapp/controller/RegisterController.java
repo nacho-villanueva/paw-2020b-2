@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -124,7 +125,8 @@ public class RegisterController {
                 throw new StudyTypeNotFoundException();
         }
 
-        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
+        //TODO: get values for accepted plans and clinic hours from user input
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(),new ClinicHours());
 
         authWithoutPassword(loggedUser());
         mns.sendClinicApplicationValidatingMail(newClinic);
