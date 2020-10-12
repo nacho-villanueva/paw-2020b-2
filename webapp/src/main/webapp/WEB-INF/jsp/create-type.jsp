@@ -12,7 +12,7 @@
 <div id="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp">
-        <jsp:param name="current" value="create-order"/>
+        <jsp:param name="current" value="create-type"/>
     </jsp:include>
 
     <div id="content-wrapper" class="d-flex flex-column">
