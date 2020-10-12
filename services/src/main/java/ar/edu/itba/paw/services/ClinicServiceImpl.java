@@ -56,4 +56,10 @@ public class ClinicServiceImpl implements ClinicService {
     public Collection<Clinic> getByStudyTypeId(int studyType_id) {
         return clinicDao.getByStudyTypeId(studyType_id);
     }
+
+    @Override
+    public Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
+        return clinicDao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+    }
+
 }

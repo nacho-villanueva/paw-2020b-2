@@ -26,4 +26,7 @@ public interface ClinicDao {
     Collection<Clinic> getByStudyTypeId(int studyType_id);
 
     StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
+
+    //If parameters are null, search will ignore those values
+    Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name);
 }

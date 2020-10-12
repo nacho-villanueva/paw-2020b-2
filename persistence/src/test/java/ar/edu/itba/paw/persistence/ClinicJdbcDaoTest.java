@@ -39,8 +39,10 @@ public class ClinicJdbcDaoTest {
     private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
     private static final String STUDIES_TABLE_NAME = "medical_studies";
 
-    private static final String NAME = "Zero's Clinic";
-    private static final String NAME_ALT = "One's Clinic";
+    private static final String NAME_ZERO = "Zero's Clinic";
+    private static final String NAME_ONE = "One's Clinic";
+    private static final String NAME_TWO = "Two's Clinic";
+    private static final String NAME_THREE = "Three's Clinic";
     private static final String TELEPHONE = "+011-00000000";
     private static final String STUDY_NAME = "MRA";
     private static final String STUDY_NAME_ALT = "Colonoscopy";
@@ -54,8 +56,10 @@ public class ClinicJdbcDaoTest {
     private static final boolean TRUE = true;
 
     //USER INFO
-    private static final String USER_EMAIL = "patient@zero.com";
-    private static final String USER_EMAIL_ALT = "patient@one.com";
+    private static final String USER_EMAIL_ZERO = "patient@zero.com";
+    private static final String USER_EMAIL_ONE = "patient@one.com";
+    private static final String USER_EMAIL_TWO = "patient@two.com";
+    private static final String USER_EMAIL_THREE = "patient@three.com";
     private static final String PASSWORD = "GroundZer0";
     private static final int ROLE = 3;
 
@@ -115,32 +119,9 @@ public class ClinicJdbcDaoTest {
 
         Assert.assertNotNull(maybeClinic);
         Assert.assertTrue(maybeClinic.isPresent());
-        Assert.assertEquals(NAME, maybeClinic.get().getName());
+        Assert.assertEquals(NAME_ZERO, maybeClinic.get().getName());
         Assert.assertTrue(maybeClinic.get().getHours().getDays()[ClinicHours.SATURDAY]);
         Assert.assertTrue(maybeClinic.get().getAccepted_plans().contains(MEDIC_PLAN_ALT));
-    }
-
-    private void insertTestClinicHours(int clinic_id) {
-        ClinicHours hours = getClinicHours();
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("clinic_id", clinic_id);
-        for (int i = 0; i < hours.getDays().length; i++) {
-            if(hours.getDays()[i]) {
-                insertMap.put("day_of_week",i);
-                insertMap.put("open_time",hours.getOpen_hours()[i]);
-                insertMap.put("close_time",hours.getClose_hours()[i]);
-                jdbcInsertHours.execute(insertMap);
-            }
-        }
-    }
-
-    private void insertTestPlans(int clinic_id) {
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("clinic_id",clinic_id);
-        insertMap.put("medic_plan", MEDIC_PLAN);
-        jdbcInsertPlans.execute(insertMap);
-        insertMap.put("medic_plan", MEDIC_PLAN_ALT);
-        jdbcInsertPlans.execute(insertMap);
     }
 
     @Test
@@ -160,7 +141,7 @@ public class ClinicJdbcDaoTest {
         Assert.assertNotNull(clinics);
         Assert.assertEquals(2,clinics.size());
         Clinic clinic = clinics.stream().findFirst().get();
-        Assert.assertTrue(clinic.getEmail().equals(USER_EMAIL) || clinic.getEmail().equals(USER_EMAIL_ALT));
+        Assert.assertTrue(clinic.getEmail().equals(USER_EMAIL_ZERO) || clinic.getEmail().equals(USER_EMAIL_ONE));
     }
 
     @Test
@@ -192,7 +173,7 @@ public class ClinicJdbcDaoTest {
 
     @Test
     public void testRegisterValid() {
-        int userkey = insertTestUser(USER_EMAIL);
+        int userkey = insertTestUser(USER_EMAIL_ZERO);
         Collection<StudyType> available_studies = new ArrayList<>();
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME));
         available_studies.add(new StudyType(ZERO_ID, STUDY_NAME_ALT));
@@ -201,7 +182,7 @@ public class ClinicJdbcDaoTest {
         plans.add(MEDIC_PLAN_ALT);
 
 
-        final Clinic clinic = dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE, available_studies,plans,getClinicHours(),false);
+        final Clinic clinic = dao.register(new User(userkey, USER_EMAIL_ZERO,PASSWORD,ROLE), NAME_ZERO,TELEPHONE, available_studies,plans,getClinicHours(),false);
 
         Assert.assertEquals(2,clinic.getMedical_studies().size());
         Assert.assertEquals(2,clinic.getAccepted_plans().size());
@@ -219,7 +200,7 @@ public class ClinicJdbcDaoTest {
     public void testRegisterAlreadyExists() {
         int userkey = insertTestClinic();
 
-        dao.register(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME,TELEPHONE,new ArrayList<>(),new HashSet<>(),new ClinicHours(),false);
+        dao.register(new User(userkey, USER_EMAIL_ZERO,PASSWORD,ROLE), NAME_ZERO,TELEPHONE,new ArrayList<>(),new HashSet<>(),new ClinicHours(),false);
     }
 
     @Test
@@ -263,10 +244,10 @@ public class ClinicJdbcDaoTest {
         //New hours
         ClinicHours new_hours = getClinicHoursAlt();
 
-        Clinic clinic = dao.updateClinicInfo(new User(userkey,USER_EMAIL,PASSWORD,ROLE),NAME_ALT,TELEPHONE,available_studies,new_plans,new_hours,TRUE);
+        Clinic clinic = dao.updateClinicInfo(new User(userkey, USER_EMAIL_ZERO,PASSWORD,ROLE), NAME_ONE,TELEPHONE,available_studies,new_plans,new_hours,TRUE);
 
         Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ALT.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NAME_ONE.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykey));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userkey + " AND study_id = " + studykeyalt));
         Assert.assertFalse(clinic.getHours().getDays()[ClinicHours.MONDAY]);
@@ -274,6 +255,123 @@ public class ClinicJdbcDaoTest {
         Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.TUESDAY]);
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(4, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME));
+    }
+
+    @Test
+    public void testSearchNoParams() {
+        int[] keys = insertTestSearchPreconditions();
+
+        //Search params
+        String clinic_name = null;
+        ClinicHours hours = null;
+        String accepted_plan = null;
+        String study_name = null;
+
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+
+        Assert.assertEquals(keys.length,clinics.size());
+    }
+
+    @Test
+    public void testSearchNoName() {
+        int[] keys = insertTestSearchPreconditions();
+
+        //Search params
+        String clinic_name = null;
+        ClinicHours hours = new ClinicHours();
+        hours.setDayHour(ClinicHours.MONDAY,Time.valueOf("16:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("15:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.SATURDAY,Time.valueOf("19:00:00"),Time.valueOf("21:00:00"));
+        String accepted_plan = "OSDE";
+        String study_name = "mra";
+
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+
+        Assert.assertEquals(1,clinics.size());
+        Assert.assertEquals(keys[3],clinics.stream().findFirst().get().getUser_id());
+    }
+
+    private int[] insertTestSearchPreconditions() {
+        int userkey = insertTestUser(USER_EMAIL_ZERO);
+        int userkey1 = insertTestUser(USER_EMAIL_ONE);
+        int userkey2 = insertTestUser(USER_EMAIL_TWO);
+        int userkey3 = insertTestUser(USER_EMAIL_THREE);
+        int studykey = insertTestStudyType(STUDY_NAME);
+        int studykeyalt = insertTestStudyType(STUDY_NAME_ALT);
+        ClinicHours hours;
+
+        /* Zero's Clinic
+           studies: MRA
+           plans: Osde, Pami
+           Hours: mon-fri from 9-15
+        */
+        insertClinic(userkey, NAME_ZERO);
+        insertTestRelation(userkey,studykey);
+
+        insertTestPlan(userkey,"Osde");
+        insertTestPlan(userkey,"Pami");
+        hours = new ClinicHours();
+        hours.setDayHour(ClinicHours.MONDAY,Time.valueOf("09:00:00"),Time.valueOf("15:00:00"));
+        hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("09:00:00"),Time.valueOf("15:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("09:00:00"),Time.valueOf("15:00:00"));
+        hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("09:00:00"),Time.valueOf("15:00:00"));
+        hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("09:00:00"),Time.valueOf("15:00:00"));
+        insertClinicHours(userkey,hours);
+
+        /* One's Clinic
+           studies: MRA,Colonoscopy
+           plans: none
+           Hours: sat-sun from 11-18 and wed 11-16
+        */
+        insertClinic(userkey1, NAME_ONE);
+        insertTestRelation(userkey1,studykey);
+        insertTestRelation(userkey1,studykeyalt);
+
+        hours = new ClinicHours();
+        hours.setDayHour(ClinicHours.SATURDAY,Time.valueOf("11:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.SUNDAY,Time.valueOf("11:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("11:00:00"),Time.valueOf("16:00:00"));
+        insertClinicHours(userkey1,hours);
+
+
+        /* Two's Clinic
+           studies: Colonoscopy
+           plans: Swiss, osde
+           Hours: mon-wed from 17-24 and fri 19-24
+        */
+        insertClinic(userkey2, NAME_TWO);
+        insertTestRelation(userkey2,studykeyalt);
+
+        insertTestPlan(userkey2,"Swiss");
+        insertTestPlan(userkey2,"osde");
+        hours = new ClinicHours();
+        hours.setDayHour(ClinicHours.MONDAY,Time.valueOf("17:00:00"),Time.valueOf("24:00:00"));
+        hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("17:00:00"),Time.valueOf("24:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("17:00:00"),Time.valueOf("24:00:00"));
+        hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("19:00:00"),Time.valueOf("24:00:00"));
+        insertClinicHours(userkey2,hours);
+
+        /* Three's Clinic
+           studies: MRA
+           plans: swiss medical, osde 310
+           Hours: sat-sun from 9-18
+        */
+        insertClinic(userkey3, NAME_THREE);
+        insertTestRelation(userkey3,studykey);
+
+        insertTestPlan(userkey3,"swiss medical");
+        insertTestPlan(userkey3,"osde 310");
+        hours = new ClinicHours();
+        hours.setDayHour(ClinicHours.SUNDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.MONDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        hours.setDayHour(ClinicHours.SATURDAY,Time.valueOf("09:00:00"),Time.valueOf("18:00:00"));
+        insertClinicHours(userkey3,hours);
+
+        return new int[]{userkey,userkey1,userkey2,userkey3};
     }
 
 
@@ -288,15 +386,15 @@ public class ClinicJdbcDaoTest {
     }
 
     private int insertTestClinic() {
-        int userkey = insertTestUser(USER_EMAIL);
-        return insertClinic(userkey, NAME);
+        int userkey = insertTestUser(USER_EMAIL_ZERO);
+        return insertClinic(userkey, NAME_ZERO);
     }
 
     private void insertMultipleTestClinic() {
-        int userkey = insertTestUser(USER_EMAIL);
-        insertClinic(userkey, NAME);
-        userkey = insertTestUser(USER_EMAIL_ALT);
-        insertClinic(userkey, NAME_ALT);
+        int userkey = insertTestUser(USER_EMAIL_ZERO);
+        insertClinic(userkey, NAME_ZERO);
+        userkey = insertTestUser(USER_EMAIL_ONE);
+        insertClinic(userkey, NAME_ONE);
     }
 
     private int insertTestUser(final String email) {
@@ -341,5 +439,35 @@ public class ClinicJdbcDaoTest {
         insertMap.put("name", name);
         Number key = jdbcInsertStudyType.executeAndReturnKey(insertMap);
         return key.intValue();
+    }
+
+    private void insertTestClinicHours(int clinic_id) {
+        ClinicHours hours = getClinicHours();
+        insertClinicHours(clinic_id,hours);
+    }
+
+    private void insertTestPlans(int clinic_id) {
+        insertTestPlan(clinic_id,MEDIC_PLAN);
+        insertTestPlan(clinic_id,MEDIC_PLAN_ALT);
+    }
+
+    private void insertTestPlan(int clinic_id, String name) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id",clinic_id);
+        insertMap.put("medic_plan", name);
+        jdbcInsertPlans.execute(insertMap);
+    }
+
+    private void insertClinicHours(int clinic_id, ClinicHours hours) {
+        Map<String, Object> insertMap = new HashMap<>();
+        insertMap.put("clinic_id", clinic_id);
+        for (int i = 0; i < hours.getDays().length; i++) {
+            if(hours.getDays()[i]) {
+                insertMap.put("day_of_week",i);
+                insertMap.put("open_time",hours.getOpen_hours()[i]);
+                insertMap.put("close_time",hours.getClose_hours()[i]);
+                jdbcInsertHours.execute(insertMap);
+            }
+        }
     }
 }

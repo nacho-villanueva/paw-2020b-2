@@ -134,9 +134,7 @@ public class ClinicJdbcDao implements ClinicDao {
 
         Collection<DayHours> clinicDayHours = jdbcTemplate.query("SELECT * FROM clinic_hours WHERE clinic_id = ?", new Object[]{clinic_id},DAY_HOURS_ROW_MAPPER);
 
-        clinicDayHours.forEach(day -> {
-            clinicHours.setDayHour(day.getDay_of_week(),day.getOpen_time(),day.getClose_time());
-        });
+        clinicDayHours.forEach(day -> clinicHours.setDayHour(day.getDay_of_week(),day.getOpen_time(),day.getClose_time()));
 
         return clinicHours;
     }
@@ -248,6 +246,89 @@ public class ClinicJdbcDao implements ClinicDao {
         //Todo: verify success
 
         return studyTypeFromDB;
+    }
+
+    @Override
+    public Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
+        String queryString = getSearchQueryString(clinic_name,hours,accepted_plan,study_name);
+
+        Collection<Clinic> clinics = jdbcTemplate.query(queryString,CLINIC_ROW_MAPPER);
+        clinics.forEach(this::loadClinicInfo);
+        return clinics;
+    }
+
+    private String getSearchQueryString(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
+        //Base Query
+        StringBuilder query = new StringBuilder("SELECT DISTINCT c.user_id, c.name, u.email, telephone, verified FROM clinics c INNER JOIN users u ON c.user_id = u.id");
+
+        //Joins
+        if(hours != null) {
+            //Add hours part
+            query.append(" INNER JOIN clinic_hours ch ON ch.clinic_id = c.user_id");
+        }
+
+        if(accepted_plan != null) {
+            //Add plans part
+            query.append(" INNER JOIN clinic_accepted_plans cap ON cap.clinic_id = c.user_id");
+        }
+
+        if(study_name != null) {
+            //Add study name part
+            query.append(" INNER JOIN clinic_available_studies cas ON cas.clinic_id = c.user_id INNER JOIN medical_studies ms ON cas.study_id = ms.id");
+        }
+
+        //Search
+        query.append(" WHERE c.verified = true");
+
+        if(clinic_name != null) {
+            //Add clinic name condition
+            query.append(" AND lower(c.name) LIKE '%") ;
+            query.append(clinic_name.replace("'","''").toLowerCase());
+            query.append("%'");
+        }
+
+        if(hours != null) {
+            //Add hours condition
+            query.append(" AND (");
+            for (int i = 0; i < hours.getDays().length; i++) {
+                //If we have a filter on this day, we add condition
+                if(hours.getDays()[i]) {
+                    //This person, on this day is available from X to Y
+                    //I want clinics that are open at least some part of the time frame of this day filter
+                    Time availableFrom = hours.getOpen_hours()[i];
+                    Time availableUntil = hours.getClose_hours()[i];
+                    query.append("( ch.day_of_week = ");
+                    query.append(i);
+                    query.append(" AND NOT (ch.close_time <= '");
+                    query.append(availableFrom);
+                    query.append("' OR ch.open_time >= '");
+                    query.append(availableUntil);
+                    query.append("' ))");
+                } else {
+                    query.append("false");
+                }
+                if(i < hours.getDays().length - 1) {
+                    query.append(" OR ");
+                }
+            }
+            query.append(")");
+        }
+
+        if(accepted_plan != null) {
+            //Add plan condition
+            query.append(" AND lower(cap.medic_plan) LIKE '%");
+            query.append(accepted_plan.replace("'","''").toLowerCase());
+            query.append("%'");
+        }
+
+        if(study_name != null) {
+            //Add study name condition
+            query.append(" AND lower(ms.name) LIKE '%");
+            query.append(study_name.replace("'","''").toLowerCase());
+            query.append("%'");
+        }
+
+        return query.toString();
     }
 
     private Collection<StudyType> registerStudiesToClinic(final Collection<StudyType> available_studies, final int clinic_id) {
