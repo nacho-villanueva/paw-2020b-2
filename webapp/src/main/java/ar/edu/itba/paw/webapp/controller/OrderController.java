@@ -98,6 +98,8 @@ public class OrderController {
 
         mav.addObject("clinicsList",clinicService.getAll());
 
+        mav.addObject("studyName", studyNameFromOrderForm(orderForm));
+
 
         return mav;
     }
@@ -140,6 +142,9 @@ public class OrderController {
                 advancedSearchClinicForm.getMedical_study());
 
         mav.addObject("clinicsList", clinicsList);
+
+        mav.addObject("studyName", studyNameFromOrderForm(orderForm));
+
         return mav;
     }
 
@@ -164,6 +169,9 @@ public class OrderController {
         orderForm.setPatientName(advancedSearchClinicForm.getPatientName());
 
         mav.addObject("clinicsList", clinicService.getAll());
+
+        mav.addObject("studyName", studyNameFromOrderForm(orderForm));
+
         return mav;
     }
 
@@ -246,5 +254,11 @@ public class OrderController {
             ret.setDayHour(6, Time.valueOf(f.getSaturdayOpenTime()),Time.valueOf(f.getSaturdayCloseTime()));
 
         return ret;
+    }
+
+    private String studyNameFromOrderForm(OrderForm orderForm){
+        if(studyTypeService.findById(orderForm.getStudyId()).isPresent())
+            return studyTypeService.findById(orderForm.getStudyId()).get().getName();
+        return "unknown";
     }
 }

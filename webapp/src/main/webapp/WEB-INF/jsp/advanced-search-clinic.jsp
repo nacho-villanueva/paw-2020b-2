@@ -48,17 +48,17 @@
                             <c:if test="${not empty orderForm}">
                                 <div class="row justify-content-center">
                                     <a class="btn btn-outline" data-toggle="collapse" href="#collapseInfo" role="button" aria-expanded="false" aria-controls="collapseInfo">
-                                        See Order info
+                                        <spring:message code="advanced-search-clinic.form.order-info.label"/>
                                     </a>
 
                                     <div class="collapse" id="collapseInfo">
                                         <div class="bs-callout bs-callout-med">
                                             <div class="row justify-content-start">
-                                                <div class="col type"><p class="type-title">Patient's name: </p> jose</div>
-                                                <div class="col type"><p class="type-title">Study type:</p>rehab</div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-name"/></p><c:out value="${orderForm.patientName}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.study-type"/></p><c:out value="${studyName}"/></div>
                                                 <div class="w-100"></div>
-                                                <div class="col type"><p class="type-title">Patient's insurance plan: </p> galerA AZUL</div>
-                                                <div class="col type"><p class="type-title">Patient's insurance number: </p> 15215521</div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-plan"/></p> <c:out value="${orderForm.patient_insurance_plan}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-number"/></p> <c:out value="${orderForm.patient_insurance_number}"/></div>
                                             </div>
                                         </div>
                                     </div>
