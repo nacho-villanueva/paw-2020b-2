@@ -11,10 +11,35 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Time;
 import java.util.*;
 
 @Repository
 public class ClinicJdbcDao implements ClinicDao {
+
+    private static class DayHours {
+        private int day_of_week;
+        private Time open_time;
+        private Time close_time;
+
+        public DayHours(final int day_of_week, final Time open_time, final Time close_time) {
+            this.day_of_week = day_of_week;
+            this.open_time = open_time;
+            this.close_time = close_time;
+        }
+
+        public int getDay_of_week() {
+            return day_of_week;
+        }
+
+        public Time getOpen_time() {
+            return open_time;
+        }
+
+        public Time getClose_time() {
+            return close_time;
+        }
+    }
 
     @Autowired
     private UserDao userDao;
@@ -30,7 +55,7 @@ public class ClinicJdbcDao implements ClinicDao {
             rs.getString("medic_plan");
 
     private static final RowMapper<DayHours> DAY_HOURS_ROW_MAPPER = (rs, rowNum) ->
-            new DayHours(rs.getInt("day_of_week"),rs.getTime("open_time"),rs.getTime("close_time"));
+            new DayHours(rs.getInt("day_of_week"), rs.getTime("open_time"), rs.getTime("close_time"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsertClinic;
