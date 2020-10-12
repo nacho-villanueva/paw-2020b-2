@@ -16,6 +16,4 @@ public interface MedicalFieldDao {
     public Collection<MedicalField> findByMedicId(int medic_id);
 
     public MedicalField findOrRegister(String name);
-
-    MedicalField register(String name);
 }

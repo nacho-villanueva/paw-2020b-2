@@ -189,22 +189,6 @@ public class StudyTypeJdbcDaoTest {
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
     }
 
-    @Test
-    public void testRegisterValid() {
-        final StudyType studyType = dao.register(STUDY_NAME);
-
-        Assert.assertNotNull(studyType);
-        Assert.assertEquals(STUDY_NAME,studyType.getName());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
-    }
-
-    @Test(expected = DuplicateKeyException.class)
-    public void testRegisterAlreadyExists() {
-        insertTestStudy();
-
-        dao.register(STUDY_NAME);
-    }
-
     private int insertTestStudy() {
         return insertStudy(STUDY_NAME);
     }

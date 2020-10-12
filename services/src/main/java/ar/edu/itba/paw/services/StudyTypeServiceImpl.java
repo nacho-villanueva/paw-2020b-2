@@ -39,9 +39,4 @@ public class StudyTypeServiceImpl implements StudyTypeService {
         return studyTypeDao.findOrRegister(name);
     }
 
-    @Override
-    public StudyType register(String name) {
-        return studyTypeDao.register(name);
-    }
-
 }

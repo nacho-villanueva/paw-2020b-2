@@ -17,6 +17,4 @@ public interface StudyTypeService {
 
     public StudyType findOrRegister(String name);
 
-    public StudyType register(String name);
-
 }

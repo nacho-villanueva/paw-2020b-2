@@ -37,7 +37,7 @@ public class MedicalFieldJdbcDao implements MedicalFieldDao {
 
     @Override
     public Optional<MedicalField> findByName(String name) {
-        return jdbcTemplate.query("SELECT * FROM medical_fields WHERE name = ?", new Object[]{name}, MEDICAL_FIELD_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM medical_fields WHERE lower(name) = lower(?)", new Object[]{name}, MEDICAL_FIELD_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -62,8 +62,7 @@ public class MedicalFieldJdbcDao implements MedicalFieldDao {
         return this.register(name);
     }
 
-    @Override
-    public MedicalField register(final String name) {
+    private MedicalField register(final String name) {
         Map<String,Object> insertMap = new HashMap<>();
         insertMap.put("name", name);
 

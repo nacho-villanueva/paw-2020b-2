@@ -58,6 +58,7 @@
                         <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
                     </f:select>
                     <f:errors path="known_fields" cssClass="text-danger" element="small"/>
+                    <a href="<c:url value='/create-field' />"><p><spring:message code="profile-edit.form.medic.add_medical_field" /></p></a>
                 </fieldset>
             </td>
         </tr>

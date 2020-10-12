@@ -104,7 +104,7 @@
                         <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
                             <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
                         </f:select>
-
+                        <a href="<c:url value='/create-field' />"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
 
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_2" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
@@ -129,6 +129,8 @@
                         <f:select id="studyFields" class="selectpicker" title="${studiesPlaceholder}" data-live-search="true" path="available_studies" data-style="btn-custom">
                             <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                         </f:select>
+                        <a href="<c:url value='/create-type' />"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
+
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_3" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
                 </div>
