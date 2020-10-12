@@ -1,15 +1,35 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.MedicalField;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 
 public class ApplyMedicForm {
-    private String first_name, last_name;
-    private String email;
-    private String telephone, licence_number;
+
+    @NotBlank
+    private String first_name;
+
+    @NotBlank
+    private String last_name;
+
+    @NotBlank
+    @Pattern(regexp = "\\+?[0-9]+")
+    private String telephone;
+
+    @NotBlank
+    @Pattern(regexp = "[0-9a-zA-Z]+")
+    private String licence_number;
+
+    @NotEmpty
     private Integer[] known_fields;
+
+    @NotNull
     private MultipartFile identification;
 
     public ApplyMedicForm(){
@@ -34,14 +54,6 @@ public class ApplyMedicForm {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getTelephone() {

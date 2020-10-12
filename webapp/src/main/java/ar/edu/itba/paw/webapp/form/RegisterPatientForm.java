@@ -1,9 +1,19 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 public class RegisterPatientForm {
 
-    private String first_name, last_name;
+    @NotBlank
+    private String first_name;
+
+    @NotBlank
+    private String last_name;
+
+    @NotBlank
     private String medical_insurance_plan;
+
+    @NotBlank
     private String medical_insurance_number;
 
 

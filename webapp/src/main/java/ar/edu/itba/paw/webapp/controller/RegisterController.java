@@ -84,7 +84,18 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/apply-as-medic", method = RequestMethod.POST)
-    public String applyMedic(@ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm){
+    public ModelAndView applyMedic(@Valid @ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            ModelAndView mavError = new ModelAndView("complete-registration");
+            mavError.addObject("tabRegistration", "medic");
+            mavError.addObject("registerPatientForm", new RegisterPatientForm());
+            mavError.addObject("applyClinicForm", new ApplyClinicForm());
+
+            mavError.addObject("fieldsList", mfs.getAll());
+            mavError.addObject("studiesList", sts.getAll());
+            return mavError;
+        }
+
         byte[] fileBytes;
         try {
             fileBytes = applyMedicForm.getIdentification().getBytes();
@@ -107,11 +118,23 @@ public class RegisterController {
 
         authWithoutPassword(loggedUser());
         mns.sendMedicApplicationValidatingMail(newMedic);
-        return "redirect:/home";
+        return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
-    public String applyClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
+    public ModelAndView applyClinic(@Valid @ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            ModelAndView mavError = new ModelAndView("complete-registration");
+            mavError.addObject("registrationTab", "clinic");
+            mavError.addObject("registerPatientForm", new RegisterPatientForm());
+            mavError.addObject("applyMedicForm", new ApplyMedicForm());
+
+            mavError.addObject("fieldsList", mfs.getAll());
+            mavError.addObject("studiesList", sts.getAll());
+
+            return mavError;
+        }
+
         ArrayList<StudyType> availableStudies = new ArrayList<>();
 
         for (Integer i : applyClinicForm.getAvailable_studies()) {
@@ -129,11 +152,22 @@ public class RegisterController {
         authWithoutPassword(loggedUser());
         mns.sendClinicApplicationValidatingMail(newClinic);
 
-        return "redirect:/home";
+        return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(value = "/register-patient", method = RequestMethod.POST)
-    public ModelAndView registerPatient(@ModelAttribute("registerPatientForm") RegisterPatientForm registerPatientForm){
+    public ModelAndView registerPatient(@Valid @ModelAttribute("registerPatientForm") RegisterPatientForm registerPatientForm, final BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            ModelAndView mavError = new ModelAndView("complete-registration");
+            mavError.addObject("registrationTab", "patient");
+            mavError.addObject("applyMedicForm", new ApplyMedicForm());
+            mavError.addObject("applyClinicForm", new ApplyClinicForm());
+
+            mavError.addObject("fieldsList", mfs.getAll());
+            mavError.addObject("studiesList", sts.getAll());
+
+            return mavError;
+        }
         ps.register(loggedUser(), registerPatientForm.getFullname(),
                 registerPatientForm.getMedical_insurance_plan(), registerPatientForm.getMedical_insurance_number());
         authWithoutPassword(loggedUser());

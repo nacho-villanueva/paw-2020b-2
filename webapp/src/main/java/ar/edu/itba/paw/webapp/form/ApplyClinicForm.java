@@ -1,9 +1,22 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class ApplyClinicForm {
-    private String name, email, telephone;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    @Pattern(regexp = "\\+?[0-9]+")
+    private String telephone;
+
+    @NotEmpty
     private Integer[] available_studies;
 
     public ApplyClinicForm() {
@@ -12,14 +25,6 @@ public class ApplyClinicForm {
 
     public String getName() {
         return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setName(String name) {
