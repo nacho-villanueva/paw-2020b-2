@@ -287,7 +287,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/edit/clinic",method = RequestMethod.GET)
-    public ModelAndView editProfileClinicGet(@ModelAttribute("editClinicForm")EditClinicForm editClinicForm, Locale locale){
+    public ModelAndView editProfileClinicGet(@ModelAttribute("editClinicForm")EditClinicForm editClinicForm){
 
         User user = loggedUser();
 
@@ -302,8 +302,8 @@ public class ProfileController {
             editClinicForm.setFull_name(clinic.getName());
             editClinicForm.setTelephone(clinic.getTelephone());
 
-            editClinicForm.setClosing_time(clinic.getHours().getClose_hours_asString());
-            editClinicForm.setOpening_time(clinic.getHours().getOpen_hours_asString());
+            editClinicForm.getClinicHoursForm().setClosing_time(clinic.getHours().getClose_hours_asString());
+            editClinicForm.getClinicHoursForm().setOpening_time(clinic.getHours().getOpen_hours_asString());
             editClinicForm.setOpen_days(clinic.getHours().getDays_asIntArray());
 
             editClinicForm.setAccepted_plans(clinic.getAccepted_plans().toArray(new String[0]));
@@ -364,8 +364,8 @@ public class ProfileController {
 
         ClinicHours clinicHours = new ClinicHours();
         clinicHours.setDays(editClinicForm.getOpen_days());
-        clinicHours.setOpen_hours(editClinicForm.getOpening_time());
-        clinicHours.setClose_hours(editClinicForm.getClosing_time());
+        clinicHours.setOpen_hours(editClinicForm.getClinicHoursForm().getOpening_time());
+        clinicHours.setClose_hours(editClinicForm.getClinicHoursForm().getClosing_time());
 
         clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAccepted_plans_List())),clinicHours,clinic.isVerified());
 

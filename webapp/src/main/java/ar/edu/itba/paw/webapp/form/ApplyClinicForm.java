@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.webapp.form.validators.ValidDays;
+import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 import org.hibernate.validator.constraints.NotBlank;
-
-import java.sql.Time;
 
 
 public class ApplyClinicForm {
@@ -14,15 +14,15 @@ public class ApplyClinicForm {
 
     private String accepted_plans;
 
+    @ValidDays
     private Integer[] open_days;
 
-    private String[] opening_time;
-
-    private String[] closing_time;
+    @ValidOpeningClosingHours()
+    private ClinicHoursForm clinicHoursForm;
 
 
     public ApplyClinicForm() {
-
+        clinicHoursForm = new ClinicHoursForm();
     }
 
     public String getName() {
@@ -69,19 +69,12 @@ public class ApplyClinicForm {
         this.open_days = open_days;
     }
 
-    public String[] getOpening_time() {
-        return opening_time;
+
+    public ClinicHoursForm getClinicHoursForm() {
+        return clinicHoursForm;
     }
 
-    public void setOpening_time(String[] opening_time) {
-        this.opening_time = opening_time;
-    }
-
-    public String[] getClosing_time() {
-        return closing_time;
-    }
-
-    public void setClosing_time(String[] closing_time) {
-        this.closing_time = closing_time;
+    public void setClinicHoursForm(ClinicHoursForm clinicHoursForm) {
+        this.clinicHoursForm = clinicHoursForm;
     }
 }

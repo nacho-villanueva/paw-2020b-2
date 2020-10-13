@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.model.ClinicHours;
 import ar.edu.itba.paw.webapp.form.validators.PasswordIsCorrect;
 import ar.edu.itba.paw.webapp.form.validators.StudyTypesAreValid;
+import ar.edu.itba.paw.webapp.form.validators.ValidDays;
+import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -10,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 
 public class EditClinicForm {
 
@@ -32,16 +36,16 @@ public class EditClinicForm {
     @Size(min = 6, max = 100)
     private String password;
 
+    @ValidDays
     private Integer[] open_days;
 
-    private String[] opening_time;
-
-    private String[] closing_time;
+    @ValidOpeningClosingHours
+    private ClinicHoursForm clinicHoursForm;
 
     private String accepted_plans;
 
     public EditClinicForm(){
-
+        clinicHoursForm = new ClinicHoursForm();
     }
 
     public String getFull_name() {
@@ -100,20 +104,11 @@ public class EditClinicForm {
         this.open_days = open_days;
     }
 
-    public String[] getOpening_time() {
-        return opening_time;
+    public ClinicHoursForm getClinicHoursForm() {
+        return clinicHoursForm;
     }
 
-    public void setOpening_time(String[] opening_time) {
-        this.opening_time = opening_time;
+    public void setClinicHoursForm(ClinicHoursForm clinicHoursForm) {
+        this.clinicHoursForm = clinicHoursForm;
     }
-
-    public String[] getClosing_time() {
-        return closing_time;
-    }
-
-    public void setClosing_time(String[] closing_time) {
-        this.closing_time = closing_time;
-    }
-
 }

@@ -45,27 +45,29 @@
                 <f:option value="6"><spring:message code="days.day-6" /></f:option>
             </f:select>
             <br>
-            <small class="text-muted"><spring:message code="profile-edit.form.clinic.selectdays.help" /></small>
+            <small class="text-muted"><spring:message code="profile-edit.form.clinic.selectdays.help" /></small><br>
+            <f:errors path="clinicHoursForm" cssClass="text-danger" /> <br>
+            <f:errors path="open_days" cssClass="text-danger" />
         </fieldset>
         <table>
             <tbody id="daysHourList">
             </tbody>
         </table>
-        <f:hidden id="OT_0" path="opening_time[0]" />
-        <f:hidden id="OT_1" path="opening_time[1]" />
-        <f:hidden id="OT_2" path="opening_time[2]" />
-        <f:hidden id="OT_3" path="opening_time[3]" />
-        <f:hidden id="OT_4" path="opening_time[4]" />
-        <f:hidden id="OT_5" path="opening_time[5]" />
-        <f:hidden id="OT_6" path="opening_time[6]" />
+        <f:hidden id="OT_0" path="clinicHoursForm.opening_time[0]" />
+        <f:hidden id="OT_1" path="clinicHoursForm.opening_time[1]" />
+        <f:hidden id="OT_2" path="clinicHoursForm.opening_time[2]" />
+        <f:hidden id="OT_3" path="clinicHoursForm.opening_time[3]" />
+        <f:hidden id="OT_4" path="clinicHoursForm.opening_time[4]" />
+        <f:hidden id="OT_5" path="clinicHoursForm.opening_time[5]" />
+        <f:hidden id="OT_6" path="clinicHoursForm.opening_time[6]" />
 
-        <f:hidden id="CT_0" path="closing_time[0]" />
-        <f:hidden id="CT_1" path="closing_time[1]" />
-        <f:hidden id="CT_2" path="closing_time[2]" />
-        <f:hidden id="CT_3" path="closing_time[3]" />
-        <f:hidden id="CT_4" path="closing_time[4]" />
-        <f:hidden id="CT_5" path="closing_time[5]" />
-        <f:hidden id="CT_6" path="closing_time[6]" />
+        <f:hidden id="CT_0" path="clinicHoursForm.closing_time[0]" />
+        <f:hidden id="CT_1" path="clinicHoursForm.closing_time[1]" />
+        <f:hidden id="CT_2" path="clinicHoursForm.closing_time[2]" />
+        <f:hidden id="CT_3" path="clinicHoursForm.closing_time[3]" />
+        <f:hidden id="CT_4" path="clinicHoursForm.closing_time[4]" />
+        <f:hidden id="CT_5" path="clinicHoursForm.closing_time[5]" />
+        <f:hidden id="CT_6" path="clinicHoursForm.closing_time[6]" />
     </div>
 
     <hr class="divider my-4">
