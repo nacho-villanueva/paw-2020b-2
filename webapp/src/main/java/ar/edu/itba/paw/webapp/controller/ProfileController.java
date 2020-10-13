@@ -287,7 +287,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/edit/clinic",method = RequestMethod.GET)
-    public ModelAndView editProfileClinicGet(@ModelAttribute("editClinicForm")EditClinicForm editClinicForm){
+    public ModelAndView editProfileClinicGet(@ModelAttribute("editClinicForm")EditClinicForm editClinicForm, Locale locale){
 
         User user = loggedUser();
 
@@ -302,12 +302,19 @@ public class ProfileController {
             editClinicForm.setFull_name(clinic.getName());
             editClinicForm.setTelephone(clinic.getTelephone());
 
+            editClinicForm.setClosing_time(clinic.getHours().getClose_hours_asString());
+            editClinicForm.setOpening_time(clinic.getHours().getOpen_hours_asString());
+            editClinicForm.setOpen_days(clinic.getHours().getDays_asIntArray());
+
+            editClinicForm.setAccepted_plans(clinic.getAccepted_plans().toArray(new String[0]));
+
             ArrayList<Integer> availableStudiesList = new ArrayList<>();
             for (StudyType studyType : clinic.getMedical_studies()) {
                 availableStudiesList.add(studyType.getId());
             }
-            Integer[] availableStudies = availableStudiesList.toArray(new Integer[availableStudiesList.size()]);
+            Integer[] availableStudies = availableStudiesList.toArray(new Integer[0]);
             editClinicForm.setAvailable_studies(availableStudies);
+
 
             mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()).mapToInt(Integer::intValue).toArray());
             mav.addObject("studiesList",studyTypeService.getAll());
@@ -355,9 +362,12 @@ public class ProfileController {
                 throw new StudyTypeNotFoundException();
         }
 
+        ClinicHours clinicHours = new ClinicHours();
+        clinicHours.setDays(editClinicForm.getOpen_days());
+        clinicHours.setOpen_hours(editClinicForm.getOpening_time());
+        clinicHours.setClose_hours(editClinicForm.getClosing_time());
 
-        //TODO: send proper data to function on plans and hours
-        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(),new ClinicHours(),clinic.isVerified());
+        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAccepted_plans_List())),clinicHours,clinic.isVerified());
 
         mav.addObject("editSuccess",User.CLINIC_ROLE_ID);
 
@@ -417,7 +427,17 @@ public class ProfileController {
                 case User.CLINIC_ROLE_ID:
                     Optional<Clinic> clinicOptional = clinicService.findByUserId(user.getId());
                     if(clinicOptional.isPresent()){
-                        mav.addObject("clinic", clinicOptional.get());
+                        Clinic clinic = clinicOptional.get();
+                        mav.addObject("clinic", clinic);
+
+                        HashMap<String, String> openDayHour = new HashMap<>();
+                        for(int i = 0; i < 7; i++){
+                            if(clinic.getHours().getDays()[i]){
+                                openDayHour.put(messageSource.getMessage("days.day-" + i, null, Locale.forLanguageTag(loggedUser().getLocale())), clinic.getHours().getClose_hours_asString()[i] + " - " + clinic.getHours().getOpen_hours_asString()[i]);
+                            }
+                        }
+
+                        mav.addObject("openDayHour", openDayHour);
                     }else{
                         throw new ClinicNotFoundException();
                     }
