@@ -47,7 +47,7 @@
                             <c:when test="${not empty orderForm}"><c:url var="formSubmitUrl" value="/create-order"/></c:when>
                             <c:otherwise><c:url var="formSubmitUrl" value="/advanced-search/clinic"/></c:otherwise>
                         </c:choose>
-                        <f:form acceptCharset="utf-8" action="${formSubmitUrl}" method="get" modelAttribute="advancedSearchClinicForm">
+                        <f:form enctype="application/x-www-form-urlencoded" action="${formSubmitUrl}" method="get" modelAttribute="advancedSearchClinicForm">
                             <p class="card-title h4"><spring:message code="advanced-search-clinic.body.title"/></p>
                             <hr/>
 
@@ -126,44 +126,44 @@
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.sunday"/> </th>
                                             <th><f:checkbox id="sunday" path="sundayOpens"/></th>
-                                            <th><f:input id="sundayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="sundayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="sundayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="sundayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="sundayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="sundayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="sundayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="sundayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.monday"/> </th>
                                             <th><f:checkbox id="monday" path="mondayOpens"/></th>
-                                            <th><f:input id="mondayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="mondayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="mondayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="mondayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="mondayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="mondayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="mondayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="mondayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.tuesday"/> </th>
                                             <th><f:checkbox id="tuesday" path="tuesdayOpens"/></th>
-                                            <th><f:input id="tuesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="tuesdayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="tuesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="tuesdayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="tuesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="tuesdayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="tuesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="tuesdayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.wednesday"/> </th>
                                             <th><f:checkbox id="wednesday" path="wednesdayOpens"/></th>
-                                            <th><f:input id="wednesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="wednesdayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="wednesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="wednesdayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="wednesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="wednesdayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="wednesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="wednesdayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.thursday"/> </th>
                                             <th><f:checkbox id="thursday" path="thursdayOpens"/></th>
-                                            <th><f:input id="thursdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="thursdayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="thursdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="thursdayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="thursdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="thursdayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="thursdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="thursdayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.friday"/> </th>
                                             <th><f:checkbox id="friday" path="fridayOpens"/></th>
-                                            <th><f:input id="fridayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="fridayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="fridayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="fridayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="fridayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="fridayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="fridayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="fridayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         <tr>
                                             <th><spring:message code="advanced-search-clinic.form.day.saturday"/> </th>
                                             <th><f:checkbox id="saturday" path="saturdayOpens"/></th>
-                                            <th><f:input id="saturdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="saturdayOpenTime" cssClass="time-input"/></th>
-                                            <th><f:input id="saturdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="saturdayCloseTime" cssClass="time-input"/></th>
+                                            <th><f:input id="saturdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="saturdayOpenTime" maxlength="5" cssClass="time-input"/></th>
+                                            <th><f:input id="saturdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="saturdayCloseTime" maxlength="5" cssClass="time-input"/></th>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -171,7 +171,7 @@
                             </fieldset>
 
                             <div class="row justify-content-center">
-                                <f:button type="submit" name="submit" value="search" id="searchButton" class="btn action-btn mt-4 mb-2">
+                                <f:button type="submit" name="submit" formenctype="application/x-www-form-urlencoded" value="search" id="searchButton" class="btn action-btn mt-4 mb-2">
                                     <spring:message code="advanced-search-clinic.form.button.search"/>
                                 </f:button>
                             </div>
@@ -232,10 +232,6 @@
                                                     <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
                                                     <td class="output"><c:forEach items="${clinic.medical_studies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
                                                 </tr>
-                                                <tr>
-                                                    <td><spring:message code="profile-view.body.tab.clinic.verified.label"/></td>
-                                                    <td class="output"><i class="fas <c:choose><c:when test="${clinic.verified}">fa-check</c:when><c:otherwise>fa-times</c:otherwise></c:choose> fa-lg"></i></td>
-                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -258,8 +254,19 @@
                                         <div class="row justify-content-center">
                                             <f:button class="row btn btn-lg action-btn" type="submit" name="submit" value="create-order"><spring:message code="create-order.body.form.button.submit"/></f:button>
                                         </div>
+                                    </f:form>
+                                    <f:form action="${formSubmitUrl}" method="post" modelAttribute="orderWithoutClinicForm">
+
+                                        <f:input path="medicId" type="hidden" id="medicId"/>
+                                        <f:input path="studyId" type="hidden" id="studyId"/>
+                                        <f:input path="description" type="hidden" id="description"/>
+                                        <f:input path="patient_insurance_plan" type="hidden" id="patient_insurance_plan"/>
+                                        <f:input path="patient_insurance_number" type="hidden" id="patient_insurance_number"/>
+                                        <f:input path="patientEmail" type="hidden" id="patientEmail"/>
+                                        <f:input path="patientName" type="hidden" id="studyId"/>
+
                                         <div class="row justify-content-center">
-                                            <f:button type="submit" name="submit" formmethod="get" value="back" id="backButton" class="row btn btn-outline-secondary">
+                                            <f:button type="submit" name="submit" formmethod="post" value="back" id="backButton" class="row btn btn-outline-secondary">
                                                 <spring:message code="create-order.body.form.button.back"/>
                                             </f:button>
                                         </div>

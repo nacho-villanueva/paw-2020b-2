@@ -1,8 +1,26 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.model.ClinicHours;
+import ar.edu.itba.paw.webapp.form.validators.ClinicHoursIsValid;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.sql.Time;
 
+@ClinicHoursIsValid.List(value = {
+        @ClinicHoursIsValid(day = 0, isOpen = "sundayOpens", openTime = "sundayOpenTime", closeTime = "sundayCloseTime"),
+        @ClinicHoursIsValid(day = 1, isOpen = "mondayOpens", openTime = "mondayOpenTime", closeTime = "mondayCloseTime"),
+        @ClinicHoursIsValid(day = 2, isOpen = "tuesdayOpens", openTime = "tuesdayOpenTime", closeTime = "tuesdayCloseTime"),
+        @ClinicHoursIsValid(day = 3, isOpen = "wednesdayOpens", openTime = "wednesdayOpenTime", closeTime = "wednesdayCloseTime"),
+        @ClinicHoursIsValid(day = 4, isOpen = "thursdayOpens", openTime = "thursdayOpenTime", closeTime = "thursdayCloseTime"),
+        @ClinicHoursIsValid(day = 5, isOpen = "fridayOpens", openTime = "fridayOpenTime", closeTime = "fridayCloseTime"),
+        @ClinicHoursIsValid(day = 6, isOpen = "saturdayOpens", openTime = "saturdayOpenTime", closeTime = "saturdayCloseTime")
+})
 public class AdvancedSearchClinicForm {
 
     private String clinic_name;
@@ -14,12 +32,12 @@ public class AdvancedSearchClinicForm {
     // for time
     private boolean sundayOpens,mondayOpens,tuesdayOpens,wednesdayOpens,thursdayOpens,fridayOpens,saturdayOpens;
 
-    @Pattern(regexp = "(^$|(?:[01]\\d|2[0-3]):(?:[0-5]\\d):(?:[0-5]\\d))")
-    @Size(max = 8)
+    @Pattern(regexp = "(^$|(?:[01]\\d|2[0-3]):(?:[0-5]\\d))")
+    @Size(max = 5)
     private String sundayOpenTime,mondayOpenTime,tuesdayOpenTime,wednesdayOpenTime,thursdayOpenTime,fridayOpenTime,saturdayOpenTime;
 
-    @Pattern(regexp = "(^$|24:00:00|(?!00:00:00)(?:[01]\\d|2[0-3]):(?:[0-5]\\d):(?:[0-5]\\d))")
-    @Size(max = 8)
+    @Pattern(regexp = "(^$|24:00|(?!00:00)(?:[01]\\d|2[0-3]):(?:[0-5]\\d))")
+    @Size(max = 5)
     private String sundayCloseTime,mondayCloseTime,tuesdayCloseTime,wednesdayCloseTime,thursdayCloseTime,fridayCloseTime,saturdayCloseTime;
 
 
@@ -34,7 +52,90 @@ public class AdvancedSearchClinicForm {
     private String patientName;
 
     public AdvancedSearchClinicForm() {
+        sundayOpens = mondayOpens = tuesdayOpens = wednesdayOpens = thursdayOpens = fridayOpens = saturdayOpens = false;
+    }
 
+    public void resetValues(){
+        clinic_name = null;
+        medical_study=null;
+        medical_plan=null;
+
+        sundayOpens = mondayOpens = tuesdayOpens = wednesdayOpens = thursdayOpens = fridayOpens = saturdayOpens = false;
+        sundayOpenTime = mondayOpenTime = tuesdayOpenTime = wednesdayOpenTime = thursdayOpenTime = fridayOpenTime = saturdayOpenTime = null;
+        sundayCloseTime = mondayCloseTime = tuesdayCloseTime = wednesdayCloseTime = thursdayCloseTime = fridayCloseTime = saturdayCloseTime = null;
+
+        // keep order info intact
+    }
+
+    public void decodeForm(String uri) {
+
+        MultiValueMap<String, String> p = UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
+
+        this.clinic_name = decodeVal(p,"clinic_name");
+        this.medical_study = decodeVal(p,"medical_study");
+        this.medical_plan = decodeVal(p,"medical_plan");
+
+        this.sundayOpenTime = decodeVal(p,"sundayOpenTime");
+        this.sundayCloseTime = decodeVal(p, "sundayCloseTime");
+        this.mondayOpenTime = decodeVal(p,"mondayOpenTime");
+        this.mondayCloseTime = decodeVal(p, "mondayCloseTime");
+        this.tuesdayOpenTime = decodeVal(p,"tuesdayOpenTime");
+        this.tuesdayCloseTime = decodeVal(p, "tuesdayCloseTime");
+        this.wednesdayOpenTime = decodeVal(p,"wednesdayOpenTime");
+        this.wednesdayCloseTime = decodeVal(p, "wednesdayCloseTime");
+        this.thursdayOpenTime = decodeVal(p,"thursdayOpenTime");
+        this.thursdayCloseTime = decodeVal(p, "thursdayCloseTime");
+        this.fridayOpenTime = decodeVal(p,"fridayOpenTime");
+        this.fridayCloseTime = decodeVal(p, "fridayCloseTime");
+        this.saturdayOpenTime = decodeVal(p,"saturdayOpenTime");
+        this.saturdayCloseTime = decodeVal(p, "saturdayCloseTime");
+
+        // orderFormData
+        // medicId is Integer
+        // clinicId is Integer
+        this.description = decodeVal(p,"description");
+        this.patient_insurance_plan = decodeVal(p, "patient_insurance_plan");
+        this.patient_insurance_number = decodeVal(p, "patient_insurance_number");
+        this.patientEmail = decodeVal(p, "patientEmail");
+        this.patientName = decodeVal(p, "patientName");
+    }
+
+    public ClinicHours getClinicHours(){
+        ClinicHours ret = new ClinicHours();
+
+        String defaultOpenTime = "00:00";
+        String defaultCloseTime = "24:00";
+
+        if(this.isSundayOpens())
+            ret.setDayHour(ClinicHours.SUNDAY,
+                    Time.valueOf((this.sundayOpenTime == null?defaultOpenTime:this.sundayOpenTime).concat(":00")),
+                    Time.valueOf((this.sundayCloseTime == null?defaultCloseTime:this.sundayCloseTime).concat(":00")));
+        if(this.isMondayOpens())
+            ret.setDayHour(ClinicHours.MONDAY,
+                    Time.valueOf((this.mondayOpenTime == null?defaultOpenTime:this.mondayOpenTime).concat(":00")),
+                    Time.valueOf((this.mondayCloseTime== null?defaultCloseTime:this.mondayCloseTime).concat(":00")));
+        if(this.isTuesdayOpens())
+            ret.setDayHour(ClinicHours.TUESDAY,
+                    Time.valueOf((this.tuesdayOpenTime== null?defaultOpenTime:this.tuesdayOpenTime).concat(":00")),
+                    Time.valueOf((this.tuesdayCloseTime== null?defaultCloseTime:this.tuesdayCloseTime).concat(":00")));
+        if(this.isWednesdayOpens())
+            ret.setDayHour(ClinicHours.WEDNESDAY,
+                    Time.valueOf((this.wednesdayOpenTime== null?defaultOpenTime:this.wednesdayOpenTime).concat(":00")),
+                    Time.valueOf((this.wednesdayCloseTime== null?defaultCloseTime:this.wednesdayCloseTime).concat(":00")));
+        if(this.isThursdayOpens())
+            ret.setDayHour(ClinicHours.THURSDAY,
+                    Time.valueOf((this.thursdayOpenTime== null?defaultOpenTime:this.thursdayOpenTime).concat(":00")),
+                    Time.valueOf((this.thursdayCloseTime== null?defaultCloseTime:this.thursdayCloseTime).concat(":00")));
+        if(this.isFridayOpens())
+            ret.setDayHour(ClinicHours.FRIDAY,
+                    Time.valueOf((this.fridayOpenTime== null?defaultOpenTime:this.fridayOpenTime).concat(":00")),
+                    Time.valueOf((this.fridayCloseTime== null?defaultCloseTime:this.fridayCloseTime).concat(":00")));
+        if(this.isSaturdayOpens())
+            ret.setDayHour(ClinicHours.SATURDAY,
+                    Time.valueOf((this.saturdayOpenTime== null?defaultOpenTime:this.saturdayOpenTime).concat(":00")),
+                    Time.valueOf((this.saturdayCloseTime== null?defaultCloseTime:this.saturdayCloseTime).concat(":00")));
+
+        return ret;
     }
 
     public String getClinic_name() {
@@ -283,5 +384,19 @@ public class AdvancedSearchClinicForm {
 
     public void setPatientName(String patientName) {
         this.patientName = patientName;
+    }
+
+    private String decodeVal(MultiValueMap<String, String> parameters, String key){
+        String enc = StandardCharsets.UTF_8.name();
+        try {
+            String val = parameters.getFirst(key);
+            if(val == null || val.trim().isEmpty())
+                return null;
+
+            return UriUtils.decode(val.replace('+',' '),enc).trim();
+        } catch (UnsupportedEncodingException e) {
+            // ignore
+        }
+        return parameters.getFirst(key);
     }
 }

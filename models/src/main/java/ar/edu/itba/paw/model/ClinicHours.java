@@ -30,7 +30,7 @@ public class ClinicHours {
         }
     }
 
-    private boolean validInput(int day_of_week, Time open_time, Time close_time) {
+    public static boolean validInput(int day_of_week, Time open_time, Time close_time) {
         if (open_time == null || close_time == null) {
             return false;
         }
