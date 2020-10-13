@@ -46,6 +46,15 @@
     </li>
     </sec:authorize>
 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Nav Item -->
+    <li class="nav-item <c:if test='${param.current == "search"}'>active</c:if>">
+        <a class="nav-link" href="<c:url value='/advanced-search/clinic' />">
+            <i class="fas fa-fw fa-search"></i>
+            <span><spring:message key="fragments.sidebar.search" /></span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">

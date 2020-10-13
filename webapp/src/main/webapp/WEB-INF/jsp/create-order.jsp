@@ -6,12 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Query: Get Clinic from study id -->
-    <c:url var="getClinicByMedicalStudy" value="/api/data/clinic/get-clinics-by-medical-study"/>
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/createorder.css"/>">
-    <title>Create Order</title>
 </head>
 <body>
 
@@ -30,10 +27,11 @@
                 </div>
 
                 <c:url var="post_createorder"  value="/create-order"/>
-                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm">
+                <f:form action="${post_createorder}" method="post" modelAttribute="orderWithoutClinicForm">
                     <div class="border-1 border-secondary">
                         <label for="medicName" class="text-muted"><spring:message code="create-order.body.form.medicName.label"/> </label>
                         <p id="medicName" class="lead"><c:out value="${loggedMedic.name}"/> </p>
+                        <f:input type="hidden" path="medicId"/>
                     </div>
                     <hr class="divider"/>
 
@@ -78,16 +76,6 @@
                                 <f:errors path="studyId" cssClass="invalid-feedback" element="small" />
                             </fieldset>
                         </div>
-                        <div class="col">
-                            <fieldset class="form-group">
-                                <label class="bmd-label-static"><spring:message code="create-order.body.form.clinicId.label"/> </label>
-                                <spring:message code="create-order.body.form.clinicId.placeholder.enabled" var="clinicIdPlaceholderEnabled"/>
-                                <f:select id="clinic" title="${clinicIdPlaceholderEnabled}" cssClass="selectpicker" cssErrorClass="selectpicker is-invalid" data-live-search="true" path="clinicId" disabled="true" data-style="text-primary">
-                                </f:select>
-                                <small class="text-muted"><spring:message code="create-order.body.form.clinicId.format"/></small>
-                                <f:errors path="clinicId" cssClass="invalid-feedback" element="small" /><br>
-                            </fieldset>
-                        </div>
                     </div>
                     <div class="row form-group">
                         <label class="bmd-label-static"><spring:message code="create-order.body.form.description.label"/></label>
@@ -99,7 +87,7 @@
                     <hr class="mt-3 mb-2"/>
 
                     <a onclick="history.back(-1)" class="btn btn-secondary mt-4 mb-2 float-left" role="button"><spring:message code="create-order.body.form.button.cancel"/></a>
-                    <button class="btn create-btn mt-4 mb-2 float-right" type="submit"><spring:message code="create-order.body.form.button.submit"/></button>
+                    <button class="btn create-btn mt-4 mb-2 float-right" type="submit" name="submit" value="toClinicSelection"><spring:message code="create-order.body.form.button.next"/></button>
 
                     <datalist id="studiesList">
                         <c:forEach var = "i" items="${studiesList}">
@@ -114,49 +102,5 @@
 </div>>
 
 <%@ include file="fragments/include-scripts.jsp"%>
-<script type="text/javascript">
-    $(document).ready(function(){
-
-        $('#medicalStudy').on('change', function(){
-            let studyId = $(this).val();
-            let clinicSelect = $('#clinic');
-
-            if(studyId>=0){
-                $.getJSON('${getClinicByMedicalStudy}',{
-                    study : studyId
-                }, function(response) {
-                    let clinicList = '';
-                    let clinicLen = response.length;
-                    for(let i =0; i<clinicLen;i++){
-                        clinicList += '<option value="' + response[i].user_id + '">' + sanitize(response[i].name) + '</option>';
-                    }
-                    clinicList += '</option>';
-
-                    clinicSelect.html(clinicList);
-                    clinicSelect.attr('disabled',false);
-                    clinicSelect.selectpicker('refresh');
-                });
-            }else{
-                clinicSelect.attr('disabled',true);
-                clinicSelect.selectpicker('refresh');
-            }
-        });
-    });
-
-    // temporal string sanitizer, from https://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript
-    // based on https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
-    function sanitize(string) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#x27;',
-            "/": '&#x2F;',
-        };
-        const reg = /[&<>"'/]/ig;
-        return string.replace(reg, (match)=>(map[match]));
-    }
-</script>
 </body>
 </html>

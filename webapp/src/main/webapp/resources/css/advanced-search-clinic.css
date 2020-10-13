@@ -25,6 +25,7 @@ body {
     background-size: cover;
 
     height: 100vh;
+    top: 0;
     padding-top: 4.5rem;
 }
 
@@ -51,22 +52,59 @@ body {
     }
 }
 
-
-.create-btn{
-    background: #19b0c8;
-    color: white;
+.filters-card {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    width: 30em;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
+.table-scrollable {
+    height: 100px;
+    overflow-y: auto;
+}
+.type-title {
+    font-weight: normal;
+    margin-bottom: 0;
+}
+.type {
+    margin-bottom: 0.75rem;
+    font-weight: lighter;
+}
+.results-card {
+    margin-top: 2em;
+    width: 50em;
+    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    padding: 10px;
+    min-height:42em;
+    margin-bottom: 2em;
 
-.logout-btn{
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.result-section {
+    width: 20em;
+    max-height: 32em;
+}
+.data-section {
+    width: 30em;
+    margin-left: 2em;
+}
+.time-input {
+    width: 60px;
+}
+.action-btn{
+    background: #009688;
+    color: white;
+    margin-top: 4%;
+    width: 50%;
+}
+.reset-btn{
     background: slategrey;
     color: white;
 
-
-    animation: 0.75s ease-out 0s 1 slideInFromDown;
-}
-.anim-content{
-    animation: 0.75s ease-out 0s 1 slideInFromDown;
+    margin-top: 4%;
+    width: 50%;
 }

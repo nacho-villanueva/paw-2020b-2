@@ -20,11 +20,11 @@
     max-width: 25em;
 }
 
-.fa-check {
+.verified {
     color: green;
 }
 
-.fa-times {
+.nverified {
     color: red;
 }
 

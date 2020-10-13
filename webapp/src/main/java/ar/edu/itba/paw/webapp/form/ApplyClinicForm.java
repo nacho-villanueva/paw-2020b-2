@@ -1,25 +1,32 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.webapp.form.validators.ValidDays;
+import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
+import org.hibernate.validator.constraints.NotBlank;
+
 
 public class ApplyClinicForm {
-    private String name, email, telephone;
+
+    @NotBlank
+    private String name, telephone;
     private Integer[] available_studies;
 
-    public ApplyClinicForm() {
+    private String accepted_plans;
 
+    @ValidDays
+    private Integer[] open_days;
+
+    @ValidOpeningClosingHours()
+    private ClinicHoursForm clinicHoursForm;
+
+
+    public ApplyClinicForm() {
+        clinicHoursForm = new ClinicHoursForm();
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setName(String name) {
@@ -40,5 +47,34 @@ public class ApplyClinicForm {
 
     public void setAvailable_studies(Integer[] available_studies) {
         this.available_studies = available_studies;
+    }
+
+    public void setAccepted_plans(String plans){
+        this.accepted_plans = plans;
+    }
+
+    public String getAccepted_plans(){
+        return this.accepted_plans;
+    }
+
+    public String[] getAccepted_plans_List(){
+        return this.accepted_plans.split(",");
+    }
+
+    public Integer[] getOpen_days() {
+        return open_days;
+    }
+
+    public void setOpen_days(Integer[] open_days) {
+        this.open_days = open_days;
+    }
+
+
+    public ClinicHoursForm getClinicHoursForm() {
+        return clinicHoursForm;
+    }
+
+    public void setClinicHoursForm(ClinicHoursForm clinicHoursForm) {
+        this.clinicHoursForm = clinicHoursForm;
     }
 }

@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class Clinic {
     private int user_id;
@@ -10,18 +8,22 @@ public class Clinic {
     private String email;
     private String telephone;
     private Collection<StudyType> medical_studies;
+    private ClinicHours hours;
+    private Set<String> accepted_plans;
     private boolean verified;
 
     public Clinic() {
 
     }
 
-    public Clinic(final int user_id, final String name, final String email, final String telephone, final Collection<StudyType> medical_studies, final boolean verified) {
+    public Clinic(final int user_id, final String name, final String email, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
         this.user_id = user_id;
         this.name = name;
         this.email = email;
         this.telephone = telephone;
         this.medical_studies = medical_studies;
+        this.hours = hours;
+        this.accepted_plans = accepted_plans;
         this.verified = verified;
     }
 
@@ -31,6 +33,8 @@ public class Clinic {
         this.email = email;
         this.telephone = telephone;
         this.medical_studies = new ArrayList<>();
+        this.hours = new ClinicHours();
+        this.accepted_plans = new HashSet<>();
         this.verified = verified;
     }
 
@@ -87,5 +91,21 @@ public class Clinic {
 
     public boolean isVerified() {
         return verified;
+    }
+
+    public ClinicHours getHours() {
+        return hours;
+    }
+
+    public void setHours(ClinicHours hours) {
+        this.hours = hours;
+    }
+
+    public Set<String> getAccepted_plans() {
+        return accepted_plans;
+    }
+
+    public void setAccepted_plans(Set<String> accepted_plans) {
+        this.accepted_plans = accepted_plans;
     }
 }

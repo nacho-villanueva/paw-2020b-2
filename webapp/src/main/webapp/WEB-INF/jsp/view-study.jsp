@@ -16,7 +16,7 @@
 
 <div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <div class="card order-card bg-light float-right">
                 <div class="card-body">
                     <div class="row">

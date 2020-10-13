@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
 
@@ -113,24 +114,87 @@
 
                 <!-- CLINIC REGISTRATION -->
                 <div id="clinic" class="tab-pane fade in">
+
                     <c:url var="registerClinic" value="/apply-as-clinic"/>
-                    <f:form action="${registerClinic}" method="post" modelAttribute="applyClinicForm">
+                    <f:form action="${registerClinic}" method="post" id="clinicForm" modelAttribute="applyClinicForm">
                         <fieldset class="form-group">
                             <label for="clinicName" class="bmd-label-floating"><spring:message code='complete-registration.body.form.clinic.name.label'/></label>
                             <f:input type="text" class="form-control" id="clinicName" path="name"/>
                         </fieldset>
-                        <fieldset class="form-group row">
+                        <fieldset class="form-group">
                             <label for="phoneNumber" class="bmd-label-floating"><spring:message code='complete-registration.body.form.telephone.label'/></label>
                             <f:input type="tel" class="form-control" id="phoneNumber" pattern="\+?[0-9\-]+" path="telephone"/>
                         </fieldset>
 
-                        <label><spring:message code='complete-registration.body.form.clinic.available_studies.label'/></label>
-                        <spring:message code='complete-registration.body.form.clinic.available_studies.placeholder' var="studiesPlaceholder"/>
-                        <f:select id="studyFields" class="selectpicker" title="${studiesPlaceholder}" data-live-search="true" path="available_studies" data-style="btn-custom">
-                            <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
-                        </f:select>
-                        <a href="<c:url value='/create-type' />"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
+                        <!-- Accepted Medical Plans -->
+                        <div>
+                            <fieldset class="form-group">
+                                <label><spring:message code='complete-registration.body.form.clinic.available_studies.label'/></label>
+                                <spring:message code='complete-registration.body.form.clinic.available_studies.placeholder' var="studiesPlaceholder"/>
+                                <f:select id="studyFields" class="selectpicker" title="${studiesPlaceholder}" cssStyle="width: 100% !important;" data-live-search="true" path="available_studies" data-style="btn-custom">
+                                    <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
+                                </f:select>
+                            </fieldset>
 
+                            <fieldset class="input-group pt-4">
+                                    <label for="addPlanInput" class="bmd-label-static"><spring:message code="complete-registration.body.form.clinic.accepted_plans.label" /></label>
+                                    <input id="addPlanInput" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="Add" />
+                                    </div>
+                                <f:hidden id="plansInputList" path="accepted_plans" onload="onLoadPlanList(${applyClinicForm.accepted_plans})" value="" />
+                            </fieldset>
+
+                            <div id="plansList" class="mb-2 mt-2">
+                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.accepted_plans.confirmation" />: </small>
+                                <template id="planPillTemplate">
+                                    <a class="mr-2 mb-1"><span class="badge-md badge-pill badge-primary"><i class="fa fa-times ml-1"></i></span></a>
+                                </template>
+                            </div>
+                        </div>
+                        <br>
+
+                        <!-- Open Day and Time Picker -->
+                            <fieldset class="form-group">
+                                <label><spring:message code="complete-registration.body.form.clinic.open_days.label" /></label>
+                                <f:select path="open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
+                                    <f:option value="0"><spring:message code="days.day-0" /></f:option>
+                                    <f:option value="1"><spring:message code="days.day-1" /></f:option>
+                                    <f:option value="2"><spring:message code="days.day-2" /></f:option>
+                                    <f:option value="3"><spring:message code="days.day-3" /></f:option>
+                                    <f:option value="4"><spring:message code="days.day-4" /></f:option>
+                                    <f:option value="5"><spring:message code="days.day-5" /></f:option>
+                                    <f:option value="6"><spring:message code="days.day-6" /></f:option>
+                                </f:select>
+                                <br>
+                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.open_days.help" /></small> <br>
+                                <f:errors path="clinicHoursForm" cssClass="text-danger" /> <br>
+                                <f:errors path="open_days" cssClass="text-danger" />
+                            </fieldset>
+                            <table>
+                                <tbody id="daysHourList">
+                                </tbody>
+                            </table>
+                            <f:hidden id="OT_0" path="clinicHoursForm.opening_time[0]" />
+                            <f:hidden id="OT_1" path="clinicHoursForm.opening_time[1]" />
+                            <f:hidden id="OT_2" path="clinicHoursForm.opening_time[2]" />
+                            <f:hidden id="OT_3" path="clinicHoursForm.opening_time[3]" />
+                            <f:hidden id="OT_4" path="clinicHoursForm.opening_time[4]" />
+                            <f:hidden id="OT_5" path="clinicHoursForm.opening_time[5]" />
+                            <f:hidden id="OT_6" path="clinicHoursForm.opening_time[6]" />
+
+                            <f:hidden id="CT_0" path="clinicHoursForm.closing_time[0]" />
+                            <f:hidden id="CT_1" path="clinicHoursForm.closing_time[1]" />
+                            <f:hidden id="CT_2" path="clinicHoursForm.closing_time[2]" />
+                            <f:hidden id="CT_3" path="clinicHoursForm.closing_time[3]" />
+                            <f:hidden id="CT_4" path="clinicHoursForm.closing_time[4]" />
+                            <f:hidden id="CT_5" path="clinicHoursForm.closing_time[5]" />
+                            <f:hidden id="CT_6" path="clinicHoursForm.closing_time[6]" />
+                        </div>
+
+
+
+                        <div>
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_3" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
                 </div>
@@ -141,8 +205,20 @@
 <%@ include file="fragments/include-scripts.jsp"%><!-- bootstrap-select JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js" integrity="sha384-SfMwgGnc3UiUUZF50PsPetXLqH2HSl/FmkMW/Ja3N2WaJ/fHLbCHPUsXzzrM6aet" crossorigin="anonymous"></script>
 <script>
+    const strings = {
+        "openTime":"<spring:message code='openDaysPicker.open_time' javaScriptEscape='true' />",
+        "closeTime":"<spring:message code='openDaysPicker.close_time' javaScriptEscape='true' />"
+
+    };
+</script>
+<script src="<c:url value="/resources/js/PlansAddList.js" />"></script>
+<script src="<c:url value="/resources/js/OpenDaysPicker.js" />"></script>
+<script>
 var hash = window.location.hash;
 hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+$("#clinicForm").submit(beforeSubmit);
 </script>
+
 </body>
 </html>

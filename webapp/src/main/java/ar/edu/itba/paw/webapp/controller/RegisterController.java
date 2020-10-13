@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.Console;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class RegisterController {
@@ -113,7 +111,18 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
-    public String applyClinic(@ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm){
+    public ModelAndView applyClinic(@Valid @ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            final ModelAndView mav = new ModelAndView("complete-registration");
+            mav.addObject("registerPatientForm", new RegisterPatientForm());
+            mav.addObject("applyMedicForm", new ApplyMedicForm());
+
+            mav.addObject("fieldsList", mfs.getAll());
+            mav.addObject("studiesList", sts.getAll());
+            return mav;
+        }
+
+
         ArrayList<StudyType> availableStudies = new ArrayList<>();
 
         for (Integer i : applyClinicForm.getAvailable_studies()) {
@@ -126,12 +135,17 @@ public class RegisterController {
                 throw new StudyTypeNotFoundException();
         }
 
-        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies);
+        ClinicHours clinicHours = new ClinicHours();
+        clinicHours.setDays(applyClinicForm.getOpen_days());
+        clinicHours.setOpen_hours(applyClinicForm.getClinicHoursForm().getOpening_time());
+        clinicHours.setClose_hours(applyClinicForm.getClinicHoursForm().getClosing_time());
+
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAccepted_plans_List())),clinicHours);
 
         authWithoutPassword(loggedUser());
         mns.sendClinicApplicationValidatingMail(newClinic);
 
-        return "redirect:/home";
+        return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(value = "/register-patient", method = RequestMethod.POST)
