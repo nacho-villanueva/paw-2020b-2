@@ -65,7 +65,7 @@ public class RegisterController {
 
         ModelAndView mav = new ModelAndView("redirect:/home");
 
-        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPassword(), locale.toLanguageTag());
+        User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPasswordField().getPassword(), locale.toLanguageTag());
 
         authWithoutPassword(newUser);
         return mav;
