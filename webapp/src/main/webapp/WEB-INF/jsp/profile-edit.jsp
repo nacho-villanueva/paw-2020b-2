@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="<c:url value="/resources/css/profile.css"/>">
 
+
 </head>
 <body>
 <c:url value="/api/image" var="imageAssets"/>
@@ -103,6 +104,20 @@
 </div>
 
 <%@ include file="fragments/include-scripts.jsp"%>
+<c:if test="${not empty clinic}">
+    <script>
+        const strings = {
+            "openTime":"<spring:message code='openDaysPicker.open_time' javaScriptEscape='true' />",
+            "closeTime":"<spring:message code='openDaysPicker.close_time' javaScriptEscape='true' />"
+
+        };
+
+    </script>
+
+    <script src="<c:url value="/resources/js/PlansAddList.js" />"></script>
+    <script src="<c:url value="/resources/js/OpenDaysPicker.js" />"></script>
+    <script>$("#editClinic").submit(beforeSubmit);</script>
+</c:if>
 <!-- bootstrap-select JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js" integrity="sha384-SfMwgGnc3UiUUZF50PsPetXLqH2HSl/FmkMW/Ja3N2WaJ/fHLbCHPUsXzzrM6aet" crossorigin="anonymous"></script>
 

@@ -342,7 +342,7 @@ public class ClinicJdbcDao implements ClinicDao {
         
         //We delete the ones that are not in the new list but are still on database
         old_studies.forEach(studyType -> {
-            if(!available_studiesDB.contains(studyType)) {
+            if(available_studiesDB.stream().noneMatch(s -> {return s.getId() == studyType.getId();})) {
                 unregisterStudyToClinic(clinic_id,studyType.getId());
             }
         });
