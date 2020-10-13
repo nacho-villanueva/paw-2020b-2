@@ -175,12 +175,12 @@
                                         <td class="output"><c:out value="${clinic.telephone}"/></td>
                                     </tr>
                                     <tr>
-                                        <td>Open Hours</td>
+                                        <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
                                         <td><c:forEach items="${openDayHour}" var="h"><p><c:out value="${h.key}"/>:&emsp;<c:out value="${h.value}"/></p></c:forEach></td>
                                     </tr>
                                     <tr>
-                                        <td>Accepted Medical Insurance</td>
-                                        <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1"><c:out value="${plan}" /></span></c:forEach></td>
+                                        <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
+                                        <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                     </tr>
                                     <tr>
                                         <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>

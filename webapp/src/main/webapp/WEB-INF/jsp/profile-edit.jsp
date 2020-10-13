@@ -105,6 +105,15 @@
 
 <%@ include file="fragments/include-scripts.jsp"%>
 <c:if test="${not empty clinic}">
+    <script>
+        const strings = {
+            "openTime":"<spring:message code='openDaysPicker.open_time' javaScriptEscape='true' />",
+            "closeTime":"<spring:message code='openDaysPicker.close_time' javaScriptEscape='true' />"
+
+        };
+
+    </script>
+
     <script src="<c:url value="/resources/js/PlansAddList.js" />"></script>
     <script src="<c:url value="/resources/js/OpenDaysPicker.js" />"></script>
     <script>$("#editClinic").submit(beforeSubmit);</script>

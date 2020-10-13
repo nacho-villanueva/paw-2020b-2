@@ -8,7 +8,7 @@ function addPlan(plan, onlyDraw){
         "class": "mr-2 mb-1",
         "style": "display:none"
     }).append($("<span/>", {
-        "class": "badge-md badge-pill badge-primary"
+        "class": "badge-md badge-pill badge-primary d-inline-block"
     }).text(plan).append($("<i/>", {
         "class": "fa fa-times ml-1"
     })));

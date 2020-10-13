@@ -433,7 +433,7 @@ public class ProfileController {
                         HashMap<String, String> openDayHour = new HashMap<>();
                         for(int i = 0; i < 7; i++){
                             if(clinic.getHours().getDays()[i]){
-                                openDayHour.put(messageSource.getMessage("days.day-" + i, null, Locale.forLanguageTag(loggedUser().getLocale())), clinic.getHours().getClose_hours_asString()[i] + " - " + clinic.getHours().getOpen_hours_asString()[i]);
+                                openDayHour.put(messageSource.getMessage("days.day-" + i, null, Locale.forLanguageTag(loggedUser().getLocale())), clinic.getHours().getClose_hours_asString()[i] + "hs - " + clinic.getHours().getOpen_hours_asString()[i] + "hs");
                             }
                         }
 

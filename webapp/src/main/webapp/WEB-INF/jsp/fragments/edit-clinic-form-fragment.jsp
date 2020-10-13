@@ -34,18 +34,18 @@
     <!-- Open Day and Time Picker -->
     <div>
         <fieldset class="form-group">
-            <label>Open Days</label>
+            <label><spring:message code="profile-view.body.tab.clinic.open_days.label" /></label>
             <f:select path="open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
-                <f:option value="0">Monday</f:option>
-                <f:option value="1">Tuesday</f:option>
-                <f:option value="2">Wednesday</f:option>
-                <f:option value="3">Thursday</f:option>
-                <f:option value="4">Friday</f:option>
-                <f:option value="5">Saturday</f:option>
-                <f:option value="6">Sunday</f:option>
+                <f:option value="0"><spring:message code="days.day-0" /></f:option>
+                <f:option value="1"><spring:message code="days.day-1" /></f:option>
+                <f:option value="2"><spring:message code="days.day-2" /></f:option>
+                <f:option value="3"><spring:message code="days.day-3" /></f:option>
+                <f:option value="4"><spring:message code="days.day-4" /></f:option>
+                <f:option value="5"><spring:message code="days.day-5" /></f:option>
+                <f:option value="6"><spring:message code="days.day-6" /></f:option>
             </f:select>
             <br>
-            <small class="text-muted    ">Select the days the clinic is open.</small>
+            <small class="text-muted"><spring:message code="profile-edit.form.clinic.selectdays.help" /></small>
         </fieldset>
         <table>
             <tbody id="daysHourList">
@@ -71,7 +71,7 @@
     <hr class="divider my-4">
 
     <fieldset class="input-group pt-4">
-        <label for="addPlanInput" class="bmd-label-static">Accepted Plans</label>
+        <label for="addPlanInput" class="bmd-label-static"><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /></label>
         <input id="addPlanInput" type="text" class="form-control">
         <div class="input-group-append">
             <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="Add" />
@@ -79,7 +79,7 @@
         <f:hidden id="plansInputList" path="accepted_plans" value="" />
     </fieldset>
     <div id="plansList" class="mb-2 mt-2">
-        <small class="text-muted">Accepted Medical Plans: </small>
+        <small class="text-muted"><spring:message code="profile-edit.form.clinic.accepted_plans.confirmation" />: </small>
         <template id="planPillTemplate">
             <a class="mr-2 mb-1"><span class="badge-md badge-pill badge-primary"><i class="fa fa-times ml-1"></i></span></a>
         </template>

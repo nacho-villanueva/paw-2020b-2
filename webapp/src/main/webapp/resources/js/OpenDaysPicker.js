@@ -8,13 +8,13 @@ function createDayEntry(dayIndex, day) {
 
     row.append(
         $("<td />").append( $("<fieldset />",{"class":"mr-3"}).append(
-            $("<label />").append($("<small />", {text: "Opening Time", "class": "text-muted"})).append($("<br />",)).append($("<input />", {"type": "time", "class":"form-control m-2", "id":"iOT_" + dayIndex}))
+            $("<label />").append($("<small />", {text: strings["openTime"], "class": "text-muted"})).append($("<br />",)).append($("<input />", {"type": "time", "class":"form-control m-2", "id":"iOT_" + dayIndex}))
         ))
     );
 
     row.append(
         $("<td />").append( $("<fieldset />",{"class":"mr-3"}).append(
-            $("<label />").append($("<small />", {text: "Closing Time", "class": "text-muted"})).append($("<input />", {"type": "time", "class":"form-control m-2", "id":"iCT_" + dayIndex}))
+            $("<label />").append($("<small />", {text: strings["closeTime"], "class": "text-muted"})).append($("<input />", {"type": "time", "class":"form-control m-2", "id":"iCT_" + dayIndex}))
         ))
     );
 
