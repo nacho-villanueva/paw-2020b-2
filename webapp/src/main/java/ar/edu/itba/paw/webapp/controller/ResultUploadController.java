@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Result;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.Order;
+import ar.edu.itba.paw.webapp.exceptions.OrderNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UploadedFileFailedToLoadException;
 import ar.edu.itba.paw.webapp.form.ResultForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Date;
@@ -44,48 +48,29 @@ public class ResultUploadController {
     private long orderId;
 
     @RequestMapping("/upload-result/{encodedId}")
-    public ModelAndView uploadResult(@PathVariable("encodedId") final String encodedId) {
-        ModelAndView mav;
-        long id = urlEncoderService.decode(encodedId);
-        Optional<Order> o = os.findById(id);
-        Order aux;
-        User user = loggedUser();
-        if(o.isPresent() && user.isClinic() && !user.isVerifying()) {
-            mav = new ModelAndView("upload-result");
-            aux = o.get();
-            mav.addObject("id", id);
-            mav.addObject("order", aux);
-            mav.addObject("resultForm", new ResultForm());
-            orderId = id;
-        }else if(user.isClinic() && user.isVerifying()){
-            mav = new ModelAndView("redirect:/home");
-        }else{
-            mav = new ModelAndView("redirect:/404");
-            // 404 go to
-        }
-
-        return mav;
+    public ModelAndView uploadResult(@PathVariable("encodedId") final String encodedId, @ModelAttribute("resultForm") ResultForm resultForm) {
+        return createUploadResultView(encodedId, resultForm);
     }
 
 
     //
 
-    @RequestMapping(value = "/result-uploaded", method = RequestMethod.POST)
-    public ModelAndView submit(@Valid @ModelAttribute ResultForm resultForm, BindingResult bindingResult, @RequestParam("files") MultipartFile[] files, @RequestParam("sign") MultipartFile sign) {
+    @RequestMapping(value = "/result-uploaded/{encodedId}", method = RequestMethod.POST)
+    public ModelAndView submit(@PathVariable("encodedId") final String encodedId, @Valid @ModelAttribute ResultForm resultForm, BindingResult bindingResult, HttpServletRequest request) {
         if(bindingResult.hasErrors()) {
-            return new ModelAndView("index");
+            return createUploadResultView(encodedId, resultForm);
         }
         else{
             try{
-                byte[] signBytes = sign.getBytes();
+                byte[] signBytes = resultForm.getSign().getBytes();
                 //for each of the files uploaded as results, it registers a different result in the db
-                for(MultipartFile file: files){
+                for(MultipartFile file: resultForm.getFiles()){
                     byte[] fileBytes = file.getBytes();
 
                     Result result = resultService.register(orderId,
                             file.getContentType(),
                             fileBytes,
-                            sign.getContentType(),
+                            resultForm.getSign().getContentType(),
                             signBytes,
                             new Date(System.currentTimeMillis()),
                             resultForm.getResponsible_name(),
@@ -98,12 +83,23 @@ public class ResultUploadController {
         }
     }
 
-    @ModelAttribute
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        final Optional<User> user = userService.findByEmail(auth.getName());
-        //LOGGER.debug("Logged user is {}", user);
-        //TODO: see more elegant solution
-        return user.orElse(null);
+    public ModelAndView createUploadResultView(final String encodedId, final ResultForm resultForm){
+        ModelAndView mav;
+        long id = urlEncoderService.decode(encodedId);
+        Optional<Order> o = os.findById(id);
+        Order aux;
+        
+        if(!o.isPresent())
+            throw new OrderNotFoundException();
+
+        mav = new ModelAndView("upload-result");
+        aux = o.get();
+        mav.addObject("encodedId", encodedId);
+        mav.addObject("id", id);
+        mav.addObject("order", aux);
+        mav.addObject("resultForm", resultForm);
+        orderId = id;
+        return mav;
     }
+
 }
