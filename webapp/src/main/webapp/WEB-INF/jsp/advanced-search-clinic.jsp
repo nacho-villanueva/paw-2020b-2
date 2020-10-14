@@ -20,26 +20,28 @@
 <div id="wrapper">
 
 
-    <c:if test="${empty notLogged}">
-        <c:choose>
-            <c:when test="${not empty orderForm}">
-                <jsp:include page="fragments/sidebar-fragment.jsp" >
-                    <jsp:param name="current" value="orders"/>
-                </jsp:include>
-            </c:when>
-            <c:otherwise>
-                <jsp:include page="fragments/sidebar-fragment.jsp" >
-                    <jsp:param name="current" value="search"/>
-                </jsp:include>
-            </c:otherwise>
-        </c:choose>
-    </c:if>
+    <c:choose>
+        <c:when test="${empty notLogged}">
+            <c:choose>
+                <c:when test="${not empty orderForm}">
+                    <jsp:include page="fragments/sidebar-fragment.jsp" >
+                        <jsp:param name="current" value="orders"/>
+                    </jsp:include>
+                </c:when>
+                <c:otherwise>
+                    <jsp:include page="fragments/sidebar-fragment.jsp" >
+                        <jsp:param name="current" value="search"/>
+                    </jsp:include>
+                </c:otherwise>
+            </c:choose>
+            <div id="content-wrapper" class="d-flex flex-column">
+        </c:when>
+        <c:otherwise>
+            <div id="content-wrapper" class="d-flex flex-column main-container">
+                <%@include file="fragments/navbar-fragment.jsp"%>
+        </c:otherwise>
+    </c:choose>
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column main-container">
-
-        <c:if test="${not empty notLogged}">
-            <%@include file="fragments/navbar-fragment.jsp"%>
-        </c:if>
 
         <div class="row justify-content-center">
             <div class="col-sm-5">

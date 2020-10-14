@@ -6,7 +6,7 @@
 html, body {
     margin: 0;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
 }
 
 body {
@@ -23,9 +23,9 @@ body {
     position: relative;
     background: white;
     background-size: cover;
-
+    overflow-y: auto;
     height: 100vh;
-    padding-top: 4.5rem;
+    padding-top: 0;
 }
 
 

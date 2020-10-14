@@ -28,16 +28,7 @@ body {
     padding-top: 4.5rem;
 }
 
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        font-size: 1.5rem;
-    }
-    100% {
-        opacity: 1;
-        font-size: 1.25rem;
-    }
-}
+
 
 @keyframes slideInFromDown {
     0% {
