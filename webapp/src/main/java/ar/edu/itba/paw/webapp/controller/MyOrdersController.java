@@ -7,20 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
+@RequestMapping(value="/my-orders")
 public class MyOrdersController {
 
     @Autowired
@@ -41,18 +47,18 @@ public class MyOrdersController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping("/my-orders")
-    public ModelAndView myOrders(@RequestParam(value = "date", required = false) String dateString,
-                                  @RequestParam(value = "clinic", required = false) String clinicString,
-                                  @RequestParam(value = "medic", required = false) String medicString,
-                                  @RequestParam(value = "study", required = false) String studyString,
-                                  @RequestParam(value = "patient", required = false) String patientString,
-                                  @ModelAttribute("filterForm") FilterForm filterForm){
+    //first visit or reset
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView myOrders(@ModelAttribute("filterForm") FilterForm filterForm){
         ModelAndView mav = new ModelAndView("my-studies");
+
+        filterForm.resetValues();
 
         mav.addObject("filterForm", filterForm);
 
-        HashMap<OrderService.Parameters, String> parameters = new HashMap<>();
+        HashMap<OrderService.Parameters, String> parameters = filterForm.getParameters();
+
+        /*
         if(dateString != null && !dateString.isEmpty())
             parameters.put(OrderService.Parameters.DATE, dateString);
         if(clinicString != null && !clinicString.isEmpty())
@@ -63,7 +69,7 @@ public class MyOrdersController {
             parameters.put(OrderService.Parameters.STUDYTYPE, studyString);
         if(patientString != null && !patientString.isEmpty())
             parameters.put(OrderService.Parameters.PATIENT, patientString);
-
+        */
         listingSetup(mav, parameters);
 
         return mav;
@@ -86,11 +92,12 @@ public class MyOrdersController {
         Collection<Order> orders = orderService.filterOrders(user, parameters);
         Collection<Clinic> clinicsList = new ArrayList<>();
         Collection<Medic> medicsList = new ArrayList<>();
+        Collection<StudyType> studiesList = new ArrayList<>();
 
         if(user.isMedic() && !user.isVerifying() && medicService.findByUserId(user.getId()).isPresent()){
             medicsList.add(medicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!clinicsList.contains(order.getClinic())){
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
                     clinicsList.add(order.getClinic());
                 }
             }
@@ -98,7 +105,7 @@ public class MyOrdersController {
         }else if(user.isClinic() && !user.isVerifying() && clinicService.findByUserId(user.getId()).isPresent()){
             clinicsList.add(clinicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!medicsList.contains(order.getMedic())){
+                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
                     medicsList.add(order.getMedic());
                 }
             }
@@ -114,10 +121,17 @@ public class MyOrdersController {
 
             }
         }
+
+        for (Order order: orders) {
+            if(!studiesList.stream().anyMatch(study -> study.getId() == order.getStudy().getId())){
+                studiesList.add(order.getStudy());
+            }
+        }
+
         mav.addObject("loggedUser", user);
         mav.addObject("medicsList", medicsList);
         mav.addObject("clinicsList", clinicsList);
-        mav.addObject("studiesList", studyService.getAll());
+        mav.addObject("studiesList", studiesList);
 
         HashMap<Long, String> encodeds = new HashMap<>();
 
@@ -134,45 +148,36 @@ public class MyOrdersController {
         }
     }
 
-    @RequestMapping(value = "/filter-search", method = RequestMethod.GET)
-    public String filterSearch(@Valid @ModelAttribute("filterForm") FilterForm filterForm, final BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            return "my-orders";
-        }else{
-            String out = "redirect:/my-orders?";
-            if(filterForm.getDate() != null && !filterForm.getDate().isEmpty()){
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.setLenient(false);
-                try{
-                    dateFormat.parse(filterForm.getDate().trim());
-                }catch (ParseException pe){
-                    return "my-orders";
-                }
-                out += "date=" + filterForm.getDate() + "&";
-            }
-            if(filterForm.getClinic_id() != null && filterForm.getClinic_id() != -1){
-                if(clinicService.findByUserId(filterForm.getClinic_id()).isPresent()) {
-                    out += "clinic=" + filterForm.getClinic_id().toString() + "&";
-                }
-            }
-            if(filterForm.getMedic_id() != null && filterForm.getMedic_id() != -1){
-                if(medicService.findByUserId(filterForm.getMedic_id()).isPresent()) {
-                    out += "medic=" + filterForm.getMedic_id().toString() + "&";
-                }
-            }
-            if(filterForm.getPatient_email() != null && !filterForm.getPatient_email().isEmpty()){
-                if(userService.findByEmail(filterForm.getPatient_email()).isPresent()) {
-                    out += "patient=" + userService.findByEmail(filterForm.getPatient_email()).get().getId() + "&";
-                }
-            }
-            if(filterForm.getStudy_id() != null && filterForm.getStudy_id() != -1){
-                if(studyService.findById(filterForm.getStudy_id()).isPresent()) {
-                    out += "study=" + filterForm.getStudy_id().toString();
-                }
-            }
+    @RequestMapping(method = RequestMethod.GET,params = {"submit=search"})
+    public ModelAndView filterSearch(@Valid @ModelAttribute("filterForm") FilterForm filterForm, final BindingResult bindingResult,
+                               HttpServletRequest httpServletRequest){
 
-            return out;
+        String uri = httpServletRequest.getRequestURL().toString() + "?" + httpServletRequest.getQueryString();
+
+        filterForm.decodeForm(uri);
+
+        ModelAndView mav = new ModelAndView("my-studies");
+
+        if (bindingResult.hasErrors()) {
+            mav.addObject("errorAlert",true);
+        } else {
+
+            HashMap<OrderService.Parameters, String> parameters = filterForm.getParameters();
+
+            listingSetup(mav, parameters);
+
         }
+
+        return mav;
+    }
+
+    private String decode(String value){
+        try {
+            return UriUtils.decode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            //ignore
+        }
+        return value;
     }
 
 }
