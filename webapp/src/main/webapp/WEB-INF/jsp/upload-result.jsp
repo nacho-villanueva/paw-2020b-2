@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/uploadresults.css"/>">
 </head>
 <body>
-<c:url value="/result-uploaded/${encodedId}" var="postPath"/>
+<c:url value="/upload-result/${encodedId}" var="postPath"/>
 <div id="wrapper">
     <jsp:include page="fragments/sidebar-fragment.jsp" />
     <div id="content-wrapper" class="main-container d-flex flex-column">

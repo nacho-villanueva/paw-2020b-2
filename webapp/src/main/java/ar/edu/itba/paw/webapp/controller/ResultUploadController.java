@@ -55,7 +55,7 @@ public class ResultUploadController {
 
     //
 
-    @RequestMapping(value = "/result-uploaded/{encodedId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload-result/{encodedId}", method = RequestMethod.POST)
     public ModelAndView submit(@PathVariable("encodedId") final String encodedId, @Valid @ModelAttribute ResultForm resultForm, BindingResult bindingResult, HttpServletRequest request) {
         if(bindingResult.hasErrors()) {
             return createUploadResultView(encodedId, resultForm);
@@ -76,7 +76,7 @@ public class ResultUploadController {
                             resultForm.getResponsible_name(),
                             resultForm.getResponsible_licence_number());
                 }
-                return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(orderId));
+                return new ModelAndView("redirect:/view-study/" + urlEncoderService.encode(orderId));
             } catch (IOException e){
                 throw new UploadedFileFailedToLoadException();
             }
