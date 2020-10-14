@@ -37,7 +37,7 @@ public class StudyTypeJdbcDao implements StudyTypeDao{
 
     @Override
     public Optional<StudyType> findByName(String name) {
-        return jdbcTemplate.query("SELECT * FROM medical_studies WHERE name = ?", new Object[]{name}, STUDY_TYPE_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM medical_studies WHERE lower(name) = lower(?)", new Object[]{name}, STUDY_TYPE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -63,8 +63,7 @@ public class StudyTypeJdbcDao implements StudyTypeDao{
         return this.register(name);
     }
 
-    @Override
-    public StudyType register(final String name) {
+    private StudyType register(final String name) {
         Map<String, Object> insertMap = new HashMap<>();
         insertMap.put("name",name);
 

@@ -5,7 +5,7 @@
 <c:url var="post_edit_profile_user" value="/profile/edit/clinic"/>
 <f:form action="${post_edit_profile_user}" method="post" id="editClinic" modelAttribute="editClinicForm" enctype="application/x-www-form-urlencoded">
 
-    <table class="table table-borderless table-responsive">
+    <table class="table table-borderless table-responsive" style="overflow:hidden;">
         <tbody>
 
         <tr>

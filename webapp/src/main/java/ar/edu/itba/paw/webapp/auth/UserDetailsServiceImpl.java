@@ -33,9 +33,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         switch (user.getRole()) {
             case MEDIC_ROLE_ID:
+                if(!user.isVerifying()) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_VERIFIED"));
+                }
                 authorities.add(new SimpleGrantedAuthority("ROLE_MEDIC"));
                 break;
             case CLINIC_ROLE_ID:
+                if(!user.isVerifying()) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_VERIFIED"));
+                }
                 authorities.add(new SimpleGrantedAuthority("ROLE_CLINIC"));
                 break;
             case ADMIN_ROLE_ID:

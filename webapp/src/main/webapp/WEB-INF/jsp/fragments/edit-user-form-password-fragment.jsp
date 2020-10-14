@@ -21,9 +21,9 @@
             <td><spring:message code="profile-edit.form.user.newPassword"/></td>
             <td class="output">
                 <fieldset>
-                    <f:input type="password" cssClass="form-control" path="newPassword"
+                    <f:input type="password" cssClass="form-control" path="newPassword.password"
                              placeholder="${placeholderPassword}"/>
-                    <f:errors path="newPassword" cssClass="text-danger" element="small"/>
+                    <f:errors path="newPassword.password" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
@@ -31,9 +31,10 @@
             <td><spring:message code="profile-edit.form.user.newPasswordRepeat"/></td>
             <td class="output">
                 <fieldset>
-                    <f:input type="password" cssClass="form-control" path="newPasswordRepeat"
+                    <f:input type="password" cssClass="form-control" path="newPassword.confirmPassword"
                              placeholder="${placeholderPassword}"/>
-                    <f:errors path="newPasswordRepeat" cssClass="text-danger" element="small"/>
+                    <f:errors path="newPassword.confirmPassword" cssClass="text-danger" element="small"/>
+                    <f:errors path="newPassword" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>

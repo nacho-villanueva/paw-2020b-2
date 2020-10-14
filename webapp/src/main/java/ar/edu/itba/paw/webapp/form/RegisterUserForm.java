@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validators.PasswordMatches;
 import ar.edu.itba.paw.webapp.form.validators.UserNotExist;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,9 +17,9 @@ public class RegisterUserForm {
     @Email
     private String email;
 
-    @NotNull
-    @Size(min = 6, max = 100)
-    private String password;
+    @Valid
+    @PasswordMatches
+    private PasswordField passwordField;
 
     public RegisterUserForm(){
 
@@ -30,11 +33,11 @@ public class RegisterUserForm {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public PasswordField getPasswordField() {
+        return passwordField;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordField(PasswordField password) {
+        this.passwordField = password;
     }
 }

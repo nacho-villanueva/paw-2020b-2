@@ -198,22 +198,6 @@ public class MedicalFieldJdbcDaoTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, MEDICAL_FIELDS_TABLE_NAME));
     }
 
-    @Test
-    public void testRegisterValid() {
-        final MedicalField medicalField = dao.register(FIELD_NAME);
-
-        Assert.assertNotNull(medicalField);
-        Assert.assertEquals(FIELD_NAME,medicalField.getName());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,MEDICAL_FIELDS_TABLE_NAME));
-    }
-
-    @Test(expected = DuplicateKeyException.class)
-    public void testRegisterAlreadyExists() {
-        insertTestField();
-
-        dao.register(FIELD_NAME);
-    }
-
     private int insertTestField() {
         return insertField(FIELD_NAME);
     }

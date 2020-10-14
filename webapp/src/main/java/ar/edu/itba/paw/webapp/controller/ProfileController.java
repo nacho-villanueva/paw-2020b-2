@@ -143,7 +143,7 @@ public class ProfileController {
             return mav;
         }
 
-        userService.updatePassword(loggedUser(),editUserPasswordForm.getNewPassword());
+        userService.updatePassword(loggedUser(),editUserPasswordForm.getNewPassword().getPassword());
 
         ModelAndView mav = new ModelAndView("redirect:/profile");
 

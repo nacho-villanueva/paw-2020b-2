@@ -75,8 +75,8 @@
                 <div class="card-body">
                     <p class="card-title h4"><spring:message code="my-studies.filters-card.title"/></p>
                     <hr/>
-                    <c:url var="filter" value="/filter-search"/>
-                    <f:form action="${filter}" method="get" modelAttribute="filterForm">
+                    <c:url var="filter" value="/my-orders"/>
+                    <f:form enctype="application/x-www-form-urlencoded" action="${filter}" method="get" modelAttribute="filterForm">
                         <fieldset>
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.studytype"/></label>
                             <spring:message code="my-studies.filters-card.select.title.studytype" var="selectStudyTitle"/>
@@ -122,13 +122,17 @@
                             </div>
                         </fieldset>
                         <div class="row justify-content-center">
-                            <spring:message code="my-studies.filters-card.search" var="searchValue"/>
-                            <input type="submit" id="search" class="row btn btn-lg action-btn" value="${searchValue}">
+                            <f:button type="submit" name="submit" formenctype="application/x-www-form-urlencoded" value="search" id="searchButton" class="row btn btn-lg action-btn">
+                                <spring:message code="my-studies.filters-card.search"/>
+                            </f:button>
+                        </div>
+                        <div class="row justify-content-center">
+                            <f:button type="submit" name="submit" value="reset" id="resetButton" class="row btn btn-outline-secondary">
+                                <spring:message code="my-studies.filters-card.reset"/>
+                            </f:button>
                         </div>
                     </f:form>
-                    <div class="row justify-content-center">
-                        <a href="${reloadPath}" type="reset" role="button" class="row btn btn-outline-secondary"><spring:message code="my-studies.filters-card.reset"/></a>
-                    </div>
+
                 </div>
             </div>
         </div>

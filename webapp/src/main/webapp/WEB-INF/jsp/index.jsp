@@ -76,13 +76,14 @@
                         <fieldset class="form-group">
                             <label for="registerPassword" class="bmd-label-static"><spring:message code="index.body.card.registerForm.label.password"/></label>
                             <spring:message code="index.body.card.registerForm.label.password" var="registerPassword"/>
-                            <f:input type="password" path="password" cssClass="form-control" cssErrorClass="form-control is-invalid" id="registerPassword" required="required" placeholder="${registerPassword}" />
-                            <f:errors path="password" cssClass="invalid-feedback" element="small"/>
+                            <f:input type="password" path="passwordField.password" cssClass="form-control" cssErrorClass="form-control is-invalid" id="registerPassword" required="required" placeholder="${registerPassword}" />
+                            <f:errors path="passwordField.password" cssClass="invalid-feedback" element="small"/>
                         </fieldset>
                         <fieldset class="form-group">
                             <label for="registerPasswordConfirm" class="bmd-label-static"><spring:message code="index.body.card.registerForm.label.repeatPassword"/></label>
                             <spring:message code="index.body.card.registerForm.label.repeatPassword" var="registerRepeatPassword"/>
-                            <input type="password" class="form-control" required id="registerPasswordConfirm" placeholder="${registerRepeatPassword}" />
+                            <f:input path="passwordField.confirmPassword" type="password" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="registerPasswordConfirm" placeholder="${registerRepeatPassword}" />
+                            <f:errors path="passwordField" cssClass="text-danger" element="small"/>
                         </fieldset>
                         <div class="row justify-content-center">
                             <input type="submit" class="row btn btn-lg action-btn" value="<spring:message code="index.body.card.registerForm.submit"/>"/>
@@ -96,6 +97,5 @@
 </div>
 
 <%@ include file="fragments/include-scripts.jsp"%>
-<script src="<c:url value="/resources/js/LoginFormValidations.js"/>"></script>>
 </body>
 </html>

@@ -38,9 +38,4 @@ public class MedicalFieldServiceImpl implements MedicalFieldService {
     public MedicalField findOrRegister(String name) {
         return dao.findOrRegister(name);
     }
-
-    @Override
-    public MedicalField register(String name) {
-        return dao.register(name);
-    }
 }

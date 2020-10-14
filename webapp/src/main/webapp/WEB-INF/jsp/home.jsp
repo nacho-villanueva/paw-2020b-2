@@ -26,9 +26,21 @@
 
         <div class="pl-5">
             <div class="my-4 py-5">
-                <p class="h5 lead anim-content">Welcome back, </p><p class="h4 anim-content"><c:out value="${loggedUser.email}" /></p>
+                <p class="h4 lead anim-content"><spring:message code="home.body.greeting" arguments="${loggedUser.email}"/></p>
             </div>
         </div>
+
+        <c:if test="${loggedUser.isVerifying() eq true}">
+            <div class="row justify-content-center mt-0 mb-4 anim-content">
+                <div class="alert alert-info pb-3" role="alert">
+                    <h4 class="alert-heading"><spring:message code="home.body.verifying.title"/></h4>
+                    <p><spring:message code="home.body.verifying.text1"/><br/>
+                        <spring:message code="home.body.verifying.text2"/></p>
+                    <hr>
+                    <p class="mb-0"><spring:message code="home.body.verifying.text3"/></p>
+                </div>
+            </div>
+        </c:if>
 
         <c:choose>
             <c:when test="${has_studies != true}">
@@ -41,7 +53,7 @@
                 <div class="col">
                     <div class="card bg-light anim-content">
                         <div class="card-body">
-                            <p class="card-title h4">Your Orders</p>
+                            <p class="card-title h4"><spring:message code="home.body.card.studies.title"/></p>
                             <div class="list-group">
                                 <c:forEach items="${orders}" var="o">
                                     <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">

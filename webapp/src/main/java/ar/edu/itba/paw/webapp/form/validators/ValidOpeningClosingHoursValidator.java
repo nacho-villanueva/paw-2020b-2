@@ -38,7 +38,15 @@ public class ValidOpeningClosingHoursValidator implements ConstraintValidator<Va
     }
 
     private boolean isValidHour(String hourStr){
+
+        if(!hourStr.contains(":"))
+            return false;
+
         String[] time = hourStr.split(":");
+
+        if(time.length!=2)
+            return false;
+
         int hour = Integer.parseInt(time[0]);
         int minutes = Integer.parseInt(time[1]);
         return hour >= 0 && hour <= 24 && minutes >= 0 && minutes <= 59;

@@ -76,16 +76,12 @@ public class OrderController {
                                                 @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm,
                                                 @ModelAttribute("orderForm") OrderForm orderForm){
         if (bindingResult.hasErrors()) {
-            ModelAndView mav = new ModelAndView("create-order");
-
-            Optional<Medic> m = medicService.findByUserId(loggedUser().getId());
-            if(m.isPresent())
-                mav.addObject("loggedMedic", m.get());
-            else
-                throw new MedicNotFoundException();
-
-            mav.addObject("studiesList", studyTypeService.getAll());
-            return mav;
+            ModelAndView errorMav = new ModelAndView("create-order");
+            if(medicService.findByUserId(loggedUser().getId()).isPresent())
+                errorMav.addObject("loggedMedic", medicService.findByUserId(loggedUser().getId()).get());
+            errorMav.addObject("studiesList", studyTypeService.getAll());
+            errorMav.addObject("clinicsList", clinicService.getAll());
+            return errorMav;
         }
 
         ModelAndView mav = new ModelAndView("/advanced-search-clinic");

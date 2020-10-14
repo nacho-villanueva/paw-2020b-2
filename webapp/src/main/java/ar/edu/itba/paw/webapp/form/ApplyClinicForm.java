@@ -4,12 +4,21 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class ApplyClinicForm {
 
     @NotBlank
-    private String name, telephone;
+    private String name;
+
+    @NotBlank
+    @Pattern(regexp = "\\+?[0-9]+")
+    private String telephone;
+
+    @NotEmpty
     private Integer[] available_studies;
 
     private String accepted_plans;

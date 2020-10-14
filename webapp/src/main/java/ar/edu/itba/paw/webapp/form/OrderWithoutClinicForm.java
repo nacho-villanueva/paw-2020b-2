@@ -1,24 +1,20 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validators.ValidStudyTypeId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 public class OrderWithoutClinicForm {
 
-    @Min(0)
     private Integer medicId;
 
-    @Min(1)
+    @ValidStudyTypeId
     private Integer studyId;
 
     private String description;
 
-    @NotBlank
     private String patient_insurance_plan;
-    @NotNull
+
     private String patient_insurance_number;
 
     @NotBlank
