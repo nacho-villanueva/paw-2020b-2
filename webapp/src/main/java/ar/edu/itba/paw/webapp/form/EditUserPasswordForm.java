@@ -1,45 +1,23 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validators.FieldMatch;
 import ar.edu.itba.paw.webapp.form.validators.PasswordIsCorrect;
-import ar.edu.itba.paw.webapp.form.validators.UserNotExist;
-import org.hibernate.validator.constraints.Email;
+import ar.edu.itba.paw.webapp.form.validators.PasswordMatches;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
-@FieldMatch(first = "newPasswordRepeat", second = "newPassword", message = "Passwords don't match")
 public class EditUserPasswordForm {
 
-    @NotNull
-    @Size(min = 6, max = 100)
-    private String newPassword;
-
-    @NotNull
-    private String newPasswordRepeat;
+    @Valid
+    @PasswordMatches
+    private PasswordField newPassword;
 
     @PasswordIsCorrect
-    @NotNull
+    @NotBlank
     private String password;
 
     public EditUserPasswordForm(){
-
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public String getNewPasswordRepeat() {
-        return newPasswordRepeat;
-    }
-
-    public void setNewPasswordRepeat(String newPasswordRepeat) {
-        this.newPasswordRepeat = newPasswordRepeat;
+        newPassword = new PasswordField();
     }
 
     public String getPassword() {
@@ -48,5 +26,13 @@ public class EditUserPasswordForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public PasswordField getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(PasswordField newPassword) {
+        this.newPassword = newPassword;
     }
 }
