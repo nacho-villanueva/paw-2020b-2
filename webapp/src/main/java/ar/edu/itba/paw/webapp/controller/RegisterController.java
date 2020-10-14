@@ -148,9 +148,8 @@ public class RegisterController {
         }
 
         ClinicHours clinicHours = new ClinicHours();
-        clinicHours.setDays(applyClinicForm.getOpen_days());
-        clinicHours.setOpen_hours(applyClinicForm.getClinicHoursForm().getOpening_time());
-        clinicHours.setClose_hours(applyClinicForm.getClinicHoursForm().getClosing_time());
+        Set<Integer> daysSet = new HashSet<>(Arrays.asList(applyClinicForm.getOpen_days()));
+        clinicHours.setDaysHours(daysSet,applyClinicForm.getClinicHoursForm().getClosing_time(),applyClinicForm.getClinicHoursForm().getClosing_time());
 
         Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAccepted_plans_List())),clinicHours);
 

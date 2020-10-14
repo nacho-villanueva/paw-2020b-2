@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class ClinicHours {
     private static final int DAYS_OF_WEEK = 7;
@@ -16,6 +18,9 @@ public class ClinicHours {
     public static final int THURSDAY = 4;
     public static final int FRIDAY = 5;
     public static final int SATURDAY = 6;
+
+    private static final String HOUR_REGEX = "^((?:2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]|24:00:00)$";
+    private final Pattern HOUR_PATTERN = Pattern.compile(HOUR_REGEX);
 
     private final boolean[] days = new boolean[DAYS_OF_WEEK];
     private final Time[] open_hours = new Time[DAYS_OF_WEEK];
@@ -94,22 +99,58 @@ public class ClinicHours {
         return stime;
     }
 
-    public void setOpen_hours(String[] hours){
+    public void setDaysHours(Set<Integer> daysSet, String[] open_hours, String[] close_hours) {
+        if(validInput(daysSet,open_hours,close_hours)) {
+            this.setDays(daysSet);
+            this.setOpen_hours(open_hours);
+            this.setClose_hours(close_hours);
+        }
+    }
+
+    private boolean validInput(Set<Integer> daysSet, String[] open_hours, String[] close_hours) {
+        boolean ret = true;
+        for(Integer i: daysSet) {
+            switch (i) {
+                case SUNDAY:
+                case MONDAY:
+                case TUESDAY:
+                case WEDNESDAY:
+                case THURSDAY:
+                case FRIDAY:
+                case SATURDAY:
+                    break;
+                default:
+                    ret = false;
+            }
+
+            if(open_hours[i] == null || !HOUR_PATTERN.matcher(open_hours[i]+":00").matches()) {
+                ret = false;
+            }
+
+            if(close_hours[i] == null || !HOUR_PATTERN.matcher(close_hours[i]+":00").matches()) {
+                ret = false;
+            }
+        }
+
+        return ret;
+    }
+
+    private void setOpen_hours(String[] hours){
         for(int i = 0; i < DAYS_OF_WEEK; i++){
             if(!hours[i].equals("") && hours[i] != null)
                 open_hours[i] = Time.valueOf(hours[i]+":00");
         }
     }
 
-    public void setClose_hours(String[] hours){
+    private void setClose_hours(String[] hours){
         for(int i = 0; i < DAYS_OF_WEEK; i++){
             if(!hours[i].equals("") && hours[i] != null)
                 close_hours[i] = Time.valueOf(hours[i]+":00");
         }
     }
 
-    public void setDays(Integer[] daysList){
-        for(Integer i : daysList)
+    private void setDays(Set<Integer> daysSet){
+        for(Integer i : daysSet)
             days[i] = true;
     }
 

@@ -363,9 +363,8 @@ public class ProfileController {
         }
 
         ClinicHours clinicHours = new ClinicHours();
-        clinicHours.setDays(editClinicForm.getOpen_days());
-        clinicHours.setOpen_hours(editClinicForm.getClinicHoursForm().getOpening_time());
-        clinicHours.setClose_hours(editClinicForm.getClinicHoursForm().getClosing_time());
+        Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getOpen_days()));
+        clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getClosing_time(),editClinicForm.getClinicHoursForm().getClosing_time());
 
         clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAccepted_plans_List())),clinicHours,clinic.isVerified());
 
