@@ -107,13 +107,20 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="form-group">
-                                <label class="bmd-label-floating" for="medical_study"><spring:message code="advanced-search-clinic.form.medical_study.label"/></label>
-                                <div class="input-group">
-                                    <f:input type="text" class="form-control" id="medical_study" path="medical_study"/>
-                                    <f:errors path="medical_study"/>
-                                </div>
-                            </fieldset>
+                            <c:choose>
+                                <c:when test="${not empty orderForm}">
+                                    <f:input path="medical_study" type="hidden" id="medical_study"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <fieldset class="form-group">
+                                        <label class="bmd-label-floating" for="medical_study"><spring:message code="advanced-search-clinic.form.medical_study.label"/></label>
+                                        <div class="input-group">
+                                            <f:input type="text" class="form-control" id="medical_study" path="medical_study"/>
+                                            <f:errors path="medical_study"/>
+                                        </div>
+                                    </fieldset>
+                                </c:otherwise>
+                            </c:choose>
 
                             <fieldset>
                                 <spring:message code="advanced-search-clinic.form.fromTime.placeholder" var="placeholderOT"/>

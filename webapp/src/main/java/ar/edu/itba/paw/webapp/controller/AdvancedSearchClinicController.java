@@ -47,7 +47,6 @@ public class AdvancedSearchClinicController {
         advancedSearchClinicForm.resetValues();
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-        mav.addObject("studiesList",studyTypeService.getAll());
         mav.addObject("clinicsList",clinicService.getAll());
 
         if(loggedUser() == null){
@@ -80,7 +79,6 @@ public class AdvancedSearchClinicController {
         }
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-        mav.addObject("studiesList",studyTypeService.getAll());
         mav.addObject("clinicsList",clinicsList);
 
         if(loggedUser() == null){

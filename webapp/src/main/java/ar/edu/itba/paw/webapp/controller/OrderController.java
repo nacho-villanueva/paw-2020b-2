@@ -103,9 +103,15 @@ public class OrderController {
         orderForm.setPatientEmail(orderWithoutClinicForm.getPatientEmail());
         orderForm.setPatientName(orderWithoutClinicForm.getPatientName());
 
+        advancedSearchClinicForm.setMedical_plan(orderForm.getPatient_insurance_plan());
+        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm));
+        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+                advancedSearchClinicForm.getClinicHours(),
+                advancedSearchClinicForm.getMedical_plan(),
+                advancedSearchClinicForm.getMedical_study());
+
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-        mav.addObject("studiesList",studyTypeService.getAll());
-        mav.addObject("clinicsList",clinicService.getAll());
+        mav.addObject("clinicsList",clinicsList);
         mav.addObject("studyName", studyNameFromOrderForm(orderForm));
 
 
@@ -122,7 +128,6 @@ public class OrderController {
 
         final ModelAndView mav = new ModelAndView("/advanced-search-clinic");
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-        mav.addObject("studiesList",studyTypeService.getAll());
 
         orderForm.setMedicId(advancedSearchClinicForm.getMedicId());
         orderForm.setStudyId(advancedSearchClinicForm.getStudyId());
@@ -149,6 +154,7 @@ public class OrderController {
             return mav;
         }
 
+        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm));
         clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
                 advancedSearchClinicForm.getClinicHours(),
                 advancedSearchClinicForm.getMedical_plan(),
@@ -171,7 +177,6 @@ public class OrderController {
         final ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-        mav.addObject("studiesList",studyTypeService.getAll());
 
         advancedSearchClinicForm.resetValues();
 
@@ -191,7 +196,14 @@ public class OrderController {
         orderWithoutClinicForm.setPatientEmail(advancedSearchClinicForm.getPatientEmail());
         orderWithoutClinicForm.setPatientName(advancedSearchClinicForm.getPatientName());
 
-        mav.addObject("clinicsList", clinicService.getAll());
+        advancedSearchClinicForm.setMedical_plan(orderForm.getPatient_insurance_plan());
+        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm));
+        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+                advancedSearchClinicForm.getClinicHours(),
+                advancedSearchClinicForm.getMedical_plan(),
+                advancedSearchClinicForm.getMedical_study());
+
+        mav.addObject("clinicsList", clinicsList);
 
         mav.addObject("studyName", studyNameFromOrderForm(orderForm));
 
@@ -224,7 +236,6 @@ public class OrderController {
             ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
             mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
-            mav.addObject("studiesList",studyTypeService.getAll());
             mav.addObject("clinicsList",clinicService.getAll());
             mav.addObject("clinicUnselected",true);
 
