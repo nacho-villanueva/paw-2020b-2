@@ -38,7 +38,7 @@ public class AdvancedSearchClinicController {
     @Autowired
     private ClinicService clinicService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,params = {"submit!=search"})
     public ModelAndView getAllClinics(@ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm) {
 
 

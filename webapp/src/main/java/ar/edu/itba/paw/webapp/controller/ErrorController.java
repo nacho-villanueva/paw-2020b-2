@@ -16,6 +16,15 @@ public class ErrorController {
     @Autowired
     private MessageSource messageSource;
 
+    @RequestMapping("/400")
+    @ResponseStatus(code=HttpStatus.BAD_REQUEST)
+    public ModelAndView invalidRequest(Locale locale) {
+        final ModelAndView mav = new ModelAndView("error");
+        mav.addObject("errorNumber", HttpStatus.BAD_REQUEST.value());
+        mav.addObject("errorText",messageSource.getMessage("error.400",null,locale));
+        return mav;
+    }
+
     @RequestMapping("/403")
     @ResponseStatus(code=HttpStatus.FORBIDDEN)
     public ModelAndView forbidden(Locale locale) {
