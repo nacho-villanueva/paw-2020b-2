@@ -9,7 +9,6 @@
 </head>
 <body>
 <c:url value="/" var="indexPath"/>
-<c:set value="500" var="defaultErrorNumber"/>
 <spring:message code="error.500" var="defaultErrorText"/>
 <c:set value="${empty errorNumber?500:errorNumber}" var="errorNumber"/>
 <c:set value="${empty errorText?defaultErrorText:errorText}" var="errorText"/>

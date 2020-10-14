@@ -112,4 +112,8 @@ public class ClinicHours {
         for(Integer i : daysList)
             days[i] = true;
     }
+
+    public static int getDaysOfWeek() {
+        return DAYS_OF_WEEK;
+    }
 }

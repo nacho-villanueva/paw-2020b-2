@@ -77,13 +77,13 @@ public class ProfileController {
                 mav.addObject("editSuccess",message);
         }
 
-        addUser(mav);
+        addUser(mav, locale);
 
         return mav;
     }
 
     @RequestMapping(value = "/edit/user/email",method = RequestMethod.GET)
-    public ModelAndView editProfileUserGet(@ModelAttribute("editUserEmailForm") EditUserEmailForm editUserEmailForm){
+    public ModelAndView editProfileUserGet(@ModelAttribute("editUserEmailForm") EditUserEmailForm editUserEmailForm, Locale locale){
         final ModelAndView mav = new ModelAndView("profile-edit");
 
         mav.addObject("role","user");
@@ -119,7 +119,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/edit/user/pass",method = RequestMethod.GET)
-    public ModelAndView editProfileUserGet(@ModelAttribute("editUserPasswordForm")EditUserPasswordForm editUserPasswordForm){
+    public ModelAndView editProfileUserGet(@ModelAttribute("editUserPasswordForm")EditUserPasswordForm editUserPasswordForm,Locale locale){
         final ModelAndView mav = new ModelAndView("profile-edit");
 
         mav.addObject("role","user");
@@ -400,7 +400,7 @@ public class ProfileController {
         }
     }
 
-    private void addUser(ModelAndView mav){
+    private void addUser(ModelAndView mav, Locale locale){
 
         User user = loggedUser();
 
@@ -430,10 +430,15 @@ public class ProfileController {
                         Clinic clinic = clinicOptional.get();
                         mav.addObject("clinic", clinic);
 
-                        HashMap<String, String> openDayHour = new HashMap<>();
-                        for(int i = 0; i < 7; i++){
+                        mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
+
+                        HashMap<String, String[]> openDayHour = new HashMap<>();
+
+                        int maxDays = ClinicHours.getDaysOfWeek();
+                        for(int i = 0; i < maxDays; i++){
                             if(clinic.getHours().getDays()[i]){
-                                openDayHour.put(messageSource.getMessage("days.day-" + i, null, Locale.forLanguageTag(loggedUser().getLocale())), clinic.getHours().getClose_hours_asString()[i] + "hs - " + clinic.getHours().getOpen_hours_asString()[i] + "hs");
+                                String[] val = {clinic.getHours().getOpen_hours_asString()[i],clinic.getHours().getClose_hours_asString()[i]};
+                                openDayHour.put(String.valueOf(i), val);
                             }
                         }
 

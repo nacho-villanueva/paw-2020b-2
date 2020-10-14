@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Clinic;
+import ar.edu.itba.paw.model.ClinicHours;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.StudyTypeService;
@@ -45,8 +46,8 @@ public class AdvancedSearchClinicController {
 
         advancedSearchClinicForm.resetValues();
 
+        mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
         mav.addObject("studiesList",studyTypeService.getAll());
-
         mav.addObject("clinicsList",clinicService.getAll());
 
         if(loggedUser() == null){
@@ -68,6 +69,7 @@ public class AdvancedSearchClinicController {
         Collection<Clinic> clinicsList = clinicService.getAll();
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
             mav.addObject("errorAlert",true);
         } else {
 
@@ -77,9 +79,8 @@ public class AdvancedSearchClinicController {
                     advancedSearchClinicForm.getMedical_study());
         }
 
-
+        mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
         mav.addObject("studiesList",studyTypeService.getAll());
-
         mav.addObject("clinicsList",clinicsList);
 
         if(loggedUser() == null){

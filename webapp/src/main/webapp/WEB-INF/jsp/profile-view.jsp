@@ -75,132 +75,137 @@
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.user.email.label"/></td>
                                             <td class="output"><c:out value="${loggedUser.email}"/></td>
+                                            <td>
+                                                <a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/email"/>"><spring:message code="profile-view.body.button.edit.user.email"/> </a>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.user.password.label"/></td>
                                             <td class="output"><spring:message code="profile-view.body.tab.user.password.data"/></td>
+                                            <td><a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/pass"/>"><spring:message code="profile-view.body.button.edit.user.password"/> </a></td>
                                         </tr>
 
                                     </tbody>
                                 </table>
-
-                                <hr class="divider my-4">
-
-                                <div class="row justify-content-center">
-                                    <a class="btn btn-lg action-btn" style="width: inherit;" href="<c:url value="/profile/edit/user/email"/>"><spring:message code="profile-view.body.button.edit.user.email"/> </a>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/user/pass"/>"><spring:message code="profile-view.body.button.edit.user.password"/> </a>
-                                </div>
                             </div>
 
-                            <div id="patient" class="tab-pane fade in show">
+                            <c:if test="${not empty patient}">
+                                <div id="patient" class="tab-pane fade in show">
 
-                                <table class="table table-borderless table-responsive">
-                                    <tbody>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.patient.name.label"/></td>
-                                        <td class="output"><c:out value="${patient.name}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.patient.medic_plan.label"/></td>
-                                        <td class="output"><c:out value="${patient.medic_plan}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.patient.medic_plan_number.label"/></td>
-                                        <td class="output"><c:out value="${patient.medic_plan_number}"/></td>
-                                    </tr>
+                                    <table class="table table-borderless table-responsive">
+                                        <tbody>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.patient.name.label"/></td>
+                                            <td class="output"><c:out value="${patient.name}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan.label"/></td>
+                                            <td class="output"><c:out value="${patient.medic_plan}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan_number.label"/></td>
+                                            <td class="output"><c:out value="${patient.medic_plan_number}"/></td>
+                                        </tr>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
-                                <hr class="divider my-4">
+                                    <hr class="divider my-4">
 
-                                <div class="row justify-content-center">
-                                    <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/patient"/>"><spring:message code="profile-view.body.button.edit.patient"/> </a>
+                                    <div class="row justify-content-center">
+                                        <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/patient"/>"><spring:message code="profile-view.body.button.edit.patient"/> </a>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:if>
 
-                            <div id="medic" class="tab-pane fade in">
+                            <c:if test="${not empty medic}">
+                                <div id="medic" class="tab-pane fade in">
 
-                                <table class="table table-borderless table-responsive">
-                                    <tbody>
+                                    <table class="table table-borderless table-responsive">
+                                        <tbody>
 
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.name.label"/></td>
-                                        <td class="output"><c:out value="${medic.name}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.telephone.label"/></td>
-                                        <td class="output"><c:out value="${medic.telephone}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.identification.label"/></td>
-                                        <td class="output">
-                                            <img src="${imageAssets}/medic/${loggedUser.id}?attr=identification" class="align-self-end ml-3"
-                                                 alt="<spring:message code="profile-view.body.tab.medic.identification.altText"/>" style="width: 10rem;"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
-                                        <td class="output"><c:out value="${medic.licence_number}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.medical_fields.label"/></td>
-                                        <td class="output"><c:forEach items="${medic.medical_fields}" var="medicalField"><p><c:out value="${medicalField.name}"/></p></c:forEach></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.medic.verified.label"/></td>
-                                        <td class="output"><i class="fas <c:choose><c:when test="${medic.verified}">verified fa-check</c:when><c:otherwise>nverified fa-times</c:otherwise></c:choose> fa-lg"></i></td>
-                                    </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.name.label"/></td>
+                                            <td class="output"><c:out value="${medic.name}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.telephone.label"/></td>
+                                            <td class="output"><c:out value="${medic.telephone}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.identification.label"/></td>
+                                            <td class="output">
+                                                <img src="${imageAssets}/medic/${loggedUser.id}?attr=identification" class="align-self-end ml-3"
+                                                     alt="<spring:message code="profile-view.body.tab.medic.identification.altText"/>" style="width: 10rem;"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
+                                            <td class="output"><c:out value="${medic.licence_number}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.medical_fields.label"/></td>
+                                            <td class="output"><c:forEach items="${medic.medical_fields}" var="medicalField"><p><c:out value="${medicalField.name}"/></p></c:forEach></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.medic.verified.label"/></td>
+                                            <td class="output"><i class="fas <c:choose><c:when test="${medic.verified}">verified fa-check</c:when><c:otherwise>nverified fa-times</c:otherwise></c:choose> fa-lg"></i></td>
+                                        </tr>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
-                                <div class="row justify-content-center">
-                                    <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/medic"/>"><spring:message code="profile-view.body.button.edit.medic"/> </a>
+                                    <div class="row justify-content-center">
+                                        <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/medic"/>"><spring:message code="profile-view.body.button.edit.medic"/> </a>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:if>
 
-                            <div id="clinic" class="tab-pane fade in show">
+                            <c:if test="${not empty clinic}">
+                                <div id="clinic" class="tab-pane fade in show">
 
-                                <table class="table table-borderless table-responsive">
-                                    <tbody>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.name.label"/></td>
-                                        <td class="output"><c:out value="${clinic.name}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.telephone.label"/></td>
-                                        <td class="output"><c:out value="${clinic.telephone}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
-                                        <td><c:forEach items="${openDayHour}" var="h"><p><c:out value="${h.key}"/>:&emsp;<c:out value="${h.value}"/></p></c:forEach></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
-                                        <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
-                                        <td class="output"><c:forEach items="${clinic.medical_studies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
-                                    </tr>
-                                    <tr>
-                                        <td><spring:message code="profile-view.body.tab.clinic.verified.label"/></td>
-                                        <td class="output"><i class="fas <c:choose><c:when test="${clinic.verified}">verified fa-check</c:when><c:otherwise>nverified fa-times</c:otherwise></c:choose> fa-lg"></i></td>
-                                    </tr>
+                                    <table class="table table-borderless table-responsive">
+                                        <tbody>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.name.label"/></td>
+                                            <td class="output"><c:out value="${clinic.name}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.telephone.label"/></td>
+                                            <td class="output"><c:out value="${clinic.telephone}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
+                                            <td><c:forEach items="${openDayHour}" var="h">
+                                                <spring:message code="days.day-${h.key}" var="day"/>
+                                                <p><spring:message code="profile-view.body.tab.clinic.open_hours.format" arguments="${day},${h.value[0]},${h.value[1]}"/> </p>
+                                            </c:forEach></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
+                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
+                                            <td class="output"><c:forEach items="${clinic.medical_studies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
+                                        </tr>
+                                        <tr>
+                                            <td><spring:message code="profile-view.body.tab.clinic.verified.label"/></td>
+                                            <td class="output"><i class="fas <c:choose><c:when test="${clinic.verified}">verified fa-check</c:when><c:otherwise>nverified fa-times</c:otherwise></c:choose> fa-lg"></i></td>
+                                        </tr>
 
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
-                                <hr class="divider my-4">
+                                    <hr class="divider my-4">
 
-                                <div class="row justify-content-center">
-                                    <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/clinic"/>"><spring:message code="profile-view.body.button.edit.clinic"/> </a>
+                                    <div class="row justify-content-center">
+                                        <a class="btn btn-lg action-btn" href="<c:url value="/profile/edit/clinic"/>"><spring:message code="profile-view.body.button.edit.clinic"/> </a>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:if>
+
                         </div>
 
                         <div class="row justify-content-center">

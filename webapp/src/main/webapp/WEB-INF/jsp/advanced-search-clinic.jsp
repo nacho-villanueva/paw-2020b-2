@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/callout.css"/>">
 </head>
 <body>
+<c:set value="${empty daysOfWeek?7:daysOfWeek}" var="daysOfWeek"/>
 
 <!-- Page Wrapper -->
 <div id="wrapper">
+
 
     <c:if test="${empty notLogged}">
         <c:choose>
@@ -48,7 +50,16 @@
                             <c:otherwise><c:url var="formSubmitUrl" value="/advanced-search/clinic"/></c:otherwise>
                         </c:choose>
                         <f:form enctype="application/x-www-form-urlencoded" action="${formSubmitUrl}" method="get" modelAttribute="advancedSearchClinicForm">
-                            <p class="card-title h4"><spring:message code="advanced-search-clinic.body.title"/></p>
+                            <p class="card-title h4">
+                                <c:choose>
+                                    <c:when test="${not empty orderForm}">
+                                        <spring:message code="create-order.body.form.title2"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="advanced-search-clinic.body.title"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
                             <hr/>
 
                             <c:if test="${not empty orderForm}">
@@ -62,11 +73,11 @@
                             </c:if>
                             <c:if test="${not empty orderForm}">
                                 <div class="row justify-content-center">
-                                    <a class="btn btn-outline" data-toggle="collapse" href="#collapseInfo" role="button" aria-expanded="false" aria-controls="collapseInfo">
-                                        <spring:message code="advanced-search-clinic.form.order-info.label"/>
+                                    <a class="btn btn-outline" onclick="clickOnShowOrderButton(this);return false;" data-toggle="collapse" href="#collapseInfo" role="button" aria-expanded="true" aria-controls="collapseInfo">
+                                        <spring:message code="advanced-search-clinic.form.order-info.toggle-label"/>
                                     </a>
 
-                                    <div class="collapse" id="collapseInfo">
+                                    <div class="collapse show" id="collapseInfo">
                                         <div class="bs-callout bs-callout-med">
                                             <div class="row justify-content-start">
                                                 <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-name"/></p><c:out value="${orderForm.patientName}"/></div>
@@ -89,14 +100,6 @@
                             </fieldset>
 
                             <fieldset class="form-group">
-                                <label class="bmd-label-floating" for="medical_study"><spring:message code="advanced-search-clinic.form.medical_study.label"/></label>
-                                <div class="input-group">
-                                    <f:input type="text" class="form-control" id="medical_study" path="medical_study"/>
-                                    <f:errors path="medical_study"/>
-                                </div>
-                            </fieldset>
-
-                            <fieldset class="form-group">
                                 <label class="bmd-label-floating" for="medical_plan"><spring:message code="advanced-search-clinic.form.medical_plan.label"/></label>
                                 <div class="input-group">
                                     <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
@@ -104,67 +107,42 @@
                                 </div>
                             </fieldset>
 
+                            <fieldset class="form-group">
+                                <label class="bmd-label-floating" for="medical_study"><spring:message code="advanced-search-clinic.form.medical_study.label"/></label>
+                                <div class="input-group">
+                                    <f:input type="text" class="form-control" id="medical_study" path="medical_study"/>
+                                    <f:errors path="medical_study"/>
+                                </div>
+                            </fieldset>
+
                             <fieldset>
-                                <spring:message code="advanced-search-clinic.form.openTime.placeholder" var="placeholderOT"/>
-                                <spring:message code="advanced-search-clinic.form.closeTime.placeholder" var="placeholderCT"/>
+                                <spring:message code="advanced-search-clinic.form.fromTime.placeholder" var="placeholderOT"/>
+                                <spring:message code="advanced-search-clinic.form.toTime.placeholder" var="placeholderCT"/>
 
                                 <a class="btn btn-outline" data-toggle="collapse" href="#collapseHours" role="button" aria-expanded="false" aria-controls="collapseHours">
                                     <spring:message code="advanced-search-clinic.form.available_hours.label"/>
                                 </a>
+
 
                                 <div class="collapse" id="collapseHours">
                                     <table class="table table-scrollable">
                                         <thead>
                                         <tr>
                                             <th></th>
-                                            <th><spring:message code="advanced-search-clinic.form.opens.label"/></th>
-                                            <th><spring:message code="advanced-search-clinic.form.opening_time.label"/></th>
-                                            <th><spring:message code="advanced-search-clinic.form.closing_time.label"/></th>
+                                            <th><spring:message code="advanced-search-clinic.form.available.label"/></th>
+                                            <th><spring:message code="advanced-search-clinic.form.from_time.label"/></th>
+                                            <th><spring:message code="advanced-search-clinic.form.to_time.label"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.sunday"/> </th>
-                                            <th><f:checkbox id="sunday" path="sundayOpens"/></th>
-                                            <th><f:input id="sundayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="sundayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="sundayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="sundayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.monday"/> </th>
-                                            <th><f:checkbox id="monday" path="mondayOpens"/></th>
-                                            <th><f:input id="mondayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="mondayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="mondayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="mondayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.tuesday"/> </th>
-                                            <th><f:checkbox id="tuesday" path="tuesdayOpens"/></th>
-                                            <th><f:input id="tuesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="tuesdayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="tuesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="tuesdayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.wednesday"/> </th>
-                                            <th><f:checkbox id="wednesday" path="wednesdayOpens"/></th>
-                                            <th><f:input id="wednesdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="wednesdayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="wednesdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="wednesdayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.thursday"/> </th>
-                                            <th><f:checkbox id="thursday" path="thursdayOpens"/></th>
-                                            <th><f:input id="thursdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="thursdayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="thursdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="thursdayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.friday"/> </th>
-                                            <th><f:checkbox id="friday" path="fridayOpens"/></th>
-                                            <th><f:input id="fridayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="fridayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="fridayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="fridayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
-                                        <tr>
-                                            <th><spring:message code="advanced-search-clinic.form.day.saturday"/> </th>
-                                            <th><f:checkbox id="saturday" path="saturdayOpens"/></th>
-                                            <th><f:input id="saturdayOT" type="text" class="form-control" placeholder="${placeholderOT}" path="saturdayOpenTime" maxlength="5" cssClass="time-input"/></th>
-                                            <th><f:input id="saturdayCT" type="text" class="form-control" placeholder="${placeholderCT}" path="saturdayCloseTime" maxlength="5" cssClass="time-input"/></th>
-                                        </tr>
+                                            <c:forEach var = "day" begin = "0" end = "${daysOfWeek - 1}">
+                                                <tr>
+                                                    <th><spring:message code="days.day-${day}"/> </th>
+                                                    <th><f:checkbox id="sunday" path="isAvailable[${day}]"/></th>
+                                                    <th><f:input id="day-${day}-OT" type="text" class="form-control" placeholder="${placeholderOT}" path="availableTime.opening_time[${day}]" maxlength="5" cssClass="time-input"/></th>
+                                                    <th><f:input id="day-${day}-CT" type="text" class="form-control" placeholder="${placeholderCT}" path="availableTime.closing_time[${day}]" maxlength="5" cssClass="time-input"/></th>
+                                                </tr>
+                                            </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
@@ -191,9 +169,9 @@
                     <div class="card-body">
                         <p class="card-title h4"><spring:message code="advanced-search-clinic.results.title"/></p>
                         <hr/>
-                        <h4><spring:message code="advanced-search-clinic.list.title"/> </h4>
                         <div class="d-flex flex-row">
                             <div id="results" class="list-group result-section" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
+                                <h5 class="text-muted"><spring:message code="advanced-search-clinic.list.title"/> </h5>
                                 <c:if test="${clinicsList.size() eq 0}">
                                     <h3 class="text-center py-5 lead"><spring:message code="advanced-search.clinic.results.noResults"/></h3>
                                 </c:if>
@@ -203,7 +181,6 @@
                                             <a id="${clinic.user_id}" onclick="selectClinic(this);return false;" class="list-group-item list-group-item-action" data-toggle="tab" href="#clinic_${clinic.user_id}" role="tab" aria-controls="clinic_${clinic.user_id}" aria-selected="false">
                                                 <div class="justify-content-between">
                                                     <h5 class="mb-1"><c:out value="${clinic.name}"/></h5>
-                                                    <small><spring:message code="advanced-search-clinic.results.email" arguments="${clinic.email}"/></small>
                                                 </div>
                                             </a>
                                         </li>
@@ -212,21 +189,42 @@
                             </div>
                             <div id="data" class="data-section">
 
-                                <h4><spring:message code="create-order.body.form.clinic.title"/> </h4>
+                                <h5 class="text-muted"><spring:message code="create-order.body.form.clinic.title"/> </h5>
+                                <div class=""></div>
 
-                                <div id="noClinic">
-                                    <h5><spring:message code="advanced-search.clinic.selectedClinic.noClinic"/> </h5>
+                                <div id="noClinic" class="no-clinic">
+                                    <h4><spring:message code="advanced-search.clinic.selectedClinic.noClinic"/> </h4>
                                 </div>
 
                                 <div id="clinicSelected"class="tab-content">
                                     <c:forEach items="${clinicsList}" var="clinic">
                                         <div id="clinic_${clinic.user_id}" class="tab-pane fade tab-result">
-                                            <h5><c:out value="${clinic.name}"/></h5>
+                                            <h3><c:out value="${clinic.name}"/></h3>
                                             <table class="table table-borderless">
                                                 <tbody>
                                                 <tr>
+                                                    <td><spring:message code="profile-view.body.tab.user.email.label"/></td>
+                                                    <td class="output"><c:out value="${clinic.email}"/></td>
+                                                </tr>
+                                                <tr>
                                                     <td><spring:message code="profile-view.body.tab.clinic.telephone.label"/></td>
                                                     <td class="output"><c:out value="${clinic.telephone}"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
+                                                    <td>
+                                                        <c:forEach var="day" begin="0" end="${daysOfWeek - 1}">
+                                                            <c:if test="${clinic.hours.days[day]}">
+                                                                <spring:message code="days.day-${day}" var="dayName"/>
+                                                                <p><spring:message code="profile-view.body.tab.clinic.open_hours.format" arguments="${dayName},${clinic.hours.open_hours[day]},${clinic.hours.close_hours[day]}"/> </p>
+                                                            </c:if>
+
+                                                        </c:forEach>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
+                                                    <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                                 </tr>
                                                 <tr>
                                                     <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
@@ -297,9 +295,7 @@
             clinic.setAttribute("value",listItem.id);
         }
 
-
     }
 </script>
-
 </body>
 </html>

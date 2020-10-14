@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.model.ClinicHours;
+
 public class ClinicHoursForm {
     String[] opening_time;
     String[] closing_time;
 
     public ClinicHoursForm() {
+        this.opening_time = new String[ClinicHours.getDaysOfWeek()];
+        this.closing_time = new String[ClinicHours.getDaysOfWeek()];
     }
 
 
