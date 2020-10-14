@@ -147,6 +147,7 @@
                             <br>
                             <f:errors path="available_studies" cssClass="text-danger" element="small" />
                         </fieldset>
+                        <a href="<c:url value='/create-type' />"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
                         <br>
 
                         <!-- Accepted Medical Plans -->
