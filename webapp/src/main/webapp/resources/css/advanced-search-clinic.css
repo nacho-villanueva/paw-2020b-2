@@ -56,7 +56,6 @@ body {
     margin-top: 2em;
     margin-bottom: 2em;
     width: 30em;
-    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
 
 
@@ -77,7 +76,6 @@ body {
 .results-card {
     margin-top: 2em;
     width: 50em;
-    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
     min-height:42em;
     margin-bottom: 2em;
