@@ -1,15 +1,15 @@
-delete from results;
-delete from medical_orders;
-delete from clinic_available_studies;
-delete from medic_medical_fields;
-delete from clinic_hours;
-delete from clinic_accepted_plans;
-delete from medics;
-delete from medical_fields;
-delete from clinics;
-delete from medical_studies;
-delete from patients;
-delete from users;
+DROP TABLE IF EXISTS results CASCADE;
+DROP TABLE IF EXISTS medical_orders CASCADE;
+DROP TABLE IF EXISTS clinic_accepted_plans CASCADE;
+DROP TABLE IF EXISTS clinic_available_studies CASCADE;
+DROP TABLE IF EXISTS clinic_hours CASCADE;
+DROP TABLE IF EXISTS clinics CASCADE;
+DROP TABLE IF EXISTS medic_medical_fields CASCADE;
+DROP TABLE IF EXISTS medical_fields CASCADE;
+DROP TABLE IF EXISTS medical_studies CASCADE;
+DROP TABLE IF EXISTS medics CASCADE;
+DROP TABLE IF EXISTS patients CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
 
 insert into users(email,password,role,locale) values ('gjhonson@medtransfer.com','gjhonsonPass',4,'es-AR'),
