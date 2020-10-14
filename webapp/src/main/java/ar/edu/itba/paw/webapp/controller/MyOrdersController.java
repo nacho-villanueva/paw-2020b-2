@@ -47,7 +47,6 @@ public class MyOrdersController {
     @Autowired
     private OrderService orderService;
 
-    //first visit or reset
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView myOrders(@ModelAttribute("filterForm") FilterForm filterForm){
         ModelAndView mav = new ModelAndView("my-studies");
@@ -58,18 +57,6 @@ public class MyOrdersController {
 
         HashMap<OrderService.Parameters, String> parameters = filterForm.getParameters();
 
-        /*
-        if(dateString != null && !dateString.isEmpty())
-            parameters.put(OrderService.Parameters.DATE, dateString);
-        if(clinicString != null && !clinicString.isEmpty())
-            parameters.put(OrderService.Parameters.CLINIC, clinicString);
-        if(medicString != null && !medicString.isEmpty())
-            parameters.put(OrderService.Parameters.MEDIC, medicString);
-        if(studyString != null && !studyString.isEmpty())
-            parameters.put(OrderService.Parameters.STUDYTYPE, studyString);
-        if(patientString != null && !patientString.isEmpty())
-            parameters.put(OrderService.Parameters.PATIENT, patientString);
-        */
         listingSetup(mav, parameters);
 
         return mav;
@@ -112,10 +99,10 @@ public class MyOrdersController {
 
         }else if(user.isPatient()) {
             for (Order order : orders) {
-                if (!medicsList.contains(order.getMedic())) {
+                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
                     medicsList.add(order.getMedic());
                 }
-                if (!clinicsList.contains(order.getClinic())) {
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
                     clinicsList.add(order.getClinic());
                 }
 

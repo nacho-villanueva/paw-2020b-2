@@ -96,8 +96,6 @@ public class OrderServiceImpl implements OrderService {
         }
         if(parameters.containsKey(Parameters.PATIENT)){
             orders.removeIf(order -> !order.getPatient_email().equals(parameters.get(Parameters.PATIENT)));
-            //orders.removeIf(order -> userService.findByEmail(order.getPatient_email()).isPresent() && userService.findByEmail(order.getPatient_email()).get().getId() != Integer.parseInt(parameters.get(Parameters.PATIENT)));
-
         }
         if(parameters.containsKey(Parameters.DATE)){
             boolean wrong_formatting = false;
