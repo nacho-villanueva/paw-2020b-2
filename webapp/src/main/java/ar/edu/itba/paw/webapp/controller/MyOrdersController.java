@@ -36,9 +36,6 @@ public class MyOrdersController {
     private MedicService medicService;
 
     @Autowired
-    private StudyTypeService studyService;
-
-    @Autowired
     private ClinicService clinicService;
 
     @Autowired
