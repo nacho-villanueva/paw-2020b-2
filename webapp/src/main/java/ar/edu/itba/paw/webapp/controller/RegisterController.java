@@ -116,8 +116,8 @@ public class RegisterController {
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
                 applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
 
-        authWithoutPassword(loggedUser());
         mns.sendMedicApplicationValidatingMail(newMedic);
+        authWithoutPassword(loggedUser());
         return new ModelAndView("redirect:/home");
     }
 
@@ -153,9 +153,8 @@ public class RegisterController {
 
         Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAccepted_plans_List())),clinicHours);
 
-        authWithoutPassword(loggedUser());
         mns.sendClinicApplicationValidatingMail(newClinic);
-
+        authWithoutPassword(loggedUser());
         return new ModelAndView("redirect:/home");
     }
 

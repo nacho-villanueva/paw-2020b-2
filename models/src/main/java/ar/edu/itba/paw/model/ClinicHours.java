@@ -154,12 +154,6 @@ public class ClinicHours {
             days[i] = true;
     }
 
-    public void setDaysHours(final String[] openingHours, final String[] closingHours, Integer[] openDays){
-        setOpen_hours(openingHours);
-        setClose_hours(closingHours);
-        setDays(openDays);
-    }
-
     public static int getDaysOfWeek() {
         return DAYS_OF_WEEK;
     }
