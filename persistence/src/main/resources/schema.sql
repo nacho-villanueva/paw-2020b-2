@@ -1,9 +1,8 @@
--- noinspection SqlNoDataSourceInspectionForFile
 CREATE TABLE IF NOT EXISTS users (
     id serial primary key,
     email text not null unique,
     password text not null,
-    role int not null,                                   --Should be 1 for only PATIENT, 2 for MEDIC, 3 for CLINIC, 4 for UNDEFINED, 0 for ADMIN
+    role int not null,
     locale varchar(10) default 'en-US'
 );
 
@@ -11,7 +10,7 @@ CREATE TABLE IF NOT EXISTS clinics (
     user_id int not null unique,
     name text not null,
     telephone text,
-    verified boolean not null default false,        --Until verified by humans, it should remain false
+    verified boolean not null default false,
     foreign key(user_id) references users
 );
 
@@ -23,7 +22,7 @@ CREATE TABLE IF NOT EXISTS medical_studies (
 
 CREATE TABLE IF NOT EXISTS clinic_hours (
     clinic_id int not null,
-    day_of_week int not null,                   --0 Sunday to 6 Saturday
+    day_of_week int not null,
     open_time time not null,
     close_time time not null,
     primary key(clinic_id,day_of_week),
@@ -47,12 +46,12 @@ CREATE TABLE IF NOT EXISTS clinic_available_studies (
 
 CREATE TABLE IF NOT EXISTS medics (
     user_id int not null unique,
-    name text not null,         --Secretary might handle the medic info and use same account as a patient, so we keep the separate
+    name text not null,
     telephone text,
     identification_type text not null,
     identification bytea not null,
-    licence_number text not null,   --Should be unique, but if we think internationally maybe numbers collide
-    verified boolean not null default false,    --Until verified by humans, it should remain false
+    licence_number text not null,
+    verified boolean not null default false,
     foreign key(user_id) references users
 );
 
@@ -87,7 +86,7 @@ CREATE TABLE IF NOT EXISTS medical_orders (
    patient_email text not null,
    study_id int not null,
    description text,
-   identification_type text not null,       --We want to freeze info in time for the orders, so each order hold the plan/identification info used for it
+   identification_type text not null,
    identification bytea not null,
    medic_plan text,medic_plan_number text,
    foreign key(medic_id) references medics(user_id),
