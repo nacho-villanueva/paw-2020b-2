@@ -95,6 +95,7 @@
             <f:options items="${studiesList}" itemLabel="name" itemValue="id" />
         </f:select>
         <f:errors path="available_studies" cssClass="text-danger" element="small"/>
+        <a href="<c:url value='/create-type' />"><p><spring:message code="profile-edit.form.clinic.add_medical_study" /></p></a>
     </fieldset>
 
 
