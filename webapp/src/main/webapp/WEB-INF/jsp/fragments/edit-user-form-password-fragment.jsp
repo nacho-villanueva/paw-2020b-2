@@ -13,10 +13,11 @@
             <td class="output">
                 <c:out value="${loggedUser.email}"/>
             </td>
+        </tr>
+            <td></td>
             <td>
                 <a class="btn btn-outline-primary btn-sm" href="<c:url value="/profile/edit/user/email"/>"><spring:message code="profile-view.body.button.edit.user.email"/> </a>
             </td>
-        </tr>
         <tr>
             <td><spring:message code="profile-edit.form.user.newPassword"/></td>
             <td class="output">

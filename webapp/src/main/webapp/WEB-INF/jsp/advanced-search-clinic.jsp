@@ -138,9 +138,19 @@
                                             <c:forEach var = "day" begin = "0" end = "${daysOfWeek - 1}">
                                                 <tr>
                                                     <th><spring:message code="days.day-${day}"/> </th>
-                                                    <th><f:checkbox id="sunday" path="isAvailable[${day}]"/></th>
-                                                    <th><f:input id="day-${day}-OT" type="text" class="form-control" placeholder="${placeholderOT}" path="availableTime.opening_time[${day}]" maxlength="5" cssClass="time-input"/></th>
-                                                    <th><f:input id="day-${day}-CT" type="text" class="form-control" placeholder="${placeholderCT}" path="availableTime.closing_time[${day}]" maxlength="5" cssClass="time-input"/></th>
+                                                    <th><f:checkbox id="day" path="isAvailable[${day}]"/></th>
+                                                    <th>
+                                                        <fieldset>
+                                                            <f:input id="day-${day}-OT" type="text" class="form-control time-input" placeholder="${placeholderOT}" path="availableTime.opening_time[${day}]" maxlength="5" cssClass="form-control time-input"/>
+                                                            <f:errors path="availableTime.opening_time[${day}]" cssClass="text-danger" element="small" />
+                                                        </fieldset>
+                                                    </th>
+                                                    <th>
+                                                        <fieldset>
+                                                            <f:input id="day-${day}-CT" type="text" class="form-control time-input" placeholder="${placeholderCT}" path="availableTime.closing_time[${day}]" maxlength="5" cssClass="form-control time-input"/>
+                                                            <f:errors path="availableTime.closing_time[${day}]" cssClass="text-danger" element="small" />
+                                                        </fieldset>
+                                                    </th>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
@@ -249,8 +259,10 @@
                                         <f:input path="patientEmail" type="hidden" id="patientEmail"/>
                                         <f:input path="patientName" type="hidden" id="studyId"/>
 
+                                        <c:if test="${clinicUnselected}"><div class="alert alert-danger" role="alert"><f:errors path="clinicId"/> </div></c:if>
                                         <div class="row justify-content-center">
-                                            <f:button class="row btn btn-lg action-btn" type="submit" name="submit" value="create-order"><spring:message code="create-order.body.form.button.submit"/></f:button>
+
+                                            <f:button class="row btn btn-lg action-btn" type="submit" name="submit" disabled="true" id="createOrder" value="create-order"><spring:message code="create-order.body.form.button.submit"/></f:button>
                                         </div>
                                     </f:form>
                                     <f:form action="${formSubmitUrl}" method="post" modelAttribute="orderWithoutClinicForm">
@@ -266,11 +278,8 @@
                                         <div class="row justify-content-center">
                                             <f:button type="submit" name="submit" formmethod="post" value="back" id="backButton" class="row btn btn-outline-secondary">
                                                 <spring:message code="create-order.body.form.button.back"/>
+
                                             </f:button>
-                                        </div>
-
-
-                                        <c:if test="${clinicUnselected}"><div class="alert alert-danger" role="alert"><spring:message code="profile-edit.form.clinic.clinicUnselected"/></div></c:if>
                                     </f:form>
                                 </c:if>
                             </div>
@@ -293,6 +302,8 @@
         let clinic = document.getElementById("clinicId");
         if(clinic !== null){
             clinic.setAttribute("value",listItem.id);
+
+            document.getElementById("createOrder").disabled=false;
         }
 
     }
