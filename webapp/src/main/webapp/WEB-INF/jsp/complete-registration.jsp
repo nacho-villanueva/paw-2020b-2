@@ -26,15 +26,15 @@
                 <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-item nav-link active"
-                           id="patient-tab" data-toggle="tab" href="<c:url value="#patient"/>"><spring:message code="complete-registration.body.form.patient"/></a>
+                           id="patient-tab" data-toggle="tab" href="#patient"><spring:message code="complete-registration.body.form.patient"/></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           id="medic-tab" data-toggle="tab" href="<c:url value="#medic"/>"><spring:message code="complete-registration.body.form.medic"/></a>
+                           id="medic-tab" data-toggle="tab" href="#medic"><spring:message code="complete-registration.body.form.medic"/></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                           id="clinic-tab" data-toggle="tab" href="<c:url value="#clinic"/>"><spring:message code="complete-registration.body.form.clinic"/></a>
+                           id="clinic-tab" data-toggle="tab" href="#clinic"><spring:message code="complete-registration.body.form.clinic"/></a>
                     </li>
                 </ul>
                 </div>
@@ -114,8 +114,9 @@
                         <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
                             <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
                         </f:select>
-                        <a href="<c:url value='/create-field' />"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
                         <f:errors path="known_fields" cssClass="text-danger" element="small" />
+                        <a href="<c:url value='/create-field' />"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
+
 
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_2" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
@@ -172,7 +173,7 @@
                         <!-- Open Day and Time Picker -->
                             <fieldset class="form-group">
                                 <label><spring:message code="complete-registration.body.form.clinic.open_days.label" /></label>
-                                <f:select path="open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
+                                <f:select path="clinicHoursForm.open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
                                     <f:option value="0"><spring:message code="days.day-0" /></f:option>
                                     <f:option value="1"><spring:message code="days.day-1" /></f:option>
                                     <f:option value="2"><spring:message code="days.day-2" /></f:option>
@@ -184,7 +185,7 @@
                                 <br>
                                 <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.open_days.help" /></small> <br>
                                 <f:errors path="clinicHoursForm" cssClass="text-danger" /> <br>
-                                <f:errors path="open_days" cssClass="text-danger" />
+                                <f:errors path="clinicHoursForm.open_days" cssClass="text-danger" />
                             </fieldset>
                             <table>
                                 <tbody id="daysHourList">
@@ -225,8 +226,7 @@
 <script src="<c:url value="/resources/js/PlansAddList.js" />"></script>
 <script src="<c:url value="/resources/js/OpenDaysPicker.js" />"></script>
 <script>
-var hash = window.location.hash;
-hash && $('ul.nav a[href="' + ${registrationTab} + '"]').tab('show');
+$('ul.nav a[href="#${registrationTab}"]').tab('show');
 $("#clinicForm").submit(beforeSubmit);
 </script>
 

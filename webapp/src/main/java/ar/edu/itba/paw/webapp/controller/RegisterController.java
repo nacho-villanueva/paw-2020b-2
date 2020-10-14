@@ -87,7 +87,7 @@ public class RegisterController {
     public ModelAndView applyMedic(@Valid @ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             ModelAndView mavError = new ModelAndView("complete-registration");
-            mavError.addObject("tabRegistration", "medic");
+            mavError.addObject("registrationTab", "medic");
             mavError.addObject("registerPatientForm", new RegisterPatientForm());
             mavError.addObject("applyClinicForm", new ApplyClinicForm());
 
@@ -148,7 +148,7 @@ public class RegisterController {
         }
 
         ClinicHours clinicHours = new ClinicHours();
-        clinicHours.setDays(applyClinicForm.getOpen_days());
+        clinicHours.setDays(applyClinicForm.getClinicHoursForm().getOpen_days());
         clinicHours.setOpen_hours(applyClinicForm.getClinicHoursForm().getOpening_time());
         clinicHours.setClose_hours(applyClinicForm.getClinicHoursForm().getClosing_time());
 

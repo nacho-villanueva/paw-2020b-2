@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -23,9 +24,7 @@ public class ApplyClinicForm {
 
     private String accepted_plans;
 
-    @ValidDays
-    private Integer[] open_days;
-
+    @Valid
     @ValidOpeningClosingHours()
     private ClinicHoursForm clinicHoursForm;
 
@@ -68,14 +67,6 @@ public class ApplyClinicForm {
 
     public String[] getAccepted_plans_List(){
         return this.accepted_plans.split(",");
-    }
-
-    public Integer[] getOpen_days() {
-        return open_days;
-    }
-
-    public void setOpen_days(Integer[] open_days) {
-        this.open_days = open_days;
     }
 
 

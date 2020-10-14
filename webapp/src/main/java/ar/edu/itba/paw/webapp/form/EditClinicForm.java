@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.validators.StudyTypesAreValid;
 import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -36,9 +37,7 @@ public class EditClinicForm {
     @Size(min = 6, max = 100)
     private String password;
 
-    @ValidDays
-    private Integer[] open_days;
-
+    @Valid
     @ValidOpeningClosingHours
     private ClinicHoursForm clinicHoursForm;
 
@@ -94,14 +93,6 @@ public class EditClinicForm {
 
     public String[] getAccepted_plans_List(){
         return this.accepted_plans.split(",");
-    }
-
-    public Integer[] getOpen_days() {
-        return open_days;
-    }
-
-    public void setOpen_days(Integer[] open_days) {
-        this.open_days = open_days;
     }
 
     public ClinicHoursForm getClinicHoursForm() {

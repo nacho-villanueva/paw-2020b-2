@@ -115,8 +115,8 @@ function onTimeChange(){
             }
             if(newVal.length === 2){
                 var h = parseInt(newVal.substring(0,2));
-                if(h > 24)
-                    newVal = "24"
+                if(h > 23)
+                    newVal = "23"
             }
         }
         else if(format[i] === 'm'){
