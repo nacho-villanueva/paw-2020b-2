@@ -59,7 +59,7 @@ public class MedicalFieldJdbcDao implements MedicalFieldDao {
             return medicalField.get();
         }
 
-        return this.register(name);
+        return this.register(name.substring(0, 1).toUpperCase() + name.substring(1));
     }
 
     private MedicalField register(final String name) {
