@@ -73,10 +73,10 @@
     <hr class="divider my-4">
 
     <fieldset class="input-group pt-4">
-        <label for="addPlanInput" class="bmd-label-static"><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /></label>
+        <label for="addPlanInput" class="bmd-label-static"><spring:message code="profile-edit.form.clinic.accepted_plans.label" /></label>
         <input id="addPlanInput" type="text" class="form-control">
         <div class="input-group-append">
-            <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="Add" />
+            <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="<spring:message code="profile-view.body.tab.clinic.accepted_plans.add" />" />
         </div>
         <f:hidden id="plansInputList" path="accepted_plans" value="" />
     </fieldset>
@@ -91,7 +91,7 @@
         <spring:message code="profile-view.body.tab.clinic.medical_studies.label"/>
         </label>
         <spring:message code="profile-edit.form.clinic.study_types.placeholder" var="study_typesPlaceholder"/>
-            <f:select id="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="available_studies" data-style="btn-custom">
+            <f:select id="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="available_studies" data-style="text-primary">
             <f:options items="${studiesList}" itemLabel="name" itemValue="id" />
         </f:select>
         <f:errors path="available_studies" cssClass="text-danger" element="small"/>
