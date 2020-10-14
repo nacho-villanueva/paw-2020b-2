@@ -18,6 +18,12 @@ public class ValidOpeningClosingHoursValidator implements ConstraintValidator<Va
     public boolean isValid(ClinicHoursForm hours, ConstraintValidatorContext constraintValidatorContext) {
         String[] openingValues = hours.getOpening_time();
         String[] closingValues = hours.getClosing_time();
+        Integer[] daysValues = hours.getOpen_days();
+
+        for (Integer d: daysValues) {
+            if(isEmpty(openingValues[d]) || isEmpty(closingValues[d]))
+                return false;
+        }
 
         if(openingValues.length != closingValues.length)
             return false;
@@ -27,10 +33,6 @@ public class ValidOpeningClosingHoursValidator implements ConstraintValidator<Va
                 if (!isValidHour(openingValues[i]) || !isValidHour(closingValues[i]))
                     return false;
                 if (compareTime(openingValues[i], closingValues[i]) <= 0)
-                    return false;
-            }
-            else {
-                if(!openingValues[i].equals(closingValues[i]))
                     return false;
             }
         }
@@ -49,7 +51,7 @@ public class ValidOpeningClosingHoursValidator implements ConstraintValidator<Va
 
         int hour = Integer.parseInt(time[0]);
         int minutes = Integer.parseInt(time[1]);
-        return hour >= 0 && hour <= 24 && minutes >= 0 && minutes <= 59;
+        return hour >= 0 && hour <= 23 && minutes >= 0 && minutes <= 59;
     }
 
     private int compareTime(String tA, String tB){

@@ -35,7 +35,7 @@
     <div>
         <fieldset class="form-group">
             <label><spring:message code="profile-view.body.tab.clinic.open_days.label" /></label>
-            <f:select path="open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
+            <f:select path="clinicHoursForm.open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
                 <f:option value="0"><spring:message code="days.day-0" /></f:option>
                 <f:option value="1"><spring:message code="days.day-1" /></f:option>
                 <f:option value="2"><spring:message code="days.day-2" /></f:option>
@@ -47,7 +47,7 @@
             <br>
             <small class="text-muted"><spring:message code="profile-edit.form.clinic.selectdays.help" /></small><br>
             <f:errors path="clinicHoursForm" cssClass="text-danger" /> <br>
-            <f:errors path="open_days" cssClass="text-danger" />
+            <f:errors path="clinicHoursForm.open_days" cssClass="text-danger" />
         </fieldset>
         <table>
             <tbody id="daysHourList">

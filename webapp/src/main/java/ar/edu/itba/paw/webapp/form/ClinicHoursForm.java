@@ -1,9 +1,15 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.ClinicHours;
+import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 
 public class ClinicHoursForm {
+
+    @ValidDays
+    Integer[] open_days;
+
     String[] opening_time;
+
     String[] closing_time;
 
     public ClinicHoursForm() {
@@ -26,5 +32,13 @@ public class ClinicHoursForm {
 
     public void setClosing_time(String[] closing_time) {
         this.closing_time = closing_time;
+    }
+
+    public Integer[] getOpen_days() {
+        return open_days;
+    }
+
+    public void setOpen_days(Integer[] open_days) {
+        this.open_days = open_days;
     }
 }
