@@ -154,7 +154,7 @@
                                     <label for="addPlanInput" class="bmd-label-static"><spring:message code="complete-registration.body.form.clinic.accepted_plans.label" /></label>
                                     <input id="addPlanInput" type="text" class="form-control">
                                     <div class="input-group-append">
-                                        <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="Add" />
+                                        <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="<spring:message code="complete-registration.body.form.clinic.accepted_plans.add" />" />
                                     </div>
                                 <f:hidden id="plansInputList" path="accepted_plans" onload="onLoadPlanList(${applyClinicForm.accepted_plans})" value="" />
                             </fieldset>

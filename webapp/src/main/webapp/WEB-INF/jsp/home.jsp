@@ -22,7 +22,7 @@
         <jsp:param name="current" value="home"/>
     </jsp:include>
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper" class="d-flex flex-column main-container">
 
         <div class="pl-5">
             <div class="my-4 py-5">
@@ -62,8 +62,20 @@
                                             <small><spring:message code="home.body.card.studies.date" arguments="${o.date}" /></small>
                                         </div>
                                         <div class="d-flex w-100 justify-content-between">
-                                            <p class="mb-1"><spring:message code="home.body.card.studies.clinic" arguments="${o.clinic.name}" /></p>
-                                            <small><spring:message code="home.body.card.studies.medic" arguments="${o.medic.name}" /></small>
+                                            <c:choose>
+                                                <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifying() == false}">
+                                                    <p class="mb-1"><spring:message code="home.body.card.studies.clinic" arguments="${o.clinic.name}"/></p>
+                                                    <small><spring:message code="home.body.card.studies.patient" arguments="${o.patient_name}"/></small>
+                                                </c:when>
+                                                <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifying() == false}">
+                                                    <p class="mb-1"><spring:message code="home.body.card.studies.patient" arguments="${o.patient_name}"/></p>
+                                                    <small><spring:message code="home.body.card.studies.medic" arguments="${o.medic.name}"/></small>
+                                                </c:when>
+                                                <c:when test="${loggedUser.isPatient() == true}">
+                                                    <p class="mb-1"><spring:message code="home.body.card.studies.clinic" arguments="${o.clinic.name}"/></p>
+                                                    <small><spring:message code="home.body.card.studies.medic" arguments="${o.medic.name}"/></small>
+                                                </c:when>
+                                            </c:choose>
                                         </div>
                                     </a>
                                 </c:forEach>
@@ -78,30 +90,6 @@
     <!-- End of Content Wrapper -->
 </div>
 <!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <%@ include file="fragments/include-scripts.jsp"%>
 

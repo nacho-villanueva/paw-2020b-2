@@ -60,7 +60,7 @@ public class StudyTypeJdbcDao implements StudyTypeDao{
             return studyType.get();
         }
 
-        return this.register(name);
+        return this.register(name.substring(0, 1).toUpperCase() + name.substring(1));
     }
 
     private StudyType register(final String name) {
