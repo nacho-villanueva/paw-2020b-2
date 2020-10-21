@@ -190,8 +190,10 @@ public class ClinicJdbcDao implements ClinicDao {
         insertMap.put("clinic_id", clinic_id);
 
         medic_plans.forEach(plan -> {
-            insertMap.put("medic_plan", plan);
-            jdbcInsertPlans.execute(insertMap);
+            if(!plan.equals("")) {
+                insertMap.put("medic_plan", plan);
+                jdbcInsertPlans.execute(insertMap);
+            }
         });
     }
 
