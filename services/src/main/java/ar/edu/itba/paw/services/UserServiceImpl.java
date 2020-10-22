@@ -37,7 +37,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password, String locale) {
-        return userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
+        final User user = userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
+        //Since user has just been created, he is not registered as patient/clinic or medic and therefore not in the process of verification
+        user.setRegistered(false);
+        user.setVerifying(false);
+        return user;
     }
 
     @Override
