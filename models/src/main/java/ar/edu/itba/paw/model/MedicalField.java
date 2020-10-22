@@ -4,8 +4,8 @@ public class MedicalField {
     private int id;
     private String name;
 
-    public MedicalField() {
-
+    /* package */ MedicalField() {
+        //Just for hibernate
     }
 
     public MedicalField(final int id, final String name) {

@@ -15,8 +15,8 @@ public class Result {
     private String data_type;
     private byte[] data;
 
-    public Result() {
-
+    /* package */ Result() {
+        //Just for hibernate
     }
 
     public Result(final long id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number,final String identification_type, final byte[] identification, final String data_type, final byte[] data) {

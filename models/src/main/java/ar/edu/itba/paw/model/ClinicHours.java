@@ -26,6 +26,7 @@ public class ClinicHours {
     private final Time[] open_hours = new Time[DAYS_OF_WEEK];
     private final Time[] close_hours = new Time[DAYS_OF_WEEK];
 
+    //Default constructor needed for hibernate, if functionality changes DO NOT delete constructor, just change from public to /* package */
     public ClinicHours() {
         for (int i = 0; i < DAYS_OF_WEEK; i++) {
             this.days[i] = false;

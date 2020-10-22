@@ -12,8 +12,8 @@ public class Clinic {
     private Set<String> accepted_plans;
     private boolean verified;
 
-    public Clinic() {
-
+    /* package */ Clinic() {
+        //Just for Hibernate
     }
 
     public Clinic(final int user_id, final String name, final String email, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {

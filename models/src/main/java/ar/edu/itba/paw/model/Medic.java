@@ -15,8 +15,9 @@ public class Medic {
     private Collection<MedicalField> medical_fields;
     private boolean verified;
 
-    public Medic() {
 
+    /* package */ Medic() {
+        //Just for hibernate
     }
 
     public Medic(final int user_id, final String name, final String email, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {

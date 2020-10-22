@@ -7,8 +7,8 @@ public class Patient {
     private String medic_plan;
     private String medic_plan_number;
 
-    public Patient() {
-
+    /* package */ Patient() {
+        //Just for hibernate
     }
 
     public Patient(final int user_id, final String email, final String name, final String medic_plan, final String medic_plan_number) {

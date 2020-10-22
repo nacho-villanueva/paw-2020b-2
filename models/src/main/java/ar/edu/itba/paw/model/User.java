@@ -18,8 +18,8 @@ public class User {
     private boolean isVerifying;
     private String locale;
 
-    public User() {
-
+    /* package */ User() {
+        //Just for hibernate
     }
 
     public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying, final String locale) {

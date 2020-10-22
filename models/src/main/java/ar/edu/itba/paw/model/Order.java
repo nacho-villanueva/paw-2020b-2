@@ -19,8 +19,8 @@ public class Order {
     private String patient_name;
     private Collection<Result> study_results;
 
-    public Order() {
-
+    /* package */ Order() {
+        //Just for hibernate
     }
 
     public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name, final Collection<Result> study_results) {
