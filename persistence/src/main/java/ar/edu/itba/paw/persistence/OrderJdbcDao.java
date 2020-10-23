@@ -90,11 +90,6 @@ public class OrderJdbcDao implements OrderDao {
        return new Order(key.longValue(),medic,date,clinic,studyType,description,identification_type,identification,medic_plan,medic_plan_number,patient_email,patient_name);
    }
 
-   @Override
-   public Collection<Order> getAllUserOrders(User user){
-       return jdbcTemplate.query(sqlQuerySkeleton + " where o.clinic_id = ? or o.medic_id = ? or o.patient_email = ?", new Object[]{user.getId(), user.getId(), user.getEmail()},ORDER_ROW_MAPPER);
-   }
-
     @Override
     public Collection<Order> getAllAsClinic(User user) {
         return jdbcTemplate.query(sqlQuerySkeleton + " where o.clinic_id = ?", new Object[]{user.getId()},ORDER_ROW_MAPPER);
