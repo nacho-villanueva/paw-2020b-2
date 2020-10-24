@@ -47,7 +47,7 @@ public class MedicJpaDao implements MedicDao {
     @Override
     public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
 
-        final Medic medic = new Medic(user,name,telephone,identification_type,identification,licence_number,verified,known_fields);
+        final Medic medic = new Medic(user,name,telephone,identification_type,identification,licence_number,verified);
 
         userDao.updateRole(user, User.MEDIC_ROLE_ID);
 
@@ -61,30 +61,27 @@ public class MedicJpaDao implements MedicDao {
     @Override
     public Medic updateMedicInfo(User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
 
-        registerFieldsToMedic(known_fields,user.getId());
-
         Optional<Medic> medicOptional = findByUserId(user.getId());
 
-        Medic medic = new Medic(user.getId(),user.getEmail(),name,telephone,identification_type,identification,licence_number,verified,known_fields);
+        if(!medicOptional.isPresent())
+            return null;
 
-        if(medicOptional.isPresent()){
-            medic = medicOptional.get();
+        Medic medic = medicOptional.get();
 
-            //TODO check it works
-            em.detach(medic);
+        //TODO check it works
+        em.detach(medic);
 
-            medic.setUser(user);
-            medic.setName(name);
-            medic.setTelephone(telephone);
-            medic.setIdentification_type(identification_type);
-            medic.setIdentification(identification);
-            medic.setLicence_number(licence_number);
-            medic.setVerified(verified);
+        medic.setUser(user);
+        medic.setName(name);
+        medic.setTelephone(telephone);
+        medic.setIdentification_type(identification_type);
+        medic.setIdentification(identification);
+        medic.setLicence_number(licence_number);
+        medic.setVerified(verified);
 
-            em.getTransaction().begin();
-            em.merge(medic);
-            em.getTransaction().commit();
-        }
+        em.getTransaction().begin();
+        em.merge(medic);
+        em.getTransaction().commit();
         registerFieldsToMedic(known_fields,user.getId());
 
         //Todo: Verify success
@@ -112,7 +109,7 @@ public class MedicJpaDao implements MedicDao {
 
             //TODO check it works
             em.detach(medic);
-            medic.getMedical_fields().add(medicalField);
+            medic.getMedical_fields().add(medicalFieldFromDB);
             em.getTransaction().begin();
             em.merge(medic);
             em.getTransaction().commit();
