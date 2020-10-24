@@ -1,14 +1,14 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
-public class StudyType {
+public class MedicalField {
     private int id;
     private String name;
 
-    /* package */ StudyType() {
+    /* package */ MedicalField() {
         //Just for hibernate
     }
 
-    public StudyType(final int id, final String name) {
+    public MedicalField(final int id, final String name) {
         this.id = id;
         this.name = name;
     }
@@ -21,11 +21,11 @@ public class StudyType {
         return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

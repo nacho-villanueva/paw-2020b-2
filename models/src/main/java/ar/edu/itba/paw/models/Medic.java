@@ -1,8 +1,7 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class Medic {
     private int user_id;

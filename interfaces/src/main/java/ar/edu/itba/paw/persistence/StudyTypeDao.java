@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.models.StudyType;
 
 import java.util.Collection;
 import java.util.Optional;

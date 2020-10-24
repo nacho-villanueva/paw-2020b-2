@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.hsqldb.jdbc.JDBCDriver;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class UserJdbcDaoTest {
+public class UserDaoTest {
 
     //TABLE NAMES
     private static final String USERS_TABLE_NAME = "users";
@@ -58,7 +57,7 @@ public class UserJdbcDaoTest {
     private DataSource ds;
 
     @Autowired
-    private UserJdbcDao dao;
+    private UserDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -107,7 +106,6 @@ public class UserJdbcDaoTest {
 
         Assert.assertTrue(maybeUser.isPresent());
         Assert.assertEquals(EMAIL,maybeUser.get().getEmail());
-        Assert.assertFalse(maybeUser.get().isRegistered());
         Assert.assertEquals(User.PATIENT_ROLE_ID,maybeUser.get().getRole());
     }
 
@@ -116,30 +114,6 @@ public class UserJdbcDaoTest {
         Optional<User> maybeUser = dao.findById(ZERO_ID);
 
         Assert.assertFalse(maybeUser.isPresent());
-    }
-
-    @Test
-    public void testFlagsRegisteredNotVerified() {
-        int dbkey = insertTestUser(User.MEDIC_ROLE_ID);
-        insertTestMedic(dbkey,false);
-
-        Optional<User> maybeUser = dao.findById(dbkey);
-
-        Assert.assertTrue(maybeUser.isPresent());
-        Assert.assertTrue(maybeUser.get().isRegistered());
-        Assert.assertTrue(maybeUser.get().isVerifying());
-    }
-
-    @Test
-    public void testFlagsRegisteredVerified() {
-        int dbkey = insertTestUser(User.MEDIC_ROLE_ID);
-        insertTestMedic(dbkey,true);
-
-        Optional<User> maybeUser = dao.findById(dbkey);
-
-        Assert.assertTrue(maybeUser.isPresent());
-        Assert.assertTrue(maybeUser.get().isRegistered());
-        Assert.assertFalse(maybeUser.get().isVerifying());
     }
 
     @Test

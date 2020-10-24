@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Clinic;
-import ar.edu.itba.paw.model.ClinicHours;
-import ar.edu.itba.paw.model.StudyType;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.models.StudyType;
+import ar.edu.itba.paw.models.User;
 
 import java.util.Collection;
 import java.util.Optional;

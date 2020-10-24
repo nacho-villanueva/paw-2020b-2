@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.models.StudyType;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class StudyTypeJdbcDaoTest {
+public class StudyTypeDaoTest {
 
     //TABLE NAMES
     private static final String USERS_TABLE_NAME = "users";
@@ -53,7 +52,7 @@ public class StudyTypeJdbcDaoTest {
     private DataSource ds;
 
     @Autowired
-    private StudyTypeJdbcDao dao;
+    private StudyTypeDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertStudies;

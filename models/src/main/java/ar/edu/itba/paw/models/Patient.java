@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
 public class Patient {
     private int user_id;

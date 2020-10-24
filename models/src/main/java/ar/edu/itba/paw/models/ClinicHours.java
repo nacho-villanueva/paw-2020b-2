@@ -1,9 +1,8 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

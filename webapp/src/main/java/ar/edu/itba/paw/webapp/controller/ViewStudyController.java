@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UrlEncoderService;
-import ar.edu.itba.paw.model.Order;
+import ar.edu.itba.paw.models.Order;
 import ar.edu.itba.paw.services.OrderService;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

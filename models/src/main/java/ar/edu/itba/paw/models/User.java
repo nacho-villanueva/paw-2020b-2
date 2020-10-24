@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 
@@ -33,7 +33,7 @@ public class User {
     @Column(length = 10)
     private String locale;
 
-    /* package */ User() {
+    protected User() {
         //Just for hibernate
     }
 

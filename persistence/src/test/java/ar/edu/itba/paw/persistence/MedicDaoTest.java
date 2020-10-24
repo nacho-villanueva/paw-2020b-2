@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.MedicalField;
-import ar.edu.itba.paw.model.StudyType;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.models.MedicalField;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +22,7 @@ import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class MedicJdbcDaoTest {
+public class MedicDaoTest {
 
     //TABLE NAMES
     private static final String USERS_TABLE_NAME = "users";
@@ -64,7 +63,7 @@ public class MedicJdbcDaoTest {
     private DataSource ds;
 
     @Autowired
-    private MedicJdbcDao dao;
+    private MedicDao dao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;

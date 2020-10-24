@@ -1,21 +1,20 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Clinic;
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.Patient;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.models.Patient;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public class UserJdbcDao implements UserDao{
 
     private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->

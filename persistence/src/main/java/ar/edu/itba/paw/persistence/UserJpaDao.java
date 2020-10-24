@@ -1,15 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Optional;
 
-//@Repository
+@Repository
 public class UserJpaDao implements UserDao {
 
     @PersistenceContext
@@ -34,19 +33,34 @@ public class UserJpaDao implements UserDao {
         return user;
     }
 
-    //TODO: los updates funcionan de manera rara en hibernate, voy a investigar un poco mas antes de armarlos
     @Override
     public User updateRole(final User user, final int role) {
-        return null;
+
+        em.detach(user);
+        em.getTransaction().begin();
+        user.setRole(role);
+        em.getTransaction().commit();
+
+        return user;
     }
 
     @Override
     public User updateEmail(final User user, final String email) {
-        return null;
+        em.detach(user);
+        em.getTransaction().begin();
+        user.setEmail(email);
+        em.getTransaction().commit();
+
+        return user;
     }
 
     @Override
     public User updatePassword(final User user, final String password) {
-        return null;
+        em.detach(user);
+        em.getTransaction().begin();
+        user.setPassword(password);
+        em.getTransaction().commit();
+
+        return user;
     }
 }

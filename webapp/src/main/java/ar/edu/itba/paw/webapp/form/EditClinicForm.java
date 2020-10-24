@@ -1,19 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
 
-import ar.edu.itba.paw.model.ClinicHours;
 import ar.edu.itba.paw.webapp.form.validators.PasswordIsCorrect;
 import ar.edu.itba.paw.webapp.form.validators.StudyTypesAreValid;
-import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 import ar.edu.itba.paw.webapp.form.validators.ValidOpeningClosingHours;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 
 public class EditClinicForm {

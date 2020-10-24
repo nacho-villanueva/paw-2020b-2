@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.models.*;
 
 import java.sql.Date;
 
