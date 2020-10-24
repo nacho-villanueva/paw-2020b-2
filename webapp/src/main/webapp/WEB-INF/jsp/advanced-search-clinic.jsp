@@ -190,7 +190,6 @@
                         <hr/>
                         <div class="d-flex flex-row">
                             <div id="results" class="list-group result-section" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
-                                <h5 class="text-muted"><spring:message code="advanced-search-clinic.list.title"/> </h5>
                                 <c:if test="${clinicsList.size() eq 0}">
                                     <h3 class="text-center py-5 lead"><spring:message code="advanced-search.clinic.results.noResults"/></h3>
                                 </c:if>

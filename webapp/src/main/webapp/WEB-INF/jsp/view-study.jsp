@@ -20,21 +20,12 @@
             <div class="card order-card bg-light float-right">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col">
-                            <p class="card-title h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
-                            <p class="card-subtitle text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
-                        </div>
-                        <div class="col">
-                            <div class="row justify-content-end">
-                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
-                                    <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
-                                </c:if>
-
-                            </div>
-
-                        </div>
+                        <p class="card-title ml-3 h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
                     </div>
-                    <hr class="mt-5 mb-4"/>
+                    <div class="row">
+                        <p class="card-subtitle ml-3 text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
+                    </div>
+                    <hr class="mt-3 mb-4"/>
                     <div class="row justify-content-start">
                         <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patient_name.label"/> </p> <c:out value="${order.patient_name}"/></div>
                         <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.clinic.label"/></p> <c:out value="${order.clinic.name}"/></div>
@@ -63,7 +54,21 @@
         <div class="col-sm-6">
             <div class="card results-card bg-light float-left">
                 <div class="card-body">
-                    <p class="card-title h4"><spring:message code="view-study.body.card.results.title"/> </p>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-title h4"><spring:message code="view-study.body.card.results.title"/> </p>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-end">
+                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
+                                    <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
+                                </c:if>
+
+                            </div>
+
+                        </div>
+                    </div>
+
                     <c:choose>
                         <c:when test="${results.size() < 1}">
                             <div class="align-items-end result-not">

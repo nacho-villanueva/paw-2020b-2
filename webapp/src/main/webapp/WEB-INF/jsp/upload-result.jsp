@@ -17,7 +17,7 @@
         <div class="card pb-8 mt-4" style="width: 40rem;">
             <div class="card-body">
                 <div class="row">
-                        <p class="card-title h4 mx-auto mt-3"><spring:message code="upload-result.body.order.id.label"/></p>
+                        <p class="card-title h4 mx-auto mt-3"><spring:message code="upload-result.body.title"/></p>
                 </div>
                 <hr class="mt-3 mb-4"/>
                 <div class="row justify-content-start">
