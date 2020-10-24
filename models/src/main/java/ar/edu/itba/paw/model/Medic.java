@@ -8,6 +8,10 @@ import java.util.Collection;
 @Table(name = "medics")
 public class Medic {
 
+    @Id //just to asign pk to medic
+    private int user_id;
+
+    @MapsId
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
