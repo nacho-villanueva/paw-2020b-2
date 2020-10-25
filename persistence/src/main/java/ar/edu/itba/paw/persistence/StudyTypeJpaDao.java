@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Clinic;
 import ar.edu.itba.paw.models.StudyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,9 +14,6 @@ public class StudyTypeJpaDao implements StudyTypeDao{
 
     @PersistenceContext
     private EntityManager em;
-
-    @Autowired
-    private ClinicDao clinicDao;
 
     @Override
     public Optional<StudyType> findById(int id) {
@@ -42,9 +38,8 @@ public class StudyTypeJpaDao implements StudyTypeDao{
 
     @Override
     public Collection<StudyType> findByClinicId(int clinic_id) {
-        Optional<Clinic> clinicOptional = clinicDao.findByUserId(clinic_id);
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
         return clinicOptional.map(Clinic::getMedical_studies).orElse(null);
-
     }
 
     @Override
