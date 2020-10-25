@@ -27,7 +27,11 @@ public class User {
 
     @Column(nullable = false)
     private int role;
+
+    @Transient
     private boolean isRegistered;
+
+    @Transient
     private boolean isVerifying;
 
     @Column(length = 10)

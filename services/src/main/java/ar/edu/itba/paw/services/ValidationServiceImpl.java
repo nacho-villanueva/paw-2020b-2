@@ -107,7 +107,7 @@ public class ValidationServiceImpl implements ValidationService {
 
         Patient patientDB = maybePatient.get();
 
-        return patient.getEmail().equals(patientDB.getEmail());
+        return patient.getUser().getEmail().equals(patientDB.getUser().getEmail());
     }
 
     @Override
