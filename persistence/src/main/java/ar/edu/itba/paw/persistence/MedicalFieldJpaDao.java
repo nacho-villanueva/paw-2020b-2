@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.MedicalField;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.Optional;
 
+@Repository
 public class MedicalFieldJpaDao implements MedicalFieldDao{
 
     @PersistenceContext
