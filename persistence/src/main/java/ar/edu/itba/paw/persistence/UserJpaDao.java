@@ -28,7 +28,6 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public User register(final String email, final String password, final int role, final String locale) {
         final User user = new User(email,password,role,locale);
         em.persist(user);
@@ -36,28 +35,26 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public User updateRole(final User user, final int role) {
-
         em.detach(user);
         user.setRole(role);
-
+        em.merge(user);
         return user;
     }
 
     @Override
-    @Transactional
     public User updateEmail(final User user, final String email) {
         em.detach(user);
         user.setEmail(email);
+        em.merge(user);
         return user;
     }
 
     @Override
-    @Transactional
     public User updatePassword(final User user, final String password) {
         em.detach(user);
         user.setPassword(password);
+        em.merge(user);
         return user;
     }
 }

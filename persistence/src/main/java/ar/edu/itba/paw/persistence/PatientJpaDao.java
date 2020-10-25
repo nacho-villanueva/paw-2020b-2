@@ -29,7 +29,6 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
-    @Transactional
     public Patient register(final User user, final String name) {
         final Patient patient = new Patient(user,name);
         em.persist(patient);
@@ -37,7 +36,6 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
-    @Transactional
     public Patient register(final User user, final String name, final String medic_plan, final String medic_plan_number) {
         final Patient patient = new Patient(user,name,medic_plan,medic_plan_number);
         em.persist(patient);
@@ -45,25 +43,23 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
-    @Transactional
     public Patient updatePatientInfo(final Patient patient, final String name, final String medic_plan, final String medic_plan_number) {
         em.detach(patient);
         patient.setName(name);
         patient.setMedic_plan(medic_plan);
         patient.setMedic_plan_number(medic_plan_number);
-
+        em.merge(patient);
         return patient;
     }
 
     @Override
-    @Transactional
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
         em.detach(patient);
         em.getTransaction().begin();
         patient.setMedic_plan(medic_plan);
         patient.setMedic_plan_number(medic_plan_number);
         em.getTransaction().commit();
-
+        em.merge(patient);
         return patient;
     }
 }

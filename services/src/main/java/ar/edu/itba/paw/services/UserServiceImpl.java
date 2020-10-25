@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Primary
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -28,13 +30,13 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    private ClinicDao clinicDao;
+    private ClinicService clinicService;
 
     @Autowired
-    private MedicDao medicDao;
+    private MedicService medicService;
 
     @Autowired
-    private PatientDao patientDao;
+    private PatientService patientService;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -66,7 +68,6 @@ public class UserServiceImpl implements UserService {
         if(vs.isValidRole(role)) {
             return userDao.updateRole(user,role);
         }
-
         return null;
     }
 
@@ -90,17 +91,17 @@ public class UserServiceImpl implements UserService {
     private void setUserFlags(final User user) {
         switch (user.getRole()) {
             case User.CLINIC_ROLE_ID:
-                Optional<Clinic> maybeClinic = clinicDao.findByUserId(user.getId());
+                Optional<Clinic> maybeClinic = clinicService.findByUserId(user.getId());
                 user.setRegistered(maybeClinic.isPresent());
                 maybeClinic.ifPresent(clinic -> user.setVerifying(!clinic.isVerified()));
                 break;
             case User.MEDIC_ROLE_ID:
-                Optional<Medic> maybeMedic = medicDao.findByUserId(user.getId());
+                Optional<Medic> maybeMedic = medicService.findByUserId(user.getId());
                 user.setRegistered(maybeMedic.isPresent());
                 maybeMedic.ifPresent(medic -> user.setVerifying(!medic.isVerified()));
                 break;
             case User.PATIENT_ROLE_ID:
-                Optional<Patient> maybePatient = patientDao.findByUserId(user.getId());
+                Optional<Patient> maybePatient = patientService.findByUser_id(user.getId());
                 user.setRegistered(maybePatient.isPresent());
                 break;
             case User.UNDEFINED_ROLE_ID:
