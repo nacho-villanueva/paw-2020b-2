@@ -1,7 +1,16 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "medical_fields")
 public class MedicalField {
+
+    @Id
+    @GeneratedValue
     private int id;
+
+    @Column(name = "name", nullable = false)
     private String name;
 
     /* package */ MedicalField() {
@@ -10,6 +19,10 @@ public class MedicalField {
 
     public MedicalField(final int id, final String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public MedicalField(final String name) {
         this.name = name;
     }
 
