@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public class StudyTypeJdbcDao implements StudyTypeDao{
 
     private static final RowMapper<StudyType> STUDY_TYPE_ROW_MAPPER = (rs,rowNum) ->
