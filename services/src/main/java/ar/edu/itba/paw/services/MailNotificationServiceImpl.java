@@ -138,6 +138,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                         "<tr><td align=\"center\"><h2><replace-m-body-sendOrderMailHtml-details/></h2>\n" +
                         "<a href=\"<replace-order-url/>\" style=\"background-color:#009688;border-radius:4px;color:#ffffff;display:inline-block;;font-size:20px;font-weight:normal;line-height:50px;text-align:center;text-decoration:none;width:160px;font-weight:bold\" target=\"_blank\"><replace-m-body-sendOrderMailHtml-orderUrl/></a>\n" +
                         "</td></tr></table>\n" +
+                        "<replace-new-info/>\n"+
                         "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                         "   <tr>\n" +
                         "       <td style=\"padding: 64px 0 0 0;\">\n"+
@@ -187,6 +188,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to patient
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,patientLocale);
+        if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+            mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
+        }else{
+            mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",patientContactParams,patientLocale));
+        }
         mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.medic",medicContactParams,patientLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-email/>",medicMail);
         mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.clinic",clinicContactParams,patientLocale));
@@ -200,6 +206,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to medic
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,medicLocale);
+        mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",medicContactParams,medicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,medicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
         mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.clinic",clinicContactParams,medicLocale));
@@ -213,6 +220,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to clinic
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,clinicLocale);
+        mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",clinicContactParams,clinicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,clinicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
         mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.medic",medicContactParams,clinicLocale));
@@ -325,6 +333,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                             "<tr><td align=\"center\"><h2><replace-m-body-sendOrderMailHtml-details/></h2>\n" +
                             "<a href=\"<replace-order-url/>\" style=\"background-color:#009688;border-radius:4px;color:#ffffff;display:inline-block;;font-size:20px;font-weight:normal;line-height:50px;text-align:center;text-decoration:none;width:160px;font-weight:bold\" target=\"_blank\"><replace-m-body-sendResultMailHtml-orderUrl/></a>\n" +
                             "</td></tr></table>\n" +
+                            "<replace-new-info/>\n"+
                             "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                             "   <tr>\n" +
                             "       <td style=\"padding: 64px 0 0 0;\">\n"+
@@ -374,6 +383,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to patient
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,patientLocale);
+            if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+                mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
+            }else{
+                mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",patientContactParams,patientLocale));
+            }
             mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.medic",medicContactParams,patientLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-email/>",medicMail);
             mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.clinic",clinicContactParams,patientLocale));
@@ -387,6 +401,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to medic
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,medicLocale);
+            mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",medicContactParams,medicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,medicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
             mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.clinic",clinicContactParams,medicLocale));
@@ -400,6 +415,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to clinic
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,clinicLocale);
+            mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",clinicContactParams,clinicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,clinicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
             mailContent = mailContent.replaceAll("<replace-contact2-name/>",messageSource.getMessage("mail.contact.medic",medicContactParams,clinicLocale));
