@@ -32,7 +32,7 @@ public class Medic {
     private String licence_number;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="medic_medical_field",
+    @JoinTable(name="medic_medical_fields",
             joinColumns = @JoinColumn(name="medic_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"))
     private Collection<MedicalField> medical_fields;
