@@ -8,6 +8,8 @@ public class Patient {
 
     @Id
     private Integer user_id;
+
+    @MapsId
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
@@ -23,7 +25,6 @@ public class Patient {
     }
 
     public Patient(final User user, final String name) {
-        this.user_id = user.getId();
         this.user = user;
         this.name = name;
     }

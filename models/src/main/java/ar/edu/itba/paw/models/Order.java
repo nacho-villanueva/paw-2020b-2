@@ -12,6 +12,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_orders_id_seq")
     @SequenceGenerator(sequenceName = "medical_orders_id_seq", name = "medical_orders_id_seq", allocationSize = 1)
+    @Column(name = "id")
     private long order_id;
 
     @ManyToOne
@@ -51,6 +52,7 @@ public class Order {
     private String patient_name;
 
     @OneToMany
+    @CollectionTable(name="results", joinColumns=@JoinColumn(name="order_id"))
     private Collection<Result> study_results;
 
     protected Order() {

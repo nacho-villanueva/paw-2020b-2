@@ -8,7 +8,7 @@ import java.util.*;
 public class Clinic {
 
     @Id //just to asign pk to clinic
-    private int user_id;
+    private Integer user_id;
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
@@ -32,6 +32,7 @@ public class Clinic {
 
     @ElementCollection
     @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id"))
+    @Column(name="medic_plan")
     private Set<String> accepted_plans;
 
     @Column(name="verified",nullable=false)
@@ -41,53 +42,15 @@ public class Clinic {
         //Just for Hibernate
     }
 
-    //TODO: legacy constructors adapted for clinicjdbcdao, may be removed
-    public Clinic(final int user_id, final String name, final String email, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-        this.telephone = telephone;
-        this.medical_studies = medical_studies;
-        this.hours = hours.createClinicDayHoursCollection();
-        this.accepted_plans = accepted_plans;
-        this.verified = verified;
-    }
-
-    public Clinic(final int user_id, final String name, final String email, final String telephone, final boolean verified) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-        this.telephone = telephone;
-        this.medical_studies = new ArrayList<>();
-        this.hours = new ArrayList<>();
-        this.accepted_plans = new HashSet<>();
-        this.verified = verified;
-    }
-
-    //Basic constructor for clinic objects inside orders
-    public Clinic(final int user_id, final String name, final String email) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-    }
-    // remove until here
-
     public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
-        this.user = user;
-        this.name = name;
-        this.telephone = telephone;
+        this(user,name,telephone,verified);
         this.medical_studies = medical_studies;
         this.hours = hours.createClinicDayHoursCollection();
         this.accepted_plans = accepted_plans;
-        this.verified = verified;
     }
 
     public Clinic(final User user, final String name, final String telephone, final boolean verified) {
-        this.user = user;
-        this.name = name;
+        this(user,name);
         this.telephone = telephone;
         this.medical_studies = new ArrayList<>();
         this.hours = new ArrayList<>();

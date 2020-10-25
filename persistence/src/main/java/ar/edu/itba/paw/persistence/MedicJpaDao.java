@@ -45,7 +45,12 @@ public class MedicJpaDao implements MedicDao {
 
     @Override
     public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
-        final Medic medic = new Medic(user,name,telephone,identification_type,identification,licence_number,verified,known_fields);
+        User userRef = em.getReference(User.class,user.getId());
+        Collection<MedicalField> fieldsRef = new HashSet<>();
+        known_fields.forEach(medicalField -> {
+            fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+        });
+        final Medic medic = new Medic(userRef,name,telephone,identification_type,identification,licence_number,verified,fieldsRef);
         em.persist(medic);
         return medic;
     }
@@ -60,17 +65,24 @@ public class MedicJpaDao implements MedicDao {
 
         Medic medic = medicOptional.get();
 
+        //Getting references
+        User userRef = em.getReference(User.class,user.getId());
+        Collection<MedicalField> fieldsRef = new HashSet<>();
+        known_fields.forEach(medicalField -> {
+            fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+        });
+
         //TODO check it works
         em.detach(medic);
 
-        medic.setUser(user);
+        medic.setUser(userRef);
         medic.setName(name);
         medic.setTelephone(telephone);
         medic.setIdentification_type(identification_type);
         medic.setIdentification(identification);
         medic.setLicence_number(licence_number);
         medic.setVerified(verified);
-        medic.setMedical_fields(known_fields);
+        medic.setMedical_fields(fieldsRef);
 
         em.merge(medic);
 

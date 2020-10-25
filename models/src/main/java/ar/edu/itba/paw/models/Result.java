@@ -7,14 +7,14 @@ import java.sql.Date;
 @Table(name = "results")
 public class Result {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "results_id_seq")
     @SequenceGenerator(sequenceName = "results_id_seq", name = "results_id_seq", allocationSize = 1)
-    private long id;
+    private Long id;
 
-    @Column(name="order_id", nullable=false)
-    private long order_id;
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @Column(name="date", nullable=false)
     private Date date;
@@ -41,8 +41,7 @@ public class Result {
         //Just for hibernate
     }
 
-    public Result(final long id,
-                  final long order_id,
+    public Result(final Order order,
                   final Date date,
                   final String responsible_name,
                   final String responsible_licence_number,
@@ -50,26 +49,7 @@ public class Result {
                   final byte[] identification,
                   final String data_type,
                   final byte[] data) {
-        this.id = id;
-        this.order_id = order_id;
-        this.date = date;
-        this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
-        this.identification_type = identification_type;
-        this.identification = identification;
-        this.data_type = data_type;
-        this.data = data;
-    }
-
-    public Result(final long order_id,
-                  final Date date,
-                  final String responsible_name,
-                  final String responsible_licence_number,
-                  final String identification_type,
-                  final byte[] identification,
-                  final String data_type,
-                  final byte[] data) {
-        this.order_id = order_id;
+        this.order = order;
         this.date = date;
         this.responsible_name = responsible_name;
         this.responsible_licence_number = responsible_licence_number;
@@ -83,9 +63,11 @@ public class Result {
         return id;
     }
 
-    public long getOrder_id() {
-        return order_id;
+    public Order getOrder() {
+        return order;
     }
+
+    public long getOrder_id() { return order.getOrder_id(); }
 
     public Date getDate() {
         return date;
@@ -115,8 +97,8 @@ public class Result {
         return data;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public void setIdentification_type(String identification_type) {

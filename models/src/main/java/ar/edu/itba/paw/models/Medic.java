@@ -12,8 +12,8 @@ public class Medic {
     private Integer user_id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Column(name = "name",nullable=false)
@@ -45,67 +45,26 @@ public class Medic {
         //Just for hibernate
     }
 
-    //TODO: legacy constructors adapted for medicjdbcdao, may be removed
-    public Medic(final int user_id, final String name, final String email, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-        this.telephone = telephone;
-        this.identification_type = identification_type;
-        this.identification = identification;
-        this.licence_number = licence_number;
-        this.verified = verified;
-    }
-    public Medic(final int user_id, final String name, final String email, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-        this.telephone = telephone;
-        this.identification_type = identification_type;
-        this.identification = identification;
-        this.licence_number = licence_number;
-        this.verified = verified;
-        this.medical_fields = medical_fields;
-    }
-    //Basic constructor for medics objects inside orders
-    public Medic(final int user_id, final String name, final String email, final String licence_number) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.user.setEmail(email);
-        this.name = name;
-        this.licence_number = licence_number;
-    }
-    // remove until here
-
     public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
-        this.user = user;
-        this.name = name;
-        this.telephone = telephone;
-        this.identification_type = identification_type;
-        this.identification = identification;
-        this.licence_number = licence_number;
-        this.verified = verified;
+        this(user,name,telephone,identification_type,identification,licence_number,verified);
         this.medical_fields = medical_fields;
     }
 
     public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified) {
-        this.user = user;
-        this.name = name;
+        this(user,name,licence_number);
         this.telephone = telephone;
         this.identification_type = identification_type;
         this.identification = identification;
-        this.licence_number = licence_number;
         this.verified = verified;
         this.medical_fields = new ArrayList<>();
     }
 
     //Basic constructor for medics objects inside orders
-    public Medic(final User user, final String name, final String email, final String licence_number) {
+    public Medic(final User user, final String name, final String licence_number) {
         this.user = user;
         this.name = name;
         this.licence_number = licence_number;
+        this.verified = false;
     }
 
     public User getUser() {
