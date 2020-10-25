@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -15,11 +16,13 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@EnableTransactionManagement
 @ComponentScan({
         "ar.edu.itba.paw.persistence",
 })
@@ -57,8 +60,8 @@ public class TestConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
-        dbp.addScript(hsqldbSql);
-        dbp.addScript(schemaSql);
+        //dbp.addScript(hsqldbSql);
+        //dbp.addScript(schemaSql);
 
         return dbp;
     }
@@ -71,7 +74,7 @@ public class TestConfig {
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
-        //properties.setProperty("hibernate.hbm2ddl.auto", "update");   TODO:see why commenting this makes simplejdbcinsert work
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
         // Si ponen esto en prod, hay tabla!!! //TODO: remove this from production
