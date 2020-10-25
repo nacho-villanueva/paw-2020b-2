@@ -1,30 +1,72 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Entity
+@Table(name = "medical_orders")
 public class Order {
+
+    @Id
+    @GeneratedValue
     private long order_id;
+
+    @ManyToOne
+    @JoinColumn(name = "medic_id", nullable = false)
     private Medic medic;
+
+    @Column(name = "date", nullable = false)
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
+
+    @ManyToOne
+    @JoinColumn(name = "study_id", nullable = false)
     private StudyType study;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "identification_type", nullable = false)
     private String identification_type;
+
+    @Column(name = "identification", nullable = false)
     private byte[] identification;
+
+    @Column(name="medic_plan")
     private String patient_insurance_plan;
+
+    @Column(name = "medic_plan_number")
     private String patient_insurance_number;
+
+    @Column(name="patient_email", nullable = false)
     private String patient_email;
+
+    @Column(name = "patient_name", nullable = false)
     private String patient_name;
+
+    @OneToMany(mappedBy = "results")
     private Collection<Result> study_results;
 
     /* package */ Order() {
         //Just for hibernate
     }
 
-    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name, final Collection<Result> study_results) {
-        this.order_id = order_id;
+    public Order(final Medic medic,
+                 final Date date,
+                 final Clinic clinic,
+                 final StudyType study,
+                 final String description,
+                 final String identification_type,
+                 final byte[] identification,
+                 final String patient_insurance_plan,
+                 final String patient_insurance_number,
+                 final String patient_email,
+                 final String patient_name) {
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
@@ -36,10 +78,9 @@ public class Order {
         this.patient_insurance_number = patient_insurance_number;
         this.patient_email = patient_email;
         this.patient_name = patient_name;
-        this.study_results = study_results;
     }
 
-    public Order(final long order_id,final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
+    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
         this.order_id = order_id;
         this.medic = medic;
         this.date = date;

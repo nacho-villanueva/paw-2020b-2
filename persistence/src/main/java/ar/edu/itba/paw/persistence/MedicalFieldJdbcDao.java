@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+
 public class MedicalFieldJdbcDao implements MedicalFieldDao {
 
     private static final RowMapper<MedicalField> MEDICAL_FIELD_ROW_MAPPER = (rs, rowNum) ->
