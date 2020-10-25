@@ -11,14 +11,8 @@ import java.util.Objects;
 public class ClinicDayHours {
 
     /* default */static class ClinicDayHoursPK implements Serializable {
-        protected int clinic_id;
-        @Column(name = "day_of_the_week",nullable = false)
-        protected int day;
-
-        public ClinicDayHoursPK(int clinic_id, int day_of_the_week) {
-            this.clinic_id = clinic_id;
-            this.day = day_of_the_week;
-        }
+        public int clinic_id;
+        public int day_of_week;
 
         public ClinicDayHoursPK() {
         }
@@ -29,13 +23,13 @@ public class ClinicDayHours {
             if (o == null || getClass() != o.getClass()) return false;
             ClinicDayHoursPK that = (ClinicDayHoursPK) o;
             return clinic_id == that.clinic_id &&
-                    day == that.day;
+                    day_of_week == that.day_of_week;
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(clinic_id, day);
+            return Objects.hash(clinic_id, day_of_week);
         }
     }
 
@@ -43,7 +37,7 @@ public class ClinicDayHours {
     private int clinic_id;
 
     @Id
-    @Column(name = "day_of_the_week",nullable = false)
+    @Column(name = "day_of_week",nullable = false)
     private int day_of_week;
 
     @MapsId("clinic_id")
