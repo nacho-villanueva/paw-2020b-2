@@ -40,7 +40,7 @@ public class ClinicJpaDao implements ClinicDao {
     private Collection<Clinic> getAll(final boolean verified) {
         // with hibernate, the validation that a medic is associated with an user should be unnecesary
         final TypedQuery<Clinic> query = em.createQuery("SELECT c FROM Clinic c WHERE c.verified = :isVerified",Clinic.class);
-        query.setParameter("isVerified",String.valueOf(verified));
+        query.setParameter("isVerified",verified);
         return query.getResultList();
     }
 
@@ -79,8 +79,6 @@ public class ClinicJpaDao implements ClinicDao {
     @Override
     public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
         Clinic clinic = new Clinic(user,name,telephone,false);
-
-        userDao.updateRole(user, User.CLINIC_ROLE_ID);
 
         em.persist(clinic);
         //Todo: Check success
