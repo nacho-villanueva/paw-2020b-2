@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
+//@Repository
 public class MedicJdbcDao implements MedicDao {
 
     @Autowired
