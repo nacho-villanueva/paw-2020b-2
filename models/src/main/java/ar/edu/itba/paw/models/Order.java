@@ -49,7 +49,7 @@ public class Order {
     @Column(name = "patient_name", nullable = false)
     private String patient_name;
 
-    @OneToMany(mappedBy = "results")
+    @OneToMany
     private Collection<Result> study_results;
 
     /* package */ Order() {
