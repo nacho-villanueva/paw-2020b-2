@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,42 +28,36 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
+    @Transactional
     public User register(final String email, final String password, final int role, final String locale) {
-        em.getTransaction().begin();
         final User user = new User(email,password,role,locale);
         em.persist(user);
-        em.getTransaction().commit();
         return user;
     }
 
     @Override
+    @Transactional
     public User updateRole(final User user, final int role) {
 
         em.detach(user);
-        em.getTransaction().begin();
         user.setRole(role);
-        em.getTransaction().commit();
 
         return user;
     }
 
     @Override
+    @Transactional
     public User updateEmail(final User user, final String email) {
         em.detach(user);
-        em.getTransaction().begin();
         user.setEmail(email);
-        em.getTransaction().commit();
-
         return user;
     }
 
     @Override
+    @Transactional
     public User updatePassword(final User user, final String password) {
         em.detach(user);
-        em.getTransaction().begin();
         user.setPassword(password);
-        em.getTransaction().commit();
-
         return user;
     }
 }

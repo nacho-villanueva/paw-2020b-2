@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,36 +29,34 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
+    @Transactional
     public Patient register(final User user, final String name) {
-        em.getTransaction().begin();
         final Patient patient = new Patient(user,name);
         em.persist(patient);
-        em.getTransaction().commit();
         return patient;
     }
 
     @Override
+    @Transactional
     public Patient register(final User user, final String name, final String medic_plan, final String medic_plan_number) {
-        em.getTransaction().begin();
         final Patient patient = new Patient(user,name,medic_plan,medic_plan_number);
         em.persist(patient);
-        em.getTransaction().commit();
         return patient;
     }
 
     @Override
+    @Transactional
     public Patient updatePatientInfo(final Patient patient, final String name, final String medic_plan, final String medic_plan_number) {
         em.detach(patient);
-        em.getTransaction().begin();
         patient.setName(name);
         patient.setMedic_plan(medic_plan);
         patient.setMedic_plan_number(medic_plan_number);
-        em.getTransaction().commit();
 
         return patient;
     }
 
     @Override
+    @Transactional
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
         em.detach(patient);
         em.getTransaction().begin();
