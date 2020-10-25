@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import java.sql.Time;
 import java.util.*;
 
-@Repository
+//@Repository
 public class ClinicJdbcDao implements ClinicDao {
 
     private static class DayHours {
