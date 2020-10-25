@@ -13,15 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public class PatientJdbcDao implements PatientDao {
 
     @Autowired
     private UserDao userDao;
 
     private static final RowMapper<Patient> PATIENT_ROW_MAPPER = (rs, rowNum) ->
-            new Patient(rs.getInt("user_id"),
-                    rs.getString("email"),
+            new Patient(new User(rs.getInt("user_id"),rs.getString("email"),rs.getString("password"),rs.getInt("role"),rs.getString("locale")),
                     rs.getString("name"),
                     rs.getString("medic_plan"),
                     rs.getString("medic_plan_number"));
@@ -54,7 +53,7 @@ public class PatientJdbcDao implements PatientDao {
 
         jdbcInsert.execute(insertMap);
 
-        return new Patient(user.getId(),user.getEmail(),name);
+        return new Patient(user,name);
     }
 
     @Override
@@ -69,20 +68,20 @@ public class PatientJdbcDao implements PatientDao {
 
         userDao.updateRole(user, User.PATIENT_ROLE_ID);
 
-        return new Patient(user.getId(),user.getEmail(),name,medic_plan,medic_plan_number);
+        return new Patient(user,name,medic_plan,medic_plan_number);
     }
 
     @Override
-    public Patient updatePatientInfo(final User user, final String name, final String medic_plan, final String medic_plan_number) {
-        jdbcTemplate.update("UPDATE patients Set name = ?, medic_plan = ?, medic_plan_number = ? WHERE user_id = ?",name,medic_plan,medic_plan_number,user.getId());
+    public Patient updatePatientInfo(final Patient patient, final String name, final String medic_plan, final String medic_plan_number) {
+        jdbcTemplate.update("UPDATE patients Set name = ?, medic_plan = ?, medic_plan_number = ? WHERE user_id = ?",name,medic_plan,medic_plan_number,patient.getUser().getId());
 
-        return new Patient(user.getId(), user.getEmail(), name, medic_plan, medic_plan_number);
+        return new Patient(patient.getUser(), name, medic_plan, medic_plan_number);
     }
 
     @Override
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
-        jdbcTemplate.update("UPDATE patients Set medic_plan = ?, medic_plan_number = ? WHERE user_id = ?", medic_plan, medic_plan_number, patient.getUser_id());
+        jdbcTemplate.update("UPDATE patients Set medic_plan = ?, medic_plan_number = ? WHERE user_id = ?", medic_plan, medic_plan_number, patient.getUser().getId());
 
-        return new Patient(patient.getUser_id(),patient.getEmail(),patient.getName(),medic_plan, medic_plan_number);
+        return new Patient(patient.getUser(),patient.getName(),medic_plan, medic_plan_number);
     }
 }

@@ -28,8 +28,10 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public User register(final String email, final String password, final int role, final String locale) {
+        em.getTransaction().begin();
         final User user = new User(email,password,role,locale);
         em.persist(user);
+        em.getTransaction().commit();
         return user;
     }
 

@@ -87,7 +87,7 @@ public class PatientDaoTest {
         final Patient patient = patientDao.register(new User(dbkey,EMAIL,PASSWORD,ROLE),NAME);
 
         Assert.assertNotNull(patient);
-        Assert.assertEquals(dbkey,patient.getUser_id());
+        Assert.assertEquals(dbkey,patient.getUser().getId().intValue());
         Assert.assertEquals(NAME,patient.getName());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,PATIENTS_TABLE_NAME));
     }
@@ -131,7 +131,7 @@ public class PatientDaoTest {
         final Optional<Patient> maybePatient = patientDao.findByEmail(EMAIL);
 
         Assert.assertTrue(maybePatient.isPresent());
-        Assert.assertEquals(userkey, maybePatient.get().getUser_id());
+        Assert.assertEquals(userkey, maybePatient.get().getUser().getId().intValue());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, PATIENTS_TABLE_NAME));
     }
 
@@ -145,8 +145,10 @@ public class PatientDaoTest {
     @Test
     public void testUpdatePatientInfo() {
         int dbkey = insertTestPatient();
+        User user = new User(dbkey,EMAIL,PASSWORD,ROLE);
+        Patient patient = new Patient(user,NAME);
 
-        patientDao.updatePatientInfo(new User(dbkey,EMAIL,PASSWORD,ROLE),NAME_ALT,MEDIC_PLAN,MEDIC_PLAN_NUMBER);
+        patientDao.updatePatientInfo(patient,NAME_ALT,MEDIC_PLAN,MEDIC_PLAN_NUMBER);
 
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"name = '" + NAME_ALT + "' AND medic_plan = '" + MEDIC_PLAN + "' AND medic_plan_number = '" + MEDIC_PLAN_NUMBER + "' AND user_id = " + dbkey));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,PATIENTS_TABLE_NAME));
