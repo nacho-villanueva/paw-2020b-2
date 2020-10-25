@@ -51,7 +51,7 @@ body {
 }
 
 .create-btn{
-    background: #19b0c8;
+    background: var(--primary);
     color: white;
 
 

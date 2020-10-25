@@ -12,7 +12,9 @@
 <body>
 
 <div id="wrapper">
-<jsp:include page="fragments/sidebar-fragment.jsp" />
+    <jsp:include page="fragments/sidebar-fragment.jsp" >
+        <jsp:param name="current" value="orders"/>
+    </jsp:include>
 
 <div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
