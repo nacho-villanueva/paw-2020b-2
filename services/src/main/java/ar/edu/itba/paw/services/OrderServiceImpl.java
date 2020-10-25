@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class OrderServiceImpl implements OrderService {
 
