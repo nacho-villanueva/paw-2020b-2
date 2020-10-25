@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+
 public class ResultJdbcDao implements ResultDao {
 
     private static final RowMapper<Result> RESULT_ROW_MAPPER = (rs, rowNum) ->

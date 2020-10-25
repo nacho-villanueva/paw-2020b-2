@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Order;
 import ar.edu.itba.paw.model.Result;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,7 @@ import java.sql.Date;
 import java.util.Collection;
 import java.util.Optional;
 
+@Repository
 public class ResultJpaDao implements ResultDao {
 
     @PersistenceContext

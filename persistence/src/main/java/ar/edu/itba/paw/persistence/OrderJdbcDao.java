@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.*;
 
-@Repository
+
 public class OrderJdbcDao implements OrderDao {
 
     private static final String sqlQuerySkeleton = "select o.id as order_id, date, patient_email, patient_name, o.medic_plan, o.medic_plan_number, o.identification_type, o.identification, medic_id, m.name as medic_name, m.email as medic_email, licence_number, clinic_id, c.name as clinic_name, c.email as clinic_email, study_id, s.name as study_name, description from medical_orders o inner join (select * from medics inner join users on medics.user_id = users.id) m on o.medic_id = m.user_id inner join (select * from clinics inner join users on clinics.user_id = users.id) c on o.clinic_id = c.user_id inner join medical_studies s on o.study_id = s.id";
