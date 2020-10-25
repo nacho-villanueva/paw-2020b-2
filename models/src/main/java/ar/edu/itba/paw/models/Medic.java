@@ -37,7 +37,7 @@ public class Medic {
             inverseJoinColumns = @JoinColumn(name="field_id"))
     private Collection<MedicalField> medical_fields;
 
-    @Column(name="verifed",nullable=false)
+    @Column(name="verified",nullable=false)
     private boolean verified;
 
 
