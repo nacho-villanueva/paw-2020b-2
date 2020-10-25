@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.MedicalField;
+import ar.edu.itba.paw.models.MedicalField;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 

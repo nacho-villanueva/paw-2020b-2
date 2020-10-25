@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.Result;
+import ar.edu.itba.paw.models.Order;
+import ar.edu.itba.paw.models.Result;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
