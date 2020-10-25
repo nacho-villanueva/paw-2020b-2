@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -30,6 +31,26 @@ public class ClinicHours {
         for (int i = 0; i < DAYS_OF_WEEK; i++) {
             this.days[i] = false;
         }
+    }
+
+    public ClinicHours(Collection<ClinicDayHours> clinicDayHoursCollection){
+
+        for (ClinicDayHours cdh: clinicDayHoursCollection) {
+            if(cdh.getDay_of_week()<DAYS_OF_WEEK){
+                setDayHour(cdh.getDay_of_week(),cdh.getOpen_time(),cdh.getClose_time());
+            }
+        }
+    }
+
+    public Collection<ClinicDayHours> createClinicDayHoursCollection(){
+        Collection<ClinicDayHours> clinicDayHoursCollection = new ArrayList<>();
+
+        for(int i = 0; i < DAYS_OF_WEEK; i++){
+            if(days[i])
+                clinicDayHoursCollection.add(new ClinicDayHours(i,open_hours[i],close_hours[i]));
+        }
+
+        return clinicDayHoursCollection;
     }
 
     public void setDayHour(final int day_of_week, final Time open_time, final Time close_time) {

@@ -27,8 +27,8 @@ public class Clinic {
             inverseJoinColumns = @JoinColumn(name="study_id"))
     private Collection<StudyType> medical_studies;
 
-    //TODO map clinic hours
-    private ClinicHours hours;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="clinic")
+    private Collection<ClinicDayHours> hours;
 
     @ElementCollection
     @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id"))
@@ -49,7 +49,7 @@ public class Clinic {
         this.name = name;
         this.telephone = telephone;
         this.medical_studies = medical_studies;
-        this.hours = hours;
+        this.hours = hours.createClinicDayHoursCollection();
         this.accepted_plans = accepted_plans;
         this.verified = verified;
     }
@@ -61,7 +61,7 @@ public class Clinic {
         this.name = name;
         this.telephone = telephone;
         this.medical_studies = new ArrayList<>();
-        this.hours = new ClinicHours();
+        this.hours = new ArrayList<>();
         this.accepted_plans = new HashSet<>();
         this.verified = verified;
     }
@@ -80,7 +80,7 @@ public class Clinic {
         this.name = name;
         this.telephone = telephone;
         this.medical_studies = medical_studies;
-        this.hours = hours;
+        this.hours = hours.createClinicDayHoursCollection();
         this.accepted_plans = accepted_plans;
         this.verified = verified;
     }
@@ -90,7 +90,7 @@ public class Clinic {
         this.name = name;
         this.telephone = telephone;
         this.medical_studies = new ArrayList<>();
-        this.hours = new ClinicHours();
+        this.hours = new ArrayList<>();
         this.accepted_plans = new HashSet<>();
         this.verified = verified;
     }
@@ -158,11 +158,11 @@ public class Clinic {
     }
 
     public ClinicHours getHours() {
-        return hours;
+        return new ClinicHours(hours);
     }
 
     public void setHours(ClinicHours hours) {
-        this.hours = hours;
+        this.hours = hours.createClinicDayHoursCollection();
     }
 
     public Set<String> getAccepted_plans() {

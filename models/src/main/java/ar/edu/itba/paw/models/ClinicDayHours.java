@@ -62,6 +62,12 @@ public class ClinicDayHours {
         this.close_time = close_time;
     }
 
+    public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {
+        this.day_of_week = day_of_week;
+        this.open_time = open_time;
+        this.close_time = close_time;
+    }
+
     public int getClinic_id() {
         return clinic_id;
     }
