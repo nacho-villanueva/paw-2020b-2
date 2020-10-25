@@ -183,7 +183,7 @@
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
-                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
+                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
