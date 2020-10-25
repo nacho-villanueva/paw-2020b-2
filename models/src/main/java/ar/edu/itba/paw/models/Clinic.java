@@ -27,7 +27,7 @@ public class Clinic {
             inverseJoinColumns = @JoinColumn(name="study_id"))
     private Collection<StudyType> medical_studies;
 
-    //TODO map clinic hours
+    @Transient
     private ClinicHours hours;
 
     @ElementCollection
