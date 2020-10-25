@@ -1,26 +1,73 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.sql.Date;
 
+@Entity
+@Table(name = "results")
 public class Result {
 
 
+    @Id
+    @GeneratedValue
     private long id;
+
+    @Column(name="order_id", nullable=false)
     private long order_id;
+
+    @Column(name="date", nullable=false)
     private Date date;
+
+    @Column(name="responsible_name", nullable=false)
     private String responsible_name;
+
+    @Column(name="responsible_licence_number", nullable=false)
     private String responsible_licence_number;
+
+    @Column(name="identification_type", nullable=false)
     private String identification_type;
+
+    @Column(name="identification", nullable=false)
     private byte[] identification;
+
+    @Column(name="result_data_type", nullable=false)
     private String data_type;
+
+    @Column(name="result_data", nullable=false)
     private byte[] data;
 
     /* package */ Result() {
         //Just for hibernate
     }
 
-    public Result(final long id, final long order_id, final Date date, final String responsible_name, final String responsible_licence_number,final String identification_type, final byte[] identification, final String data_type, final byte[] data) {
+    public Result(final long id,
+                  final long order_id,
+                  final Date date,
+                  final String responsible_name,
+                  final String responsible_licence_number,
+                  final String identification_type,
+                  final byte[] identification,
+                  final String data_type,
+                  final byte[] data) {
         this.id = id;
+        this.order_id = order_id;
+        this.date = date;
+        this.responsible_name = responsible_name;
+        this.responsible_licence_number = responsible_licence_number;
+        this.identification_type = identification_type;
+        this.identification = identification;
+        this.data_type = data_type;
+        this.data = data;
+    }
+
+    public Result(final long order_id,
+                  final Date date,
+                  final String responsible_name,
+                  final String responsible_licence_number,
+                  final String identification_type,
+                  final byte[] identification,
+                  final String data_type,
+                  final byte[] data) {
         this.order_id = order_id;
         this.date = date;
         this.responsible_name = responsible_name;

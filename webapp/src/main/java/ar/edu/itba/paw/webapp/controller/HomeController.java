@@ -78,7 +78,7 @@ public class HomeController {
 
 
     private ModelAndView homeSetup(ModelAndView mav){
-        Collection<Order> orders = os.getAllUserOrders(loggedUser());;
+        Collection<Order> orders = os.getAllAsUser(loggedUser());;
 
         HashMap<Long, String> orders_encoded = new HashMap<>();
         encoder(orders, orders_encoded);
