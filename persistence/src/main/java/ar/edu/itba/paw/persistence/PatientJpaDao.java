@@ -18,7 +18,7 @@ public class PatientJpaDao implements PatientDao {
 
     @Override
     public Optional<Patient> findByUserId(final int user_id) {
-        return Optional.ofNullable(em.find(Patient.class,user_id));
+        return Optional.ofNullable(em.getReference(Patient.class,user_id));
     }
 
     @Override
@@ -30,14 +30,14 @@ public class PatientJpaDao implements PatientDao {
 
     @Override
     public Patient register(final User user, final String name) {
-        final Patient patient = new Patient(user,name);
+        final Patient patient = new Patient(em.find(User.class,user.getId()),name);
         em.persist(patient);
         return patient;
     }
 
     @Override
     public Patient register(final User user, final String name, final String medic_plan, final String medic_plan_number) {
-        final Patient patient = new Patient(user,name,medic_plan,medic_plan_number);
+        final Patient patient = new Patient(em.find(User.class,user.getId()),name,medic_plan,medic_plan_number);
         em.persist(patient);
         return patient;
     }
@@ -55,10 +55,8 @@ public class PatientJpaDao implements PatientDao {
     @Override
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
         em.detach(patient);
-        em.getTransaction().begin();
         patient.setMedic_plan(medic_plan);
         patient.setMedic_plan_number(medic_plan_number);
-        em.getTransaction().commit();
         em.merge(patient);
         return patient;
     }

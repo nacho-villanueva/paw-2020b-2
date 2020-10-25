@@ -17,7 +17,7 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public Optional<User> findById(final int id) {
-        return Optional.ofNullable(em.find(User.class,id));
+        return Optional.ofNullable(em.getReference(User.class,id));
     }
 
     @Override
