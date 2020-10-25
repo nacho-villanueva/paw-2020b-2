@@ -51,7 +51,7 @@ public class ClinicDayHours {
     @Column(name="close_time")
     private Time close_time;
 
-    /*default*/ ClinicDayHours() {
+    protected ClinicDayHours() {
         //Just for hibernate
     }
 

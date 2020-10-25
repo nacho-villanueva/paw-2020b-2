@@ -7,14 +7,14 @@ import javax.persistence.*;
 public class StudyType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_studies_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_studies_id_seq")
     @SequenceGenerator(sequenceName = "medical_studies_id_seq", name = "medical_studies_id_seq", allocationSize = 1)
     private int id;
 
     @Column(name = "name",nullable = false)
     private String name;
 
-    /* package */ StudyType() {
+    protected StudyType() {
         //Just for hibernate
     }
 

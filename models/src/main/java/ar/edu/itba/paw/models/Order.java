@@ -10,7 +10,8 @@ import java.util.Collection;
 public class Order {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_orders_id_seq")
+    @SequenceGenerator(sequenceName = "medical_orders_id_seq", name = "medical_orders_id_seq", allocationSize = 1)
     private long order_id;
 
     @ManyToOne
@@ -52,7 +53,7 @@ public class Order {
     @OneToMany
     private Collection<Result> study_results;
 
-    /* package */ Order() {
+    protected Order() {
         //Just for hibernate
     }
 

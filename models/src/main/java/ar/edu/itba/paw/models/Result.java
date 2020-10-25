@@ -9,7 +9,8 @@ public class Result {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "results_id_seq")
+    @SequenceGenerator(sequenceName = "results_id_seq", name = "results_id_seq", allocationSize = 1)
     private long id;
 
     @Column(name="order_id", nullable=false)
@@ -36,7 +37,7 @@ public class Result {
     @Column(name="result_data", nullable=false)
     private byte[] data;
 
-    /* package */ Result() {
+    protected Result() {
         //Just for hibernate
     }
 

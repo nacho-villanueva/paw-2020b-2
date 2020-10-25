@@ -37,7 +37,7 @@ public class Clinic {
     @Column(name="verified",nullable=false)
     private boolean verified;
 
-    /* package */ Clinic() {
+    protected Clinic() {
         //Just for Hibernate
     }
 

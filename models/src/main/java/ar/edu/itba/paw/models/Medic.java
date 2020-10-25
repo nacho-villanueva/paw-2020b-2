@@ -9,7 +9,7 @@ import java.util.Collection;
 public class Medic {
 
     @Id //just to asign pk to medic
-    private int user_id;
+    private Integer user_id;
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
@@ -31,7 +31,7 @@ public class Medic {
     @Column(name="licence_number",nullable=false)
     private String licence_number;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name="medic_medical_fields",
             joinColumns = @JoinColumn(name="medic_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"))
@@ -41,7 +41,7 @@ public class Medic {
     private boolean verified;
 
 
-    /* package */ Medic() {
+    protected Medic() {
         //Just for hibernate
     }
 

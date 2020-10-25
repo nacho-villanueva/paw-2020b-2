@@ -7,13 +7,14 @@ import javax.persistence.*;
 public class MedicalField {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_fields_id_seq")
+    @SequenceGenerator(sequenceName = "medical_fields_id_seq", name = "medical_fields_id_seq", allocationSize = 1)
     private int id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    /* package */ MedicalField() {
+    protected MedicalField() {
         //Just for hibernate
     }
 

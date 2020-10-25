@@ -6,16 +6,23 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.MedicDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MedicServiceImpl implements MedicService {
 
     @Autowired
     private MedicDao medicDao;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MedicalFieldService medicalFieldService;
 
     @Override
     public Collection<Medic> getAll() {
@@ -29,7 +36,9 @@ public class MedicServiceImpl implements MedicService {
 
     @Override
     public Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields) {
-        return medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields, false);
+        Medic medic = medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields, false);
+        userService.updateRole(user,User.MEDIC_ROLE_ID);
+        return medic;
     }
 
     @Override
