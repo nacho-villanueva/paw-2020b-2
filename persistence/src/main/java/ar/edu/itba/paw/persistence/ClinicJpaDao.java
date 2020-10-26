@@ -82,7 +82,7 @@ public class ClinicJpaDao implements ClinicDao {
     @Override
     public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
 
-        Optional<Clinic> clinicOptional = Optional.ofNullable(em.getReference(Clinic.class,user.getId()));
+        Optional<Clinic> clinicOptional = this.findByUserId(user.getId());
 
         if(!clinicOptional.isPresent())
             return null;
