@@ -38,7 +38,7 @@
                 <div class="card-body">
                     <p class="card-title h4"><spring:message code="my-studies.results-card.title"/></p>
                     <hr/>
-                    <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
+                    <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 30rem;">
                         <c:if test="${ordersList.size() eq 0}">
                             <h3 class="text-center py-5 lead"><spring:message code="my-studies.results-card.no-results"/></h3>
                         </c:if>
