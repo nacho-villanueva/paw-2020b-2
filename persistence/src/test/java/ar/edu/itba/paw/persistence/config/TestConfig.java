@@ -60,8 +60,8 @@ public class TestConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
-        //dbp.addScript(hsqldbSql);
-        //dbp.addScript(schemaSql);
+        dbp.addScript(hsqldbSql);
+        dbp.addScript(schemaSql);
 
         return dbp;
     }
@@ -74,7 +74,7 @@ public class TestConfig {
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
+        //properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
         // Si ponen esto en prod, hay tabla!!! //TODO: remove this from production

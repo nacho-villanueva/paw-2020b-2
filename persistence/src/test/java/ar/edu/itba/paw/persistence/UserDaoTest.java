@@ -146,7 +146,7 @@ public class UserDaoTest {
 
     @Test
     public void testUpdatePasswordInvalidUser() {
-        dao.updatePassword(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_PASSWORD);  //Does not fail, it updates nothing
+        dao.updatePassword(new User(EMAIL,PASSWORD,ROLE),NEW_PASSWORD);  //Does not fail, it updates nothing
 
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
     }

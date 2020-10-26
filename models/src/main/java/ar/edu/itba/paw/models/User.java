@@ -15,7 +15,7 @@ public class User {
     private static final String DEFAULT_LOCALE = "en-US";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "users_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
     private Integer id;
 
