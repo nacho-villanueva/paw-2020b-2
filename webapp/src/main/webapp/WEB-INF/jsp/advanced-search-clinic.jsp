@@ -113,8 +113,17 @@
                             <fieldset class="form-group">
                                 <label class="bmd-label-floating" for="medical_plan"><spring:message code="advanced-search-clinic.form.medical_plan.label"/></label>
                                 <div class="input-group">
-                                    <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
-                                    <f:errors path="medical_plan"/>
+                                    <c:choose>
+                                        <c:when test="${not empty orderForm}">
+                                            <f:input type="text" readonly="true" class="form-control" id="medical_plan" path="medical_plan"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
+                                            <f:errors path="medical_plan"/>
+                                        </c:otherwise>
+                                    </c:choose>
+
+
                                 </div>
                             </fieldset>
 

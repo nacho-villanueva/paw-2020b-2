@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%@ include file="fragments/include-header.jsp"%>
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+
     <link rel="stylesheet" href="<c:url value="/resources/css/createorder.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 </head>
