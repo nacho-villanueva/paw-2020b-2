@@ -17,13 +17,14 @@ body {
     color: #212529;
     text-align: left;
     background-color: #212121;
+    overflow-y: hidden;
 }
 
 .main-container {
     position: relative;
     background: white;
     background-size: cover;
-    overflow-y: auto;
+    overflow-y: auto !important;
     height: 100vh;
     padding-top: 0;
 }
@@ -69,4 +70,8 @@ body {
 }
 .anim-content{
     animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
+.wrapper {
+    padding-top: 4.5rem !important;
 }

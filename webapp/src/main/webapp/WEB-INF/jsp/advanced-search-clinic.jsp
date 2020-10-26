@@ -10,33 +10,42 @@
     <%@ include file="fragments/include-header.jsp"%>
 
     <link rel="stylesheet" href="<c:url value="/resources/css/advanced-search-clinic.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+    <c:choose>
+        <c:when test="${empty notLogged}">
+            <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
+        </c:when>
+        <c:otherwise>
+            <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+        </c:otherwise>
+    </c:choose>
     <link rel="stylesheet" href="<c:url value="/resources/css/callout.css"/>">
 </head>
 <body>
 <c:set value="${empty daysOfWeek?7:daysOfWeek}" var="daysOfWeek"/>
-
-<!-- Page Wrapper -->
-<div id="wrapper">
 
 
     <c:choose>
         <c:when test="${empty notLogged}">
             <c:choose>
                 <c:when test="${not empty orderForm}">
-                    <jsp:include page="fragments/sidebar-fragment.jsp" >
-                        <jsp:param name="current" value="orders"/>
-                    </jsp:include>
+                    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+                    <div id="wrapper" class="wrapper">
+                        <jsp:include page="fragments/sidebar-fragment.jsp" >
+                            <jsp:param name="current" value="orders"/>
+                        </jsp:include>
                 </c:when>
                 <c:otherwise>
-                    <jsp:include page="fragments/sidebar-fragment.jsp" >
-                        <jsp:param name="current" value="search"/>
-                    </jsp:include>
+                    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+                    <div id="wrapper" class="wrapper">
+                        <jsp:include page="fragments/sidebar-fragment.jsp" >
+                            <jsp:param name="current" value="search"/>
+                        </jsp:include>
                 </c:otherwise>
             </c:choose>
-            <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content-wrapper" class="d-flex flex-column main-container">
         </c:when>
         <c:otherwise>
+            <div id="wrapper" class="wrapper">
             <div id="content-wrapper" class="d-flex flex-column main-container">
                 <%@include file="fragments/navbar-fragment.jsp"%>
         </c:otherwise>

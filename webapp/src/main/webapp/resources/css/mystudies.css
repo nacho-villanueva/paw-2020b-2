@@ -17,17 +17,18 @@ body {
     color: #212529;
     text-align: left;
     background-color: #212121;
+    overflow-y: hidden;
 }
 
 .main-container {
     position: relative;
     background: white;
     background-size: cover;
-
+    overflow-y: auto !important;
     height: 100vh;
-    top: 0;
-    padding-top: 4.5rem;
+    padding-top: 0;
 }
+
 
 
 @keyframes fadeIn {
@@ -95,4 +96,8 @@ body {
 }
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: var(--primary) !important;
+}
+
+.wrapper {
+    padding-top: 4.5rem !important;
 }

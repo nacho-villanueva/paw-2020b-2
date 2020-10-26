@@ -6,12 +6,13 @@
     <!-- bootstrap-select CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="<c:url value="/resources/css/profile.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 
 </head>
 <body>
 <c:url value="/api/image" var="imageAssets"/>
-
-<div id="wrapper">
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="profile"/>
@@ -20,7 +21,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
 
         <div class="main-container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" style="padding-bottom: 3rem !important;margin-bottom: 3rem !important;">
                 <div class="card" style="width: 40em; margin-top: 2em;">
                     <div class="card-body">
                         <div class="row">
