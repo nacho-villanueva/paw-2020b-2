@@ -148,12 +148,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                         "       <td style=\"padding: 24px 0 0 0;\">\n" +
                         "           <table width=\"100%\">\n" +
                         "               <tr>\n" +
-                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
                         "                      <replace-study-type/>\n" +
                         "                   </td>\n"+
                         "               </tr>\n" +
                         "               <tr>\n" +
-                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
                         "                      <replace-description/>\n" +
                         "                   </td>\n"+
                         "               </tr>\n" +
@@ -386,12 +386,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                             "       <td style=\"padding: 24px 0 0 0;\">\n" +
                             "           <table width=\"100%\">\n" +
                             "               <tr>\n" +
-                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
                             "                      <replace-study-type/>\n" +
                             "                   </td>\n"+
                             "               </tr>\n" +
                             "               <tr>\n" +
-                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
                             "                      <replace-description/>\n" +
                             "                   </td>\n"+
                             "               </tr>\n" +
