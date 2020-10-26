@@ -45,7 +45,7 @@ public class Clinic {
     public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
         this(user,name,telephone,verified);
         this.medical_studies = medical_studies;
-        this.hours = hours.createClinicDayHoursCollection();
+        this.hours = hours.createClinicDayHoursCollection(user.getId());
         this.accepted_plans = accepted_plans;
     }
 
@@ -125,7 +125,7 @@ public class Clinic {
     }
 
     public void setHours(ClinicHours hours) {
-        this.hours = hours.createClinicDayHoursCollection();
+        this.hours = hours.createClinicDayHoursCollection(this.user.getId());
     }
 
     public Set<String> getAccepted_plans() {
