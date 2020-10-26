@@ -149,34 +149,34 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                         "   </tr>\n" +
                         "   <tr>\n" +
                         "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                        "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
                         "           <table width=\"100%\">\n" +
                         "               <tr>\n" +
                         "                   <td align=\"left\" width=\"35%\">\n"+
                         "                           <replace-contact1-name/>\n" +
-                        "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                        "                           </a>\n" +
                         "                   </td>\n" +
                         "                   <td align=\"left\" width=\"65%\">\n" +
                         "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
                         "                   </td>\n"+
                         "               </tr>\n" +
                         "           </table>\n"+
+                        "                           </a>\n" +
                         "       </td>\n" +
                         "   </tr>\n" +
                         "   <tr>\n" +
                         "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                        "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
                         "           <table width=\"100%\">\n" +
                         "               <tr>\n" +
                         "                   <td align=\"left\" width=\"35%\">\n"+
                         "                           <replace-contact2-name/>\n" +
-                        "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                        "                           </a>\n" +
                         "                   </td>\n" +
                         "                   <td align=\"left\" width=\"65%\">\n" +
                         "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
                         "                   </td>\n"+
                         "               </tr>\n" +
                         "           </table>\n"+
+                        "                           </a>\n" +
                         "       </td>\n" +
                         "   </tr>\n" +
                         "</table>";
@@ -344,34 +344,34 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                             "   </tr>\n" +
                             "   <tr>\n" +
                             "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                            "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
                             "           <table width=\"100%\">\n" +
                             "               <tr>\n" +
                             "                   <td align=\"left\" width=\"35%\">\n"+
                             "                           <replace-contact1-name/>\n" +
-                            "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                            "                           </a>\n" +
                             "                   </td>\n" +
                             "                   <td align=\"left\" width=\"65%\">\n" +
                             "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
                             "                   </td>\n"+
                             "               </tr>\n" +
                             "           </table>\n"+
+                            "                           </a>\n" +
                             "       </td>\n" +
                             "   </tr>\n" +
                             "   <tr>\n" +
                             "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                            "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
                             "           <table width=\"100%\">\n" +
                             "               <tr>\n" +
                             "                   <td align=\"left\" width=\"35%\">\n"+
                             "                           <replace-contact2-name/>\n" +
-                            "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                            "                           </a>\n" +
                             "                   </td>\n" +
                             "                   <td align=\"left\" width=\"65%\">\n" +
                             "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
                             "                   </td>\n"+
                             "               </tr>\n" +
                             "           </table>\n"+
+                            "                           </a>\n" +
                             "       </td>\n" +
                             "   </tr>\n" +
                             "</table>";
