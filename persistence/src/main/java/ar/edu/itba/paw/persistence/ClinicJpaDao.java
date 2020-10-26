@@ -17,9 +17,6 @@ public class ClinicJpaDao implements ClinicDao {
     private EntityManager em;
 
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
     private StudyTypeDao studyTypeDao;
 
     @Override
@@ -47,7 +44,7 @@ public class ClinicJpaDao implements ClinicDao {
     @Override
     public Collection<Clinic> getByStudyTypeId(final int studyType_id) {
 
-        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyType_id);
+        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyType_id));
 
         if(!studyTypeOptional.isPresent())
             return new ArrayList<>();
@@ -63,90 +60,54 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList();
     }
 
-    private ClinicHours getClinicHours(int clinic_id) {
-        ClinicHours clinicHours = new ClinicHours();
-
-        final TypedQuery<ClinicDayHours> query = em.createQuery("SELECT cdh FROM ClinicDayHours cdh WHERE cdh.clinic_id = :clinicId",ClinicDayHours.class);
-        query.setParameter("clinicId",clinic_id);
-        Collection<ClinicDayHours> clinicDayHours =  query.getResultList();
-
-        clinicDayHours.forEach(day -> clinicHours.setDayHour(day.getDay_of_week(),day.getOpen_time(),day.getClose_time()));
-
-        return clinicHours;
-    }
-
     //TODO: when moving to aspect oriented programming make this function transactional
     @Override
     public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
-        Clinic clinic = new Clinic(user,name,telephone,false);
+
+        //Getting references
+        User userRef = em.getReference(User.class,user.getId());
+        Collection<StudyType> studyTypesRef = new HashSet<>();
+        available_studies.forEach(studyType -> {
+            studyTypesRef.add(em.getReference(StudyType.class,studyType.getId()));
+        });
+
+        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,hours,medic_plans,false);
 
         em.persist(clinic);
         //Todo: Check success
 
-        registerStudiesToClinic(available_studies,user.getId());
-
-        //Add hours to database
-        registerHours(user.getId(), hours);
-
         return clinic;
-    }
-
-    private void registerHours(int clinic_id, ClinicHours hours) {
-
-        Optional<Clinic> clinicOptional = findByUserId(clinic_id);
-        if(clinicOptional.isPresent()){
-            Clinic clinic = clinicOptional.get();
-
-            for(int i = 0; i < hours.getDays().length; i++) {
-                if(hours.getDays()[i]) {
-                    ClinicDayHours clinicDayHours = new ClinicDayHours(i,clinic,hours.getOpen_hours()[i],hours.getClose_hours()[i]);
-                    em.persist(clinicDayHours);
-                }
-            }
-        }
     }
 
     @Override
     public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
 
-        Optional<Clinic> clinicOptional = findByUserId(user.getId());
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.getReference(Clinic.class,user.getId()));
 
         if(!clinicOptional.isPresent())
             return null;
 
         Clinic clinic = clinicOptional.get();
 
+        //Getting references
+        User userRef = em.getReference(User.class,user.getId());
+        Collection<StudyType> studyTypeRef = new HashSet<>();
+        available_studies.forEach(studyType -> {
+            studyTypeRef.add(em.getReference(StudyType.class,studyType.getId()));
+        });
+
         em.detach(clinic);
-        em.getTransaction().begin();
-        clinic.setUser(user);
+        clinic.setUser(userRef);
         clinic.setName(name);
         clinic.setTelephone(telephone);
         clinic.setAccepted_plans(medic_plans);
+        clinic.setMedical_studies(studyTypeRef);
+        clinic.setHours(hours);
         clinic.setVerified(verified);
-        em.getTransaction().commit();
 
-        registerStudiesToClinic(available_studies,user.getId());
-
-        updateHours(user.getId(),hours);
+        em.merge(clinic);
 
         return clinic;
-    }
-
-    private void updateHours(int clinic_id, ClinicHours hours) {
-
-        // remove existing ClinicDayHours and then register the new ones
-        final TypedQuery<ClinicDayHours> query = em.createQuery("SELECT cdh FROM ClinicDayHours cdh WHERE cdh.clinic_id = :clinicId",ClinicDayHours.class);
-        query.setParameter("clinicId",clinic_id);
-        Collection<ClinicDayHours> clinicDayHours =  query.getResultList();
-
-        for (ClinicDayHours cdh:clinicDayHours) {
-            em.detach(cdh);
-            em.getTransaction().begin();
-            em.remove(cdh);
-            em.getTransaction().commit();
-        }
-
-        registerHours(clinic_id,hours);
     }
 
     @Override
@@ -162,7 +123,7 @@ public class ClinicJpaDao implements ClinicDao {
         //We check if it exists
         StudyType studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
 
-        Optional<Clinic> clinicOptional = findByUserId(clinic_id);
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
 
         if(clinicOptional.isPresent()){
             Clinic clinic = clinicOptional.get();
@@ -170,9 +131,7 @@ public class ClinicJpaDao implements ClinicDao {
             //TODO check it works
             em.detach(clinic);
             clinic.getMedical_studies().add(studyTypeFromDB);
-            em.getTransaction().begin();
             em.merge(clinic);
-            em.getTransaction().commit();
         }
 
         //Todo: verify success
@@ -208,12 +167,12 @@ public class ClinicJpaDao implements ClinicDao {
 
     private String getSearchQueryString(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
         //Base Query
-        StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinics c");
+        StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinic c");
 
         //Joins
         if(hours != null) {
             //Add hours part
-            query.append(" INNER JOIN ClinicDayHours cdh ON cdh.clinic_id = c.user.id");
+            query.append(" INNER JOIN FETCH c.hours as cdh");
         }
 
         if(accepted_plan != null) {
@@ -274,42 +233,4 @@ public class ClinicJpaDao implements ClinicDao {
         return query.toString();
     }
 
-    private void registerStudiesToClinic(final Collection<StudyType> available_studies, final int clinic_id) {
-        Collection<StudyType> old_studies = studyTypeDao.findByClinicId(clinic_id);
-        Collection<StudyType> available_studiesDB = new ArrayList<>();
-
-        available_studies.forEach(studyType -> {
-            StudyType studyTypeFromDB = this.registerStudyToClinic(clinic_id, studyType);
-            available_studiesDB.add(studyTypeFromDB);
-        });
-        
-        //We delete the ones that are not in the new list but are still on database
-        old_studies.forEach(studyType -> {
-            if(available_studiesDB.stream().noneMatch(s -> {return s.getId() == studyType.getId();})) {
-                unregisterStudyToClinic(clinic_id,studyType.getId());
-            }
-        });
-
-        return;
-    }
-
-    private void unregisterStudyToClinic(int clinic_id, int study_id) {
-        Optional<Clinic> clinicOptional = findByUserId(clinic_id);
-        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(study_id);
-
-        if(clinicOptional.isPresent() && studyTypeOptional.isPresent()){
-            Clinic clinic = clinicOptional.get();
-            StudyType medicalField = studyTypeOptional.get();
-
-            //TODO check it works
-            em.detach(clinic);
-            clinic.getMedical_studies().remove(medicalField);
-            em.getTransaction().begin();
-            em.merge(clinic);
-            em.getTransaction().commit();
-
-        }
-
-        return;
-    }
 }

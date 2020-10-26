@@ -55,9 +55,9 @@ public class ClinicDayHours {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, Clinic clinic, Time open_time, Time close_time) {
+    public ClinicDayHours(int day, int clinic_id, Time open_time, Time close_time) {
         this.day_of_week = day;
-        this.clinic = clinic;
+        this.clinic_id = clinic_id;
         this.open_time = open_time;
         this.close_time = close_time;
     }

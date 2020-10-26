@@ -4,11 +4,13 @@ import ar.edu.itba.paw.models.StudyType;
 import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class StudyTypeServiceImpl implements StudyTypeService {
 
     @Autowired
