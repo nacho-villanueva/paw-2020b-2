@@ -145,12 +145,14 @@ public class ClinicJpaDao implements ClinicDao {
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
+        //filling params
+
         if(clinic_name!=null)
-            query.setParameter("clinicName",clinic_name);
+            query.setParameter("clinicName","%"+clinic_name.toLowerCase()+"%");
         if(accepted_plan!=null)
-            query.setParameter("clinicAcceptedPlan",accepted_plan.toLowerCase());
+            query.setParameter("clinicAcceptedPlan","%"+accepted_plan.toLowerCase()+"%");
         if(study_name!=null)
-            query.setParameter("clinicMedicalStudy",study_name.toLowerCase());
+            query.setParameter("clinicMedicalStudy","%"+study_name.toLowerCase()+"%");
         if(hours!=null){
             for (int i = 0; i < hours.getDays().length; i++) {
                 //If we have a filter on this day, we add condition
@@ -172,17 +174,17 @@ public class ClinicJpaDao implements ClinicDao {
         //Joins
         if(hours != null) {
             //Add hours part
-            query.append(" INNER JOIN FETCH c.hours as cdh");
+            query.append(" INNER JOIN c.hours as cdh");
         }
 
         if(accepted_plan != null) {
             //Add plans part
-            query.append(" INNER JOIN FETCH c.accepted_plans as cap");
+            query.append(" INNER JOIN c.accepted_plans as cap");
         }
 
         if(study_name != null) {
             //Add study name part
-            query.append(" INNER JOIN FETCH c.medical_studies as ms");
+            query.append(" INNER JOIN c.medical_studies as ms");
         }
 
         //Search
@@ -190,7 +192,7 @@ public class ClinicJpaDao implements ClinicDao {
 
         if(clinic_name != null) {
             //Add clinic name condition
-            query.append(" AND lower(c.name) LIKE '%:clinicName%'");
+            query.append(" AND (LOWER(c.name) LIKE :clinicName)");
         }
 
         if(hours != null) {
@@ -211,7 +213,8 @@ public class ClinicJpaDao implements ClinicDao {
                     query.append(i);
                     query.append(" ))");
                 } else {
-                    query.append("false");
+                    //writing 'false' failed
+                    query.append("1=0");
                 }
                 if(i < hours.getDays().length - 1) {
                     query.append(" OR ");
@@ -222,12 +225,12 @@ public class ClinicJpaDao implements ClinicDao {
 
         if(accepted_plan != null) {
             //Add plan condition
-            query.append(" AND lower(cap.name) LIKE '%:clinicAcceptedPlan%'");
+            query.append(" AND LOWER(cap) LIKE :clinicAcceptedPlan");
         }
 
         if(study_name != null) {
             //Add study name condition
-            query.append(" AND lower(ms.name) LIKE '%:clinicMedicalStudy%'");
+            query.append(" AND LOWER(ms.name) LIKE :clinicMedicalStudy");
         }
 
         return query.toString();
