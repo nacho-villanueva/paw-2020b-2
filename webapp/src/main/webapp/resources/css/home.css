@@ -24,7 +24,7 @@ body {
     position: relative;
     background: white;
     background-size: cover;
-    overflow-y: auto !important;
+    overflow-y: auto;
     height: 100vh;
     padding-top: 0;
 }

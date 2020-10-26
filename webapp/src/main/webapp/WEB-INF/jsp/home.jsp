@@ -52,7 +52,7 @@
         <c:otherwise>
             <div class="row mx-2">
                 <div class="col">
-                    <div class="card bg-light anim-content">
+                    <div class="card bg-light anim-content" style="margin-bottom: 7rem;">
                         <div class="card-body">
                             <p class="card-title h4"><spring:message code="home.body.card.studies.title"/></p>
                             <div class="list-group">

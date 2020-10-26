@@ -117,6 +117,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String patientName  = order.getPatient_name();
         String medicName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
+        String studyName = order.getStudy().getName();
+        String description = order.getDescription();
 
         Locale patientLocale = getLocale(patientMail);
         Locale medicLocale = getLocale(medicMail);
@@ -126,6 +128,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Object[] patientContactParams = {patientName};
         Object[] medicContactParams = {medicName};
         Object[] clinicContactParams = {clinicName};
+        Object[] studyParam = {studyName};
+        Object[] descriptionParam = {description};
 
         ArrayList<String> mailInline = new ArrayList<>();
         mailInline.add("logo.png");
@@ -141,7 +145,24 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                         "<replace-new-info/>\n"+
                         "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                         "   <tr>\n" +
-                        "       <td style=\"padding: 64px 0 0 0;\">\n"+
+                        "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                        "           <table width=\"100%\">\n" +
+                        "               <tr>\n" +
+                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                        "                      <replace-study-type/>\n" +
+                        "                   </td>\n"+
+                        "               </tr>\n" +
+                        "               <tr>\n" +
+                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                        "                      <replace-description/>\n" +
+                        "                   </td>\n"+
+                        "               </tr>\n" +
+                        "           </table>\n"+
+                        "       </td>\n" +
+                        "   </tr>\n" +
+                        "   <tr>\n" +
+                        "   <tr>\n" +
+                        "       <td style=\"padding: 32px 0 0 0;\">\n"+
                         "           <p>\n" +
                         "               <replace-m-contactInfo/>\n" +
                         "           </p>\n" +
@@ -188,6 +209,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to patient
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,patientLocale);
+        mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, patientLocale));
+        if(description != null && !description.isEmpty()){
+            if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
+            }else{
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, patientLocale));
+            }
+        }else{
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, patientLocale));
+        }
         if(!userService.findByEmail(order.getPatient_email()).isPresent()){
             mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
         }else{
@@ -206,6 +237,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to medic
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,medicLocale);
+        mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, medicLocale));
+        if(description != null && !description.isEmpty()){
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
+        }else{
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, medicLocale));
+        }
         mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",medicContactParams,medicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,medicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
@@ -220,6 +257,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         // mail to clinic
         mailContent = basicMailContent;
         mailContent = replaceMessages(mailContent,clinicLocale);
+        mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, clinicLocale));
+        if(description != null && !description.isEmpty()){
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, clinicLocale));
+        }else{
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, clinicLocale));
+        }
         mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",clinicContactParams,clinicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,clinicLocale));
         mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
@@ -312,6 +355,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             String patientName  = order.getPatient_name();
             String medicName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
+            String studyName = order.getStudy().getName();
+            String description = order.getDescription();
 
             Locale patientLocale = getLocale(patientMail);
             Locale medicLocale = getLocale(medicMail);
@@ -321,6 +366,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             Object[] patientContactParams = {patientName};
             Object[] medicContactParams = {medicName};
             Object[] clinicContactParams = {clinicName};
+            Object[] studyParam = {studyName};
+            Object[] descriptionParam = {description};
 
             String basicMailContent = getMailTemplate();
 
@@ -336,12 +383,30 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                             "<replace-new-info/>\n"+
                             "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
                             "   <tr>\n" +
-                            "       <td style=\"padding: 64px 0 0 0;\">\n"+
+                            "       <td style=\"padding: 24px 0 0 0;\">\n" +
+                            "           <table width=\"100%\">\n" +
+                            "               <tr>\n" +
+                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                            "                      <replace-study-type/>\n" +
+                            "                   </td>\n"+
+                            "               </tr>\n" +
+                            "               <tr>\n" +
+                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:14px;\">\n"+
+                            "                      <replace-description/>\n" +
+                            "                   </td>\n"+
+                            "               </tr>\n" +
+                            "           </table>\n"+
+                            "       </td>\n" +
+                            "   </tr>\n" +
+                            "   <tr>\n" +
+                            "   <tr>\n" +
+                            "       <td style=\"padding: 32px 0 0 0;\">\n"+
                             "           <p>\n" +
                             "               <replace-m-contactInfo/>\n" +
                             "           </p>\n" +
                             "       </td>\n"+
                             "   </tr>\n" +
+                            "   <tr>\n" +
                             "   <tr>\n" +
                             "       <td style=\"padding: 24px 0 0 0;\">\n" +
                             "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
@@ -383,6 +448,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to patient
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,patientLocale);
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, patientLocale));
+            if(description != null && !description.isEmpty()){
+                if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+                    mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
+                }else{
+                    mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, patientLocale));
+                }
+            }else{
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, patientLocale));
+            }
             if(!userService.findByEmail(order.getPatient_email()).isPresent()){
                 mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
             }else{
@@ -401,6 +476,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to medic
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,medicLocale);
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, medicLocale));
+            if(description != null && !description.isEmpty()){
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
+            }else{
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, medicLocale));
+            }
             mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",medicContactParams,medicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,medicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
@@ -415,6 +496,12 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             // mail to clinic
             mailContent = basicMailContent;
             mailContent = replaceMessages(mailContent,clinicLocale);
+            mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, clinicLocale));
+            if(description != null && !description.isEmpty()){
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, clinicLocale));
+            }else{
+                mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, clinicLocale));
+            }
             mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",clinicContactParams,clinicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-name/>",messageSource.getMessage("mail.contact.patient",patientContactParams,clinicLocale));
             mailContent = mailContent.replaceAll("<replace-contact1-email/>",patientMail);
