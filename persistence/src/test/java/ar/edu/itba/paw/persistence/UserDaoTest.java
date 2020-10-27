@@ -21,41 +21,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Transactional
-@Rollback
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class UserDaoTest {
 
     //TABLE NAMES
     private static final String USERS_TABLE_NAME = "users";
-    private static final String CLINICS_TABLE_NAME = "clinics";
-    private static final String CLINICS_RELATION_TABLE_NAME = "clinic_available_studies";
-    private static final String MEDICS_TABLE_NAME = "medics";
-    private static final String MEDICS_RELATION_TABLE_NAME = "medic_medical_fields";
-    private static final String PATIENTS_TABLE_NAME = "patients";
-    private static final String ORDERS_TABLE_NAME = "medical_orders";
-    private static final String RESULTS_TABLE_NAME = "results";
-    private static final String CLINIC_HOURS_TABLE_NAME = "clinic_hours";
-    private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
 
+    //Test data
+    private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
-    private static final String EMAIL = "patient@zero.com";
-    private static final String NEW_EMAIL = "patient@one.com";
-    private static final String PASSWORD = "GroundZer0";
-    private static final String NEW_PASSWORD = "GroundZer1";
-    private static final int ROLE = 4;
-    private static final int NEW_ROLE = 2;
-    private static final int ZERO_ID = 0;
-    private static final String DEFAULT_LOCALE = "en-US";
+    //Known users
+    private static final User userZero = new User(1,"zero@zero.com","zeroPass",User.PATIENT_ROLE_ID);
+    private static final User userOne = new User(2,"one@one.com","onePass",User.MEDIC_ROLE_ID);
+    private static final User userSix = new User(7,"six@six.com","sixPass",User.UNDEFINED_ROLE_ID);
 
-    private static final String MEDIC_IDENTIFICATION_TYPE = "image/png";
-    private static final byte[] MEDIC_IDENTIFICATION = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
-            0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
-            0x30, 0x30, (byte)0x9d };
-    private static final String MEDIC_NAME = "Jhon William";
-    private static final String MEDIC_TELEPHONE = "1111111111";
-    private static final String MEDIC_LICENCE = "A21-B15";
 
     @Autowired
     private DataSource ds;
@@ -64,130 +45,67 @@ public class UserDaoTest {
     private UserDao dao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
-    private SimpleJdbcInsert jdbcInsertMedic;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName(USERS_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-        jdbcInsertMedic = new SimpleJdbcInsert(ds)
-                .withTableName(MEDICS_TABLE_NAME);
-
-        /*JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_HOURS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_PLANS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_RELATION_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_RELATION_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);*/
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testRegisterValid() {
-        final User user = dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
+        final User user = dao.register(userTest.getEmail(),userTest.getPassword(),userTest.getRole(),userTest.getLocale());
 
         Assert.assertNotNull(user);
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
-    }
-/*
-    @Test(expected = DuplicateKeyException.class)
-    public void testRegisterInvalid() {
-        insertTestUser(User.PATIENT_ROLE_ID);
-        dao.register(EMAIL,PASSWORD,ROLE,DEFAULT_LOCALE);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));
     }
 
+    @Test(expected = DuplicateKeyException.class)
+    @Transactional
+    @Rollback
+    public void testRegisterDuplicateEmail() {
+        dao.register(userZero.getEmail(),userTest.getPassword(),userTest.getRole(),userTest.getLocale());
+    }
+
+    @Transactional
+    @Rollback
     @Test
     public void testFindByIdExists() {
-        int dbkey = insertTestUser(User.PATIENT_ROLE_ID);
-
-        Optional<User> maybeUser = dao.findById(dbkey);
+        Optional<User> maybeUser = dao.findById(userZero.getId());
 
         Assert.assertTrue(maybeUser.isPresent());
-        Assert.assertEquals(EMAIL,maybeUser.get().getEmail());
-        Assert.assertEquals(User.PATIENT_ROLE_ID,maybeUser.get().getRole());
+        Assert.assertEquals(userZero.getEmail(),maybeUser.get().getEmail());
+        Assert.assertEquals(userZero.getRole(),maybeUser.get().getRole());
     }
 
+    @Transactional
+    @Rollback
     @Test
     public void testFindByIdNotExists() {
-        Optional<User> maybeUser = dao.findById(ZERO_ID);
+        Optional<User> maybeUser = dao.findById(userTest.getId());
 
         Assert.assertFalse(maybeUser.isPresent());
     }
 
+    @Transactional
+    @Rollback
     @Test
     public void testUpdateRoleValidUser() {
-        int dbkey = insertTestUser(ROLE);
+        User newUser = dao.updateRole(userSix,User.PATIENT_ROLE_ID);
 
-        User newUser = dao.updateRole(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_ROLE);
-
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"role = " + NEW_ROLE));
-        Assert.assertEquals(NEW_ROLE,newUser.getRole());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"id = " + userSix.getId() + " AND role = " + User.PATIENT_ROLE_ID));
+        Assert.assertEquals(User.PATIENT_ROLE_ID,newUser.getRole());
+        Assert.assertEquals(userSix.getId(),newUser.getId());
     }
 
+    @Transactional
+    @Rollback
     @Test
-    public void testUpdateRoleInvalidUser() {
-        dao.updateRole(new User(EMAIL,PASSWORD,ROLE),NEW_ROLE);  //Does not fail, it updates nothing
+    public void testUpdateRoleNonExistantUser() {
+        User user = dao.updateRole(userTest,User.PATIENT_ROLE_ID);  //Does not fail, it updates nothing
 
-        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
-    }
-
-    @Test
-    public void testUpdatePassword() {
-        int dbkey = insertTestUser(ROLE);
-
-        dao.updatePassword(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_PASSWORD);
-
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"password = '" + NEW_PASSWORD + "'"));
-    }
-
-    @Test
-    public void testUpdatePasswordInvalidUser() {
-        dao.updatePassword(new User(EMAIL,PASSWORD,ROLE),NEW_PASSWORD);  //Does not fail, it updates nothing
-
-        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
-    }
-
-    @Test
-    public void testUpdateEmail() {
-        int dbkey = insertTestUser(ROLE);
-
-        dao.updateEmail(new User(dbkey,EMAIL,PASSWORD,ROLE),NEW_EMAIL);
-
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + NEW_EMAIL + "'"));
-    }
-
-    @Test
-    public void testUpdateEmailInvalidUser() {
-        dao.updateEmail(new User(ZERO_ID,EMAIL,PASSWORD,ROLE),NEW_EMAIL);  //Does not fail, it updates nothing
-
-        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,USERS_TABLE_NAME));
-    }*/
-
-    private int insertTestUser(int role) {
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("email", EMAIL);
-        insertMap.put("password", PASSWORD);
-        insertMap.put("role", role);
-        Number key = jdbcInsert.executeAndReturnKey(insertMap);
-        return key.intValue();
-    }
-
-    private void insertTestMedic(int user_id, boolean verified) {
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("user_id",user_id);
-        insertMap.put("name", MEDIC_NAME);
-        insertMap.put("telephone", MEDIC_TELEPHONE);
-        insertMap.put("identification_type",MEDIC_IDENTIFICATION_TYPE);
-        insertMap.put("identification",MEDIC_IDENTIFICATION);
-        insertMap.put("licence_number", MEDIC_LICENCE);
-        insertMap.put("verified", verified);
-
-        jdbcInsertMedic.execute(insertMap);
+        Assert.assertNull(user);
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));
     }
 }

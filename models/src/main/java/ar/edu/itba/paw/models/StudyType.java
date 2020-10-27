@@ -11,7 +11,7 @@ public class StudyType {
     @SequenceGenerator(sequenceName = "medical_studies_id_seq", name = "medical_studies_id_seq", allocationSize = 1)
     private int id;
 
-    @Column(name = "name",nullable = false)
+    @Column(nullable = false)
     private String name;
 
     protected StudyType() {
@@ -19,8 +19,8 @@ public class StudyType {
     }
 
     public StudyType(final int id, final String name) {
+        this(name);
         this.id = id;
-        this.name = name;
     }
 
     public StudyType(String name) {

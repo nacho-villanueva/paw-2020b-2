@@ -11,7 +11,7 @@ public class MedicalField {
     @SequenceGenerator(sequenceName = "medical_fields_id_seq", name = "medical_fields_id_seq", allocationSize = 1)
     private int id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     protected MedicalField() {
@@ -19,8 +19,8 @@ public class MedicalField {
     }
 
     public MedicalField(final int id, final String name) {
+        this(name);
         this.id = id;
-        this.name = name;
     }
 
     public MedicalField(final String name) {
