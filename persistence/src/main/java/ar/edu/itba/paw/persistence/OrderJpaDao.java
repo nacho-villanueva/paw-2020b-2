@@ -50,21 +50,21 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Collection<Order> getAllAsClinic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN Clinic c WHERE c.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.clinic c WHERE c.user_id = :id", Order.class);
         query.setParameter("id", user.getId());
-        return query.getResultList();
+            return query.getResultList();
     }
 
     @Override
     public Collection<Order> getAllAsMedic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN Medic m WHERE m.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.user_id = :id", Order.class);
         query.setParameter("id", user.getId());
         return query.getResultList();
     }
 
     @Override
     public Collection<Order> getAllAsPatient(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE  o.patient_email = :email", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patient_email = :email", Order.class);
         query.setParameter("email", user.getEmail());
         return query.getResultList();
     }
