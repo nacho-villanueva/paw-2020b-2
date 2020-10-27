@@ -13,6 +13,7 @@ public class Patient {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
+
     @Column(nullable = false)
     private String name;
     @Column

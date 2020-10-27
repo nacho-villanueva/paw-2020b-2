@@ -33,9 +33,8 @@ public class UserDaoTest {
     private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
     //Known users
-    private static final User userZero = new User(1,"zero@zero.com","zeroPass",User.PATIENT_ROLE_ID);
-    private static final User userOne = new User(2,"one@one.com","onePass",User.MEDIC_ROLE_ID);
-    private static final User userSix = new User(7,"six@six.com","sixPass",User.UNDEFINED_ROLE_ID);
+    private static final User userZero = new User(1,"zero@zero.com","passZero",User.PATIENT_ROLE_ID);
+    private static final User userSix = new User(7,"six@six.com","passSix",User.UNDEFINED_ROLE_ID);
 
 
     @Autowired
@@ -102,8 +101,50 @@ public class UserDaoTest {
     @Transactional
     @Rollback
     @Test
-    public void testUpdateRoleNonExistantUser() {
+    public void testUpdateRoleNonExistentUser() {
         User user = dao.updateRole(userTest,User.PATIENT_ROLE_ID);  //Does not fail, it updates nothing
+
+        Assert.assertNull(user);
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testUpdatePasswordValidUser() {
+        User newUser = dao.updatePassword(userSix,userTest.getPassword());
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"id = " + userSix.getId() + " AND password = '" + userTest.getPassword() + "'"));
+        Assert.assertEquals(userTest.getPassword(),newUser.getPassword());
+        Assert.assertEquals(userSix.getId(),newUser.getId());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testUpdatePasswordNonExistentUser() {
+        User user = dao.updatePassword(userTest,userTest.getPassword());  //Does not fail, it updates nothing
+
+        Assert.assertNull(user);
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testUpdateEmailValidUser() {
+        User newUser = dao.updateEmail(userSix,userTest.getEmail());
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"id = " + userSix.getId() + " AND email = '" + userTest.getEmail() + "'"));
+        Assert.assertEquals(User.PATIENT_ROLE_ID,newUser.getRole());
+        Assert.assertEquals(userSix.getId(),newUser.getId());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testUpdateEmailNonExistentUser() {
+        User user = dao.updateEmail(userTest,userTest.getEmail());  //Does not fail, it updates nothing
 
         Assert.assertNull(user);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));

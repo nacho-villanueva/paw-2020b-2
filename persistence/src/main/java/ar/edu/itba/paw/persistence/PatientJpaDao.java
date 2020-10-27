@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,20 +47,22 @@ public class PatientJpaDao implements PatientDao {
 
     @Override
     public Patient updatePatientInfo(final Patient patient, final String name, final String medic_plan, final String medic_plan_number) {
-        em.detach(patient);
-        patient.setName(name);
-        patient.setMedic_plan(medic_plan);
-        patient.setMedic_plan_number(medic_plan_number);
-        em.merge(patient);
-        return patient;
+        Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
+        patientDB.ifPresent(patient1 -> {
+            patient1.setName(name);
+            patient1.setMedic_plan(medic_plan);
+            patient1.setMedic_plan_number(medic_plan_number);
+        });
+        return patientDB.orElse(null);
     }
 
     @Override
     public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
-        em.detach(patient);
-        patient.setMedic_plan(medic_plan);
-        patient.setMedic_plan_number(medic_plan_number);
-        em.merge(patient);
-        return patient;
+        Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
+        patientDB.ifPresent(patient1 -> {
+            patient1.setMedic_plan(medic_plan);
+            patient1.setMedic_plan_number(medic_plan_number);
+        });
+        return patientDB.orElse(null);
     }
 }

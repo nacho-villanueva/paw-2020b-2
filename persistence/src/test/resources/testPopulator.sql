@@ -26,4 +26,6 @@ insert into medics(user_id,name,identification_type,identification,licence_numbe
 
 insert into medic_medical_fields(medic_id,field_id) values (2,1),(2,2),(2,3),(5,3),(5,4),(5,5);
 
-insert into clinic_available_studies(clinic_id,study_id) values (3,1),(3,2),(3,3),(6,4),(6,5),(6,6);
+insert into clinic_available_studies(clinic_id,study_id) values (3,1),(3,2),(3,4),(6,4),(6,5),(6,6);
+
+insert into patients(user_id,name) values (1,'Patient Zero'),(4,'Patient Three');
