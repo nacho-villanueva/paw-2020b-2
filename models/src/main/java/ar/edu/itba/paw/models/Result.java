@@ -10,6 +10,7 @@ public class Result {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "results_id_seq")
     @SequenceGenerator(sequenceName = "results_id_seq", name = "results_id_seq", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne

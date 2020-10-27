@@ -18,10 +18,10 @@ public class Clinic {
     @Column(name = "name",nullable=false)
     private String name;
 
-    @Column(name="telephone",nullable=false)
+    @Column(name="telephone")
     private String telephone;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="clinic_available_studies",
             joinColumns = @JoinColumn(name="clinic_id"),
             inverseJoinColumns = @JoinColumn(name="study_id"))
