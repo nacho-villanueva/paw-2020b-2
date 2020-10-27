@@ -12,7 +12,5 @@ public interface MedicalFieldService {
 
     public Collection<MedicalField> getAll();
 
-    public Collection<MedicalField> findByMedicId(int medic_id);
-
     public MedicalField findOrRegister(String name);
 }

@@ -32,11 +32,6 @@ public class MedicalFieldServiceImpl implements MedicalFieldService {
     }
 
     @Override
-    public Collection<MedicalField> findByMedicId(int medic_id) {
-        return dao.findByMedicId(medic_id);
-    }
-
-    @Override
     public MedicalField findOrRegister(String name) {
         return dao.findOrRegister(name);
     }
