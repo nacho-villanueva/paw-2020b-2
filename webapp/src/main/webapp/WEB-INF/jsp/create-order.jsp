@@ -22,7 +22,7 @@
 
 <div id="content-wrapper" class="d-flex flex-column main-container">
     <div class="row justify-content-center">
-        <div class="card" style="width: 40em; margin-top: 2em;">
+        <div class="card" style="width: 40em; margin-top: 2em; margin-bottom: 7rem;">
             <div class="card-body">
                 <div class="row">
                     <p class="card-title h4 mx-auto mt-3"><spring:message code="create-order.body.form.title"/> </p>

@@ -49,7 +49,7 @@
                             <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
                             <p class="text-center"><spring:message code="view-study.body.card.order.licence_number.prefix" arguments="${order.medic.licence_number}"/></p>
                         </div>
-                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem;">
+                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem; max-height: 5em;">
                     </div>
                 </div>
             </div>
