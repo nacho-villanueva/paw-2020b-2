@@ -42,6 +42,26 @@ public class Result {
         //Just for hibernate
     }
 
+    public Result(final Long id,
+                  final Order order,
+                  final Date date,
+                  final String responsible_name,
+                  final String responsible_licence_number,
+                  final String identification_type,
+                  final byte[] identification,
+                  final String data_type,
+                  final byte[] data) {
+        this.id = id;
+        this.order = order;
+        this.date = date;
+        this.responsible_name = responsible_name;
+        this.responsible_licence_number = responsible_licence_number;
+        this.identification_type = identification_type;
+        this.identification = identification;
+        this.data_type = data_type;
+        this.data = data;
+    }
+
     public Result(final Order order,
                   final Date date,
                   final String responsible_name,
