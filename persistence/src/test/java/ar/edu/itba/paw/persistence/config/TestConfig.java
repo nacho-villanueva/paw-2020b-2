@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -35,11 +36,15 @@ public class TestConfig {
     @Value("classpath:schema.sql")
     Resource schemaSql;
 
+    @Value("classpath:testPopulator.sql")
+    Resource testPopulatorSql;
+
     @Bean
     public DataSource dataSource() {
-        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
 
-        ds.setDriverClass(JDBCDriver.class);
+        ds.setDriverClassName(JDBCDriver.class.getName());
+        ds.setSuppressClose(true);
         ds.setUrl("jdbc:hsqldb:mem:paw");
         ds.setUsername("ha");
         ds.setPassword("");
@@ -60,8 +65,8 @@ public class TestConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
-        dbp.addScript(hsqldbSql);
-        dbp.addScript(schemaSql);
+        //dbp.addScript(hsqldbSql);
+        //dbp.addScript(schemaSql);
 
         return dbp;
     }
@@ -74,7 +79,7 @@ public class TestConfig {
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
-        //properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
         // Si ponen esto en prod, hay tabla!!! //TODO: remove this from production

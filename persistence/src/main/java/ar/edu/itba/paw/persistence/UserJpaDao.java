@@ -17,7 +17,7 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public Optional<User> findById(final int id) {
-        return Optional.ofNullable(em.getReference(User.class,id));
+        return Optional.ofNullable(em.find(User.class,id));
     }
 
     @Override
@@ -36,25 +36,28 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public User updateRole(final User user, final int role) {
-        em.detach(user);
-        user.setRole(role);
-        em.merge(user);
+        Optional<User> userDB = findById(user.getId());
+        userDB.ifPresent(user1 -> {
+            user1.setRole(role);
+        });
         return user;
     }
 
     @Override
     public User updateEmail(final User user, final String email) {
-        em.detach(user);
-        user.setEmail(email);
-        em.merge(user);
+        Optional<User> userDB = findById(user.getId());
+        userDB.ifPresent(user1 -> {
+            user1.setEmail(email);
+        });
         return user;
     }
 
     @Override
     public User updatePassword(final User user, final String password) {
-        em.detach(user);
-        user.setPassword(password);
-        em.merge(user);
+        Optional<User> userDB = findById(user.getId());
+        userDB.ifPresent(user1 -> {
+            user1.setPassword(password);
+        });
         return user;
     }
 }
