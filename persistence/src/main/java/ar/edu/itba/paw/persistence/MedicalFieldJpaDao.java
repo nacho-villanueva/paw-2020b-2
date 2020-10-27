@@ -36,15 +36,10 @@ public class MedicalFieldJpaDao implements MedicalFieldDao{
     }
 
     @Override
-    public Collection<MedicalField> findByMedicId(int medic_id) {
-        final TypedQuery<MedicalField> query = em.createQuery("SELECT m.medical_fields from Medic m WHERE m.user_id=:medic_id", MedicalField.class);
-        query.setParameter("medic_id",medic_id);
-        return query.getResultList();
-    }
-
-    @Override
     public MedicalField findOrRegister(String name) {
-        return findByName(name).orElse(register(name));
+        Optional<MedicalField> maybeField = findByName(name);
+
+        return maybeField.orElseGet(() -> register(name));
     }
 
     private MedicalField register(String name){
