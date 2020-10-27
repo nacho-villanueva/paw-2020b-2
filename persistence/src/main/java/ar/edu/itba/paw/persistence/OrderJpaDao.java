@@ -26,7 +26,7 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Order register(final Medic medic, final Date date, final Clinic clinic,
-                          final String patient_name, final String patient_email,
+                          final String patient_email, final String patient_name,
                           final StudyType studyType, final String description,
                           final String identification_type, final byte[] identification,
                           final String insurance_plan, final String insurance_number) {
@@ -41,8 +41,8 @@ public class OrderJpaDao implements OrderDao {
                 identification,
                 insurance_plan,
                 insurance_number,
-                patient_name,
-                patient_email);
+                patient_email,
+                patient_name);
 
         em.persist(order);
         return order;

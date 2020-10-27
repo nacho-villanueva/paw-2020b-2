@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "medical_studies")
@@ -13,6 +14,9 @@ public class StudyType {
 
     @Column(nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "medical_studies",fetch = FetchType.LAZY)
+    private Collection<Clinic> clinics;
 
     protected StudyType() {
         //Just for hibernate

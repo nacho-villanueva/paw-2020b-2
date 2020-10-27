@@ -51,8 +51,7 @@ public class Order {
     @Column(name = "patient_name", nullable = false)
     private String patient_name;
 
-    @OneToMany
-    @CollectionTable(name="results", joinColumns=@JoinColumn(name="order_id"))
+    @OneToMany(mappedBy = "order")
     private Collection<Result> study_results;
 
     protected Order() {
