@@ -34,6 +34,7 @@ public class PatientJpaDao implements PatientDao {
         User userRef = em.getReference(User.class,user.getId());
         final Patient patient = new Patient(userRef,name);
         em.persist(patient);
+        em.flush();
         return patient;
     }
 
@@ -42,6 +43,7 @@ public class PatientJpaDao implements PatientDao {
         User userRef = em.getReference(User.class,user.getId());
         final Patient patient = new Patient(userRef,name,medic_plan,medic_plan_number);
         em.persist(patient);
+        em.flush();
         return patient;
     }
 
@@ -52,6 +54,7 @@ public class PatientJpaDao implements PatientDao {
             patient1.setName(name);
             patient1.setMedic_plan(medic_plan);
             patient1.setMedic_plan_number(medic_plan_number);
+            em.flush();
         });
         return patientDB.orElse(null);
     }
@@ -62,6 +65,7 @@ public class PatientJpaDao implements PatientDao {
         patientDB.ifPresent(patient1 -> {
             patient1.setMedic_plan(medic_plan);
             patient1.setMedic_plan_number(medic_plan_number);
+            em.flush();
         });
         return patientDB.orElse(null);
     }

@@ -75,7 +75,7 @@ public class ClinicJpaDao implements ClinicDao {
 
         em.persist(clinic);
         //Todo: Check success
-
+        em.flush();
         return clinic;
     }
 
@@ -96,7 +96,6 @@ public class ClinicJpaDao implements ClinicDao {
             studyTypeRef.add(em.getReference(StudyType.class,studyType.getId()));
         });
 
-        em.detach(clinic);
         clinic.setUser(userRef);
         clinic.setName(name);
         clinic.setTelephone(telephone);
@@ -105,8 +104,7 @@ public class ClinicJpaDao implements ClinicDao {
         clinic.setHours(hours);
         clinic.setVerified(verified);
 
-        em.merge(clinic);
-
+        em.flush();
         return clinic;
     }
 
@@ -129,13 +127,11 @@ public class ClinicJpaDao implements ClinicDao {
             Clinic clinic = clinicOptional.get();
 
             //TODO check it works
-            em.detach(clinic);
             clinic.getMedical_studies().add(studyTypeFromDB);
-            em.merge(clinic);
+            em.flush();
         }
 
         //Todo: verify success
-
         return studyTypeFromDB;
     }
 

@@ -54,7 +54,7 @@ public class StudyTypeJpaDao implements StudyTypeDao{
         StudyType studyType = new StudyType(name);
 
         em.persist(studyType);
-
+        em.flush();
         //TODO: Check success
         return studyType;
     }

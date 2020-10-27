@@ -31,6 +31,7 @@ public class UserJpaDao implements UserDao {
     public User register(final String email, final String password, final int role, final String locale) {
         final User user = new User(email,password,role,locale);
         em.persist(user);
+        em.flush();
         return user;
     }
 
@@ -40,6 +41,7 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setRole(role);
         });
+        em.flush();
         return userDB.orElse(null);
     }
 
@@ -49,6 +51,7 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setEmail(email);
         });
+        em.flush();
         return userDB.orElse(null);
     }
 
@@ -58,6 +61,7 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setPassword(password);
         });
+        em.flush();
         return userDB.orElse(null);
     }
 }

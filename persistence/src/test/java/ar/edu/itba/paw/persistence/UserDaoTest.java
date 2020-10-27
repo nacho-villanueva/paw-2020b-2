@@ -2,20 +2,21 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.hibernate.SessionFactory;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,6 @@ public class UserDaoTest {
     private static final User userZero = new User(1,"zero@zero.com","passZero",User.PATIENT_ROLE_ID);
     private static final User userSix = new User(7,"six@six.com","passSix",User.UNDEFINED_ROLE_ID);
 
-
     @Autowired
     private DataSource ds;
 
@@ -45,10 +45,11 @@ public class UserDaoTest {
 
     private JdbcTemplate jdbcTemplate;
 
-    @Before
-    public void setUp() {
+    @Autowired
+    public void setDataSource() {
         jdbcTemplate = new JdbcTemplate(ds);
     }
+
 
     @Test
     @Transactional
@@ -60,7 +61,7 @@ public class UserDaoTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"email = '" + userTest.getEmail() + "'"));
     }
 
-    @Test(expected = DuplicateKeyException.class)
+    @Test(expected = PersistenceException.class)
     @Transactional
     @Rollback
     public void testRegisterDuplicateEmail() {
@@ -136,7 +137,7 @@ public class UserDaoTest {
         User newUser = dao.updateEmail(userSix,userTest.getEmail());
 
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,USERS_TABLE_NAME,"id = " + userSix.getId() + " AND email = '" + userTest.getEmail() + "'"));
-        Assert.assertEquals(User.PATIENT_ROLE_ID,newUser.getRole());
+        Assert.assertEquals(userSix.getRole(),newUser.getRole());
         Assert.assertEquals(userSix.getId(),newUser.getId());
     }
 

@@ -58,6 +58,7 @@ public class MedicJpaDao implements MedicDao {
         });
         final Medic medic = new Medic(userRef,name,telephone,identification_type,identification,licence_number,verified,fieldsRef);
         em.persist(medic);
+        em.flush();
         return medic;
     }
 
@@ -78,6 +79,7 @@ public class MedicJpaDao implements MedicDao {
                 fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
             });
             medic.setMedical_fields(fieldsRef);
+            em.flush();
         });
 
         return medicDB.orElse(null);
@@ -105,6 +107,7 @@ public class MedicJpaDao implements MedicDao {
         if(medicDB.isPresent()) {
             MedicalField medicalFieldDB = medicalFieldDao.findOrRegister(medicalField.getName());
             medicDB.get().getMedical_fields().add(medicalFieldDB);
+            em.flush();
             return medicalFieldDB;
         }
 

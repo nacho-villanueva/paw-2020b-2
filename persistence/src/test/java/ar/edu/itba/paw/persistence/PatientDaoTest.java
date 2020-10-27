@@ -18,6 +18,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,14 +65,14 @@ public class PatientDaoTest {
 
     @Transactional
     @Rollback
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testRegisterNoSuchUser() {
         dao.register(userTest,patientTest.getName());
     }
 
     @Transactional
     @Rollback
-    @Test(expected = EntityExistsException.class)
+    @Test(expected = PersistenceException.class)
     public void testRegisterAlreadyExists() {
         dao.register(patientZero.getUser(),patientTest.getName());
     }

@@ -45,6 +45,7 @@ public class OrderJpaDao implements OrderDao {
                 patient_name);
 
         em.persist(order);
+        em.flush();
         return order;
     }
 

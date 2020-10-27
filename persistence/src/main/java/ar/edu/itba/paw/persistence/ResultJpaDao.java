@@ -45,6 +45,7 @@ public class ResultJpaDao implements ResultDao {
                 result_data);
 
         em.persist(result);
+        em.flush();
         return result;
     }
 }
