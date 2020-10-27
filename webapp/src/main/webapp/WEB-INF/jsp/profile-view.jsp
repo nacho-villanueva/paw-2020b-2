@@ -77,13 +77,13 @@
                                             <td><spring:message code="profile-view.body.tab.user.email.label"/></td>
                                             <td class="output"><c:out value="${loggedUser.email}"/></td>
                                             <td>
-                                                <a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/email"/>"><spring:message code="profile-view.body.button.edit.user.email"/> </a>
+                                                <a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/email"/>" title="<spring:message code="profile-view.body.button.edit.user.email"/>"> <i class="fas fa-fw fa-edit"></i> </a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.user.password.label"/></td>
                                             <td class="output"><spring:message code="profile-view.body.tab.user.password.data"/></td>
-                                            <td><a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/pass"/>"><spring:message code="profile-view.body.button.edit.user.password"/> </a></td>
+                                            <td><a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/pass"/>" title="<spring:message code="profile-view.body.button.edit.user.password"/>"> <i class="fas fa-fw fa-edit"></i> </a></td>
                                         </tr>
 
                                     </tbody>
