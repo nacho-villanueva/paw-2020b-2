@@ -40,7 +40,7 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setRole(role);
         });
-        return user;
+        return userDB.orElse(null);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setEmail(email);
         });
-        return user;
+        return userDB.orElse(null);
     }
 
     @Override
@@ -58,6 +58,6 @@ public class UserJpaDao implements UserDao {
         userDB.ifPresent(user1 -> {
             user1.setPassword(password);
         });
-        return user;
+        return userDB.orElse(null);
     }
 }

@@ -45,10 +45,16 @@ public class MedicJpaDao implements MedicDao {
 
     @Override
     public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+        //Getting user reference
         User userRef = em.getReference(User.class,user.getId());
+
+        //Getting field references
         Collection<MedicalField> fieldsRef = new HashSet<>();
         known_fields.forEach(medicalField -> {
-            fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+            MedicalField fieldRef = em.getReference(MedicalField.class,medicalField.getId());
+            if(fieldRef != null) {
+                fieldsRef.add(fieldRef);
+            }
         });
         final Medic medic = new Medic(userRef,name,telephone,identification_type,identification,licence_number,verified,fieldsRef);
         em.persist(medic);
@@ -58,43 +64,37 @@ public class MedicJpaDao implements MedicDao {
     @Override
     public Medic updateMedicInfo(User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
 
-        Optional<Medic> medicOptional = findByUserId(user.getId());
+        Optional<Medic> medicDB = findByUserId(user.getId());
 
-        if(!medicOptional.isPresent())
-            return null;
-
-        Medic medic = medicOptional.get();
-
-        //Getting references
-        User userRef = em.getReference(User.class,user.getId());
-        Collection<MedicalField> fieldsRef = new HashSet<>();
-        known_fields.forEach(medicalField -> {
-            fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+        medicDB.ifPresent(medic -> {
+            medic.setName(name);
+            medic.setTelephone(telephone);
+            medic.setIdentification_type(identification_type);
+            medic.setIdentification(identification);
+            medic.setLicence_number(licence_number);
+            medic.setVerified(verified);
+            Collection<MedicalField> fieldsRef = new HashSet<>();
+            known_fields.forEach(medicalField -> {
+                fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+            });
+            medic.setMedical_fields(fieldsRef);
         });
 
-        //TODO check it works
-        em.detach(medic);
-
-        medic.setUser(userRef);
-        medic.setName(name);
-        medic.setTelephone(telephone);
-        medic.setIdentification_type(identification_type);
-        medic.setIdentification(identification);
-        medic.setLicence_number(licence_number);
-        medic.setVerified(verified);
-        medic.setMedical_fields(fieldsRef);
-
-        em.merge(medic);
-
-        return medic;
+        return medicDB.orElse(null);
     }
 
     @Override
     public boolean knowsField(int medic_id, int field_id) {
-        Optional<Medic> medicOptional = findByUserId(medic_id);
-        Optional<MedicalField> medicalFieldOptional = medicalFieldDao.findById(field_id);
+        Optional<Medic> medicDB = findByUserId(medic_id);
 
-        return medicOptional.isPresent() && medicalFieldOptional.isPresent() && medicOptional.get().getMedical_fields().contains(medicalFieldOptional.get());
+        //No medic, false
+        if(!medicDB.isPresent()) {
+            return false;
+        }
+
+        Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,field_id));
+
+        return medicalFieldDB.filter(medicalField -> medicDB.get().getMedical_fields().contains(medicalField)).isPresent();
     }
 
     @Override

@@ -13,31 +13,31 @@ public class Medic {
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    @Column(name = "name",nullable=false)
+    @Column(nullable=false)
     private String name;
 
-    @Column(name="telephone",nullable=false)
+    @Column
     private String telephone;
 
-    @Column(name="identification_type",nullable=false)
+    @Column(nullable=false)
     private String identification_type;
 
-    @Column(name="identification",nullable=false)
+    @Column(nullable=false)
     private byte[] identification;
 
-    @Column(name="licence_number",nullable=false)
+    @Column(nullable=false)
     private String licence_number;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="medic_medical_fields",
             joinColumns = @JoinColumn(name="medic_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"))
     private Collection<MedicalField> medical_fields;
 
-    @Column(name="verified",nullable=false)
+    @Column(nullable=false)
     private boolean verified;
 
 

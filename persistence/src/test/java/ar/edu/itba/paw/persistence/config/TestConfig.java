@@ -67,6 +67,7 @@ public class TestConfig {
 
         //dbp.addScript(hsqldbSql);
         //dbp.addScript(schemaSql);
+        dbp.addScript(testPopulatorSql);
 
         return dbp;
     }
