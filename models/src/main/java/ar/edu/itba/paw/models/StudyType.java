@@ -31,7 +31,7 @@ public class StudyType {
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

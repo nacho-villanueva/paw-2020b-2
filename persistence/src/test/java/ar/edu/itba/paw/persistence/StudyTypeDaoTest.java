@@ -118,7 +118,7 @@ public class StudyTypeDaoTest {
 
         Assert.assertNotNull(maybeStudy);
         Assert.assertTrue(maybeStudy.isPresent());
-        Assert.assertEquals(dbkey,maybeStudy.get().getId());
+        Assert.assertEquals(dbkey,maybeStudy.get().getId().intValue());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class StudyTypeDaoTest {
         final StudyType studyType = dao.findOrRegister(STUDY_NAME);
 
         Assert.assertNotNull(studyType);
-        Assert.assertEquals(dbkey,studyType.getId());
+        Assert.assertEquals(dbkey,studyType.getId().intValue());
         Assert.assertEquals(STUDY_NAME,studyType.getName());
     }
 

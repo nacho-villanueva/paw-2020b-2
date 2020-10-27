@@ -51,15 +51,28 @@ public class MedicJpaDao implements MedicDao {
         //Getting field references
         Collection<MedicalField> fieldsRef = new HashSet<>();
         known_fields.forEach(medicalField -> {
-            MedicalField fieldRef = em.getReference(MedicalField.class,medicalField.getId());
-            if(fieldRef != null) {
-                fieldsRef.add(fieldRef);
-            }
+            MedicalField fieldRef = getFieldRef(medicalField);
+            fieldsRef.add(fieldRef);
         });
         final Medic medic = new Medic(userRef,name,telephone,identification_type,identification,licence_number,verified,fieldsRef);
         em.persist(medic);
         em.flush();
         return medic;
+    }
+
+    private MedicalField getFieldRef(MedicalField medicalField) {
+        MedicalField retRef;
+        if(medicalField.getId() != null) {
+            retRef = em.getReference(MedicalField.class, medicalField.getId());
+            if(retRef != null) {
+                return retRef;
+            }
+        }
+
+        //If field does not exists we try and create it then add its reference that we know it wont fail (in theory)
+        MedicalField newField = medicalFieldDao.findOrRegister(medicalField.getName());
+        return em.getReference(MedicalField.class,newField.getId());
+
     }
 
     @Override

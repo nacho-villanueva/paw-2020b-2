@@ -30,6 +30,7 @@ public class MedicDaoTest {
     //TABLE NAMES
     private static final String MEDICS_TABLE_NAME = "medics";
     private static final String MEDIC_FIELDS_TABLE_NAME = "medic_medical_fields";
+    private static final String FIELDS_TABLE_NAME = "medical_fields";
 
     //Test data
     private static final User userSix = new User(7,"six@six.com","passSix",User.UNDEFINED_ROLE_ID);
@@ -101,7 +102,7 @@ public class MedicDaoTest {
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
-        Assert.assertEquals(3,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
+        Assert.assertEquals(known_fields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
     }
 
@@ -109,8 +110,18 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterNonExistentField() {
-        //TODO: queremos que al registrar un medico, si le mandas fields que no existen en base de datos, no los persista, tema de cascada
-        Assert.assertNotNull(null);
+        Collection<MedicalField> known_fields = new HashSet<>();
+        known_fields.add(fieldOne);
+        known_fields.add(fieldTwo);
+        known_fields.add(fieldTest);
+
+        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentification_type(),medicTest.getIdentification(),medicTest.getLicence_number(),known_fields,medicTest.isVerified());
+
+        Assert.assertNotNull(medic);
+        Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
+        Assert.assertEquals(known_fields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,FIELDS_TABLE_NAME,"lower(name) = lower('" + fieldTest.getName() + "')"));
     }
 
     @Test
@@ -128,6 +139,7 @@ public class MedicDaoTest {
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicOne.getUser().getId() + " AND name = '" + medicTest.getName() + "'"));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicOne.getUser().getId() + " AND field_id = " + fieldThree.getId()));
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicOne.getUser().getId() + " AND field_id = " + fieldFour.getId()));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,FIELDS_TABLE_NAME,"id = " + fieldFour.getId()));
     }
 
     @Test

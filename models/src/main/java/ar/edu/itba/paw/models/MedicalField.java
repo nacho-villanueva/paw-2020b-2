@@ -27,7 +27,7 @@ public class MedicalField {
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
