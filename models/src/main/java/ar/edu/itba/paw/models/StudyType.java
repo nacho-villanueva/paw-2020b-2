@@ -10,7 +10,7 @@ public class StudyType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_studies_id_seq")
     @SequenceGenerator(sequenceName = "medical_studies_id_seq", name = "medical_studies_id_seq", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;

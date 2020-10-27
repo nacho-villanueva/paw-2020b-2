@@ -13,7 +13,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_orders_id_seq")
     @SequenceGenerator(sequenceName = "medical_orders_id_seq", name = "medical_orders_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private long order_id;
+    private Long order_id;
 
     @ManyToOne
     @JoinColumn(name = "medic_id", nullable = false)

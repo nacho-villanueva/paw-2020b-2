@@ -22,9 +22,9 @@ insert into clinics(user_id,name,verified) values (3,'Clinic two',true),(6,'Clin
 
 insert into medics(user_id,name,identification_type,identification,licence_number,verified) values
                     (2,'Medic one','image/png','\000','1234567',true),
-                    (5,'medic four','image/png','\000','1234567',true);
+                    (5,'medic four','image/png','\000','1234567',false);
 
-insert into medic_medical_fields(medic_id,field_id) values (2,1),(2,2),(2,3),(5,3),(5,4),(5,5);
+insert into medic_medical_fields(medic_id,field_id) values (2,1),(2,2),(2,4),(5,3),(5,4),(5,5);
 
 insert into clinic_available_studies(clinic_id,study_id) values (3,1),(3,2),(3,4),(6,4),(6,5),(6,6);
 

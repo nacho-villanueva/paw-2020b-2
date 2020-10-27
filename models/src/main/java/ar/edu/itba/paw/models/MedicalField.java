@@ -9,7 +9,7 @@ public class MedicalField {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_fields_id_seq")
     @SequenceGenerator(sequenceName = "medical_fields_id_seq", name = "medical_fields_id_seq", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;

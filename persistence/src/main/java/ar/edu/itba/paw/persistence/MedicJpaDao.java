@@ -99,22 +99,15 @@ public class MedicJpaDao implements MedicDao {
 
     @Override
     public MedicalField registerFieldToMedic(final int medic_id, MedicalField medicalField) {
-        //We check if it exists
-        MedicalField medicalFieldFromDB = medicalFieldDao.findOrRegister(medicalField.getName());
 
-        Optional<Medic> medicOptional = findByUserId(medic_id);
+        Optional<Medic> medicDB = findByUserId(medic_id);
 
-        if(medicOptional.isPresent()){
-            Medic medic = medicOptional.get();
-
-            //TODO check it works
-            em.detach(medic);
-            medic.getMedical_fields().add(medicalFieldFromDB);
-            em.merge(medic);
+        if(medicDB.isPresent()) {
+            MedicalField medicalFieldDB = medicalFieldDao.findOrRegister(medicalField.getName());
+            medicDB.get().getMedical_fields().add(medicalFieldDB);
+            return medicalFieldDB;
         }
 
-        //Todo: Verify success
-
-        return medicalFieldFromDB;
+        return null;
     }
 }
