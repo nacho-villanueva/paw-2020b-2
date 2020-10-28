@@ -22,11 +22,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     }
 
     @Override
-    public Collection<StudyType> findByClinicId(int clinic_id) {
-        return studyTypeDao.findByClinicId(clinic_id);
-    }
-
-    @Override
     public Optional<StudyType> findById(int id){
         return studyTypeDao.findById(id);
     }

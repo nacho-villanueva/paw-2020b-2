@@ -37,12 +37,6 @@ public class StudyTypeJpaDao implements StudyTypeDao{
     }
 
     @Override
-    public Collection<StudyType> findByClinicId(int clinic_id) {
-        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
-        return clinicOptional.map(Clinic::getMedical_studies).orElse(null);
-    }
-
-    @Override
     public StudyType findOrRegister(String name) {
         Optional<StudyType> studyType = this.findByName(name);
 

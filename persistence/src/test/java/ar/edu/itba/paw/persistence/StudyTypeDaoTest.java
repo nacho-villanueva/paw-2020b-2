@@ -8,45 +8,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class StudyTypeDaoTest {
 
     //TABLE NAMES
-    private static final String USERS_TABLE_NAME = "users";
-    private static final String CLINICS_TABLE_NAME = "clinics";
-    private static final String CLINICS_RELATION_TABLE_NAME = "clinic_available_studies";
-    private static final String MEDICS_TABLE_NAME = "medics";
-    private static final String MEDICS_RELATION_TABLE_NAME = "medic_medical_fields";
-    private static final String PATIENTS_TABLE_NAME = "patients";
-    private static final String ORDERS_TABLE_NAME = "medical_orders";
-    private static final String RESULTS_TABLE_NAME = "results";
     private static final String STUDIES_TABLE_NAME = "medical_studies";
-    private static final String CLINIC_HOURS_TABLE_NAME = "clinic_hours";
-    private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
 
-    private static final String STUDY_NAME = "MRA";
-    private static final String STUDY_NAME_ALT = "Colonoscopy";
-    private static final String CLINIC_NAME = "Zero's clinic";
-    private static final String CLINIC_EMAIL = "zero@clinic.com";
+    //TEST DATA
+    private static final StudyType studyTypeTest = new StudyType(10,"TEST STUDY TEST");
+
+    private static final StudyType studyTypeZero = new StudyType(2,"Vaccine");
+
+    private static final List<String> studyTypeNames = new ArrayList<>(Arrays.asList("X-ray", "Vaccine", "Electrocardiography", "Allergy Test", "Rehab", "Surgery"));
+
+    private static final int STUDY_TYPES_COUNT = studyTypeNames.size();
+
+    // shouldn't exist
     private static final int ZERO_ID = 0;
-    private static final boolean TRUE = true;
-
-    //USER INFO
-    private static final String EMAIL = "patient@zero.com";
-    private static final String PASSWORD = "GroundZer0";
-    private static final int ROLE = 3;
+    private static final String STUDY_NAME = "MRA";
 
     @Autowired
     private DataSource ds;
@@ -55,54 +44,27 @@ public class StudyTypeDaoTest {
     private StudyTypeDao dao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertStudies;
-    private SimpleJdbcInsert jdbcInsertClinics;
-    private SimpleJdbcInsert jdbcInsertRelation;
-    private SimpleJdbcInsert jdbcInsertUsers;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
 
-        jdbcInsertUsers = new SimpleJdbcInsert(ds)
-                .withTableName(USERS_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-
-        jdbcInsertStudies = new SimpleJdbcInsert(ds)
-                .withTableName(STUDIES_TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-
-        jdbcInsertClinics = new SimpleJdbcInsert(ds)
-                .withTableName(CLINICS_TABLE_NAME);
-
-        jdbcInsertRelation = new SimpleJdbcInsert(ds)
-                .withTableName(CLINICS_RELATION_TABLE_NAME);
-
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_HOURS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINIC_PLANS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,PATIENTS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,RESULTS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ORDERS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_RELATION_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_RELATION_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,MEDICS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,CLINICS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE_NAME);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,STUDIES_TABLE_NAME);
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testFindByIdExists() {
-        int dbkey = insertTestStudy();
 
-        final Optional<StudyType> maybeStudy = dao.findById(dbkey);
+        Optional<StudyType> maybeStudy = dao.findById(studyTypeZero.getId());
 
         Assert.assertNotNull(maybeStudy);
         Assert.assertTrue(maybeStudy.isPresent());
-        Assert.assertEquals(STUDY_NAME, maybeStudy.get().getName());
+        Assert.assertEquals(studyTypeZero.getName(), maybeStudy.get().getName());
     }
-
     @Test
+    @Transactional
+    @Rollback
     public void testFindByIdNotExists() {
         final Optional<StudyType> maybeStudy = dao.findById(ZERO_ID);
 
@@ -111,17 +73,20 @@ public class StudyTypeDaoTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testFindByNameExists() {
-        int dbkey = insertTestStudy();
 
-        final Optional<StudyType> maybeStudy = dao.findByName(STUDY_NAME);
+        final Optional<StudyType> maybeStudy = dao.findByName(studyTypeZero.getName());
 
         Assert.assertNotNull(maybeStudy);
         Assert.assertTrue(maybeStudy.isPresent());
-        Assert.assertEquals(dbkey,maybeStudy.get().getId().intValue());
+        Assert.assertEquals(studyTypeZero.getId().intValue(),maybeStudy.get().getId().intValue());
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testFindByNameNotExists() {
         final Optional<StudyType> maybeStudy = dao.findByName(STUDY_NAME);
 
@@ -130,113 +95,53 @@ public class StudyTypeDaoTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testGetAll() {
-        insertMultipleStudies();
 
         Collection<StudyType> studies = dao.getAll();
 
         Assert.assertNotNull(studies);
-        Assert.assertEquals(2, studies.size());
+        Assert.assertEquals(STUDY_TYPES_COUNT, studies.size());
+        Assert.assertTrue(studies.stream().findFirst().isPresent());
         StudyType study = studies.stream().findFirst().get();
-        Assert.assertTrue(study.getName().equals(STUDY_NAME) || study.getName().equals(STUDY_NAME_ALT));
+        Assert.assertTrue(studyTypeNames.contains(study.getName()));
     }
-
+    /*
+    // Currently not useful
     @Test
+    @Transactional
+    @Rollback
     public void testGetAllNone() {
         Collection<StudyType> studies = dao.getAll();
 
         Assert.assertNotNull(studies);
         Assert.assertEquals(0,studies.size());
     }
+    */
 
     @Test
-    public void testFindByClinicIdExists() {
-        int clinic_id = insertClinic();
-        insertStudiesIntoClinic(clinic_id);
-
-        final Collection<StudyType> studiesForClinic = dao.findByClinicId(clinic_id);
-
-        Assert.assertNotNull(studiesForClinic);
-        Assert.assertEquals(2,studiesForClinic.size());
-        StudyType studyType = studiesForClinic.stream().findFirst().get();
-        Assert.assertTrue(studyType.getName().equals(STUDY_NAME) || studyType.getName().equals(STUDY_NAME_ALT));
-    }
-
-    @Test
-    public void testFindByClinicIdNotExists() {
-        int userkey = insertTestUser();
-
-        final Collection<StudyType> studiesForClinic = dao.findByClinicId(userkey);
-
-        Assert.assertNotNull(studiesForClinic);
-        Assert.assertEquals(0,studiesForClinic.size());
-    }
-
-    @Test
+    @Transactional
+    @Rollback
     public void testFindOrRegisterExists() {
-        int dbkey = insertTestStudy();
 
-        final StudyType studyType = dao.findOrRegister(STUDY_NAME);
+        final StudyType maybeType = dao.findOrRegister(studyTypeZero.getName());
 
-        Assert.assertNotNull(studyType);
-        Assert.assertEquals(dbkey,studyType.getId().intValue());
-        Assert.assertEquals(STUDY_NAME,studyType.getName());
+        Assert.assertNotNull(maybeType);
+        Assert.assertEquals(studyTypeZero.getId().intValue(),maybeType.getId().intValue());
+        Assert.assertEquals(studyTypeZero.getName(),maybeType.getName());
+        Assert.assertEquals(STUDY_TYPES_COUNT,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testFindOrRegisterNotExists() {
-        final StudyType studyType = dao.findOrRegister(STUDY_NAME);
+        final StudyType maybeType = dao.findOrRegister(STUDY_NAME);
 
-        Assert.assertNotNull(studyType);
-        Assert.assertEquals(STUDY_NAME,studyType.getName());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
-    }
-
-    private int insertTestStudy() {
-        return insertStudy(STUDY_NAME);
-    }
-
-    private int insertStudy(final String name) {
-        Map<String,Object> insertMap = new HashMap<>();
-        insertMap.put("name", name);
-        return jdbcInsertStudies.executeAndReturnKey(insertMap).intValue();
-    }
-
-    private void insertMultipleStudies() {
-        insertStudy(STUDY_NAME);
-        insertStudy(STUDY_NAME_ALT);
-    }
-
-    private int insertClinic() {
-        int userkey = insertTestUser();
-        Map<String,Object> insertMap = new HashMap<>();
-        insertMap.put("user_id", userkey);
-        insertMap.put("name", CLINIC_NAME);
-        insertMap.put("email", CLINIC_EMAIL);
-        insertMap.put("verified", TRUE);
-        jdbcInsertClinics.execute(insertMap);
-        return userkey;
-    }
-
-    private int insertTestUser() {
-        Map<String, Object> insertMap = new HashMap<>();
-        insertMap.put("email", EMAIL);
-        insertMap.put("password", PASSWORD);
-        insertMap.put("role", ROLE);
-        Number key = jdbcInsertUsers.executeAndReturnKey(insertMap);
-        return key.intValue();
-    }
-
-    private void insertStudiesIntoClinic(final int clinic_id) {
-        int studykey = insertStudy(STUDY_NAME);
-        Map<String,Object> insertMap = new HashMap<>();
-        insertMap.put("clinic_id",clinic_id);
-        insertMap.put("study_id",studykey);
-        jdbcInsertRelation.execute(insertMap);
-
-        studykey = insertStudy(STUDY_NAME_ALT);
-        insertMap.put("study_id",studykey);
-        jdbcInsertRelation.execute(insertMap);
+        Assert.assertNotNull(maybeType);
+        Assert.assertEquals(STUDY_NAME,maybeType.getName());
+        Assert.assertEquals(1+STUDY_TYPES_COUNT,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
     }
 
 }
