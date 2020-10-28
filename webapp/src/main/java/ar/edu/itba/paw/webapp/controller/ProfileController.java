@@ -6,8 +6,11 @@ import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,6 +47,9 @@ public class ProfileController {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private UserDetailsService uds;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getProfile(@RequestParam(required = false,name = "editSuccess") final Integer editSuccess, Locale locale){
@@ -109,7 +115,8 @@ public class ProfileController {
             return mav;
         }
 
-        userService.updateEmail(loggedUser(),editUserEmailForm.getEmail());
+        User user = userService.updateEmail(loggedUser(),editUserEmailForm.getEmail());
+        updateUserContext(user);
 
         ModelAndView mav = new ModelAndView("redirect:/profile");
 
@@ -281,6 +288,7 @@ public class ProfileController {
         medicService.updateMedicInfo(loggedUser(),editMedicForm.getFull_name(),editMedicForm.getTelephone(),
                 newContentType, newContent, editMedicForm.getLicence_number(),knownFields,medic.isVerified());
 
+
         mav.addObject("editSuccess",User.MEDIC_ROLE_ID);
 
         return mav;
@@ -380,6 +388,12 @@ public class ProfileController {
         //LOGGER.debug("Logged user is {}", user);
         //TODO: see more elegant solution
         return user.orElse(null);
+    }
+
+    public void updateUserContext(User user){
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, auth.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private void addUserRole(ModelAndView mav){
