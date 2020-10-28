@@ -16,6 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.Collection;
@@ -31,6 +34,7 @@ public class ResultDaoTest {
     private static final String RESULTS_TABLE_NAME = "results";
     //Others
     private static final long ZERO_ID_LONG = 0;
+    private static final long INVALID_ORDER_ID = -1;
 
     //Known Data
     private static final User userMedic = new User(2,"one@one.com","onePass",User.MEDIC_ROLE_ID);
@@ -116,9 +120,9 @@ public class ResultDaoTest {
 
     @Transactional
     @Rollback
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testRegisterInvalid() {
-        dao.register(result.getOrder_id(),result.getData_type(),result.getData(),result.getIdentification_type(),result.getIdentification(),result.getDate(),result.getResponsible_name(),result.getResponsible_licence_number());
+        dao.register(INVALID_ORDER_ID, result.getData_type(),result.getData(),result.getIdentification_type(),result.getIdentification(),result.getDate(),result.getResponsible_name(),result.getResponsible_licence_number());
     }
 
 }
