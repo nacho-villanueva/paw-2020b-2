@@ -8,7 +8,7 @@
             <ul class="navbar-nav ml-auto my-2 my-lg-0">
                 <li class="nav-item">
                     <a class="navbar-options" href="<c:url value='/profile' />">
-                        <i class="far fa-lg fa-user-circle icons"></i>
+                        <i class="fas fa-lg fa-user-circle icons"></i>
                         <spring:message code="fragments.sidebar.profile" />
                     </a>
                 </li>

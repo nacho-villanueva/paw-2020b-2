@@ -53,7 +53,7 @@
 
     <li class="nav-item">
         <a class="nav-link" href="<c:url value='/logout' />">
-            <i class="fas fa fa-sign-out "></i>
+            <i class="fas fa fa-sign-out-alt "></i>
             <span><spring:message key="fragments.sidebar.logout" /></span></a>
     </li>
 
