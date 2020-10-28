@@ -42,13 +42,14 @@ public class ClinicDaoTest {
             clinicDaysHoursTwoTue,
             clinicDaysHoursTwoWed)));
     private static final Clinic clinicTwo = new Clinic(userTwo, "Clinic two", null, true);
-    private static final String CLINIC_TWO_ACCEPTED_PLAN = "OSDE";
+    private static final String CLINIC_TWO_ACCEPTED_PLAN = "Osde";
     private static final StudyType studyTypeOne = new StudyType(1,"X-ray");
     private static final StudyType studyTypeSix = new StudyType(6,"Surgery");
 
     private static final User userSeven = new User(8,"seven@seven.com","passSeven",User.UNDEFINED_ROLE_ID);
 
-    private static final List<String> clinicMails = new ArrayList<>(Arrays.asList("two@two.com","five@five.com"));
+    private static final List<String> clinicMails = new ArrayList<>(Arrays.asList("two@two.com","five@five.com","eight@eight.com","nine@nine.com","ten@ten.com","twelve@twelve.com",
+            "thirteen@thirteen.com","fifteen@fifteen.com","sixteen@sixteen.com","eighteen@eighteen.com", "nineteen@nineteen.com","twenty@twenty.com"));
 
     private static final int ZERO_ID = 1;
     private static final String NAME_ZERO = "Zero's Clinic";
@@ -110,7 +111,7 @@ public class ClinicDaoTest {
         final Collection<Clinic> clinics = dao.getAll();
 
         Assert.assertNotNull(clinics);
-        Assert.assertEquals(clinicMails.size(),clinics.size());
+        Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         Clinic clinic = clinics.stream().findFirst().get();
         Assert.assertTrue(clinicMails.contains(clinic.getUser().getEmail()));
     }
