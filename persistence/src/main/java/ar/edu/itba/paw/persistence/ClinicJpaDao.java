@@ -71,10 +71,11 @@ public class ClinicJpaDao implements ClinicDao {
             studyTypesRef.add(em.getReference(StudyType.class,studyType.getId()));
         });
 
-        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,hours,medic_plans,false);
+        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medic_plans,false);
 
         em.persist(clinic);
-        //Todo: Check success
+
+        clinic.setHours(hours);
         em.flush();
         return clinic;
     }
@@ -105,6 +106,7 @@ public class ClinicJpaDao implements ClinicDao {
         clinic.setVerified(verified);
 
         em.flush();
+
         return clinic;
     }
 
@@ -233,5 +235,4 @@ public class ClinicJpaDao implements ClinicDao {
 
         return query.toString();
     }
-
 }

@@ -32,10 +32,10 @@ public class ClinicDaoTest {
     private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
     private static final User userTwo = new User(3,"two@two.com","passTwo",User.CLINIC_ROLE_ID);
-    private static final ClinicDayHours clinicDaysHoursTwoSun = new ClinicDayHours(0,userTwo.getId(),Time.valueOf("08:00:00"),Time.valueOf("22:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoMon = new ClinicDayHours(1,userTwo.getId(),Time.valueOf("09:00:00"),Time.valueOf("21:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoTue = new ClinicDayHours(2,userTwo.getId(),Time.valueOf("10:00:00"),Time.valueOf("20:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoWed = new ClinicDayHours(3,userTwo.getId(),Time.valueOf("11:00:00"),Time.valueOf("19:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoSun = new ClinicDayHours(0,Time.valueOf("08:00:00"),Time.valueOf("22:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoMon = new ClinicDayHours(1,Time.valueOf("09:00:00"),Time.valueOf("21:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoTue = new ClinicDayHours(2,Time.valueOf("10:00:00"),Time.valueOf("20:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoWed = new ClinicDayHours(3,Time.valueOf("11:00:00"),Time.valueOf("19:00:00"));
     private static final ClinicHours clinicHourTwo = new ClinicHours(new ArrayList<>(Arrays.asList(
             clinicDaysHoursTwoSun,
             clinicDaysHoursTwoMon,
@@ -127,7 +127,6 @@ public class ClinicDaoTest {
     }
     */
 
-    /* TODO
     @Test
     @Transactional
     @Rollback
@@ -141,8 +140,6 @@ public class ClinicDaoTest {
         Assert.assertEquals(studyTypeSix.getName(), study.getName());
         Assert.assertEquals(1+clinicMedicalStudies, clinicTwo.getMedical_studies().size());
     }
-
-    */
 
     @Test
     @Transactional
@@ -210,7 +207,6 @@ public class ClinicDaoTest {
         Assert.assertFalse(ret);
     }
 
-    /* TODO
     @Test
     @Transactional
     @Rollback
@@ -242,7 +238,6 @@ public class ClinicDaoTest {
         Assert.assertEquals(1+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(4+rowsClinicHoursTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME));
     }
-    */
 
     @Test
     @Transactional
@@ -262,7 +257,6 @@ public class ClinicDaoTest {
         Assert.assertEquals(rowsClinicTable-1,clinics.size());
     }
 
-    /* TODO
     @Test
     @Transactional
     @Rollback
@@ -283,7 +277,6 @@ public class ClinicDaoTest {
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
     }
 
-    */
 
 
 

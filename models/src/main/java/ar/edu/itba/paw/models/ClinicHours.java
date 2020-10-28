@@ -42,6 +42,17 @@ public class ClinicHours {
         }
     }
 
+    public Collection<ClinicDayHours> createClinicDayHoursCollection(){
+        Collection<ClinicDayHours> clinicDayHoursCollection = new ArrayList<>();
+
+        for(int i = 0; i < DAYS_OF_WEEK; i++){
+            if(days[i])
+                clinicDayHoursCollection.add(new ClinicDayHours(i,open_hours[i],close_hours[i]));
+        }
+
+        return clinicDayHoursCollection;
+    }
+
     public Collection<ClinicDayHours> createClinicDayHoursCollection(int clinic_id){
         Collection<ClinicDayHours> clinicDayHoursCollection = new ArrayList<>();
 
