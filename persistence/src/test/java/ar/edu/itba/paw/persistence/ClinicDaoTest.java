@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.sql.Time;
@@ -328,6 +329,27 @@ public class ClinicDaoTest {
         Assert.assertFalse(clinicIds.contains(18));     //18 has osde but it's not a verified clinic
         Assert.assertTrue(clinicIds.contains(19));
         Assert.assertTrue(clinicIds.contains(20));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testSearchJustHours() {
+        String name = null;
+        ClinicHours availableHours = new ClinicHours();
+        availableHours.setDayHour(ClinicHours.MONDAY,Time.valueOf("00:00:00"),Time.valueOf("23:59:59"));        //TODO: See why 24:00:00 breaks the test
+        String medic_plan = null;
+        String study_name = null;
+
+        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medic_plan,study_name);
+
+        Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
+        Assert.assertTrue(clinicIds.contains(11));
+        Assert.assertTrue(clinicIds.contains(6));
+        Assert.assertTrue(clinicIds.contains(9));
+        Assert.assertFalse(clinicIds.contains(10));
+        Assert.assertFalse(clinicIds.contains(12));
+        Assert.assertEquals(7,clinics.size());
     }
 
 
