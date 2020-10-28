@@ -132,13 +132,13 @@ public class ClinicDaoTest {
     @Rollback
     public void testRegisterStudyToClinic() {
 
-        int clinicMedicalStudies = clinicTwo.getMedical_studies().size();
+        int clinicMedicalStudies = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = "+clinicTwo.getUser().getId());
 
         StudyType study = dao.registerStudyToClinic(clinicTwo.getUser().getId(), studyTypeSix);
 
         Assert.assertNotNull(study);
         Assert.assertEquals(studyTypeSix.getName(), study.getName());
-        Assert.assertEquals(1+clinicMedicalStudies, clinicTwo.getMedical_studies().size());
+        Assert.assertEquals(1+clinicMedicalStudies, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = "+clinicTwo.getUser().getId()));
     }
 
     @Test
@@ -243,7 +243,7 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testSearchNoParams() {
-        int rowsClinicTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME);
+        int rowsClinicTableVerified = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true");
 
         //Search params
         String clinic_name = null;
@@ -253,8 +253,8 @@ public class ClinicDaoTest {
 
         Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
 
-        Assert.assertEquals(rowsClinicTable,JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
-        Assert.assertEquals(rowsClinicTable-1,clinics.size());
+        Assert.assertEquals(rowsClinicTableVerified,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"));
+        Assert.assertEquals(rowsClinicTableVerified,clinics.size());
     }
 
     @Test
@@ -265,9 +265,11 @@ public class ClinicDaoTest {
         //Search params
         String clinic_name = null;
         ClinicHours hours = new ClinicHours();
-        hours.setDayHour(ClinicHours.MONDAY,Time.valueOf("00:00:00"),Time.valueOf("18:00:00"));
-        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("18:00:00"));
-        hours.setDayHour(ClinicHours.SATURDAY,Time.valueOf("00:00:00"),Time.valueOf("21:00:00"));
+
+        hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("08:00:00"),Time.valueOf("23:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
+        hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
+        hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
         String accepted_plan = "OSDE";
         String study_name = "allergy";
 
