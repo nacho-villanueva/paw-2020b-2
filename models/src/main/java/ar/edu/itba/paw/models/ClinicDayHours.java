@@ -45,10 +45,10 @@ public class ClinicDayHours {
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @Column(name="open_time")
+    @Column(name="open_time", nullable = false)
     private Time open_time;
 
-    @Column(name="close_time")
+    @Column(name="close_time", nullable = false)
     private Time close_time;
 
     protected ClinicDayHours() {
