@@ -34,7 +34,8 @@ public class Medic {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="medic_medical_fields",
             joinColumns = @JoinColumn(name="medic_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name="field_id"))
+            inverseJoinColumns = @JoinColumn(name="field_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"medic_id","field_id"}))
     private Collection<MedicalField> medical_fields;
 
     @Column(nullable=false)

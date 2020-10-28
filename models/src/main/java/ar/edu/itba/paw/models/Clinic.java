@@ -24,7 +24,8 @@ public class Clinic {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="clinic_available_studies",
             joinColumns = @JoinColumn(name="clinic_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name="study_id"))
+            inverseJoinColumns = @JoinColumn(name="study_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"clinic_id","study_id"}))
     private Collection<StudyType> medical_studies;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -33,7 +34,7 @@ public class Clinic {
 
     @ElementCollection
     @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id", referencedColumnName = "user_id"))
-    @Column(name="medic_plan")
+    @Column(name="medic_plan", nullable = false)
     private Set<String> accepted_plans;
 
     @Column(name="verified",nullable=false)
