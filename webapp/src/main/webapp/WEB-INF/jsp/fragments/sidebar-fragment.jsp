@@ -4,16 +4,6 @@
 <!-- Sidebar -->
 <ul class="navbar-nav sidebar sidebar-dark bg-gradient-primary accordion" id="accordionSidebar">
 
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<c:url value='/home' />">
-        <div class="sidebar-brand-icon">
-            <i class="fas fa-laptop-medical"></i>
-        </div>
-        <div class="mx-3">/MedTransfer</div>
-    </a>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -59,20 +49,11 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Settings
-    </div>
 
-    <li class="nav-item <c:if test='${param.current == "profile"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/profile' />">
-            <i class="fas fa-fw fa-sliders-h"></i>
-            <span><spring:message key="fragments.sidebar.profile" /></span></a>
-    </li>
 
     <li class="nav-item">
         <a class="nav-link" href="<c:url value='/logout' />">
-            <i class="fas fa fa-sign-out "></i>
+            <i class="fas fa fa-sign-out-alt "></i>
             <span><spring:message key="fragments.sidebar.logout" /></span></a>
     </li>
 

@@ -10,33 +10,42 @@
     <%@ include file="fragments/include-header.jsp"%>
 
     <link rel="stylesheet" href="<c:url value="/resources/css/advanced-search-clinic.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+    <c:choose>
+        <c:when test="${empty notLogged}">
+            <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
+        </c:when>
+        <c:otherwise>
+            <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+        </c:otherwise>
+    </c:choose>
     <link rel="stylesheet" href="<c:url value="/resources/css/callout.css"/>">
 </head>
 <body>
 <c:set value="${empty daysOfWeek?7:daysOfWeek}" var="daysOfWeek"/>
-
-<!-- Page Wrapper -->
-<div id="wrapper">
 
 
     <c:choose>
         <c:when test="${empty notLogged}">
             <c:choose>
                 <c:when test="${not empty orderForm}">
-                    <jsp:include page="fragments/sidebar-fragment.jsp" >
-                        <jsp:param name="current" value="orders"/>
-                    </jsp:include>
+                    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+                    <div id="wrapper" class="wrapper">
+                        <jsp:include page="fragments/sidebar-fragment.jsp" >
+                            <jsp:param name="current" value="orders"/>
+                        </jsp:include>
                 </c:when>
                 <c:otherwise>
-                    <jsp:include page="fragments/sidebar-fragment.jsp" >
-                        <jsp:param name="current" value="search"/>
-                    </jsp:include>
+                    <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+                    <div id="wrapper" class="wrapper">
+                        <jsp:include page="fragments/sidebar-fragment.jsp" >
+                            <jsp:param name="current" value="search"/>
+                        </jsp:include>
                 </c:otherwise>
             </c:choose>
-            <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content-wrapper" class="d-flex flex-column main-container">
         </c:when>
         <c:otherwise>
+            <div id="wrapper" class="wrapper">
             <div id="content-wrapper" class="d-flex flex-column main-container">
                 <%@include file="fragments/navbar-fragment.jsp"%>
         </c:otherwise>
@@ -104,8 +113,17 @@
                             <fieldset class="form-group">
                                 <label class="bmd-label-floating" for="medical_plan"><spring:message code="advanced-search-clinic.form.medical_plan.label"/></label>
                                 <div class="input-group">
-                                    <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
-                                    <f:errors path="medical_plan"/>
+                                    <c:choose>
+                                        <c:when test="${not empty orderForm}">
+                                            <f:input type="text" readonly="true" class="form-control" id="medical_plan" path="medical_plan"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
+                                            <f:errors path="medical_plan"/>
+                                        </c:otherwise>
+                                    </c:choose>
+
+
                                 </div>
                             </fieldset>
 
@@ -190,7 +208,6 @@
                         <hr/>
                         <div class="d-flex flex-row">
                             <div id="results" class="list-group result-section" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
-                                <h5 class="text-muted"><spring:message code="advanced-search-clinic.list.title"/> </h5>
                                 <c:if test="${clinicsList.size() eq 0}">
                                     <h3 class="text-center py-5 lead"><spring:message code="advanced-search.clinic.results.noResults"/></h3>
                                 </c:if>
@@ -243,7 +260,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
-                                                    <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
+                                                    <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                                 </tr>
                                                 <tr>
                                                     <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>

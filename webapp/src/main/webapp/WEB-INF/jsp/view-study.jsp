@@ -6,13 +6,16 @@
 <head>
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/viewstudy.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
 <body>
-
-<div id="wrapper">
-<jsp:include page="fragments/sidebar-fragment.jsp" />
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<div id="wrapper" class="wrapper">
+    <jsp:include page="fragments/sidebar-fragment.jsp" >
+        <jsp:param name="current" value="orders"/>
+    </jsp:include>
 
 <div id="content-wrapper" class="main-container d-flex flex-column">
     <div class="row justify-content-center">
@@ -20,21 +23,12 @@
             <div class="card order-card bg-light float-right">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col">
-                            <p class="card-title h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
-                            <p class="card-subtitle text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
-                        </div>
-                        <div class="col">
-                            <div class="row justify-content-end">
-                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
-                                    <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
-                                </c:if>
-
-                            </div>
-
-                        </div>
+                        <p class="card-title ml-3 h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
                     </div>
-                    <hr class="mt-5 mb-4"/>
+                    <div class="row">
+                        <p class="card-subtitle ml-3 text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
+                    </div>
+                    <hr class="mt-3 mb-4"/>
                     <div class="row justify-content-start">
                         <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patient_name.label"/> </p> <c:out value="${order.patient_name}"/></div>
                         <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.clinic.label"/></p> <c:out value="${order.clinic.name}"/></div>
@@ -55,7 +49,7 @@
                             <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
                             <p class="text-center"><spring:message code="view-study.body.card.order.licence_number.prefix" arguments="${order.medic.licence_number}"/></p>
                         </div>
-                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem;">
+                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem; max-height: 5em;">
                     </div>
                 </div>
             </div>
@@ -63,7 +57,21 @@
         <div class="col-sm-6">
             <div class="card results-card bg-light float-left">
                 <div class="card-body">
-                    <p class="card-title h4"><spring:message code="view-study.body.card.results.title"/> </p>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-title h4"><spring:message code="view-study.body.card.results.title"/> </p>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-end">
+                                <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() eq false}">
+                                    <a href="${uploadPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.button.uploadResults"/></a>
+                                </c:if>
+
+                            </div>
+
+                        </div>
+                    </div>
+
                     <c:choose>
                         <c:when test="${results.size() < 1}">
                             <div class="align-items-end result-not">

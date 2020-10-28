@@ -6,6 +6,7 @@
 <head>
     <%@ include file="fragments/include-header.jsp"%>
     <link rel="stylesheet" href="<c:url value="/resources/css/home.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
     <title><spring:message code="appname"/></title>
 </head>
 
@@ -14,9 +15,9 @@
 <c:url value="/create-order" var="createPath"/>
 <c:url value="/view-study/" var="studyPath"/>
 <c:url value="/logout" var="logoutPath"/>
-
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="home"/>
@@ -51,7 +52,7 @@
         <c:otherwise>
             <div class="row mx-2">
                 <div class="col">
-                    <div class="card bg-light anim-content">
+                    <div class="card bg-light anim-content" style="margin-bottom: 7rem;">
                         <div class="card-body">
                             <p class="card-title h4"><spring:message code="home.body.card.studies.title"/></p>
                             <div class="list-group">

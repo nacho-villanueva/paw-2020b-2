@@ -34,3 +34,18 @@
     margin-top: 4%;
     width: 50%;
 }
+.wrapper {
+    padding-top: 4.5rem !important;
+}
+.main-container {
+    position: relative;
+    background: white;
+    background-size: cover;
+    overflow-y: auto !important;
+    height: 100vh;
+    padding-top: 0;
+    margin-bottom: 2rem;
+}
+body {
+    overflow-y: hidden;
+}

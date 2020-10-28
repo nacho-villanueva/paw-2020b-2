@@ -7,20 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%@ include file="fragments/include-header.jsp"%>
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
+
     <link rel="stylesheet" href="<c:url value="/resources/css/createorder.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 </head>
 <body>
 
-<div id="wrapper">
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp">
         <jsp:param name="current" value="create-order"/>
     </jsp:include>
 
-<div id="content-wrapper" class="d-flex flex-column">
+<div id="content-wrapper" class="d-flex flex-column main-container">
     <div class="row justify-content-center">
-        <div class="card" style="width: 40em; margin-top: 2em;">
+        <div class="card" style="width: 40em; margin-top: 2em; margin-bottom: 7rem;">
             <div class="card-body">
                 <div class="row">
                     <p class="card-title h4 mx-auto mt-3"><spring:message code="create-order.body.form.title"/> </p>
