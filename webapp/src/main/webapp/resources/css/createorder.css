@@ -17,16 +17,18 @@ body {
     color: #212529;
     text-align: left;
     background-color: #212121;
+    overflow-y: hidden;
 }
 
 .main-container {
     position: relative;
     background: white;
     background-size: cover;
-
+    overflow-y: auto !important;
     height: 100vh;
-    padding-top: 4.5rem;
+    padding-top: 0;
 }
+
 
 @keyframes fadeIn {
     0% {
@@ -51,9 +53,13 @@ body {
 }
 
 .create-btn{
-    background: #19b0c8;
+    background: var(--primary);
     color: white;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
+.wrapper {
+    padding-top: 4.5rem !important;
 }

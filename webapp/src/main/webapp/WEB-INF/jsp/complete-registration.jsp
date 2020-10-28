@@ -15,7 +15,7 @@
     <div class="row justify-content-center">
         <h2><spring:message code="complete-registration.body.form.title1"/></h2>
     </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-4">
         <h3><spring:message code="complete-registration.body.form.title2"/></h3>
     </div>
 
@@ -46,16 +46,20 @@
                     <c:url value="/register-patient" var="register" />
                     <f:form action="${register}" method="post" modelAttribute="registerPatientForm">
                         <div class="row">
-                            <fieldset class="form-group">
-                                <f:label path="first_name" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.first_name.label"/></f:label>
-                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="first_name" />
-                                <f:errors path="first_name" cssClass="text-danger" element="small" />
-                            </fieldset>
-                            <fieldset class="form-group">
-                                <f:label path="last_name" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.last_name.label"/></f:label>
-                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="last_name" />
-                                <f:errors path="last_name" cssClass="text-danger" element="small" />
-                            </fieldset>
+                            <div class="col pl-0">
+                                <fieldset class="form-group">
+                                    <label for="first_name" class="bmd-label-floating"><spring:message code="complete-registration.body.form.first_name.label"/></label>
+                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="first_name"  path="first_name"/>
+                                    <f:errors path="first_name" cssClass="text-danger" element="small" />
+                                </fieldset>
+                            </div>
+                            <div class="col">
+                                <fieldset class="form-group">
+                                    <label for="last_name" class="bmd-label-floating"><spring:message code="complete-registration.body.form.last_name.label"/></label>
+                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="last_name" path="last_name"/>
+                                    <f:errors path="last_name" cssClass="text-danger" element="small" />
+                                </fieldset>
+                            </div>
                         </div>
                         <fieldset class="form-group row">
                             <f:label path="medical_insurance_plan" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.patient.patient_insurance_plan.label"/></f:label>

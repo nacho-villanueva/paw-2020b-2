@@ -17,16 +17,16 @@ body {
     color: #212529;
     text-align: left;
     background-color: #212121;
+    overflow-y: hidden;
 }
 
 .main-container {
     position: relative;
     background: white;
     background-size: cover;
-
+    overflow-y: auto !important;
     height: 100vh;
-    top: 0;
-    padding-top: 4.5rem;
+    padding-top: 0;
 }
 
 
@@ -54,7 +54,7 @@ body {
 
 .filters-card {
     margin-top: 2em;
-    margin-bottom: 2em;
+    margin-bottom: 7rem;
     width: 30em;
     padding: 10px;
 
@@ -111,4 +111,8 @@ body {
 
     margin-top: 4%;
     width: 50%;
+}
+
+.wrapper {
+    padding-top: 4.5rem !important;
 }

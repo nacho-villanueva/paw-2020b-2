@@ -6,12 +6,13 @@
     <!-- bootstrap-select CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="<c:url value="/resources/css/profile.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 
 </head>
 <body>
 <c:url value="/api/image" var="imageAssets"/>
-
-<div id="wrapper">
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="profile"/>
@@ -20,7 +21,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
 
         <div class="main-container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" style="padding-bottom: 3rem !important;margin-bottom: 3rem !important;">
                 <div class="card" style="width: 40em; margin-top: 2em;">
                     <div class="card-body">
                         <div class="row">
@@ -76,13 +77,13 @@
                                             <td><spring:message code="profile-view.body.tab.user.email.label"/></td>
                                             <td class="output"><c:out value="${loggedUser.email}"/></td>
                                             <td>
-                                                <a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/email"/>"><spring:message code="profile-view.body.button.edit.user.email"/> </a>
+                                                <a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/email"/>" title="<spring:message code="profile-view.body.button.edit.user.email"/>"> <i class="fas fa-fw fa-edit"></i> </a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.user.password.label"/></td>
                                             <td class="output"><spring:message code="profile-view.body.tab.user.password.data"/></td>
-                                            <td><a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/pass"/>"><spring:message code="profile-view.body.button.edit.user.password"/> </a></td>
+                                            <td><a class="btn btn-outline-secondary btn-sm" href="<c:url value="/profile/edit/user/pass"/>" title="<spring:message code="profile-view.body.button.edit.user.password"/>"> <i class="fas fa-fw fa-edit"></i> </a></td>
                                         </tr>
 
                                     </tbody>
@@ -183,7 +184,7 @@
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
-                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-primary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
+                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>

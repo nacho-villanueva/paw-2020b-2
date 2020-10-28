@@ -17,15 +17,16 @@ body {
     color: #212529;
     text-align: left;
     background-color: #212121;
+    overflow-y: hidden;
 }
 
 .main-container {
     position: relative;
     background: white;
     background-size: cover;
-
+    overflow-y: auto !important;
     height: 100vh;
-    padding-top: 4.5rem;
+    padding-top: 0;
 }
 
 
@@ -54,7 +55,6 @@ body {
 .order-card {
     margin-top: 2em;
     width: 35em;
-    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
     padding: 10px;
     height: 43em;
 
@@ -70,7 +70,7 @@ body {
 }
 
 .upload-btn{
-    background: #19b0c8;
+    background: var(--primary);
     color: white;
 
 
@@ -79,8 +79,7 @@ body {
 .results-card {
     left: 0;
     margin-top: 2em;
-    width: 42em;
-    box-shadow: 0 0 20px rgba(65, 65, 65, 0.75);
+    width: 45em;
     padding: 10px;
     height:43em;
 
@@ -106,7 +105,7 @@ body {
 
 }
 .tab button.active{
-    background: #19b0c8;
+    background: var(--primary);
     color: white;
 
 }
@@ -130,4 +129,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+}
+
+.wrapper {
+    padding-top: 4.5rem !important;
 }

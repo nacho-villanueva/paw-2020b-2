@@ -15,22 +15,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <%@ include file="fragments/include-header.jsp"%>
 
-    <link rel="stylesheet" href="<c:url value="/resources/css/navbar.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/css/mystudies.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/navbar-alternative.css"/>">
 
 </head>
 <c:url value="?" var="reloadPath"/>
 <c:url value="/view-study/" var="studyPath"/>
 <body>
-
+<%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
         <jsp:param name="current" value="orders"/>
     </jsp:include>
     <!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
+<div id="content-wrapper" class="d-flex flex-column main-container">
 
     <div class="row justify-content-center">
         <div class="col-sm-7">
@@ -38,7 +38,7 @@
                 <div class="card-body">
                     <p class="card-title h4"><spring:message code="my-studies.results-card.title"/></p>
                     <hr/>
-                    <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 90%;">
+                    <div id="results" class="list-group" style="overflow-y: scroll; overflow-x: hidden; height: 30rem;">
                         <c:if test="${ordersList.size() eq 0}">
                             <h3 class="text-center py-5 lead"><spring:message code="my-studies.results-card.no-results"/></h3>
                         </c:if>
