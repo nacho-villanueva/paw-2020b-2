@@ -18,6 +18,7 @@ import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.sql.Time;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -266,7 +267,6 @@ public class ClinicDaoTest {
         //Search params
         String clinic_name = null;
         ClinicHours hours = new ClinicHours();
-
         hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("08:00:00"),Time.valueOf("23:00:00"));
         hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
         hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
@@ -280,7 +280,39 @@ public class ClinicDaoTest {
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void testSearchNoHours() {
+        //Search params
+        String clinic_name = null;
+        ClinicHours hours = new ClinicHours();
+        String accepted_plan = null;
+        String study_name = null;
 
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+
+        Assert.assertEquals(0,clinics.size());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testSearchPlanWithLike() {
+        //Search params
+        String clinic_name = null;
+        ClinicHours hours = null;
+        String accepted_plan = "oSdE";
+        String study_name = null;
+
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+
+        Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
+
+        Assert.assertTrue(clinicIds.contains(6));
+        Assert.assertTrue(clinicIds.contains(9));
+        Assert.assertTrue(clinicIds.contains(16));
+    }
 
 
     private ClinicHours getClinicHours() {

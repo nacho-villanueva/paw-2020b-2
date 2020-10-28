@@ -68,7 +68,7 @@ public class ClinicJpaDao implements ClinicDao {
         User userRef = em.getReference(User.class,user.getId());
         Collection<StudyType> studyTypesRef = new HashSet<>();
         available_studies.forEach(studyType -> {
-            studyTypesRef.add(em.getReference(StudyType.class,studyType.getId()));
+            studyTypesRef.add(getStudyTypeRef(studyType));
         });
 
         final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medic_plans,false);
@@ -78,6 +78,20 @@ public class ClinicJpaDao implements ClinicDao {
         clinic.setHours(hours);
         em.flush();
         return clinic;
+    }
+
+    private StudyType getStudyTypeRef(StudyType studyType){
+
+        if(studyType==null || studyType.getId()==null)
+            return null;
+
+        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyType.getId()));
+        if(studyTypeOptional.isPresent())
+            return studyTypeOptional.get();
+
+        //the studyType is inexistent, therefore we create it
+        StudyType newStudyType = studyTypeDao.findOrRegister(studyType.getName());
+        return em.getReference(StudyType.class, newStudyType.getId());
     }
 
     @Override
