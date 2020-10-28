@@ -31,11 +31,16 @@ public class OrderJpaDao implements OrderDao {
                           final String identification_type, final byte[] identification,
                           final String insurance_plan, final String insurance_number) {
 
+        final Medic medicReference = em.getReference(Medic.class, medic.getUser().getId());
+        final Clinic clinicReference = em.getReference(Clinic.class, clinic.getUser().getId());
+        final StudyType studyTypeReference = em.getReference(StudyType.class, studyType.getId());
+
+
         final Order order = new Order(
-                medic,
+                medicReference,
                 date,
-                clinic,
-                studyType,
+                clinicReference,
+                studyTypeReference,
                 description,
                 identification_type,
                 identification,
