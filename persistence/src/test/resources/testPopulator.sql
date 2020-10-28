@@ -5,7 +5,8 @@ insert into users(id,email,password,role) values ((next value for users_id_seq),
                                                 ((next value for users_id_seq),'four@four.com','passFour',2),
                                                 ((next value for users_id_seq),'five@five.com','passFive',3),
                                                 ((next value for users_id_seq),'six@six.com','passSix',4),
-                                                ((next value for users_id_seq),'seven@seven.com','passSeven',4);
+                                                ((next value for users_id_seq),'seven@seven.com','passSeven',4),
+                                                ((next value for users_id_seq),'eight@eight.com','passEight',3);
 
 
 insert into medical_studies(id,name) values ((next value for medical_studies_id_seq),'X-ray'),
@@ -18,7 +19,20 @@ insert into medical_studies(id,name) values ((next value for medical_studies_id_
 insert into medical_fields(id,name) values ((next value for medical_fields_id_seq),'Neurology'),
                                         ((next value for medical_fields_id_seq),'Cardiology'), ((next value for medical_fields_id_seq),'Endocrinology'), ((next value for medical_fields_id_seq),'Pulmonology'), ((next value for medical_fields_id_seq),'Ophthalmology');
 
-insert into clinics(user_id,name,verified) values (3,'Clinic two',true),(6,'Clinic five',true);
+insert into clinics(user_id,name,verified) values (3,'Clinic two',true),(6,'Clinic five',true),(9,'Clinic Eight',false);
+
+insert into clinic_hours(clinic_id,day_of_week,close_time,open_time) values
+                                                                        (3,0,'08:00:00','22:00:00'),
+                                                                        (3,1,'09:00:00','21:00:00'),
+                                                                        (3,2,'10:00:00','20:00:00'),
+                                                                        (3,3,'11:00:00','19:00:00'),
+                                                                        (6,0,'08:00:00','22:00:00'),
+                                                                        (6,1,'09:00:00','21:00:00'),
+                                                                        (9,1,'09:00:00','21:00:00'),
+                                                                        (9,2,'10:00:00','20:00:00'),
+                                                                        (9,3,'11:00:00','19:00:00');
+
+insert into clinic_accepted_plans(clinic_id,medic_plan) values (3,'OSDE');
 
 insert into medics(user_id,name,identification_type,identification,licence_number,verified) values
                     (2,'Medic one','image/png','\000','1234567',true),

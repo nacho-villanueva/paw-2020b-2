@@ -10,9 +10,9 @@ import java.util.Objects;
 @IdClass(ClinicDayHours.ClinicDayHoursPK.class)
 public class ClinicDayHours {
 
-    /* default */static class ClinicDayHoursPK implements Serializable {
-        public int clinic_id;
-        public int day_of_week;
+    public static class ClinicDayHoursPK implements Serializable {
+        private int clinic_id;
+        private int day_of_week;
 
         public ClinicDayHoursPK() {
         }
@@ -56,10 +56,8 @@ public class ClinicDayHours {
     }
 
     public ClinicDayHours(int day, int clinic_id, Time open_time, Time close_time) {
-        this.day_of_week = day;
+        this(day,open_time,close_time);
         this.clinic_id = clinic_id;
-        this.open_time = open_time;
-        this.close_time = close_time;
     }
 
     public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {

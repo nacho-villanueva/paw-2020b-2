@@ -9,8 +9,6 @@ public interface StudyTypeService {
 
     Collection<StudyType> getAll();
 
-    public Collection<StudyType> findByClinicId(int clinic_id);
-
     public Optional<StudyType> findById(int id);
 
     public Optional<StudyType> findByName(String name);

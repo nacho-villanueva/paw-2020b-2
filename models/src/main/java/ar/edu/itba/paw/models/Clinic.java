@@ -28,7 +28,7 @@ public class Clinic {
     private Collection<StudyType> medical_studies;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="clinic_hours", joinColumns = @JoinColumn(name = "clinic_id", referencedColumnName = "user_id"))
+    @JoinColumn(name = "clinic_id", referencedColumnName = "user_id")
     private Collection<ClinicDayHours> hours;
 
     @ElementCollection
@@ -41,6 +41,7 @@ public class Clinic {
 
     protected Clinic() {
         //Just for Hibernate
+        this.verified = false;
     }
 
     public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {

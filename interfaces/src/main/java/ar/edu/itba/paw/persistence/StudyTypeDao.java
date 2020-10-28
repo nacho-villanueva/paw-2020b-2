@@ -12,7 +12,5 @@ public interface StudyTypeDao {
 
     public Collection<StudyType> getAll();
 
-    public Collection<StudyType> findByClinicId(int clinic_id);
-
     public StudyType findOrRegister(String name);
 }

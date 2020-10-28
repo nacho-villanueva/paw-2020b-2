@@ -118,12 +118,14 @@ public class ClinicJpaDao implements ClinicDao {
 
     @Override
     public StudyType registerStudyToClinic(final int clinic_id, final StudyType studyType) {
-        //We check if it exists
-        StudyType studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
 
         Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
 
+        StudyType studyTypeFromDB = null;
+
         if(clinicOptional.isPresent()){
+            //We check if it exists
+            studyTypeFromDB = studyTypeDao.findOrRegister(studyType.getName());
             Clinic clinic = clinicOptional.get();
 
             //TODO check it works
