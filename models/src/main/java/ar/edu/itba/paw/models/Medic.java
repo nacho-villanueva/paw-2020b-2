@@ -13,7 +13,7 @@ public class Medic {
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false,unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Column(nullable=false)
@@ -25,7 +25,7 @@ public class Medic {
     @Column(nullable=false)
     private String identification_type;
 
-    @Column(nullable=false)
+    @Column(nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
     @Column(nullable=false)

@@ -91,6 +91,26 @@ public class UserDaoTest {
     @Transactional
     @Rollback
     @Test
+    public void testFindByEmailExists() {
+        Optional<User> maybeUser = dao.findByEmail(userZero.getEmail());
+
+        Assert.assertTrue(maybeUser.isPresent());
+        Assert.assertEquals(userZero.getEmail(),maybeUser.get().getEmail());
+        Assert.assertEquals(userZero.getRole(),maybeUser.get().getRole());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testFindByEmailNotExists() {
+        Optional<User> maybeUser = dao.findByEmail(userTest.getEmail());
+
+        Assert.assertFalse(maybeUser.isPresent());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
     public void testUpdateRoleValidUser() {
         User newUser = dao.updateRole(userSix,User.PATIENT_ROLE_ID);
 

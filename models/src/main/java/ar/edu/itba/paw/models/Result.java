@@ -29,13 +29,13 @@ public class Result {
     @Column(name="identification_type", nullable=false)
     private String identification_type;
 
-    @Column(name="identification", nullable=false)
+    @Column(name="identification", nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
     @Column(name="result_data_type", nullable=false)
     private String data_type;
 
-    @Column(name="result_data", nullable=false)
+    @Column(name="result_data", nullable=false, length = 32000000)
     private byte[] data;
 
     protected Result() {
