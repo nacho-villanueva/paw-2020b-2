@@ -28,8 +28,7 @@ public class Clinic {
             uniqueConstraints = @UniqueConstraint(columnNames = {"clinic_id","study_id"}))
     private Collection<StudyType> medical_studies;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "clinic_id", referencedColumnName = "user_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "clinic")
     private Collection<ClinicDayHours> hours;
 
     @ElementCollection
@@ -133,11 +132,46 @@ public class Clinic {
     }
 
     public void setHours(ClinicHours hours) {
-        this.hours = hours.createClinicDayHoursCollection(this.user.getId());
+        this.setHours(hours.createClinicDayHoursCollection(this.user.getId()));
     }
 
     public void setHours(Collection<ClinicDayHours> hours) {
-        this.hours = hours;
+        //First we check which entries need to be removed, then we add the new ones and update the ones that got modified
+
+        //We will find entries to be removed by the day of the week
+        Set<Integer> new_days = new HashSet<>();
+        hours.forEach(clinicDayHours -> {
+            new_days.add(clinicDayHours.getDay_of_week());
+        });
+        Set<ClinicDayHours> to_delete = new HashSet<>();
+        Map<Integer, ClinicDayHours> to_update = new HashMap<>();
+
+        //We go through the old days, and if they are on the new days as well then we gotta update, else we gotta delete them
+        this.hours.forEach(clinicDayHours -> {
+            if(new_days.contains(clinicDayHours.getDay_of_week())) {
+                to_update.put(clinicDayHours.getDay_of_week(),clinicDayHours);
+                new_days.remove(clinicDayHours.getDay_of_week());   //Since we found out it's on both new and old days, then it's no longer a new day
+            } else {
+                to_delete.add(clinicDayHours);
+            }
+        });
+
+        //We delete those that need to be deleted
+        to_delete.forEach(clinicDayHours -> {
+            this.hours.remove(clinicDayHours);
+        });
+
+        //We update those that need to be updated and add those that need to be added
+        hours.forEach(newClinicDayHours -> {
+            if(to_update.containsKey(newClinicDayHours.getDay_of_week())) {
+                ClinicDayHours oldHoursRef = to_update.get(newClinicDayHours.getDay_of_week());
+                oldHoursRef.setOpen_time(newClinicDayHours.getOpen_time());
+                oldHoursRef.setClose_time(newClinicDayHours.getClose_time());
+            } else {
+                newClinicDayHours.setClinic_id(this.user.getId());
+                this.hours.add(newClinicDayHours);
+            }
+        });
     }
 
     public Set<String> getAccepted_plans() {

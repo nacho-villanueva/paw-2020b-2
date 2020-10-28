@@ -88,7 +88,7 @@ public class MedicJpaDao implements MedicDao {
             medic.setVerified(verified);
             Collection<MedicalField> fieldsRef = new HashSet<>();
             known_fields.forEach(medicalField -> {
-                fieldsRef.add(em.getReference(MedicalField.class,medicalField.getId()));
+                fieldsRef.add(getFieldRef(medicalField));
             });
             medic.setMedical_fields(fieldsRef);
             em.flush();

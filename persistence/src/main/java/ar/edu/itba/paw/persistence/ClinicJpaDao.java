@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -68,60 +69,55 @@ public class ClinicJpaDao implements ClinicDao {
         User userRef = em.getReference(User.class,user.getId());
         Collection<StudyType> studyTypesRef = new HashSet<>();
         available_studies.forEach(studyType -> {
-            studyTypesRef.add(getStudyTypeRef(studyType));
+            studyTypesRef.add(getStudyRef(studyType));
         });
 
         final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medic_plans,false);
 
         em.persist(clinic);
 
-        clinic.setHours(hours);
+        clinic.setHours(hours); //TODO: check
         em.flush();
         return clinic;
-    }
-
-    private StudyType getStudyTypeRef(StudyType studyType){
-
-        if(studyType==null || studyType.getId()==null)
-            return null;
-
-        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyType.getId()));
-        if(studyTypeOptional.isPresent())
-            return studyTypeOptional.get();
-
-        //the studyType is inexistent, therefore we create it
-        StudyType newStudyType = studyTypeDao.findOrRegister(studyType.getName());
-        return em.getReference(StudyType.class, newStudyType.getId());
     }
 
     @Override
     public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
+        Optional<Clinic> clinicDB = findByUserId(user.getId());
 
-        Optional<Clinic> clinicOptional = this.findByUserId(user.getId());
+        clinicDB.ifPresent(clinic -> {
+            clinic.setName(name);
+            clinic.setTelephone(telephone);
+            clinic.setVerified(verified);
+            clinic.setAccepted_plans(medic_plans);
 
-        if(!clinicOptional.isPresent())
-            return null;
+            Collection<StudyType> studiesRef = new HashSet<>();
+            available_studies.forEach(study -> {
+                studiesRef.add(getStudyRef(study));
+            });
+            clinic.setMedical_studies(studiesRef);
 
-        Clinic clinic = clinicOptional.get();
+            //Updating hours
+            clinic.setHours(hours);
 
-        //Getting references
-        User userRef = em.getReference(User.class,user.getId());
-        Collection<StudyType> studyTypeRef = new HashSet<>();
-        available_studies.forEach(studyType -> {
-            studyTypeRef.add(em.getReference(StudyType.class,studyType.getId()));
+            em.flush();
         });
 
-        clinic.setUser(userRef);
-        clinic.setName(name);
-        clinic.setTelephone(telephone);
-        clinic.setAccepted_plans(medic_plans);
-        clinic.setMedical_studies(studyTypeRef);
-        clinic.setHours(hours);
-        clinic.setVerified(verified);
+        return clinicDB.orElse(null);
+    }
 
-        em.flush();
+    private StudyType getStudyRef(StudyType studyType) {
+        StudyType retRef;
+        if(studyType.getId() != null) {
+            retRef = em.getReference(StudyType.class, studyType.getId());
+            if(retRef != null) {
+                return retRef;
+            }
+        }
 
-        return clinic;
+        //If study does not exists we try and create it then add its reference that we know it wont fail (in theory)
+        StudyType newStudy = studyTypeDao.findOrRegister(studyType.getName());
+        return em.getReference(StudyType.class,newStudy.getId());
     }
 
     @Override

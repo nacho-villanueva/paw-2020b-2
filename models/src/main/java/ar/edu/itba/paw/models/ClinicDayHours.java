@@ -31,17 +31,25 @@ public class ClinicDayHours {
 
             return Objects.hash(clinic_id, day_of_week);
         }
+
+        public void setClinic_id(int clinic_id) {
+            this.clinic_id = clinic_id;
+        }
+
+        public void setDay_of_week(int day_of_week) {
+            this.day_of_week = day_of_week;
+        }
     }
 
     @Id // to allow mapping
-    private int clinic_id;
+    private Integer clinic_id;
 
     @Id
     @Column(name = "day_of_week",nullable = false)
-    private int day_of_week;
+    private Integer day_of_week;
 
     @MapsId("clinic_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
