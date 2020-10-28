@@ -11,8 +11,8 @@ public class Clinic {
     private Integer user_id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Column(name = "name",nullable=false)
@@ -21,17 +21,18 @@ public class Clinic {
     @Column(name="telephone")
     private String telephone;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="clinic_available_studies",
-            joinColumns = @JoinColumn(name="clinic_id"),
+            joinColumns = @JoinColumn(name="clinic_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name="study_id"))
     private Collection<StudyType> medical_studies;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="clinic")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="clinic_hours", joinColumns = @JoinColumn(name = "clinic_id", referencedColumnName = "user_id"))
     private Collection<ClinicDayHours> hours;
 
     @ElementCollection
-    @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id"))
+    @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id", referencedColumnName = "user_id"))
     @Column(name="medic_plan")
     private Set<String> accepted_plans;
 

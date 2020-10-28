@@ -11,7 +11,7 @@ public class MedicalField {
     @SequenceGenerator(sequenceName = "medical_fields_id_seq", name = "medical_fields_id_seq", allocationSize = 1)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     protected MedicalField() {

@@ -13,7 +13,7 @@ public class Medic {
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", nullable = false,unique = true)
     private User user;
 
     @Column(nullable=false)
@@ -33,7 +33,7 @@ public class Medic {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="medic_medical_fields",
-            joinColumns = @JoinColumn(name="medic_id"),
+            joinColumns = @JoinColumn(name="medic_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"))
     private Collection<MedicalField> medical_fields;
 

@@ -16,14 +16,14 @@ public class Order {
     private Long order_id;
 
     @ManyToOne
-    @JoinColumn(name = "medic_id", nullable = false)
+    @JoinColumn(name = "medic_id", nullable = false, referencedColumnName = "user_id")
     private Medic medic;
 
     @Column(name = "date", nullable = false)
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "clinic_id", nullable = false)
+    @JoinColumn(name = "clinic_id", nullable = false, referencedColumnName = "user_id")
     private Clinic clinic;
 
     @ManyToOne
