@@ -30,13 +30,13 @@
 
                 <c:url var="post_createorder"  value="/create-order"/>
                 <f:form action="${post_createorder}" method="post" modelAttribute="orderWithoutClinicForm">
-                    <div class="border-1 border-secondary">
+                    <div class="border-1 border-secondary mx-2 mt-3">
                         <label for="medicName" class="text-muted"><spring:message code="create-order.body.form.medicName.label"/> </label>
                         <p id="medicName" class="lead"><c:out value="${loggedMedic.name}"/> </p>
                         <f:input type="hidden" path="medicId"/>
                     </div>
                     <hr class="divider"/>
-                    <div class="row">
+                    <div class="row mx-1">
                         <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientName.label"/> </label>
                             <f:input type="text" path="patientName" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
@@ -48,7 +48,7 @@
                             <f:errors path="patientEmail" cssClass="text-danger" element="small" />
                         </fieldset>
                     </div>
-                    <div class="row">
+                    <div class="row mx-1">
                         <fieldset class="form-group col ">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patient_insurance_plan.label"/></label>
                             <f:input type="text" path="patient_insurance_plan" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
@@ -64,7 +64,7 @@
 
                     <hr class="mt-3 mb-2"/>
 
-                    <div class="row">
+                    <div class="row mx-1">
                         <div class="col">
                             <fieldset class="form-group">
                                 <label class="bmd-label-static"><spring:message code="create-order.body.form.studyId.label"/></label>
@@ -77,7 +77,7 @@
                         </div>
 
                     </div>
-                    <div class="row form-group">
+                    <div class="row form-group" style="margin-left: 1.25rem; margin-right:1.25rem;">
                         <label class="bmd-label-static"><spring:message code="create-order.body.form.description.label"/></label>
                         <f:textarea path="description" cssStyle="resize: none" cssClass="form-control" cssErrorClass="form-control is-invalid" rows="10"/>
                         <f:errors path="description" cssClass="text-danger" element="small" />
