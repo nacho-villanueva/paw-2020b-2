@@ -50,7 +50,7 @@ public class ClinicDaoTest {
     private static final User userSeven = new User(8,"seven@seven.com","passSeven",User.UNDEFINED_ROLE_ID);
 
     private static final List<String> clinicMails = new ArrayList<>(Arrays.asList("two@two.com","five@five.com","eight@eight.com","nine@nine.com","ten@ten.com","twelve@twelve.com",
-            "thirteen@thirteen.com","fifteen@fifteen.com","sixteen@sixteen.com","eighteen@eighteen.com", "nineteen@nineteen.com","twenty@twenty.com"));
+            "thirteen@thirteen.com","fourteen@fourteen.com","fifteen@fifteen.com","sixteen@sixteen.com","seventeen@seventeen.com","eighteen@eighteen.com", "nineteen@nineteen.com","twenty@twenty.com"));
 
     private static final int ZERO_ID = 1;
     private static final String NAME_ZERO = "Zero's Clinic";
@@ -139,7 +139,7 @@ public class ClinicDaoTest {
         StudyType study = dao.registerStudyToClinic(clinicTwo.getUser().getId(), studyTypeSix);
 
         Assert.assertNotNull(study);
-        Assert.assertEquals(studyTypeSix.getName(), study.getName());
+        Assert.assertEquals(studyTypeSix.getId(), study.getId());
         Assert.assertEquals(1+clinicMedicalStudies, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = "+clinicTwo.getUser().getId()));
     }
 
@@ -147,8 +147,12 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterStudyToClinicNotExists() {
+        int numberOfRelations = JdbcTestUtils.countRowsInTable(jdbcTemplate,CLINICS_RELATION_TABLE_NAME);
+
         StudyType studyType = dao.registerStudyToClinic(ZERO_ID, studyTypeOne);
+
         Assert.assertNull(studyType);
+        Assert.assertEquals(numberOfRelations,JdbcTestUtils.countRowsInTable(jdbcTemplate,CLINICS_RELATION_TABLE_NAME));
     }
 
     @Test
@@ -169,15 +173,15 @@ public class ClinicDaoTest {
 
         final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, available_studies,plans,getClinicHours(),false);
 
-        Assert.assertEquals(2,clinic.getMedical_studies().size());
-        Assert.assertEquals(2,clinic.getAccepted_plans().size());
+        Assert.assertEquals(available_studies.size(),clinic.getMedical_studies().size());
+        Assert.assertEquals(plans.size(),clinic.getAccepted_plans().size());
         Assert.assertTrue(clinic.getHours().getDays()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.SATURDAY]);
         StudyType study = clinic.getMedical_studies().stream().findFirst().get();
         Assert.assertTrue(study.getName().equals(studyTypeOne.getName()) || study.getName().equals(studyTypeSix.getName()));
         Assert.assertEquals(1+rowsClinicTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
-        Assert.assertEquals(2+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
+        Assert.assertEquals(plans.size()+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(5+rowsClinicHoursTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME));
     }
 
@@ -185,8 +189,14 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterAlreadyExists() {
+        Collection<StudyType> available_studies = new ArrayList<>();
+        available_studies.add(studyTypeOne);
+        available_studies.add(studyTypeSix);
+        Set<String> plans = new HashSet<>();
+        plans.add(MEDIC_PLAN);
+        plans.add(MEDIC_PLAN_ALT);
 
-        dao.register(userTwo,NAME_ZERO,null,new ArrayList<>(),new HashSet<>(),new ClinicHours(),false);
+        dao.register(userTwo,NAME_ZERO,null,available_studies,plans,getClinicHours(),false);
     }
 
     @Test
@@ -237,15 +247,14 @@ public class ClinicDaoTest {
         Assert.assertFalse(clinic.getHours().getDays()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.SUNDAY]);
         Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.TUESDAY]);
-        Assert.assertEquals(rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
-        Assert.assertEquals(rowsClinicHoursTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_PLANS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND lower(medic_plan) = lower('" + MEDIC_PLAN_ALT + "')"));
+        Assert.assertEquals(3, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_HOURS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND close_time = '" + CLOSE_TIME_ALT + "'"));
     }
 
     @Test
     @Transactional
     @Rollback
     public void testSearchNoParams() {
-        int rowsClinicTableVerified = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true");
 
         //Search params
         String clinic_name = null;
@@ -255,8 +264,10 @@ public class ClinicDaoTest {
 
         Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
 
-        Assert.assertEquals(rowsClinicTableVerified,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"));
-        Assert.assertEquals(rowsClinicTableVerified,clinics.size());
+        Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
+        clinics.forEach(clinic -> {
+            Assert.assertTrue(clinicMails.contains(clinic.getUser().getEmail()));
+        });
     }
 
     @Test
@@ -309,9 +320,14 @@ public class ClinicDaoTest {
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
 
+        Assert.assertTrue(clinicIds.contains(3));
         Assert.assertTrue(clinicIds.contains(6));
         Assert.assertTrue(clinicIds.contains(9));
+        Assert.assertTrue(clinicIds.contains(11));
         Assert.assertTrue(clinicIds.contains(16));
+        Assert.assertFalse(clinicIds.contains(18));     //18 has osde but it's not a verified clinic
+        Assert.assertTrue(clinicIds.contains(19));
+        Assert.assertTrue(clinicIds.contains(20));
     }
 
 
