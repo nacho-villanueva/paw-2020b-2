@@ -86,24 +86,31 @@
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                             </f:select>
                         </fieldset>
-                        <fieldset <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() == false}">style="display:none;"</c:if>>
-                            <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
-                            <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
-                            <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
-                            <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
-                                <f:option value="-1" label="${selectClinicOption}"/>
-                                <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
-                            </f:select>
-                        </fieldset>
-                        <fieldset <c:if test="${loggedUser.isMedic() eq true && loggedUser.isVerifying() == false}">style="display:none;"</c:if>>
-                            <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
-                            <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
-                            <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
-                            <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
-                                <f:option value="-1" label="${selectMedicOption}"/>
-                                <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
-                            </f:select>
-                        </fieldset>
+
+                        <c:if test="${!(loggedUser.isClinic() eq true && loggedUser.isVerifying() == false)}">
+                            <fieldset>
+                                <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
+                                <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
+                                <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
+                                <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
+                                    <f:option value="-1" label="${selectClinicOption}"/>
+                                    <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
+                                </f:select>
+                            </fieldset>
+                        </c:if>
+
+                        <c:if test="${!(loggedUser.isMedic() eq true && loggedUser.isVerifying() == false)}">
+                            <fieldset>
+                                <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
+                                <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
+                                <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
+                                <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
+                                    <f:option value="-1" label="${selectMedicOption}"/>
+                                    <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
+                                </f:select>
+                            </fieldset>
+                        </c:if>
+
                         <c:if test="${(loggedUser.isMedic() == true || loggedUser.isClinic() == true ) && loggedUser.isVerifying() == false}">
                             <fieldset>
                                 <fieldset class="form-group">
