@@ -86,7 +86,7 @@
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                             </f:select>
                         </fieldset>
-                        <fieldset>
+                        <fieldset <c:if test="${loggedUser.isClinic() eq true && loggedUser.isVerifying() == false}">style="display:none;"</c:if>>
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
                             <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
@@ -95,7 +95,7 @@
                                 <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
                             </f:select>
                         </fieldset>
-                        <fieldset>
+                        <fieldset <c:if test="${loggedUser.isMedic() eq true && loggedUser.isVerifying() == false}">style="display:none;"</c:if>>
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
                             <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
@@ -107,26 +107,26 @@
                         <c:if test="${(loggedUser.isMedic() == true || loggedUser.isClinic() == true ) && loggedUser.isVerifying() == false}">
                             <fieldset>
                                 <fieldset class="form-group">
-                                    <label for="patientEmail" class="bmd-label-floating"><spring:message code="my-studies.filters-card.label.patient-email"/></label>
+                                    <label for="patientEmail" class="bmd-label-static"><spring:message code="my-studies.filters-card.label.patient-email"/></label>
                                     <f:input type="email" class="form-control" id="patientEmail" path="patient_email"/>
                                     <f:errors path="patient_email"/>
                                 </fieldset>
                             </fieldset>
                         </c:if>
 
-                        <fieldset class="form-group">
+                        <fieldset class="form-group mb-3">
                             <label class="bmd-label-static" for="date"><spring:message code="my-studies.filters-card.label.date"/></label>
                             <div class="input-group date">
                                 <f:input type="date" class="form-control" id="date" path="date"/>
                                 <f:errors path="date"/>
                             </div>
                         </fieldset>
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center mt-5">
                             <f:button type="submit" name="submit" formenctype="application/x-www-form-urlencoded" value="search" id="searchButton" class="row btn btn-lg action-btn">
                                 <spring:message code="my-studies.filters-card.search"/>
                             </f:button>
                         </div>
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center mt-2">
                             <f:button type="submit" name="submit" value="reset" id="resetButton" class="row btn btn-outline-secondary">
                                 <spring:message code="my-studies.filters-card.reset"/>
                             </f:button>
