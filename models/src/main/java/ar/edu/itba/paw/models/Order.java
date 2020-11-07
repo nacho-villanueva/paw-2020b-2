@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "medical_orders")
@@ -53,6 +54,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private Collection<Result> study_results;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<User> shared_with;
 
     protected Order() {
         //Just for hibernate
@@ -200,5 +204,17 @@ public class Order {
 
     public void setPatient_name(String patient_name) {
         this.patient_name = patient_name;
+    }
+
+    public Set<User> getShared_with() {
+        return shared_with;
+    }
+
+    public void setShared_with(Set<User> shared_with) {
+        this.shared_with = shared_with;
+    }
+
+    public void addToShared_with(User user){
+        this.shared_with.add(user);
     }
 }

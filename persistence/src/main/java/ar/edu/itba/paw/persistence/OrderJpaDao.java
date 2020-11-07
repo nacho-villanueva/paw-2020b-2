@@ -19,6 +19,9 @@ public class OrderJpaDao implements OrderDao {
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired
+    private UserDao ud;
+
     @Override
     public Optional<Order> findById(final long id) {
         return Optional.ofNullable(em.find(Order.class, id));
@@ -66,6 +69,27 @@ public class OrderJpaDao implements OrderDao {
         final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.user_id = :id", Order.class);
         query.setParameter("id", user.getId());
         return query.getResultList();
+    }
+
+    @Override
+    public Collection<Order> getAllSharedAsMedic(User user) {
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o, User m WHERE m.id=:userId AND m MEMBER o.shared_with", Order.class);
+        query.setParameter("userId", user.getId());
+        return query.getResultList();
+    }
+
+    @Override
+    public Order shareWithMedic(Order order, User user){
+        final Optional<Order> maybeOrder = findById(order.getOrder_id());
+        if(order.getMedic().getUser_id() == user.getId())
+            return null;
+        final Optional<User> maybeUser = ud.findById(user.getId());
+        if(maybeOrder.isPresent() && maybeUser.isPresent()){
+            maybeOrder.get().addToShared_with(maybeUser.get());
+            em.flush();
+        }
+
+        return maybeOrder.orElse(null);
     }
 
     @Override

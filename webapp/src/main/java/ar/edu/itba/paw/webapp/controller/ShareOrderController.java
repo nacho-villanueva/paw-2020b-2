@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.models.Order;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.MedicService;
 import ar.edu.itba.paw.services.OrderService;
 import ar.edu.itba.paw.services.UrlEncoderService;
@@ -42,7 +42,7 @@ public class ShareOrderController {
     private OrderService os;
 
     @RequestMapping(value = "/share-order/{encodedId}", method = RequestMethod.GET)
-    public ModelAndView getShareOrder(@PathVariable("encodedId") final String encodedId, @Valid @ModelAttribute("shareOrderForm")ShareOrderForm shareOrderForm){
+    public ModelAndView getShareOrder(@PathVariable("encodedId") final String encodedId, @ModelAttribute("shareOrderForm")ShareOrderForm shareOrderForm){
         final Optional<Order> maybeOrder = os.findById(ues.decode(encodedId));
         Order order;
         if(maybeOrder.isPresent())
@@ -62,7 +62,6 @@ public class ShareOrderController {
 
     @RequestMapping(value = "/share-order/{encodedId}", method = RequestMethod.POST)
     public ModelAndView postShareOrder(@PathVariable("encodedId") final String encodedId, @Valid @ModelAttribute("shareOrderForm")ShareOrderForm shareOrderForm, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-
         final Optional<Order> maybeOrder = os.findById(ues.decode(encodedId));
         Order order;
         if(maybeOrder.isPresent())
@@ -94,7 +93,7 @@ public class ShareOrderController {
         else
             throw new MedicNotFoundException();
 
-        //os.shareToMedic(maybeOrder.get(), maybeMedic.get());
+        os.shareWithMedic(maybeOrder.get(), maybeMedic.get().getUser());
 
         return viewStudyMav;
     }
