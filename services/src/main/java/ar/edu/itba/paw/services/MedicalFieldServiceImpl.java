@@ -1,14 +1,16 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.MedicalField;
+import ar.edu.itba.paw.models.MedicalField;
 import ar.edu.itba.paw.persistence.MedicalFieldDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MedicalFieldServiceImpl implements MedicalFieldService {
 
     @Autowired
@@ -27,11 +29,6 @@ public class MedicalFieldServiceImpl implements MedicalFieldService {
     @Override
     public Collection<MedicalField> getAll() {
         return dao.getAll();
-    }
-
-    @Override
-    public Collection<MedicalField> findByMedicId(int medic_id) {
-        return dao.findByMedicId(medic_id);
     }
 
     @Override

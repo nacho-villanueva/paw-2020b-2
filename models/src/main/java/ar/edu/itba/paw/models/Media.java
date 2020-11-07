@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
 public class Media {
 
@@ -6,8 +6,8 @@ public class Media {
     private byte[] file;
     private String contentType;
 
+    //Default constructor needed for hibernate, if functionality changes DO NOT delete constructor, just change from public to /* package */
     public Media(){
-
     }
 
     public Media(String name, byte[] image, String contentType) {

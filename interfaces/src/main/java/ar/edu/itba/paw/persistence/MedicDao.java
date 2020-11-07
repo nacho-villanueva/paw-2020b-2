@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.models.*;
 
 import java.util.Collection;
 import java.util.Optional;
