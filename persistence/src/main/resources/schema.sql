@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS clinics (
-    user_id int not null unique,
+    user_id int primary key,
     name text not null,
     telephone text,
     verified boolean not null default false,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS clinic_available_studies (
 );
 
 CREATE TABLE IF NOT EXISTS medics (
-    user_id int not null unique,
+    user_id int primary key,
     name text not null,
     telephone text,
     identification_type text not null,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS medic_medical_fields (
 );
 
 CREATE TABLE IF NOT EXISTS patients (
-    user_id int not null unique,
+    user_id int primary key,
     name text not null,
     medic_plan text,
     medic_plan_number text,

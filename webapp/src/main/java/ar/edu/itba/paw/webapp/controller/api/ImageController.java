@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller.api;
 
-import ar.edu.itba.paw.model.Media;
+import ar.edu.itba.paw.models.Media;
 import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import org.springframework.beans.factory.annotation.Autowired;

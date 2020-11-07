@@ -1,5 +1,9 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
 
     public static final int ADMIN_ROLE_ID = 0;
@@ -10,49 +14,64 @@ public class User {
 
     private static final String DEFAULT_LOCALE = "en-US";
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "users_id_seq")
+    @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
+    private Integer id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private int role;
+
+    @Transient
     private boolean isRegistered;
+
+    @Transient
     private boolean isVerifying;
+
+    @Column(length = 10)
     private String locale;
 
-    public User() {
-
+    protected User() {
+        //Just for hibernate
     }
 
-    public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying, final String locale) {
-        this.id = id;
+    public User(final String email, final String password, final int role) {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.isRegistered = isRegistered;
-        this.isVerifying = isVerifying;
-        this.locale = locale;
+        this.locale = DEFAULT_LOCALE;
+        this.isRegistered = true;
+        this.isVerifying = false;
     }
 
     public User(final int id, final String email, final String password, final int role) {
+        this(email,password,role);
         this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.isRegistered = true;
-        this.isVerifying = false;
-        this.locale = DEFAULT_LOCALE;
     }
 
-    public User(final int id, final String email, final String password, final int role, final String locale) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.isRegistered = true;
-        this.isVerifying = false;
+    public User(final String email, final String password, final int role, final String locale) {
+        this(email,password,role);
         this.locale = locale;
     }
 
-    public int getId() {
+    public User(final int id, final String email, final String password, final int role, final String locale) {
+        this(email,password,role,locale);
+        this.id = id;
+    }
+
+    public User(final int id, final String email, final String password, final int role, final boolean isRegistered, final boolean isVerifying, final String locale) {
+        this(id,email,password,role,locale);
+        this.isRegistered = isRegistered;
+        this.isVerifying = isVerifying;
+    }
+
+    public Integer getId() {
         return id;
     }
 

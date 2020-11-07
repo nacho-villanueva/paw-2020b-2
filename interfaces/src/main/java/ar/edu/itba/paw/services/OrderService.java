@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.models.*;
 
 import java.sql.Date;
 import java.util.Collection;
@@ -11,8 +11,6 @@ public interface OrderService {
     public Optional<Order> findById(long id);
 
     Order register(Medic medic, Date date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identification_type, byte[] identification, String medic_plan, String medic_plan_number);
-
-    Collection<Order> getAllUserOrders(User user);
 
     Collection<Order> getAllAsClinic(User user);
 

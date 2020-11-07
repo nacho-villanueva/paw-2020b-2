@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.MedicalField;
-import ar.edu.itba.paw.model.StudyType;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.MedicalFieldService;
 import ar.edu.itba.paw.services.StudyTypeService;
 import ar.edu.itba.paw.services.UserService;
