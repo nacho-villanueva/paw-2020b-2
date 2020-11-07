@@ -58,6 +58,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/create-type").hasAnyRole("UNDEFINED","CLINIC")
                     .antMatchers("/create-field").hasAnyRole("UNDEFINED","MEDIC")
                     .antMatchers("/upload-result/**","/result-uploaded").access("hasRole('ROLE_CLINIC') and hasRole('ROLE_VERIFIED')")
+                    .antMatchers("/share-order/**").hasRole("PATIENT")
                     .antMatchers("/profile/edit/clinic").hasRole("CLINIC")
                     .antMatchers("/complete-register").hasRole("UNDEFINED")
                     .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
