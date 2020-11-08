@@ -85,13 +85,22 @@ public class RegisterController {
 
     @RequestMapping(value = "/apply-as-medic", method = RequestMethod.POST)
     public ModelAndView applyMedic(@Valid @ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm, BindingResult bindingResult){
+
+        Collection<MedicalField> knownFields = new HashSet<>();
+        for (String medicalFieldName : applyMedicForm.getKnown_fields()) {
+            //TODO REPLACE -1 WITH NULL WHEN MEDICAL FIELD HAS INTEGER ID
+            knownFields.add(new MedicalField(-1,medicalFieldName));
+        }
+
         if(bindingResult.hasErrors()){
             ModelAndView mavError = new ModelAndView("complete-registration");
             mavError.addObject("registrationTab", "medic");
             mavError.addObject("registerPatientForm", new RegisterPatientForm());
             mavError.addObject("applyClinicForm", new ApplyClinicForm());
 
-            mavError.addObject("fieldsList", mfs.getAll());
+            knownFields.addAll(mfs.getAll());
+
+            mavError.addObject("fieldsList", knownFields);
             mavError.addObject("studiesList", sts.getAll());
             return mavError;
         }
@@ -101,16 +110,6 @@ public class RegisterController {
             fileBytes = applyMedicForm.getIdentification().getBytes();
         } catch (IOException e) {
             throw new UploadedFileFailedToLoadException();
-        }
-        ArrayList<MedicalField> knownFields = new ArrayList<>();
-        for (Integer i : applyMedicForm.getKnown_fields()) {
-
-            Optional<MedicalField> mf = mfs.findById(i);
-
-            if (mf.isPresent())
-                knownFields.add(mf.get());
-            else
-                throw new MedicalFieldNotFoundException();
         }
 
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
@@ -123,29 +122,27 @@ public class RegisterController {
 
     @RequestMapping(value = "/apply-as-clinic", method = RequestMethod.POST)
     public ModelAndView applyClinic(@Valid @ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm, BindingResult bindingResult){
+
+        Collection<StudyType> availableStudies = new HashSet<>();
+        for (String studyTypeName : applyClinicForm.getAvailable_studies()) {
+            //TODO REPLACE -1 WITH NULL WHEN STUDY TYPE HAS INTEGER ID
+            availableStudies.add(new StudyType(-1,studyTypeName));
+        }
+
         if(bindingResult.hasErrors()){
             ModelAndView mavError = new ModelAndView("complete-registration");
             mavError.addObject("registrationTab", "clinic");
             mavError.addObject("registerPatientForm", new RegisterPatientForm());
             mavError.addObject("applyMedicForm", new ApplyMedicForm());
 
+            availableStudies.addAll(sts.getAll());
+
             mavError.addObject("fieldsList", mfs.getAll());
-            mavError.addObject("studiesList", sts.getAll());
+            mavError.addObject("studiesList", availableStudies);
 
             return mavError;
         }
 
-        ArrayList<StudyType> availableStudies = new ArrayList<>();
-
-        for (Integer i : applyClinicForm.getAvailable_studies()) {
-
-            Optional<StudyType> st = sts.findById(i);
-
-            if (st.isPresent())
-                availableStudies.add(st.get());
-            else
-                throw new StudyTypeNotFoundException();
-        }
 
         ClinicHours clinicHours = new ClinicHours();
         Set<Integer> daysSet = new HashSet<>(Arrays.asList(applyClinicForm.getClinicHoursForm().getOpen_days()));

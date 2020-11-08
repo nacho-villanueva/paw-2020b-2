@@ -30,8 +30,7 @@ public class EditClinicForm {
     private String telephone;
 
     @NotNull
-    @StudyTypesAreValid
-    private Integer[] available_studies;
+    private String[] available_studies;
 
     @PasswordIsCorrect
     @Size(min = 6, max = 100)
@@ -63,11 +62,11 @@ public class EditClinicForm {
         this.telephone = telephone;
     }
 
-    public Integer[] getAvailable_studies() {
+    public String[] getAvailable_studies() {
         return available_studies;
     }
 
-    public void setAvailable_studies(Integer[] available_studies) {
+    public void setAvailable_studies(String[] available_studies) {
         this.available_studies = available_studies;
     }
 

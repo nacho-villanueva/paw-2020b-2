@@ -9,7 +9,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -221,14 +220,13 @@ public class ProfileController {
             editMedicForm.setTelephone(medic.getTelephone());
             editMedicForm.setLicence_number(medic.getLicence_number());
 
-            ArrayList<Integer> knownFieldsList = new ArrayList<>();
+            ArrayList<String> knownFieldsList = new ArrayList<>();
             for (MedicalField mf : medic.getMedical_fields()) {
-                knownFieldsList.add(mf.getId());
+                knownFieldsList.add(mf.getName());
             }
-            Integer[] knownFields = knownFieldsList.toArray(new Integer[knownFieldsList.size()]);
-            editMedicForm.setKnown_fields(knownFields);
+            editMedicForm.setKnown_fields(knownFieldsList.toArray(new String[0]));
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()).mapToInt(Integer::intValue).toArray());
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
             mav.addObject("fieldsList",medicalFieldService.getAll());
         }else{
             throw new MedicNotFoundException();
@@ -239,14 +237,23 @@ public class ProfileController {
 
     @RequestMapping(value = "/edit/medic",method = RequestMethod.POST)
     public ModelAndView editProfileMedicPost(@Valid @ModelAttribute("editMedicForm") final EditMedicForm editMedicForm, final BindingResult errors, Locale locale){
+
+        Collection<MedicalField> knownFields = new HashSet<>();
+        for (String medicalFieldName : editMedicForm.getKnown_fields()) {
+            //TODO REPLACE -1 WITH NULL WHEN MEDICAL FIELD HAS INTEGER ID
+            knownFields.add(new MedicalField(-1,medicalFieldName));
+        }
+
         if(errors.hasErrors()){
 
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("role","medic");
             addUserRole(mav);
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()).mapToInt(Integer::intValue).toArray());
-            mav.addObject("fieldsList",medicalFieldService.getAll());
+            knownFields.addAll(medicalFieldService.getAll());
+
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
+            mav.addObject("fieldsList",knownFields);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
 
@@ -261,17 +268,6 @@ public class ProfileController {
             medic = medicOptional.get();
         }else{
             throw new MedicNotFoundException();
-        }
-
-        ArrayList<MedicalField> knownFields = new ArrayList<>();
-        for (Integer i : editMedicForm.getKnown_fields()) {
-
-            Optional<MedicalField> mf = medicalFieldService.findById(i);
-
-            if (mf.isPresent())
-                knownFields.add(mf.get());
-            else
-                throw new MedicalFieldNotFoundException();
         }
 
         String newContentType = medic.getIdentification_type();
@@ -316,15 +312,13 @@ public class ProfileController {
 
             editClinicForm.setAccepted_plans(clinic.getAccepted_plans().toArray(new String[0]));
 
-            ArrayList<Integer> availableStudiesList = new ArrayList<>();
+            ArrayList<String> availableStudiesList = new ArrayList<>();
             for (StudyType studyType : clinic.getMedical_studies()) {
-                availableStudiesList.add(studyType.getId());
+                availableStudiesList.add(studyType.getName());
             }
-            Integer[] availableStudies = availableStudiesList.toArray(new Integer[0]);
-            editClinicForm.setAvailable_studies(availableStudies);
+            editClinicForm.setAvailable_studies(availableStudiesList.toArray(new String[0]));
 
-
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()).mapToInt(Integer::intValue).toArray());
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
             mav.addObject("studiesList",studyTypeService.getAll());
         }else{
             throw new ClinicNotFoundException();
@@ -335,14 +329,23 @@ public class ProfileController {
 
     @RequestMapping(value = "/edit/clinic",method = RequestMethod.POST)
     public ModelAndView editProfileClinicPost(@Valid @ModelAttribute("editClinicForm") final EditClinicForm editClinicForm, final BindingResult errors, Locale locale){
+
+        Collection<StudyType> availableStudies = new HashSet<>();
+        for (String studyTypeName : editClinicForm.getAvailable_studies()) {
+            //TODO REPLACE -1 WITH NULL WHEN STUDY TYPE HAS INTEGER ID
+            availableStudies.add(new StudyType(-1,studyTypeName));
+        }
+
         if(errors.hasErrors()){
 
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("role","clinic");
             addUserRole(mav);
 
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()).mapToInt(Integer::intValue).toArray());
-            mav.addObject("studiesList",studyTypeService.getAll());
+            availableStudies.addAll(studyTypeService.getAll());
+
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
+            mav.addObject("studiesList",availableStudies);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
 
@@ -357,17 +360,6 @@ public class ProfileController {
             clinic = clinicOptional.get();
         }else{
             throw new ClinicNotFoundException();
-        }
-
-        ArrayList<StudyType> availableStudies = new ArrayList<>();
-        for (Integer i : editClinicForm.getAvailable_studies()) {
-
-            Optional<StudyType> studyType = studyTypeService.findById(i);
-
-            if (studyType.isPresent())
-                availableStudies.add(studyType.get());
-            else
-                throw new StudyTypeNotFoundException();
         }
 
         ClinicHours clinicHours = new ClinicHours();

@@ -3,6 +3,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url var="post_edit_profile_user" value="/profile/edit/clinic"/>
+<script type="text/javascript">
+    $(document).on('keyup keypress', '#newStudyType', function(e) {
+        if(e.keyCode === 13) {
+            e.preventDefault();
+        }else if(e.keyCode === 27){
+            $('#createStudyType').modal('hide');
+        }
+    });
+</script>
 <f:form action="${post_edit_profile_user}" method="post" id="editClinic" modelAttribute="editClinicForm" enctype="application/x-www-form-urlencoded">
 
     <table class="table table-borderless table-responsive" style="overflow:hidden;">
@@ -91,13 +100,40 @@
         <spring:message code="profile-view.body.tab.clinic.medical_studies.label"/>
         </label>
         <spring:message code="profile-edit.form.clinic.study_types.placeholder" var="study_typesPlaceholder"/>
-            <f:select id="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="available_studies" data-style="text-primary">
-            <f:options items="${studiesList}" itemLabel="name" itemValue="id" />
+        <f:select id="studyTypes" name="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="available_studies" data-style="text-primary">
+            <f:options items="${studiesList}" itemLabel="name" itemValue="name" />
         </f:select>
         <f:errors path="available_studies" cssClass="text-danger" element="small"/>
-        <a href="<c:url value='/create-type' />"><p><spring:message code="profile-edit.form.clinic.add_medical_study" /></p></a>
-    </fieldset>
+        <!-- Button trigger modal -->
+        <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="profile-edit.form.clinic.add_medical_study" /></p></a>
+        <!-- Modal -->
+        <div class="modal fade" id="createStudyType" tabindex="-1" role="dialog" aria-labelledby="studyTypeModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="studyTypeModalLabel"><spring:message code="create-type.body.header"/></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="alertBox">
+                        </div>
+                        <fieldset class="form-group">
+                            <label for="newStudyType" class="bmd-label-floating"><spring:message code="create-type.body.form.name.label"/></label>
+                            <input type="text" id="newStudyType" class="form-control" />
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><spring:message code="create-field.body.form.return"/></button>
+                        <button type="button" class="btn btn-primary" onclick='addOptionValue("newStudyType","#studyTypes","#alertBox")'><spring:message code="create-type.body.form.submit"/></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+
+    </fieldset>
 
     <hr class="divider my-4">
     <h5><spring:message code="profile-edit.form.insertPasswordMessage"/> </h5>
@@ -126,14 +162,5 @@
     <div class="row justify-content-center">
         <a class="btn btn-lg" href="<c:url value="/profile"/>"><spring:message code="profile-edit.form.cancel"/> </a>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#studyTypes').selectpicker('val',${selectedStudies});
-        });
-
-
-    </script>
 </f:form>
 

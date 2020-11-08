@@ -26,8 +26,7 @@ public class EditMedicForm {
     private String licence_number;
 
     @NotNull
-    @MedicalFieldsAreValid
-    private Integer[] known_fields;
+    private String[] known_fields;
 
     @MultipartFileIsImage
     private MultipartFile identification;
@@ -64,11 +63,11 @@ public class EditMedicForm {
         this.licence_number = licence_number;
     }
 
-    public Integer[] getKnown_fields() {
+    public String[] getKnown_fields() {
         return known_fields;
     }
 
-    public void setKnown_fields(Integer[] known_fields) {
+    public void setKnown_fields(String[] known_fields) {
         this.known_fields = known_fields;
     }
 

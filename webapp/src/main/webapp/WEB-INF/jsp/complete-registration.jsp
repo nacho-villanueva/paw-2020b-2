@@ -10,6 +10,77 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/registration.css"/>">
 </head>
 <body>
+<script src="<c:url value="/resources/js/addOption.js" />"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+<spring:message code="create-type-or-field.body.form.successMessage" var="successMessage"/>
+<spring:message code="create-type-or-field.body.form.existsMessage" var="existsMessage"/>
+<spring:message code="create-type-or-field.body.form.errorMessage" var="errorMessage"/>
+<script type="text/javascript">
+    $(document).on('keyup keypress', '#newMedicalField', function(e) {
+        if(e.keyCode === 13) {
+            e.preventDefault();
+        }else if(e.keyCode === 27){
+            $('#createMedicalField').modal('hide');
+        }
+    });
+
+    $(document).on('keyup keypress', '#newStudyType', function(e) {
+        if(e.keyCode === 13) {
+            e.preventDefault();
+        }else if(e.keyCode === 27){
+            $('#createStudyType').modal('hide');
+        }
+    });
+</script>
+<script type="text/javascript">
+    function addOptionValue(optionValue,mySelectId,alerts) {
+
+        let newOptionValue = document.getElementById(optionValue).value.trim();
+
+        let alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+            '${errorMessage}'.replace("{0}",newOptionValue) +
+            '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '    <span aria-hidden="true">&times;</span>' +
+            '  </button>' +
+            '</div>';
+
+
+        if(!!newOptionValue){
+
+            let options = ($(mySelectId).find("option"));
+            let optionText=[];
+
+            for(let i=0; i< options.length; i++){
+                let option = options[i].value;
+                if(option !== ""){
+                    optionText.push(option.toLowerCase());
+                }
+            }
+
+            if(!optionText.includes(newOptionValue.toLowerCase())){
+                addOption(mySelectId,newOptionValue);
+                alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                    '${successMessage}'.replace("{0}",newOptionValue) +
+                    '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '    <span aria-hidden="true">&times;</span>' +
+                    '  </button>' +
+                    '</div>';
+            }else{
+                alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">' +
+                    '${existsMessage}'.replace("{0}",newOptionValue) +
+                    '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '    <span aria-hidden="true">&times;</span>' +
+                    '  </button>' +
+                    '</div>';
+            }
+        }
+
+        document.getElementById(optionValue).value = "";
+        let alertBox = $(alerts);
+
+        alertBox.html(alert);
+    }
+</script>
 <div class="background"></div>
 <div class="p-5 col-auto card main-container mx-auto" >
     <div class="row justify-content-center">
@@ -116,10 +187,36 @@
                         <label class="mb-4"><spring:message code="complete-registration.body.form.medic.known_fields.label"/></label>
                         <spring:message code='complete-registration.body.form.medic.known_fields.placeholder' var="medicalFieldsPlaceholder"/>
                         <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
-                            <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
+                            <f:options items="${fieldsList}" itemLabel="name" itemValue="name" />
                         </f:select>
                         <f:errors path="known_fields" cssClass="text-danger" element="small" />
-                        <a href="<c:url value='/create-field' />"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
+                        <!-- Button trigger modal -->
+                        <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="createMedicalField" tabindex="-1" role="dialog" aria-labelledby="medicalFieldModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="medicalFieldModalLabel"><spring:message code="create-field.body.header"/></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="alertBoxMedicalField">
+                                        </div>
+                                        <fieldset class="form-group">
+                                            <label for="newMedicalField" class="bmd-label-floating"><spring:message code="create-field.body.form.name.label"/></label>
+                                            <input type="text" id="newMedicalField" class="form-control" />
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><spring:message code="create-field.body.form.return"/></button>
+                                        <button type="button" class="btn btn-primary" onclick='addOptionValue("newMedicalField","#medicalFields","#alertBoxMedicalField")'><spring:message code="create-field.body.form.submit"/></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_2" class="row btn btn-lg btn-light  bg-primary btn-block">
@@ -146,12 +243,38 @@
                             <label><spring:message code='complete-registration.body.form.clinic.available_studies.label'/></label>
                             <spring:message code='complete-registration.body.form.clinic.available_studies.placeholder' var="studiesPlaceholder"/>
                             <f:select id="studyFields" class="selectpicker" cssErrorClass="selectpicker is-invalid" title="${studiesPlaceholder}" data-live-search="true" path="available_studies" data-style="btn-custom">
-                                <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
+                                <f:options items="${studiesList}" itemLabel="name" itemValue="name"/>
                             </f:select>
                             <br>
                             <f:errors path="available_studies" cssClass="text-danger" element="small" />
                         </fieldset>
-                        <a href="<c:url value='/create-type' />"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
+                        <!-- Button trigger modal -->
+                        <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="createStudyType" tabindex="-1" role="dialog" aria-labelledby="studyTypeModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="studyTypeModalLabel"><spring:message code="create-type.body.header"/></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="alertBoxStudyType">
+                                        </div>
+                                        <fieldset class="form-group">
+                                            <label for="newStudyType" class="bmd-label-floating"><spring:message code="create-type.body.form.name.label"/></label>
+                                            <input type="text" id="newStudyType" class="form-control" />
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><spring:message code="create-field.body.form.return"/></button>
+                                        <button type="button" class="btn btn-primary" onclick='addOptionValue("newStudyType","#studyFields","#alertBoxStudyType")'><spring:message code="create-type.body.form.submit"/></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <br>
 
                         <!-- Accepted Medical Plans -->
