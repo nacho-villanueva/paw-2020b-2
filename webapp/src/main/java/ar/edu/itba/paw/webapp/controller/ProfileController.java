@@ -240,8 +240,7 @@ public class ProfileController {
 
         Collection<MedicalField> knownFields = new HashSet<>();
         for (String medicalFieldName : editMedicForm.getKnown_fields()) {
-            //TODO REPLACE -1 WITH NULL WHEN MEDICAL FIELD HAS INTEGER ID
-            knownFields.add(new MedicalField(-1,medicalFieldName));
+            knownFields.add(new MedicalField(medicalFieldName));
         }
 
         if(errors.hasErrors()){
@@ -332,8 +331,7 @@ public class ProfileController {
 
         Collection<StudyType> availableStudies = new HashSet<>();
         for (String studyTypeName : editClinicForm.getAvailable_studies()) {
-            //TODO REPLACE -1 WITH NULL WHEN STUDY TYPE HAS INTEGER ID
-            availableStudies.add(new StudyType(-1,studyTypeName));
+            availableStudies.add(new StudyType(studyTypeName));
         }
 
         if(errors.hasErrors()){

@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "medical_fields")
-public class MedicalField {
+public class MedicalField implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_fields_id_seq")
@@ -41,5 +43,19 @@ public class MedicalField {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MedicalField that = (MedicalField) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name);
     }
 }
