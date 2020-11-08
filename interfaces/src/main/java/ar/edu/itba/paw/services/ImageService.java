@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Media;
+import ar.edu.itba.paw.models.Media;
 
 import java.util.Optional;
 

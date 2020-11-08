@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Result;
+import ar.edu.itba.paw.models.Result;
 
 import java.sql.Date;
 import java.util.Collection;

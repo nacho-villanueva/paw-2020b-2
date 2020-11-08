@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Media;
-import ar.edu.itba.paw.model.Medic;
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.Result;
+import ar.edu.itba.paw.models.Media;
+import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.models.Order;
+import ar.edu.itba.paw.models.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

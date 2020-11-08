@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.ClinicHours;
+import ar.edu.itba.paw.models.ClinicHours;
 import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 
 public class ClinicHoursForm {

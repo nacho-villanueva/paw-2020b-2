@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.model.Order;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.models.Order;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.OrderService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.services.UserService;
@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Controller
@@ -79,7 +78,7 @@ public class HomeController {
 
 
     private ModelAndView homeSetup(ModelAndView mav){
-        Collection<Order> orders = os.getAllUserOrders(loggedUser());;
+        Collection<Order> orders = os.getAllAsUser(loggedUser());;
 
         HashMap<Long, String> orders_encoded = new HashMap<>();
         encoder(orders, orders_encoded);

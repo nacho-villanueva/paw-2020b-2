@@ -1,14 +1,16 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.StudyType;
+import ar.edu.itba.paw.models.StudyType;
 import ar.edu.itba.paw.persistence.StudyTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class StudyTypeServiceImpl implements StudyTypeService {
 
     @Autowired
@@ -17,11 +19,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     @Override
     public Collection<StudyType> getAll() {
         return studyTypeDao.getAll();
-    }
-
-    @Override
-    public Collection<StudyType> findByClinicId(int clinic_id) {
-        return studyTypeDao.findByClinicId(clinic_id);
     }
 
     @Override

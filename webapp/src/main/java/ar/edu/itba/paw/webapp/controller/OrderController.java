@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exceptions.ClinicNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.MedicNotFoundException;
@@ -10,7 +10,6 @@ import ar.edu.itba.paw.webapp.form.OrderForm;
 import ar.edu.itba.paw.webapp.form.OrderWithoutClinicForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -260,8 +259,8 @@ public class OrderController {
                 medicOptional.get(),
                 new Date(System.currentTimeMillis()),
                 clinicOptional.get(),
-                orderForm.getPatientName(),
                 orderForm.getPatientEmail(),
+                orderForm.getPatientName(),
                 studyTypeOptional.get(),
                 orderForm.getDescription(),
                 medicOptional.get().getIdentification_type(),
