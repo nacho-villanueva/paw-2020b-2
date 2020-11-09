@@ -38,26 +38,40 @@
                     <hr class="divider"/>
                     <div class="row mx-1">
                         <fieldset class="form-group col">
-                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientName.label"/> </label>
-                            <f:input type="text" path="patientName" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
-                            <f:errors path="patientName" cssClass="text-danger" element="small" />
-                        </fieldset>
-                        <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientMail.label"/> </label>
-                            <f:input type="email" path="patientEmail" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
-                            <f:errors path="patientEmail" cssClass="text-danger" element="small" />
+                            <f:input type="email" path="patientInfo.email" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                            <f:errors path="patientInfo.email" cssClass="text-danger" element="small" />
+                        </fieldset>
+                    </div>
+                    <div class="row mx-1">
+                        <fieldset class="form-group col">
+                            <f:checkbox id="patientInfo.existingPatient" path="patientInfo.existingPatient" cssErrorClass="is-invalid"/>
+                            <label for="patientInfo.existingPatient"><spring:message code="create-order.body.form.existingPatient.label"/></label>
+                            <div>
+                                <small><spring:message code="create-order.body.form.existingPatient.small"/></small>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <f:errors path="patientInfo" cssClass="text-danger" element="p" />
+                    </div>
+                    <div class="row mx-1">
+                        <fieldset class="form-group col">
+                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientName.label"/> </label>
+                            <f:input type="text" path="patientInfo.name" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientInfo.name" cssClass="text-danger" element="small" />
                         </fieldset>
                     </div>
                     <div class="row mx-1">
                         <fieldset class="form-group col ">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patient_insurance_plan.label"/></label>
-                            <f:input type="text" path="patient_insurance_plan" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
-                            <f:errors path="patient_insurance_plan" cssClass="text-danger" element="small" />
+                            <f:input type="text" path="patientInfo.insurancePlan" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientInfo.insurancePlan" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patient_insurance_number.label"/> </label>
-                            <f:input type="text" path="patient_insurance_number" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
-                            <f:errors path="patient_insurance_number" cssClass="text-danger" element="small" />
+                            <f:input type="text" path="patientInfo.insuranceNumber" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientInfo.insuranceNumber" cssClass="text-danger" element="small" />
                         </fieldset>
 
                     </div>

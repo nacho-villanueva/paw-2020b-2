@@ -9,6 +9,11 @@ public class OrderForm extends  OrderWithoutClinicForm{
 
     public OrderForm(){ }
 
+    public OrderForm(Integer medicId, Integer studyId, String description, PatientInfoForm patientInfoForm, Integer clinicId) {
+        super(medicId, studyId, description, patientInfoForm);
+        this.clinicId = clinicId;
+    }
+
     public Integer getClinicId() {
         return clinicId;
     }

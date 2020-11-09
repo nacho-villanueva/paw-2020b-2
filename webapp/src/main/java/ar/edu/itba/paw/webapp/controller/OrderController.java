@@ -4,10 +4,12 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exceptions.ClinicNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.MedicNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.PatientNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
 import ar.edu.itba.paw.webapp.form.AdvancedSearchClinicForm;
 import ar.edu.itba.paw.webapp.form.OrderForm;
 import ar.edu.itba.paw.webapp.form.OrderWithoutClinicForm;
+import ar.edu.itba.paw.webapp.form.PatientInfoForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
@@ -39,6 +41,9 @@ public class OrderController {
 
     @Autowired
     private StudyTypeService studyTypeService;
+
+    @Autowired
+    private PatientService patientService;
 
     @Autowired
     private MedicService medicService;
@@ -90,29 +95,25 @@ public class OrderController {
 
         ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
+        fillPatientInfo(orderWithoutClinicForm.getPatientInfo());
+
         // passing all the data
         advancedSearchClinicForm.setMedicId(orderWithoutClinicForm.getMedicId());
         advancedSearchClinicForm.setStudyId(orderWithoutClinicForm.getStudyId());
         advancedSearchClinicForm.setDescription(orderWithoutClinicForm.getDescription());
-        advancedSearchClinicForm.setPatient_insurance_plan(orderWithoutClinicForm.getPatient_insurance_plan());
-        advancedSearchClinicForm.setPatient_insurance_number(orderWithoutClinicForm.getPatient_insurance_number());
-        advancedSearchClinicForm.setPatientEmail(orderWithoutClinicForm.getPatientEmail());
-        advancedSearchClinicForm.setPatientName(orderWithoutClinicForm.getPatientName());
+        advancedSearchClinicForm.setPatientInfo(orderWithoutClinicForm.getPatientInfo());
 
         orderForm.setMedicId(orderWithoutClinicForm.getMedicId());
         orderForm.setStudyId(orderWithoutClinicForm.getStudyId());
         orderForm.setDescription(orderWithoutClinicForm.getDescription());
-        orderForm.setPatient_insurance_plan(orderWithoutClinicForm.getPatient_insurance_plan());
-        orderForm.setPatient_insurance_number(orderWithoutClinicForm.getPatient_insurance_number());
-        orderForm.setPatientEmail(orderWithoutClinicForm.getPatientEmail());
-        orderForm.setPatientName(orderWithoutClinicForm.getPatientName());
+        orderForm.setPatientInfo(orderWithoutClinicForm.getPatientInfo());
 
-        advancedSearchClinicForm.setMedical_plan(orderForm.getPatient_insurance_plan());
-        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm,locale));
-        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInfo().getInsurancePlan());
+        advancedSearchClinicForm.setMedicalStudy(studyNameFromOrderForm(orderForm,locale));
+        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                 advancedSearchClinicForm.getClinicHours(),
-                advancedSearchClinicForm.getMedical_plan(),
-                advancedSearchClinicForm.getMedical_study());
+                advancedSearchClinicForm.getMedicalPlan(),
+                advancedSearchClinicForm.getMedicalStudy());
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
         mav.addObject("clinicsList",clinicsList);
@@ -136,18 +137,12 @@ public class OrderController {
         orderForm.setMedicId(advancedSearchClinicForm.getMedicId());
         orderForm.setStudyId(advancedSearchClinicForm.getStudyId());
         orderForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderForm.setPatient_insurance_plan(advancedSearchClinicForm.getPatient_insurance_plan());
-        orderForm.setPatient_insurance_number(advancedSearchClinicForm.getPatient_insurance_number());
-        orderForm.setPatientEmail(advancedSearchClinicForm.getPatientEmail());
-        orderForm.setPatientName(advancedSearchClinicForm.getPatientName());
+        orderForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
 
         orderWithoutClinicForm.setMedicId(advancedSearchClinicForm.getMedicId());
         orderWithoutClinicForm.setStudyId(advancedSearchClinicForm.getStudyId());
         orderWithoutClinicForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderWithoutClinicForm.setPatient_insurance_plan(advancedSearchClinicForm.getPatient_insurance_plan());
-        orderWithoutClinicForm.setPatient_insurance_number(advancedSearchClinicForm.getPatient_insurance_number());
-        orderWithoutClinicForm.setPatientEmail(advancedSearchClinicForm.getPatientEmail());
-        orderWithoutClinicForm.setPatientName(advancedSearchClinicForm.getPatientName());
+        orderWithoutClinicForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
 
         Collection<Clinic> clinicsList;
         if(bindingResult.hasErrors()){
@@ -158,11 +153,11 @@ public class OrderController {
             return mav;
         }
 
-        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm,locale));
-        clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+        advancedSearchClinicForm.setMedicalStudy(studyNameFromOrderForm(orderForm,locale));
+        clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                 advancedSearchClinicForm.getClinicHours(),
-                advancedSearchClinicForm.getMedical_plan(),
-                advancedSearchClinicForm.getMedical_study());
+                advancedSearchClinicForm.getMedicalPlan(),
+                advancedSearchClinicForm.getMedicalStudy());
 
         mav.addObject("clinicsList", clinicsList);
         mav.addObject("studyName", studyNameFromOrderForm(orderForm,locale));
@@ -187,25 +182,19 @@ public class OrderController {
         orderForm.setMedicId(advancedSearchClinicForm.getMedicId());
         orderForm.setStudyId(advancedSearchClinicForm.getStudyId());
         orderForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderForm.setPatient_insurance_plan(advancedSearchClinicForm.getPatient_insurance_plan());
-        orderForm.setPatient_insurance_number(advancedSearchClinicForm.getPatient_insurance_number());
-        orderForm.setPatientEmail(advancedSearchClinicForm.getPatientEmail());
-        orderForm.setPatientName(advancedSearchClinicForm.getPatientName());
+        orderForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
 
         orderWithoutClinicForm.setMedicId(advancedSearchClinicForm.getMedicId());
         orderWithoutClinicForm.setStudyId(advancedSearchClinicForm.getStudyId());
         orderWithoutClinicForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderWithoutClinicForm.setPatient_insurance_plan(advancedSearchClinicForm.getPatient_insurance_plan());
-        orderWithoutClinicForm.setPatient_insurance_number(advancedSearchClinicForm.getPatient_insurance_number());
-        orderWithoutClinicForm.setPatientEmail(advancedSearchClinicForm.getPatientEmail());
-        orderWithoutClinicForm.setPatientName(advancedSearchClinicForm.getPatientName());
+        orderWithoutClinicForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
 
-        advancedSearchClinicForm.setMedical_plan(orderForm.getPatient_insurance_plan());
-        advancedSearchClinicForm.setMedical_study(studyNameFromOrderForm(orderForm,locale));
-        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInfo().getInsurancePlan());
+        advancedSearchClinicForm.setMedicalStudy(studyNameFromOrderForm(orderForm,locale));
+        Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                 advancedSearchClinicForm.getClinicHours(),
-                advancedSearchClinicForm.getMedical_plan(),
-                advancedSearchClinicForm.getMedical_study());
+                advancedSearchClinicForm.getMedicalPlan(),
+                advancedSearchClinicForm.getMedicalStudy());
 
         mav.addObject("clinicsList", clinicsList);
 
@@ -224,18 +213,12 @@ public class OrderController {
             advancedSearchClinicForm.setMedicId(orderForm.getMedicId());
             advancedSearchClinicForm.setStudyId(orderForm.getStudyId());
             advancedSearchClinicForm.setDescription(orderForm.getDescription());
-            advancedSearchClinicForm.setPatient_insurance_plan(orderForm.getPatient_insurance_plan());
-            advancedSearchClinicForm.setPatient_insurance_number(orderForm.getPatient_insurance_number());
-            advancedSearchClinicForm.setPatientEmail(orderForm.getPatientEmail());
-            advancedSearchClinicForm.setPatientName(orderForm.getPatientName());
+            advancedSearchClinicForm.setPatientInfo(orderForm.getPatientInfo());
 
             orderWithoutClinicForm.setMedicId(orderForm.getMedicId());
             orderWithoutClinicForm.setStudyId(orderForm.getStudyId());
             orderWithoutClinicForm.setDescription(orderForm.getDescription());
-            orderWithoutClinicForm.setPatient_insurance_plan(orderForm.getPatient_insurance_plan());
-            orderWithoutClinicForm.setPatient_insurance_number(orderForm.getPatient_insurance_number());
-            orderWithoutClinicForm.setPatientEmail(orderForm.getPatientEmail());
-            orderWithoutClinicForm.setPatientName(orderForm.getPatientName());
+            orderWithoutClinicForm.setPatientInfo(orderForm.getPatientInfo());
 
             ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
@@ -255,18 +238,22 @@ public class OrderController {
         if(!clinicOptional.isPresent()){throw new ClinicNotFoundException();}
         if(!studyTypeOptional.isPresent()){throw new StudyTypeNotFoundException();}
 
+        PatientInfoForm patientInfo = orderForm.getPatientInfo();
+
+        fillPatientInfo(patientInfo);
+
         Order order = orderService.register(
                 medicOptional.get(),
                 new Date(System.currentTimeMillis()),
                 clinicOptional.get(),
-                orderForm.getPatientEmail(),
-                orderForm.getPatientName(),
+                patientInfo.getEmail(),
+                patientInfo.getName(),
                 studyTypeOptional.get(),
                 orderForm.getDescription(),
                 medicOptional.get().getIdentification_type(),
                 medicOptional.get().getIdentification(),
-                orderForm.getPatient_insurance_plan(),
-                orderForm.getPatient_insurance_number());
+                patientInfo.getInsurancePlan(),
+                patientInfo.getInsuranceNumber());
 
         return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(order.getOrder_id()));
     }
@@ -290,5 +277,18 @@ public class OrderController {
         if(studyTypeService.findById(orderForm.getStudyId()).isPresent())
             return studyTypeService.findById(orderForm.getStudyId()).get().getName();
         return messageSource.getMessage("create-order.unknownStudyType",null,locale);
+    }
+
+    private void fillPatientInfo(PatientInfoForm patientInfo){
+        if(patientInfo.getExistingPatient()){
+            Optional<Patient> patientOptional = patientService.findByEmail(patientInfo.getEmail());
+            if(!patientOptional.isPresent()){throw new PatientNotFoundException();}
+
+            Patient patient = patientOptional.get();
+
+            if(patientInfo.getName()==null || patientInfo.getName().equals("")){patientInfo.setName(patient.getName());}
+            if(patientInfo.getInsurancePlan()==null || patientInfo.getInsurancePlan().equals("")){patientInfo.setInsurancePlan(patient.getMedic_plan());}
+            if(patientInfo.getInsuranceNumber()==null || patientInfo.getInsuranceNumber().equals("")){patientInfo.setInsuranceNumber(patient.getMedic_plan_number());}
+        }
     }
 }
