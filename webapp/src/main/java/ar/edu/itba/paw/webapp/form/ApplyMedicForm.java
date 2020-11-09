@@ -24,7 +24,7 @@ public class ApplyMedicForm {
     private String licence_number;
 
     @NotEmpty
-    private Integer[] known_fields;
+    private String[] known_fields;
 
     @NotNull
     private MultipartFile identification;
@@ -61,11 +61,11 @@ public class ApplyMedicForm {
         this.telephone = telephone;
     }
 
-    public Integer[] getKnown_fields() {
+    public String[] getKnown_fields() {
         return known_fields;
     }
 
-    public void setKnown_fields(Integer[] known_fields) {
+    public void setKnown_fields(String[] known_fields) {
         this.known_fields = known_fields;
     }
 

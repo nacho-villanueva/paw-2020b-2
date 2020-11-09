@@ -3,6 +3,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url var="post_edit_profile_user" value="/profile/edit/medic"/>
+<script type="text/javascript">
+    $(document).on('keyup keypress', '#newMedicalField', function(e) {
+        if(e.keyCode === 13) {
+            e.preventDefault();
+        }else if(e.keyCode === 27){
+            $('#createMedicalField').modal('hide');
+        }
+    });
+</script>
 <f:form action="${post_edit_profile_user}" method="post" modelAttribute="editMedicForm" enctype="multipart/form-data">
 
     <table class="table table-borderless table-responsive" style="overflow: hidden;">
@@ -55,10 +64,36 @@
                 <fieldset>
                     <spring:message code="profile-edit.form.medic.medical_fields.placeholder" var="medical_fieldsPlaceholder"/>
                     <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom" data-container="body">
-                        <f:options items="${fieldsList}" itemLabel="name" itemValue="id" />
+                        <f:options items="${fieldsList}" itemLabel="name" itemValue="name" />
                     </f:select>
                     <f:errors path="known_fields" cssClass="text-danger" element="small"/>
-                    <a href="<c:url value='/create-field' />"><p><spring:message code="profile-edit.form.medic.add_medical_field" /></p></a>
+                    <!-- Button trigger modal -->
+                    <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="profile-edit.form.medic.add_medical_field" /></p></a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="createMedicalField" tabindex="-1" role="dialog" aria-labelledby="medicalFieldModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="medicalFieldModalLabel"><spring:message code="create-field.body.header"/></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="alertBox">
+                                    </div>
+                                    <fieldset class="form-group">
+                                        <label for="newMedicalField" class="bmd-label-floating"><spring:message code="create-field.body.form.name.label"/></label>
+                                        <input type="text" id="newMedicalField" class="form-control" />
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><spring:message code="create-field.body.form.return"/></button>
+                                    <button type="button" class="btn btn-primary" onclick='addOptionValue("newMedicalField","#medicalFields","#alertBox")'><spring:message code="create-field.body.form.submit"/></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </td>
         </tr>
@@ -95,12 +130,5 @@
     <div class="row justify-content-center">
         <a class="btn btn-lg" href="<c:url value="/profile"/>"><spring:message code="profile-edit.form.cancel"/> </a>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#medicalFields').selectpicker('val',${selectedFields});
-        });
-    </script>
 </f:form>
 

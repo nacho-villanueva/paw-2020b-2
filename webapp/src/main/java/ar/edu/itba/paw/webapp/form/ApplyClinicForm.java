@@ -20,7 +20,7 @@ public class ApplyClinicForm {
     private String telephone;
 
     @NotEmpty
-    private Integer[] available_studies;
+    private String[] available_studies;
 
     private String accepted_plans;
 
@@ -49,11 +49,11 @@ public class ApplyClinicForm {
         this.telephone = telephone;
     }
 
-    public Integer[] getAvailable_studies() {
+    public String[] getAvailable_studies() {
         return available_studies;
     }
 
-    public void setAvailable_studies(Integer[] available_studies) {
+    public void setAvailable_studies(String[] available_studies) {
         this.available_studies = available_studies;
     }
 

@@ -13,6 +13,61 @@
 <body>
 <c:url value="/api/image" var="imageAssets"/>
 <%@include file="fragments/navbar-alternative-fragment.jsp"%>
+<script src="<c:url value="/resources/js/addOption.js" />"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+<spring:message code="create-type-or-field.body.form.successMessage" var="successMessage"/>
+<spring:message code="create-type-or-field.body.form.existsMessage" var="existsMessage"/>
+<spring:message code="create-type-or-field.body.form.errorMessage" var="errorMessage"/>
+<script type="text/javascript">
+    function addOptionValue(optionValue,mySelectId,alerts) {
+
+        let newOptionValue = document.getElementById(optionValue).value.trim();
+
+        let alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+            '${errorMessage}'.replace("{0}",newOptionValue) +
+            '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '    <span aria-hidden="true">&times;</span>' +
+            '  </button>' +
+            '</div>';
+
+
+        if(!!newOptionValue){
+
+            let options = ($(mySelectId).find("option"));
+            let optionText=[];
+
+            for(let i=0; i< options.length; i++){
+                let option = options[i].value;
+                if(option !== ""){
+                    optionText.push(option.toLowerCase());
+                }
+            }
+
+            if(!optionText.includes(newOptionValue.toLowerCase())){
+                addOption(mySelectId,newOptionValue);
+                alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                    '${successMessage}'.replace("{0}",newOptionValue) +
+                    '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '    <span aria-hidden="true">&times;</span>' +
+                    '  </button>' +
+                    '</div>';
+                $(mySelectId).selectpicker("refresh");
+            }else{
+                alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">' +
+                    '${existsMessage}'.replace("{0}",newOptionValue) +
+                    '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                    '    <span aria-hidden="true">&times;</span>' +
+                    '  </button>' +
+                    '</div>';
+            }
+        }
+
+        document.getElementById(optionValue).value = "";
+        let alertBox = $(alerts);
+
+        alertBox.html(alert);
+    }
+</script>
 <div id="wrapper" class="wrapper">
 
     <jsp:include page="fragments/sidebar-fragment.jsp" >
