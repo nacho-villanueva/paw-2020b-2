@@ -13,11 +13,11 @@ import java.sql.Time;
 
 public class AdvancedSearchClinicForm {
 
-    private String clinic_name;
+    private String clinicName;
 
-    private String medical_study;
+    private String medicalStudy;
 
-    private String medical_plan;
+    private String medicalPlan;
 
     // for time
     @ValidAvailabilityHours
@@ -31,19 +31,17 @@ public class AdvancedSearchClinicForm {
     private Integer medicId;
     private Integer studyId;
     private String description;
-    private String patient_insurance_plan;
-    private String patient_insurance_number;
-    private String patientEmail;
-    private String patientName;
+    private PatientInfoForm patientInfo;
 
     public AdvancedSearchClinicForm() {
+        this.patientInfo = new PatientInfoForm();
         resetValues();
     }
 
     public void resetValues(){
-        clinic_name = null;
-        medical_study=null;
-        medical_plan=null;
+        clinicName = null;
+        medicalStudy =null;
+        medicalPlan =null;
 
         this.availableTime = new ClinicHoursForm();
         this.isAvailable = new boolean[ClinicHours.getDaysOfWeek()];
@@ -58,9 +56,9 @@ public class AdvancedSearchClinicForm {
 
         MultiValueMap<String, String> p = UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
-        this.clinic_name = decodeVal(p,"clinic_name");
-        this.medical_study = decodeVal(p,"medical_study");
-        this.medical_plan = decodeVal(p,"medical_plan");
+        this.clinicName = decodeVal(p,"clinicName");
+        this.medicalStudy = decodeVal(p,"medicalStudy");
+        this.medicalPlan = decodeVal(p,"medicalPlan");
 
         String[] auxOT = new String[ClinicHours.getDaysOfWeek()];
         String[] auxCT = new String[ClinicHours.getDaysOfWeek()];
@@ -76,10 +74,12 @@ public class AdvancedSearchClinicForm {
         // medicId is Integer
         // clinicId is Integer
         this.description = decodeVal(p,"description");
-        this.patient_insurance_plan = decodeVal(p, "patient_insurance_plan");
-        this.patient_insurance_number = decodeVal(p, "patient_insurance_number");
-        this.patientEmail = decodeVal(p, "patientEmail");
-        this.patientName = decodeVal(p, "patientName");
+
+        //patient Data
+        this.patientInfo.setInsurancePlan(decodeVal(p, "patientInfo.insurancePlan"));
+        this.patientInfo.setInsuranceNumber(decodeVal(p, "patientInfo.insuranceNumber"));
+        this.patientInfo.setEmail(decodeVal(p, "patientInfo.email"));
+        this.patientInfo.setName(decodeVal(p, "patientInfo.name"));
     }
 
     public ClinicHours getClinicHours(){
@@ -102,28 +102,28 @@ public class AdvancedSearchClinicForm {
         return ret;
     }
 
-    public String getClinic_name() {
-        return clinic_name;
+    public String getClinicName() {
+        return clinicName;
     }
 
-    public void setClinic_name(String clinic_name) {
-        this.clinic_name = clinic_name;
+    public void setClinicName(String clinicName) {
+        this.clinicName = clinicName;
     }
 
-    public String getMedical_study() {
-        return medical_study;
+    public String getMedicalStudy() {
+        return medicalStudy;
     }
 
-    public void setMedical_study(String medical_study) {
-        this.medical_study = medical_study;
+    public void setMedicalStudy(String medicalStudy) {
+        this.medicalStudy = medicalStudy;
     }
 
-    public String getMedical_plan() {
-        return medical_plan;
+    public String getMedicalPlan() {
+        return medicalPlan;
     }
 
-    public void setMedical_plan(String medical_plan) {
-        this.medical_plan = medical_plan;
+    public void setMedicalPlan(String medicalPlan) {
+        this.medicalPlan = medicalPlan;
     }
 
     public Integer getMedicId() {
@@ -150,38 +150,6 @@ public class AdvancedSearchClinicForm {
         this.description = description;
     }
 
-    public String getPatient_insurance_plan() {
-        return patient_insurance_plan;
-    }
-
-    public void setPatient_insurance_plan(String patient_insurance_plan) {
-        this.patient_insurance_plan = patient_insurance_plan;
-    }
-
-    public String getPatient_insurance_number() {
-        return this.patient_insurance_number;
-    }
-
-    public void setPatient_insurance_number(String patient_insurance_number) {
-        this.patient_insurance_number = patient_insurance_number;
-    }
-
-    public String getPatientEmail() {
-        return patientEmail;
-    }
-
-    public void setPatientEmail(String patientEmail) {
-        this.patientEmail = patientEmail;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
     public ClinicHoursForm getAvailableTime() {
         return availableTime;
     }
@@ -196,6 +164,14 @@ public class AdvancedSearchClinicForm {
 
     public void setIsAvailable(boolean[] isAvailable) {
         this.isAvailable = isAvailable;
+    }
+
+    public PatientInfoForm getPatientInfo() {
+        return patientInfo;
+    }
+
+    public void setPatientInfo(PatientInfoForm patientInfo) {
+        this.patientInfo = patientInfo;
     }
 
     private String decodeVal(MultiValueMap<String, String> parameters, String key){

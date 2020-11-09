@@ -72,10 +72,10 @@ public class AdvancedSearchClinicController {
             mav.addObject("errorAlert",true);
         } else {
 
-            clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinic_name(),
+            clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                     advancedSearchClinicForm.getClinicHours(),
-                    advancedSearchClinicForm.getMedical_plan(),
-                    advancedSearchClinicForm.getMedical_study());
+                    advancedSearchClinicForm.getMedicalPlan(),
+                    advancedSearchClinicForm.getMedicalStudy());
         }
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());

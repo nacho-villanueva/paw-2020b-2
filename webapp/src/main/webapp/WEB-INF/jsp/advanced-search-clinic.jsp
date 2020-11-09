@@ -77,10 +77,10 @@
                                 <f:input path="medicId" type="hidden" id="medicId"/>
                                 <f:input path="studyId" type="hidden" id="studyId"/>
                                 <f:input path="description" type="hidden" id="description"/>
-                                <f:input path="patient_insurance_plan" type="hidden" id="patient_insurance_plan"/>
-                                <f:input path="patient_insurance_number" type="hidden" id="patient_insurance_number"/>
-                                <f:input path="patientEmail" type="hidden" id="patientEmail"/>
-                                <f:input path="patientName" type="hidden" id="studyId"/>
+                                <f:input path="patientInfo.insurancePlan" type="hidden" id="patientInfo.insurancePlan"/>
+                                <f:input path="patientInfo.insuranceNumber" type="hidden" id="patientInfo.insuranceNumber"/>
+                                <f:input path="patientInfo.email" type="hidden" id="patientEmail"/>
+                                <f:input path="patientInfo.name" type="hidden" id="patientInfo.name"/>
                             </c:if>
                             <c:if test="${not empty orderForm}">
                                 <div class="row justify-content-center">
@@ -91,11 +91,11 @@
                                     <div class="collapse show" id="collapseInfo">
                                         <div class="bs-callout bs-callout-med">
                                             <div class="row justify-content-start">
-                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-name"/></p><c:out value="${orderForm.patientName}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-name"/></p><c:out value="${orderForm.patientInfo.name}"/></div>
                                                 <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.study-type"/></p><c:out value="${studyName}"/></div>
                                                 <div class="w-100"></div>
-                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-plan"/></p> <c:out value="${orderForm.patient_insurance_plan}"/></div>
-                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-number"/></p> <c:out value="${orderForm.patient_insurance_number}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-plan"/></p> <c:out value="${orderForm.patientInfo.insurancePlan}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.patient-insurance-number"/></p> <c:out value="${orderForm.patientInfo.insuranceNumber}"/></div>
                                             </div>
                                         </div>
                                     </div>
@@ -103,23 +103,23 @@
                             </c:if>
 
                             <fieldset class="form-group">
-                                <label class="bmd-label-floating" for="clinic_name"><spring:message code="advanced-search-clinic.form.clinic_name.label"/></label>
+                                <label class="bmd-label-floating" for="clinicName"><spring:message code="advanced-search-clinic.form.clinicName.label"/></label>
                                 <div class="input-group">
-                                    <f:input type="text" class="form-control" id="clinic_name" path="clinic_name"/>
-                                    <f:errors path="clinic_name"/>
+                                    <f:input type="text" class="form-control" id="clinicName" path="clinicName"/>
+                                    <f:errors path="clinicName"/>
                                 </div>
                             </fieldset>
 
                             <fieldset class="form-group">
-                                <label class="bmd-label-floating" for="medical_plan"><spring:message code="advanced-search-clinic.form.medical_plan.label"/></label>
+                                <label class="bmd-label-floating" for="medicalPlan"><spring:message code="advanced-search-clinic.form.medicalPlan.label"/></label>
                                 <div class="input-group">
                                     <c:choose>
                                         <c:when test="${not empty orderForm}">
-                                            <f:input type="text" readonly="true" class="form-control" id="medical_plan" path="medical_plan"/>
+                                            <f:input type="text" readonly="true" class="form-control" id="medicalPlan" path="medicalPlan"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <f:input type="text" class="form-control" id="medical_plan" path="medical_plan"/>
-                                            <f:errors path="medical_plan"/>
+                                            <f:input type="text" class="form-control" id="medicalPlan" path="medicalPlan"/>
+                                            <f:errors path="medicalPlan"/>
                                         </c:otherwise>
                                     </c:choose>
 
@@ -129,14 +129,14 @@
 
                             <c:choose>
                                 <c:when test="${not empty orderForm}">
-                                    <f:input path="medical_study" type="hidden" id="medical_study"/>
+                                    <f:input path="medicalStudy" type="hidden" id="medicalStudy"/>
                                 </c:when>
                                 <c:otherwise>
                                     <fieldset class="form-group">
-                                        <label class="bmd-label-floating" for="medical_study"><spring:message code="advanced-search-clinic.form.medical_study.label"/></label>
+                                        <label class="bmd-label-floating" for="medicalStudy"><spring:message code="advanced-search-clinic.form.medicalStudy.label"/></label>
                                         <div class="input-group">
-                                            <f:input type="text" class="form-control" id="medical_study" path="medical_study"/>
-                                            <f:errors path="medical_study"/>
+                                            <f:input type="text" class="form-control" id="medicalStudy" path="medicalStudy"/>
+                                            <f:errors path="medicalStudy"/>
                                         </div>
                                     </fieldset>
                                 </c:otherwise>
@@ -280,10 +280,10 @@
                                         <f:input path="clinicId" type="hidden" id="clinicId"/>
                                         <f:input path="studyId" type="hidden" id="studyId"/>
                                         <f:input path="description" type="hidden" id="description"/>
-                                        <f:input path="patient_insurance_plan" type="hidden" id="patient_insurance_plan"/>
-                                        <f:input path="patient_insurance_number" type="hidden" id="patient_insurance_number"/>
-                                        <f:input path="patientEmail" type="hidden" id="patientEmail"/>
-                                        <f:input path="patientName" type="hidden" id="studyId"/>
+                                        <f:input path="patientInfo.insurancePlan" type="hidden" id="patientInfo.insurancePlan"/>
+                                        <f:input path="patientInfo.insuranceNumber" type="hidden" id="patientInfo.insuranceNumber"/>
+                                        <f:input path="patientInfo.email" type="hidden" id="patientEmail"/>
+                                        <f:input path="patientInfo.name" type="hidden" id="patientInfo.name"/>
 
                                         <c:if test="${clinicUnselected}"><div class="alert alert-danger" role="alert"><f:errors path="clinicId"/> </div></c:if>
                                         <div class="row justify-content-center">
@@ -296,10 +296,11 @@
                                         <f:input path="medicId" type="hidden" id="medicId"/>
                                         <f:input path="studyId" type="hidden" id="studyId"/>
                                         <f:input path="description" type="hidden" id="description"/>
-                                        <f:input path="patient_insurance_plan" type="hidden" id="patient_insurance_plan"/>
-                                        <f:input path="patient_insurance_number" type="hidden" id="patient_insurance_number"/>
-                                        <f:input path="patientEmail" type="hidden" id="patientEmail"/>
-                                        <f:input path="patientName" type="hidden" id="studyId"/>
+                                        <f:input path="patientInfo.insurancePlan" type="hidden" id="patientInfo.insurancePlan"/>
+                                        <f:input path="patientInfo.insuranceNumber" type="hidden" id="patientInfo.insuranceNumber"/>
+                                        <f:input path="patientInfo.email" type="hidden" id="patientEmail"/>
+                                        <f:input path="patientInfo.name" type="hidden" id="patientInfo.name"/>
+                                        <f:input path="patientInfo.existingPatient" type="hidden" id="patientInfo.existingPatient"/>
 
                                         <div class="row justify-content-center">
                                             <f:button type="submit" name="submit" formmethod="post" value="back" id="backButton" class="row btn btn-outline-secondary">

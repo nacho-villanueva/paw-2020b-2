@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validators.PatientInfoFormHasNotNullName;
+import ar.edu.itba.paw.webapp.form.validators.PatientInfoFormHasValidEmail;
+import ar.edu.itba.paw.webapp.form.validators.PatientInfoFormHasValidPatient;
 import ar.edu.itba.paw.webapp.form.validators.ValidStudyTypeId;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 public class OrderWithoutClinicForm {
 
@@ -13,27 +14,21 @@ public class OrderWithoutClinicForm {
 
     private String description;
 
-    private String patient_insurance_plan;
+    @PatientInfoFormHasValidEmail
+    @PatientInfoFormHasValidPatient
+    @PatientInfoFormHasNotNullName
+    private PatientInfoForm patientInfo;
 
-    private String patient_insurance_number;
-
-    @NotBlank
-    @Email
-    private String patientEmail;
-    @NotBlank
-    private String patientName;
-
-    public OrderWithoutClinicForm(Integer medicId, Integer studyId, String description, String patient_insurance_plan, String patient_insurance_number, String patientEmail, String patientName) {
+    public OrderWithoutClinicForm(Integer medicId, Integer studyId, String description,PatientInfoForm patientInfoForm) {
         this.medicId = medicId;
         this.studyId = studyId;
         this.description = description;
-        this.patient_insurance_plan = patient_insurance_plan;
-        this.patient_insurance_number = patient_insurance_number;
-        this.patientEmail = patientEmail;
-        this.patientName = patientName;
+        this.patientInfo = patientInfoForm;
     }
 
-    public OrderWithoutClinicForm(){ }
+    public OrderWithoutClinicForm(){
+        this.patientInfo = new PatientInfoForm();
+    }
 
     public Integer getMedicId() {
         return medicId;
@@ -45,22 +40,6 @@ public class OrderWithoutClinicForm {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getPatient_insurance_plan() {
-        return patient_insurance_plan;
-    }
-
-    public String getPatient_insurance_number() {
-        return patient_insurance_number;
-    }
-
-    public String getPatientEmail() {
-        return patientEmail;
-    }
-
-    public String getPatientName() {
-        return patientName;
     }
 
     public void setMedicId(Integer medicId) {
@@ -75,19 +54,11 @@ public class OrderWithoutClinicForm {
         this.description = description;
     }
 
-    public void setPatient_insurance_plan(String patient_insurance_plan) {
-        this.patient_insurance_plan = patient_insurance_plan;
+    public PatientInfoForm getPatientInfo() {
+        return patientInfo;
     }
 
-    public void setPatient_insurance_number(String patient_insurance_number) {
-        this.patient_insurance_number = patient_insurance_number;
-    }
-
-    public void setPatientEmail(String patientEmail) {
-        this.patientEmail = patientEmail;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
+    public void setPatientInfo(PatientInfoForm patientInfo) {
+        this.patientInfo = patientInfo;
     }
 }
