@@ -51,6 +51,7 @@
                     '    <span aria-hidden="true">&times;</span>' +
                     '  </button>' +
                     '</div>';
+                $(mySelectId).selectpicker("refresh");
             }else{
                 alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">' +
                     '${existsMessage}'.replace("{0}",newOptionValue) +
