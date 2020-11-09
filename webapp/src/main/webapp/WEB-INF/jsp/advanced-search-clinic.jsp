@@ -300,6 +300,7 @@
                                         <f:input path="patientInfo.insuranceNumber" type="hidden" id="patientInfo.insuranceNumber"/>
                                         <f:input path="patientInfo.email" type="hidden" id="patientEmail"/>
                                         <f:input path="patientInfo.name" type="hidden" id="patientInfo.name"/>
+                                        <f:input path="patientInfo.existingPatient" type="hidden" id="patientInfo.existingPatient"/>
 
                                         <div class="row justify-content-center">
                                             <f:button type="submit" name="submit" formmethod="post" value="back" id="backButton" class="row btn btn-outline-secondary">
