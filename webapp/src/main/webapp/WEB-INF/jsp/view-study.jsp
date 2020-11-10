@@ -10,6 +10,7 @@
 </head>
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
+<c:url value="/share-order/${encodedId}" var="shareOrderPath"/>
 <body>
 <%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <div id="wrapper" class="wrapper">
@@ -23,10 +24,21 @@
             <div class="card order-card bg-light float-right">
                 <div class="card-body">
                     <div class="row">
-                        <p class="card-title ml-3 h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
+                        <div class="col">
+                            <p class="card-title ml-3 h4"><spring:message code="view-study.body.card.order.title" arguments="${id}"/> </p>
+                        </div>
+                        <c:if test="${loggedUser.isPatient()}">
+                            <div class="col">
+                                <div class="row justify-content-end">
+                                    <a href="${shareOrderPath}" class="btn upload-btn mt-0 mb-3 mr-4" role="button"><spring:message code="view-study.body.card.order.share" /></a>
+                                </div>
+                            </div>
+                        </c:if>
                     </div>
                     <div class="row">
-                        <p class="card-subtitle ml-3 text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
+                        <div class="col">
+                            <p class="card-subtitle ml-3 text-muted lead"><spring:message code="view-study.body.card.order.date" arguments="${order.date}"/></p>
+                        </div>
                     </div>
                     <hr class="mt-3 mb-4"/>
                     <div class="row justify-content-start">
@@ -52,6 +64,11 @@
                         <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem; max-height: 5em;">
                     </div>
                 </div>
+                <c:if test="${successMedicName != ''}">
+                    <div class="alert alert-success">
+                        <spring:message code="view-study.body.card.share.success" arguments="${successMedicName}"/>
+                    </div>
+                </c:if>
             </div>
         </div>
         <div class="col-sm-6">
@@ -128,8 +145,10 @@
             </div>
         </div>
     </div>
+    <div id="snackbar"></div>
 </div>
 </div>
+
 <%@ include file="fragments/include-scripts.jsp"%>
 </body>
 </html>

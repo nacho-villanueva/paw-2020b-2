@@ -29,7 +29,7 @@ public class ViewStudyController {
     private UrlEncoderService urlEncoderService;
 
     @RequestMapping("/view-study/{encodedId}")
-    public ModelAndView viewStudy(@PathVariable("encodedId") final String encodedId) {
+    public ModelAndView viewStudy(@PathVariable("encodedId") final String encodedId, @ModelAttribute("successMedicName") final String medicName) {
         ModelAndView mav;
         long id = urlEncoderService.decode(encodedId);
         Optional<Order> o = os.findById(id);
@@ -42,11 +42,15 @@ public class ViewStudyController {
             mav.addObject("order", aux);
             mav.addObject("results", aux.getStudy_results());
             mav.addObject("loggedUser",loggedUser());
+            if(medicName != null)
+                mav.addObject("medicName",medicName);
 
         }else{
             mav = new ModelAndView("redirect:/404");
             // 404 go to
         }
+
+
 
         return mav;
     }

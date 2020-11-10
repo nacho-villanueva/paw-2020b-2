@@ -18,6 +18,8 @@ public interface OrderService {
 
     Collection<Order> getAllAsPatient(User user);
 
+    Order shareWithMedic(Order order, User user);
+
     enum Parameters{
         DATE,
         CLINIC,

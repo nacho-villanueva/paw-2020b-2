@@ -42,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.getAllAsClinic(user);
     }
 
+    private Collection<Order> getAllSharedWithMedic(User user) { return orderDao.getAllSharedAsMedic(user); }
+
     @Override
     public Collection<Order> getAllAsMedic(User user) {
         return orderDao.getAllAsMedic(user);
@@ -67,7 +69,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Collection<Order> getAllAsUser(User user){
         if(user.isMedic() && !user.isVerifying()){
-            return getAllAsMedic(user);
+            Collection<Order> orders = getAllAsMedic(user);
+            orders.addAll(getAllSharedWithMedic(user));
+            return orders;
         }else if(user.isClinic() && !user.isVerifying()){
             return getAllAsClinic(user);
         }else if(user.isPatient()){
@@ -116,5 +120,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orders;
+    }
+
+    @Override
+    public Order shareWithMedic(Order order, User user){
+        return orderDao.shareWithMedic(order, user);
     }
 }
