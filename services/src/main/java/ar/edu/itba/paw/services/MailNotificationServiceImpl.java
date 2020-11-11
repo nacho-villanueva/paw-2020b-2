@@ -107,6 +107,20 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
+    @Override
+    public void sendVerificationMessage(String email, String token, String locale) {
+        String verificationUrl = address.toString()+"/user-verification?token=" + token;
+
+        Locale l = Locale.forLanguageTag(locale);
+
+        if(this.useHTML){
+            sendVerificationMessageHtml(email,verificationUrl,l);
+        }else{
+            sendVerificationMessageNoHtml(email,verificationUrl,l);
+        }
+
+    }
+
     // send order mail with html
     private void sendOrderMailHtml(Order order){
 
@@ -711,6 +725,65 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 replaceClinicInfo(mailContent, clinic)
         );
 
+    }
+
+    private void sendVerificationMessageHtml(String email, String verificationUrl,Locale locale){
+
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+
+        String mailSubject = messageSource.getMessage("mail.subject.verification.user",null,locale);
+
+        String body =
+                "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n<tr><td><h2>"+
+                        messageSource.getMessage("mail.body.VerificationMessageHtml.title",null,locale)+
+                        "</h2>\n"+
+                        "<p>"+ messageSource.getMessage("mail.body.VerificationMessageHtml.body.main",null,locale)+ "</p>\n"+
+                        "<a href="+verificationUrl+
+                        " style=\"background-color:#009688;border-radius:4px;color:#ffffff;display:inline-block;;font-size:20px;font-weight:normal;line-height:50px;text-align:center;text-decoration:none;width:160px;font-weight:bold\" target=\"_blank\">"+
+                        messageSource.getMessage("mail.body.VerificationMessageHtml.button.text",null,locale)
+                        +"</a>\n" +
+                        "<p>"+ messageSource.getMessage("mail.body.VerificationMessageHtml.body.alternativeUrl",null,locale)+ "</p>\n"+
+                        "<p>"+ verificationUrl +"</p>\n"+
+                        "<p>"+ messageSource.getMessage("mail.body.VerificationMessageHtml.body.secondary",null,locale)+ "</p>\n"+
+                        "<p>"+ messageSource.getMessage("mail.body.VerificationMessageHtml.body.last",null,locale)+ "</p>\n"+
+                "</td></tr></table>\n";
+
+
+        String basicMailContent = replaceURL(getTextTemplate());
+        basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
+        String mailContent = replaceMessages(basicMailContent, locale);
+
+        ms.sendMimeMessage(email,
+                mailSubject,
+                mailContent,
+                mailInline
+        );
+    }
+
+    private void sendVerificationMessageNoHtml(String email, String verificationUrl,Locale locale){
+
+        String mailSubject = messageSource.getMessage("mail.subject.verification.user",null,locale);
+        String basicMailContent = getTextTemplate();
+
+        String body =
+                messageSource.getMessage("mail.body.VerificationMessageHtml.title",null,locale)+
+                        "\n"+
+                        messageSource.getMessage("mail.body.VerificationMessageHtml.body.main",null,locale)+
+                        "\n"+
+                        verificationUrl+
+                        messageSource.getMessage("mail.body.VerificationMessageHtml.body.secondary",null,locale)+
+                        "\n"+
+                        messageSource.getMessage("mail.body.VerificationMessageHtml.body.last",null,locale)
+        ;
+
+        String mailContent = basicMailContent.replace("<replace-content/>",body);
+        mailContent = replaceMessages(mailContent, locale);
+
+        ms.sendSimpleMessage(email,
+                mailSubject,
+                mailContent
+        );
     }
 
     // get data

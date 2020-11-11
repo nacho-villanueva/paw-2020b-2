@@ -6,12 +6,14 @@ import ar.edu.itba.paw.models.Order;
 import ar.edu.itba.paw.models.Result;
 
 public interface MailNotificationService {
-    public void sendOrderMail(Order order);
+    void sendOrderMail(Order order);
 
-    public void sendResultMail(Result result);
+    void sendResultMail(Result result);
 
-    public void sendMedicApplicationValidatingMail(Medic medic);
+    void sendMedicApplicationValidatingMail(Medic medic);
 
-    public void sendClinicApplicationValidatingMail(Clinic clinic);
+    void sendClinicApplicationValidatingMail(Clinic clinic);
+
+    void sendVerificationMessage(String email, String token, String locale);
 
 }

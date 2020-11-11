@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder encoder;
 
     @Autowired
-    private MailService mailService;
+    private MailNotificationService mailNotificationService;
 
     @Override
     public Optional<User> findById(int id) {
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         String token = UUID.randomUUID().toString();
         userDao.setVerificationToken(user,token);
 
-        mailService.sendVerificationMessage(email,token);
+        mailNotificationService.sendVerificationMessage(email,token,locale);
         return user;
     }
 
