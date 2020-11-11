@@ -37,8 +37,12 @@ public class User {
     @Column(length = 10)
     private String locale;
 
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
     protected User() {
         //Just for hibernate
+        this.enabled = false;
     }
 
     public User(final String email, final String password, final int role) {
@@ -48,6 +52,7 @@ public class User {
         this.locale = DEFAULT_LOCALE;
         this.isRegistered = true;
         this.isVerifying = false;
+        this.enabled = false;
     }
 
     public User(final int id, final String email, final String password, final int role) {
@@ -137,5 +142,13 @@ public class User {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

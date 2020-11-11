@@ -61,7 +61,7 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList();
     }
 
-    //TODO: when moving to aspect oriented programming make this function transactional
+
     @Override
     public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
 

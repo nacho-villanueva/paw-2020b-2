@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.models.Medic;
-import ar.edu.itba.paw.models.Patient;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 
 import ar.edu.itba.paw.persistence.ClinicDao;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Primary
 @Service
@@ -41,6 +39,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private MailService mailService;
+
     @Override
     public Optional<User> findById(int id) {
         Optional<User> maybeUser = userDao.findById(id);
@@ -60,6 +61,12 @@ public class UserServiceImpl implements UserService {
         final User user = userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
         //Since user has just been created, he is not registered as patient/clinic or medic
         user.setRegistered(false);
+
+        //Create token and send email
+        String token = UUID.randomUUID().toString();
+        userDao.setVerificationToken(user,token);
+
+        mailService.sendVerificationMessage(email,token);
         return user;
     }
 
@@ -86,6 +93,22 @@ public class UserServiceImpl implements UserService {
     public boolean checkPassword(int user_id, String password) {
         Optional<User> maybeUser = findById(user_id);
         return maybeUser.filter(user -> encoder.matches(password, user.getPassword())).isPresent();
+    }
+
+    @Override
+    public User verify(User user) {
+        User returnUser = userDao.verify(user);
+        userDao.freeVerificationToken(user);
+        return returnUser;
+    }
+
+    @Override
+    public Optional<VerificationToken> getVerificationToken(String token) {
+        Optional<VerificationToken> maybeToken = userDao.getVerificationToken(token);
+        maybeToken.ifPresent(verificationToken -> {
+            this.setUserFlags(verificationToken.getUser());
+        });
+        return maybeToken;
     }
 
     private void setUserFlags(final User user) {

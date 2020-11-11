@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -62,11 +63,11 @@ public class RegisterController {
             return registrationErrors;
         }
 
-        ModelAndView mav = new ModelAndView("redirect:/home");
+        ModelAndView mav = new ModelAndView("redirect:/?registrationSuccess=true");
 
         User newUser = us.register(registerUserForm.getEmail(),registerUserForm.getPasswordField().getPassword(), locale.toLanguageTag());
 
-        authWithoutPassword(newUser);
+        //authWithoutPassword(newUser);
         return mav;
     }
 
@@ -169,6 +170,23 @@ public class RegisterController {
                 registerPatientForm.getMedical_insurance_plan(), registerPatientForm.getMedical_insurance_number());
         authWithoutPassword(loggedUser());
         return new ModelAndView("redirect:/home");
+    }
+
+    @RequestMapping(value = "/user-verification", method = RequestMethod.GET)
+    public ModelAndView confirmRegistration(@RequestParam(name = "token") String token) {
+        Optional<VerificationToken> verificationToken = us.getVerificationToken(token);
+        if(!verificationToken.isPresent()) {
+            //Redirect to invalid token site (If they entered from this URL, there is no need to resend the link, they are probably probing or our DB connection is down)
+            return new ModelAndView("redirect:/400");
+        }
+
+        User user = verificationToken.get().getUser();
+        if(!user.isEnabled()) {
+            user = us.verify(user);
+            authWithoutPassword(user);
+            return new ModelAndView("redirect:/complete-registration");
+        }
+        return new ModelAndView("redirect:/");
     }
 
     @ModelAttribute

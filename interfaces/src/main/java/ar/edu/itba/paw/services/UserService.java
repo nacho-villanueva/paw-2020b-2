@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.VerificationToken;
 
 import java.util.Optional;
 
@@ -20,4 +21,7 @@ public interface UserService {
 
     boolean checkPassword(int user_id, String password);
 
+    User verify(User user);
+
+    Optional<VerificationToken> getVerificationToken(String token);
 }

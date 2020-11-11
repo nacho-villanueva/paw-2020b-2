@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.VerificationToken;
 
 import java.util.Optional;
 
@@ -16,4 +17,12 @@ public interface UserDao {
     User updateEmail(User user, String email);
 
     User updatePassword(User user, String password);
+
+    void setVerificationToken(User user, String token);
+
+    User verify(User user);
+
+    Optional<VerificationToken> getVerificationToken(String token);
+
+    void freeVerificationToken(User user);
 }

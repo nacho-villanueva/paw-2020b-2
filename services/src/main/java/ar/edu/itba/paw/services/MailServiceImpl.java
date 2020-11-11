@@ -46,4 +46,12 @@ public class MailServiceImpl implements MailService {
             }
         });
     }
+
+    @Async
+    @Override
+    public void sendVerificationMessage(String email, String token) {
+        //todo: Send the actual fucking message
+        String verificationUrl = "/user-verification?token=" + token;
+
+    }
 }
