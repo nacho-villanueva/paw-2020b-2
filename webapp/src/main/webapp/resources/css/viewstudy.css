@@ -134,3 +134,26 @@ body {
 .wrapper {
     padding-top: 4.5rem !important;
 }
+
+.close {
+    position: absolute;
+    top: 1em;
+    right: -1em;
+    color: #fafafa;
+    font-size: 4em;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.clickableImg {
+    transition: 0.3s;
+}
+.clickableImg:hover {
+    opacity: 0.7;
+}
