@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class ShareRequestId implements Serializable {
-    private final int medic;
-    private final int studyType;
-    private final String patientEmail;
+    private int medic;
+    private int studyType;
+    private String patientEmail;
 
-    // default constructor
+    protected ShareRequestId(){
+        // For hibernate.
+    }
 
     public ShareRequestId(int medic, String patientEmail, int studyType) {
         this.medic = medic;
