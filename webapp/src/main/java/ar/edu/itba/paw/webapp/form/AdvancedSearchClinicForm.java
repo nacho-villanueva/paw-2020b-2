@@ -8,7 +8,7 @@ import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Time;
+import java.time.LocalTime;
 
 
 public class AdvancedSearchClinicForm {
@@ -94,8 +94,8 @@ public class AdvancedSearchClinicForm {
         for(int day=0 ; day < ClinicHours.getDaysOfWeek(); day++){
             if(this.isAvailable[day])
                 ret.setDayHour(day,
-                        Time.valueOf(((auxOT[day] == null)?defaultFromTime:auxOT[day]).concat(timeSuffix)),
-                        Time.valueOf(((auxCT[day] == null)?defaultToTime:auxCT[day]).concat(timeSuffix))
+                        LocalTime.parse(((auxOT[day] == null)?defaultFromTime:auxOT[day]).concat(timeSuffix)),
+                        LocalTime.parse(((auxCT[day] == null)?defaultToTime:auxCT[day]).concat(timeSuffix))
                 );
         }
 
