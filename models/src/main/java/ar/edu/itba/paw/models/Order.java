@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -21,7 +21,7 @@ public class Order {
     private Medic medic;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false, referencedColumnName = "user_id")
@@ -63,7 +63,7 @@ public class Order {
     }
 
     public Order(final Medic medic,
-                 final Date date,
+                 final LocalDate date,
                  final Clinic clinic,
                  final StudyType study,
                  final String description,
@@ -86,7 +86,7 @@ public class Order {
         this.patient_name = patient_name;
     }
 
-    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
+    public Order(final long order_id, final Medic medic, final LocalDate date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
         this.order_id = order_id;
         this.medic = medic;
         this.date = date;
@@ -110,7 +110,7 @@ public class Order {
         this.clinic = clinic;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -154,7 +154,7 @@ public class Order {
         return medic;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
