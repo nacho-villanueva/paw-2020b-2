@@ -98,4 +98,12 @@ public class OrderJpaDao implements OrderDao {
         query.setParameter("email", user.getEmail());
         return query.getResultList();
     }
+
+    @Override
+    public Collection<Order> getAllAsPatientOfType(String email, StudyType type){
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patient_email = :email AND o.study = :type", Order.class);
+        query.setParameter("email", email);
+        query.setParameter("type", type);
+        return query.getResultList();
+    }
 }

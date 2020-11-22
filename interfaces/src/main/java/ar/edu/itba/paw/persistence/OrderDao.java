@@ -21,4 +21,6 @@ public interface OrderDao {
     Order shareWithMedic(Order order, User user);
 
     Collection<Order> getAllAsPatient(User user);
+
+    Collection<Order> getAllAsPatientOfType(String email, StudyType type);
 }

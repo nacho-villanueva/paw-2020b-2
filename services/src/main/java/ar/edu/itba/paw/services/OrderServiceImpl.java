@@ -54,6 +54,11 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.getAllAsPatient(user);
     }
 
+    @Override
+    public Collection<Order> getAllAsPatientOfType(String email, StudyType type) {
+        return orderDao.getAllAsPatientOfType(email, type);
+    }
+
     @Autowired
     private MedicService medicService;
 
@@ -126,4 +131,6 @@ public class OrderServiceImpl implements OrderService {
     public Order shareWithMedic(Order order, User user){
         return orderDao.shareWithMedic(order, user);
     }
+
+
 }
