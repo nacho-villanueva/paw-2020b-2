@@ -17,6 +17,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
+        <spring:message key="fragments.sidebar.heading.orders" />
         Orders
     </div>
 
@@ -26,6 +27,14 @@
             <i class="fas fa-fw fa-table"></i>
             <span><spring:message key="fragments.sidebar.myorders" /></span></a>
     </li>
+    <sec:authorize access="hasRole('ROLE_PATIENT')">
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "access-requests"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/access-requests' />">
+                <i class="fas fa-comment-medical"></i>
+                <span><spring:message key="fragments.sidebar.access-requests" /></span></a>
+        </li>
+    </sec:authorize>
 
     <sec:authorize access="hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')">
         <!-- Nav Item - Utilities Collapse Menu -->

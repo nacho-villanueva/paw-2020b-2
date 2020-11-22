@@ -26,7 +26,9 @@
                     <div class="row">
                         <p class="card-title h4 mx-auto mt-3"><spring:message code="request-studies.body.title" /></p>
                     </div>
-
+                    <c:if test="${success}"><div class="alert alert-success" role="alert">
+                        <spring:message code="request-order.body.form.successMessage"/>
+                    </div></c:if>
                     <c:url var="post_requestorders"  value="/request-orders"/>
                     <f:form action="${post_requestorders}" method="post" modelAttribute="requestOrdersForm">
                         <hr class="divider"/>
@@ -53,7 +55,7 @@
                             <spring:message code="request-order.body.form.button.cancel"/>
                         </a>
                         <button class="btn action-btn mt-4 mb-2 float-right"
-                                type="submit" name="submit" value="sendRequest">
+                                type="submit" name="submit">
                             <spring:message code="request-order.body.form.button.send"/>
                         </button>
 
