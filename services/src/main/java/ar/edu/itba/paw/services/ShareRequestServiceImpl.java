@@ -3,11 +3,14 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.ShareRequestDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
 
+@Primary
 @Service
 public class ShareRequestServiceImpl implements ShareRequestService{
 
@@ -20,11 +23,13 @@ public class ShareRequestServiceImpl implements ShareRequestService{
     @Autowired
     MedicService ms;
 
+    @Transactional
     @Override
     public ShareRequest requestShare(Medic medic, String patientEmail, StudyType type) {
         return srd.register(medic, patientEmail, type);
     }
 
+    @Transactional
     @Override
     public void acceptOrDenyShare(ShareRequest request, boolean accepted) {
         if(accepted){
