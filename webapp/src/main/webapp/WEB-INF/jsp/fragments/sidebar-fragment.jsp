@@ -11,7 +11,7 @@
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item <c:if test='${param.current == "home"}'>active</c:if>">
         <a class="nav-link" href="<c:url value='/home' />">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-clinic-medical"></i>
             <span><spring:message key="fragments.sidebar.home" /></span></a>
     </li>
 
@@ -28,12 +28,18 @@
     </li>
 
     <sec:authorize access="hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')">
-    <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/create-order' />">
-            <i class="fas fa-fw fa-plus"></i>
-            <span><spring:message key="fragments.sidebar.createorder" /></span></a>
-    </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/create-order' />">
+                <i class="fas fa-fw fa-plus"></i>
+                <span><spring:message key="fragments.sidebar.createorder" /></span></a>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "request-orders"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/request-orders' />">
+                <i class="fas fa-file-medical"></i>
+                <span>Request Share Orders </span></a>
+        </li>
     </sec:authorize>
 
     <!-- Divider -->
