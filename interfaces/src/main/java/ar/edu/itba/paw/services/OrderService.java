@@ -30,5 +30,7 @@ public interface OrderService {
 
     Collection<Order> filterOrders(User user, HashMap<Parameters, String> parameters);
 
+    Collection<Order> getAllAsPatientOfType(String email, StudyType type);
+
     Collection<Order> getAllAsUser(User user);
 }
