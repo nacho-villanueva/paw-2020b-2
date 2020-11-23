@@ -2,8 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalTime;
-import java.util.Locale;
+import java.sql.Time;
 import java.util.Objects;
 
 @Entity
@@ -55,21 +54,21 @@ public class ClinicDayHours {
     private Clinic clinic;
 
     @Column(name="open_time", nullable = false)
-    private LocalTime open_time;
+    private Time open_time;
 
     @Column(name="close_time", nullable = false)
-    private LocalTime close_time;
+    private Time close_time;
 
     protected ClinicDayHours() {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, int clinic_id, LocalTime open_time, LocalTime close_time) {
+    public ClinicDayHours(int day, int clinic_id, Time open_time, Time close_time) {
         this(day,open_time,close_time);
         this.clinic_id = clinic_id;
     }
 
-    public ClinicDayHours(int day_of_week, LocalTime open_time, LocalTime close_time) {
+    public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {
         this.day_of_week = day_of_week;
         this.open_time = open_time;
         this.close_time = close_time;
@@ -99,19 +98,19 @@ public class ClinicDayHours {
         this.clinic = clinic;
     }
 
-    public LocalTime getOpen_time() {
+    public Time getOpen_time() {
         return open_time;
     }
 
-    public void setOpen_time(LocalTime open_time) {
+    public void setOpen_time(Time open_time) {
         this.open_time = open_time;
     }
 
-    public LocalTime getClose_time() {
+    public Time getClose_time() {
         return close_time;
     }
 
-    public void setClose_time(LocalTime close_time) {
+    public void setClose_time(Time close_time) {
         this.close_time = close_time;
     }
 }

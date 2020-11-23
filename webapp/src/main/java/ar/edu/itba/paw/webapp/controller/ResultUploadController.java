@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.Optional;
 
 @Controller
@@ -66,7 +66,7 @@ public class ResultUploadController {
                             fileBytes,
                             resultForm.getSign().getContentType(),
                             signBytes,
-                            LocalDate.now(),
+                            new Date(System.currentTimeMillis()),
                             resultForm.getResponsible_name(),
                             resultForm.getResponsible_licence_number());
                 }

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -244,7 +244,7 @@ public class OrderController {
 
         Order order = orderService.register(
                 medicOptional.get(),
-                LocalDate.now(),
+                new Date(System.currentTimeMillis()),
                 clinicOptional.get(),
                 patientInfo.getEmail(),
                 patientInfo.getName(),

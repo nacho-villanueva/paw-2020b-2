@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.*;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public interface ValidationService {
     boolean isValid(User user);
@@ -41,5 +41,5 @@ public interface ValidationService {
 
     boolean isValidResultDataType(String result_data_type);
 
-    boolean isValidDate(LocalDate date);
+    boolean isValidDate(Date date);
 }

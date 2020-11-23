@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order register(Medic medic, LocalDate date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identification_type, byte[] identification, String medic_plan, String medic_plan_number) {
+    public Order register(Medic medic, Date date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identification_type, byte[] identification, String medic_plan, String medic_plan_number) {
         Order order = orderDao.register(medic,date,clinic,patient_name,patient_email,studyType,description,identification_type,identification,medic_plan,medic_plan_number);
         mailNotificationService.sendOrderMail(order);
         return order;
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
                 wrong_formatting = true;
             }
             if(!wrong_formatting) {
-                orders.removeIf(order -> !order.getDate().equals(LocalDate.parse(parameters.get(Parameters.DATE))));
+                orders.removeIf(order -> !order.getDate().equals(Date.valueOf(parameters.get(Parameters.DATE))));
             }
         }
         if(parameters.containsKey(Parameters.STUDYTYPE)){

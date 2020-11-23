@@ -20,7 +20,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,11 +43,11 @@ public class ResultDaoTest {
     private static final Clinic clinic = new Clinic(userClinic, "Clinic two", null, true);
     private static final StudyType studyType = new StudyType(1, "X-ray");
 
-    private static final Order order = new Order(1, medic, LocalDate.parse("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
+    private static final Order order = new Order(1, medic, Date.valueOf("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
 
     //Test data
-    private static final Result result = new Result(1L, order, LocalDate.parse("2020-10-05"), "responsible_one","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
-    private static final Result testResultTwo = new Result(20L, order, LocalDate.parse("2020-10-05"), "responsible_test","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
+    private static final Result result = new Result(1L, order, Date.valueOf("2020-10-05"), "responsible_one","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
+    private static final Result testResultTwo = new Result(20L, order, Date.valueOf("2020-10-05"), "responsible_test","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
 
 
     @Autowired

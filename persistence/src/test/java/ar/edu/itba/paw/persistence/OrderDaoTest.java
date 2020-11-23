@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,8 +50,8 @@ public class OrderDaoTest {
     private static final Clinic clinic = new Clinic(userClinic, "Clinic two", null, true);
     private static final StudyType studyType = new StudyType(1, "X-ray");
 
-    private static final Order order = new Order(1, medic, LocalDate.parse("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
-    private static final Order newOrder = new Order(2, medic, LocalDate.parse("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patientnew@patient.com", "Patient New");
+    private static final Order order = new Order(1, medic, Date.valueOf("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
+    private static final Order newOrder = new Order(2, medic, Date.valueOf("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patientnew@patient.com", "Patient New");
 
     @Autowired
     private DataSource ds;

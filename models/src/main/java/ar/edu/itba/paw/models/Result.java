@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Entity
 @Table(name = "results")
@@ -18,7 +18,7 @@ public class Result {
     private Order order;
 
     @Column(name="date", nullable=false)
-    private LocalDate date;
+    private Date date;
 
     @Column(name="responsible_name", nullable=false)
     private String responsible_name;
@@ -44,7 +44,7 @@ public class Result {
 
     public Result(final Long id,
                   final Order order,
-                  final LocalDate date,
+                  final Date date,
                   final String responsible_name,
                   final String responsible_licence_number,
                   final String identification_type,
@@ -63,7 +63,7 @@ public class Result {
     }
 
     public Result(final Order order,
-                  final LocalDate date,
+                  final Date date,
                   final String responsible_name,
                   final String responsible_licence_number,
                   final String identification_type,
@@ -90,7 +90,7 @@ public class Result {
 
     public long getOrder_id() { return order.getOrder_id(); }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -130,7 +130,7 @@ public class Result {
         this.identification = identification;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
