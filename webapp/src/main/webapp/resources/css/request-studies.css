@@ -50,6 +50,14 @@ body {
     animation: 0.75s ease-out 0s 1 slideInFromDown;
 }
 
+.deny-btn{
+    background: grey;
+    color: white;
+
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
 @keyframes fadeIn {
     0% {
         opacity: 0;

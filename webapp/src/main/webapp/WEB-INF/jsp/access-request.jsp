@@ -24,11 +24,8 @@
             <div class="card request-card">
                 <div class="card-body">
                     <div class="row">
-                        <p class="card-title h4 mx-auto mt-3"><spring:message code="access-request.body.title" /></p>
+                        <p class="card-title h4 mx-3 mt-3 "><spring:message code="access-request.body.title" /></p>
                     </div>
-                    <c:if test="${success}"><div class="alert alert-success" role="alert">
-                        <spring:message code="request-order.body.form.successMessage"/>
-                    </div></c:if>
                     <c:url var="post_requestorders"  value="/access-request/complete"/>
                     <f:form action="${post_requestorders}" method="post" modelAttribute="requestOrdersForm">
 
@@ -40,7 +37,7 @@
                             </fieldset>
                         </div>
                         <div class="row mx-1">
-                            <fieldset class="form-group">
+                            <fieldset class="form-group col">
                                 <label class="bmd-label-static"><spring:message code="access-request.body.form.studyId.label"/></label>
                                 <p id="studyType" class="lead"><c:out value="${studyType.name}"/> </p>
                             </fieldset>
@@ -51,7 +48,7 @@
                         <f:input type="hidden" path="patientEmail" id="patientEmail"/>
                         <f:input type="hidden" path="studyTypeId" id="studyTypeId"/>
 
-                        <button class="btn btn-secondary mt-4 mb-2 float-left"
+                        <button class="btn deny-btn mt-4 mb-2 float-left"
                                 type="submit" name="submit" value="false">
                             <spring:message code="access-request.body.form.button.deny"/>
                         </button>

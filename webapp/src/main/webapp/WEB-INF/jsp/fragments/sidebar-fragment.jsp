@@ -18,7 +18,6 @@
     <!-- Heading -->
     <div class="sidebar-heading">
         <spring:message key="fragments.sidebar.heading.orders" />
-        Orders
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->

@@ -24,7 +24,7 @@
                 <fieldset>
                     <spring:message code="profile-view.body.tab.patient.medic_plan.label" var="medical_planPlaceholder"/>
                     <f:input type="text" cssClass="form-control" path="medical_plan" placeholder="${medical_planPlaceholder}"/>
-                    <f:errors path="medicalPlan" cssClass="text-danger" element="small"/>
+                    <f:errors path="medical_plan" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
