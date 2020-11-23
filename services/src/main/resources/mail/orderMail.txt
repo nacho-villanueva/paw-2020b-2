@@ -1,0 +1,7 @@
+<replace-m-body-sendOrderMailNoHtml-details/>
+
+<replace-order-url/>
+
+<replace-m-contactInfo/>
+<replace-contact1-name/><replace-contact1-mail/>
+<replace-contact2-name/><replace-contact2-mail>

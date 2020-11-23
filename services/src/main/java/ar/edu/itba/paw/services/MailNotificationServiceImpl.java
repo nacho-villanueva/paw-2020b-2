@@ -8,15 +8,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceEditor;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,6 +47,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Value("classpath:mail/mailTemplate.html")
     private Resource mailTemplateResource;
 
+    @Autowired
+    private ResourceLoader resourceLoader;
+
     private String mailTemplate;
     private boolean useHTML;
 
@@ -72,20 +76,71 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Override
     public void sendOrderMail(Order order) {
 
-        if(this.useHTML){
-            sendOrderMailHtml(order);
-        }else{
-            sendOrderMailNoHtml(order);
+        URL bodyFile = null;
+
+        if(useHTML){
+            try {
+                bodyFile = ResourceUtils.getURL("classpath:mail/orderMail.html");
+            } catch (FileNotFoundException e) {
+                useHTML = false;
+            }
+        }
+
+        if(!useHTML){
+            try {
+                bodyFile = ResourceUtils.getURL("classpath:mail/orderMail.txt");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(bodyFile != null){
+            try {
+                InputStream stream = bodyFile.openStream();
+                String body = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+                if(this.useHTML){
+                    sendOrderMailHtml(order, body);
+                }else{
+                    sendOrderMailNoHtml(order, body);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void sendResultMail(Result result){
+        URL bodyFile = null;
 
-        if(this.useHTML){
-            sendResultMailHtml(result);
-        }else{
-            sendResultMailNoHtml(result);
+        if(useHTML){
+            try {
+                bodyFile = ResourceUtils.getURL("classpath:mail/resultMail.html");
+            } catch (FileNotFoundException e) {
+                useHTML = false;
+            }
+        }
+
+        if(!useHTML){
+            try {
+                bodyFile = ResourceUtils.getURL("classpath:mail/resultMail.txt");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(bodyFile != null){
+            try {
+                InputStream stream = bodyFile.openStream();
+                String body = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+                if(this.useHTML){
+                    sendResultMailHtml(result, body);
+                }else{
+                    sendResultMailNoHtml(result, body);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -122,7 +177,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     // send order mail with html
-    private void sendOrderMailHtml(Order order){
+    private void sendOrderMailHtml(Order order, String body){
 
         String patientMail  = order.getPatient_email();
         String medicMail   = order.getMedic().getEmail();
@@ -149,71 +204,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         mailInline.add("envelope-regular.png");
 
         String basicMailContent = getMailTemplate();
-
-        String body =
-                "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                        "<tr><td align=\"center\"><h2><replace-m-body-sendOrderMailHtml-details/></h2>\n" +
-                        "<a href=\"<replace-order-url/>\" style=\"background-color:#009688;border-radius:4px;color:#ffffff;display:inline-block;;font-size:20px;font-weight:normal;line-height:50px;text-align:center;text-decoration:none;width:160px;font-weight:bold\" target=\"_blank\"><replace-m-body-sendOrderMailHtml-orderUrl/></a>\n" +
-                        "</td></tr></table>\n" +
-                        "<replace-new-info/>\n"+
-                        "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                        "   <tr>\n" +
-                        "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                        "           <table width=\"100%\">\n" +
-                        "               <tr>\n" +
-                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
-                        "                      <replace-study-type/>\n" +
-                        "                   </td>\n"+
-                        "               </tr>\n" +
-                        "               <tr>\n" +
-                        "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
-                        "                      <replace-description/>\n" +
-                        "                   </td>\n"+
-                        "               </tr>\n" +
-                        "           </table>\n"+
-                        "       </td>\n" +
-                        "   </tr>\n" +
-                        "   <tr>\n" +
-                        "   <tr>\n" +
-                        "       <td style=\"padding: 32px 0 0 0;\">\n"+
-                        "           <p>\n" +
-                        "               <replace-m-contactInfo/>\n" +
-                        "           </p>\n" +
-                        "       </td>\n"+
-                        "   </tr>\n" +
-                        "   <tr>\n" +
-                        "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                        "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                        "           <table width=\"100%\">\n" +
-                        "               <tr>\n" +
-                        "                   <td align=\"left\" width=\"35%\">\n"+
-                        "                           <replace-contact1-name/>\n" +
-                        "                   </td>\n" +
-                        "                   <td align=\"left\" width=\"65%\">\n" +
-                        "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
-                        "                   </td>\n"+
-                        "               </tr>\n" +
-                        "           </table>\n"+
-                        "                           </a>\n" +
-                        "       </td>\n" +
-                        "   </tr>\n" +
-                        "   <tr>\n" +
-                        "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                        "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                        "           <table width=\"100%\">\n" +
-                        "               <tr>\n" +
-                        "                   <td align=\"left\" width=\"35%\">\n"+
-                        "                           <replace-contact2-name/>\n" +
-                        "                   </td>\n" +
-                        "                   <td align=\"left\" width=\"65%\">\n" +
-                        "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
-                        "                   </td>\n"+
-                        "               </tr>\n" +
-                        "           </table>\n"+
-                        "                           </a>\n" +
-                        "       </td>\n" +
-                        "   </tr>\n" +
-                        "</table>";
 
         basicMailContent = basicMailContent.replace("<replace-content/>",body);
 
@@ -286,13 +276,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 replaceOrderInfo(mailContent,order),
                 mailInline
         );
-
-        return;
     }
 
 
     // send order mail without html
-    private void sendOrderMailNoHtml(Order order){
+    private void sendOrderMailNoHtml(Order order, String body){
 
         String patientMail  = order.getPatient_email();
         String medicMail   = order.getMedic().getEmail();
@@ -312,8 +300,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Object[] patientMailParams = {patientName};
         Object[] medicMailParams = {medicMail};
         Object[] clinicMailParams = {clinicMail};
-
-        String body = "<replace-m-body-sendOrderMailNoHtml-details/>\n\n<replace-order-url/>\n\n<replace-m-contactInfo/>\n<replace-contact1-name/><replace-contact1-mail/>\n<replace-contact2-name/><replace-contact2-mail>";
 
         String basicMailContent = replaceURL(getTextTemplate());
         basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
@@ -351,12 +337,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         ms.sendSimpleMessage(clinicMail,
                 messageSource.getMessage("mail.subject.order.clinic",subjectParams,clinicLocale),
                 replaceOrderInfo(mailContent,order));
-
-        return;
     }
 
     // send result mail with html
-    private void sendResultMailHtml(Result result){
+    private void sendResultMailHtml(Result result, String body){
         Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
 
         if(resultOrder.isPresent()){
@@ -387,72 +371,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             ArrayList<String> mailInline = new ArrayList<>();
             mailInline.add("logo.png");
             mailInline.add("envelope-regular.png");
-
-            String body =
-                    "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                            "<tr><td align=\"center\"><h2><replace-m-body-sendOrderMailHtml-details/></h2>\n" +
-                            "<a href=\"<replace-order-url/>\" style=\"background-color:#009688;border-radius:4px;color:#ffffff;display:inline-block;;font-size:20px;font-weight:normal;line-height:50px;text-align:center;text-decoration:none;width:160px;font-weight:bold\" target=\"_blank\"><replace-m-body-sendResultMailHtml-orderUrl/></a>\n" +
-                            "</td></tr></table>\n" +
-                            "<replace-new-info/>\n"+
-                            "<table width=\"440\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                            "   <tr>\n" +
-                            "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                            "           <table width=\"100%\">\n" +
-                            "               <tr>\n" +
-                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
-                            "                      <replace-study-type/>\n" +
-                            "                   </td>\n"+
-                            "               </tr>\n" +
-                            "               <tr>\n" +
-                            "                   <td align=\"center\" width=\"100%\" style=\"font-family: Arial, sans-serif; font-size:18px;\">\n"+
-                            "                      <replace-description/>\n" +
-                            "                   </td>\n"+
-                            "               </tr>\n" +
-                            "           </table>\n"+
-                            "       </td>\n" +
-                            "   </tr>\n" +
-                            "   <tr>\n" +
-                            "   <tr>\n" +
-                            "       <td style=\"padding: 32px 0 0 0;\">\n"+
-                            "           <p>\n" +
-                            "               <replace-m-contactInfo/>\n" +
-                            "           </p>\n" +
-                            "       </td>\n"+
-                            "   </tr>\n" +
-                            "   <tr>\n" +
-                            "   <tr>\n" +
-                            "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                            "                           <a href=\"mailto:<replace-contact1-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                            "           <table width=\"100%\">\n" +
-                            "               <tr>\n" +
-                            "                   <td align=\"left\" width=\"35%\">\n"+
-                            "                           <replace-contact1-name/>\n" +
-                            "                   </td>\n" +
-                            "                   <td align=\"left\" width=\"65%\">\n" +
-                            "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
-                            "                   </td>\n"+
-                            "               </tr>\n" +
-                            "           </table>\n"+
-                            "                           </a>\n" +
-                            "       </td>\n" +
-                            "   </tr>\n" +
-                            "   <tr>\n" +
-                            "       <td style=\"padding: 24px 0 0 0;\">\n" +
-                            "                           <a href=\"mailto:<replace-contact2-email/>\" target =\"_blank\" title=\"Send Mail\" style=\"text-decoration: none;\">\n" +
-                            "           <table width=\"100%\">\n" +
-                            "               <tr>\n" +
-                            "                   <td align=\"left\" width=\"35%\">\n"+
-                            "                           <replace-contact2-name/>\n" +
-                            "                   </td>\n" +
-                            "                   <td align=\"left\" width=\"65%\">\n" +
-                            "                               <img height=\"10\" class=\"image_fix\" src=\"cid:envelope-regular.png\" alt=\"<replace-m-altText-envelope/>\"/>\n" +
-                            "                   </td>\n"+
-                            "               </tr>\n" +
-                            "           </table>\n"+
-                            "                           </a>\n" +
-                            "       </td>\n" +
-                            "   </tr>\n" +
-                            "</table>";
 
             basicMailContent = basicMailContent.replace("<replace-content/>",body);
 
@@ -529,12 +447,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }else{
             throw new OrderNotFoundForExistingResultException();
         }
-
-        return;
     }
 
     // send result mail without html
-    private void sendResultMailNoHtml(Result result){
+    private void sendResultMailNoHtml(Result result, String body){
 
         Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
 
@@ -559,8 +475,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             Object[] patientMailParams = {patientName};
             Object[] medicMailParams = {medicMail};
             Object[] clinicMailParams = {clinicMail};
-
-            String body = "<replace-m-body-sendResultMailNoHtml-details/>\n\n<replace-order-url/>\n\nContact Info\n<replace-contact1-name/><replace-contact1-email/>\n<replace-contact2-name/><replace-contact2-email/>";
 
             String basicMailContent = replaceURL(getTextTemplate());
             basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
