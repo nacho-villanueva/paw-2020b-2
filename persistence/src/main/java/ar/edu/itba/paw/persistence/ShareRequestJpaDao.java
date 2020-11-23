@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
+import java.util.Optional;
 
 @Repository
 public class ShareRequestJpaDao implements ShareRequestDao{
@@ -19,6 +20,10 @@ public class ShareRequestJpaDao implements ShareRequestDao{
 
     @Override
     public ShareRequest register(Medic medic, String patientEmail, StudyType type) {
+        Optional<ShareRequest> maybeShareRequest = getShareRequest(medic, patientEmail, type);
+        if (maybeShareRequest.isPresent())
+            return maybeShareRequest.get();
+
         ShareRequest request = new ShareRequest(medic, patientEmail, type);
         em.persist(request);
         em.flush();
@@ -45,5 +50,14 @@ public class ShareRequestJpaDao implements ShareRequestDao{
         final TypedQuery<ShareRequest> query = em.createQuery("SELECT sr FROM ShareRequest sr WHERE sr.patientEmail = :email", ShareRequest.class);
         query.setParameter("email", patientEmail);
         return query.getResultList();
+    }
+
+    @Override
+    public Optional<ShareRequest> getShareRequest(Medic medic, String patientEmail, StudyType type) {
+        final TypedQuery<ShareRequest> query = em.createQuery("SELECT sr FROM ShareRequest sr WHERE sr.patientEmail = :email AND sr.medic = :medic AND sr.studyType = :type", ShareRequest.class);
+        query.setParameter("email", patientEmail);
+        query.setParameter("medic", medic);
+        query.setParameter("type", type);
+        return query.getResultList().stream().findFirst();
     }
 }

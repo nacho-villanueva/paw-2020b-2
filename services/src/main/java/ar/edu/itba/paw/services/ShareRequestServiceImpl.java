@@ -31,9 +31,8 @@ public class ShareRequestServiceImpl implements ShareRequestService{
 
     @Transactional
     @Override
-    public boolean requestExists(ShareRequest request){
-        // TODO replace this with function
-        return true;
+    public Optional<ShareRequest> getShareRequest(Medic medic, String patientEmail, StudyType type){
+        return srd.getShareRequest(medic, patientEmail, type);
     }
 
     @Transactional

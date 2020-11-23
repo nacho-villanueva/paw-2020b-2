@@ -62,8 +62,9 @@ public class AccessRequestsController {
 
         if(medicOptional.isPresent() && studyTypeOptional.isPresent()) {
 
-            ShareRequest shareRequest = new ShareRequest(medicOptional.get(),requestOrdersForm.getPatientEmail(),studyTypeOptional.get());
-            if(!shareRequestService.requestExists(shareRequest)){
+            Optional<ShareRequest> maybeShareRequest = shareRequestService.getShareRequest(medicOptional.get(),requestOrdersForm.getPatientEmail(),studyTypeOptional.get());
+
+            if(!maybeShareRequest.isPresent()){
                 return new ModelAndView("redirect:/404");
             }
 
@@ -96,10 +97,10 @@ public class AccessRequestsController {
         Optional<StudyType> studyTypeOptional = studyTypeService.findById(requestOrdersForm.getStudyTypeId());
 
         if(medicOptional.isPresent() && studyTypeOptional.isPresent()){
-            ShareRequest shareRequest = new ShareRequest(medicOptional.get(),requestOrdersForm.getPatientEmail(),studyTypeOptional.get());
+            Optional<ShareRequest> maybeShareRequest = shareRequestService.getShareRequest(medicOptional.get(),requestOrdersForm.getPatientEmail(),studyTypeOptional.get());
 
-            if(shareRequestService.requestExists(shareRequest)){
-                shareRequestService.acceptOrDenyShare(shareRequest,accept);
+            if(maybeShareRequest.isPresent()){
+                shareRequestService.acceptOrDenyShare(maybeShareRequest.get(), accept);
 
                 return new ModelAndView("redirect:/access-requests?s=true");
             }
