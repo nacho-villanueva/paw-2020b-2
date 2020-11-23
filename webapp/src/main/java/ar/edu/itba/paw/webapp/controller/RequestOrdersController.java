@@ -39,6 +39,9 @@ public class RequestOrdersController {
     @RequestMapping(value = "/request-orders", method = RequestMethod.GET)
     public ModelAndView requestOrders(@ModelAttribute("requestOrdersForm") RequestOrdersForm requestOrdersForm,
                                       @RequestParam(value = "s", required = false) boolean creationSuccesful){
+
+        requestOrdersForm.setMedicId(loggedUser().getId());
+
         final ModelAndView mav = new ModelAndView("request-orders");
         mav.addObject("studiesList", studyTypeService.getAll());
         mav.addObject("success", creationSuccesful);
@@ -48,18 +51,23 @@ public class RequestOrdersController {
     @RequestMapping(value = "/request-orders", method = RequestMethod.POST)
     public ModelAndView requestOrders(@Valid @ModelAttribute("requestOrdersForm") RequestOrdersForm requestOrdersForm,
                                       final BindingResult bindingResult){
-        if(!bindingResult.hasErrors()) {
-            Optional<Medic> medic = medicService.findByUserId(loggedUser().getId());
-            Optional<StudyType> studyType = studyTypeService.findById(requestOrdersForm.getStudyId());
-            if(medic.isPresent() && studyType.isPresent()){
-                shareRequestService.requestShare(medic.get(), requestOrdersForm.getPatientEmail(), studyType.get());
 
-                return new ModelAndView("redirect:/request-orders?s=true");
-            }
-
+        if (bindingResult.hasErrors()) {
+            final ModelAndView mav = new ModelAndView("request-orders");
+            mav.addObject("studiesList", studyTypeService.getAll());
+            return mav;
         }
 
-        return new ModelAndView("request-orders");
+        Optional<Medic> medic = medicService.findByUserId(loggedUser().getId());
+        Optional<StudyType> studyType = studyTypeService.findById(requestOrdersForm.getStudyTypeId());
+        if(medic.isPresent() && studyType.isPresent()){
+            shareRequestService.requestShare(medic.get(), requestOrdersForm.getPatientEmail(), studyType.get());
+
+            return new ModelAndView("redirect:/request-orders?s=true");
+        }
+
+        return new ModelAndView("redirect:/request-orders");
+
     }
 
     @ModelAttribute

@@ -32,6 +32,7 @@
                     <c:url var="post_requestorders"  value="/request-orders"/>
                     <f:form action="${post_requestorders}" method="post" modelAttribute="requestOrdersForm">
                         <hr class="divider"/>
+                        <f:input path="medicId" type="hidden" id="medicId"/>
                         <div class="row mx-1">
                             <fieldset class="form-group col">
                                 <label class="bmd-label-static"><spring:message code="request-studies.body.form.patientMail.label"/> </label>
@@ -43,10 +44,10 @@
                             <fieldset class="form-group">
                                 <label class="bmd-label-static"><spring:message code="request-order.body.form.studyId.label"/></label>
                                 <spring:message code="create-order.body.form.studyId.placeholder" var="studyIdPlaceholder"/>
-                                <f:select title="${studyIdPlaceholder}" cssErrorClass="selectpicker is-invalid" id="medicalStudy" cssClass="selectpicker" data-live-search="true" path="studyId" data-style="text-primary">
+                                <f:select title="${studyIdPlaceholder}" cssErrorClass="selectpicker is-invalid" id="medicalStudy" cssClass="selectpicker" data-live-search="true" path="studyTypeId" data-style="text-primary">
                                     <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                                 </f:select>
-                                <f:errors path="studyId" cssClass="text-danger" element="small" />
+                                <f:errors path="studyTypeId" cssClass="text-danger" element="small" />
                             </fieldset>
                         </div>
                         <hr class="mt-4 mb-2"/>

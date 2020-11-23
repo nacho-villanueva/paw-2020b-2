@@ -1,18 +1,19 @@
 package ar.edu.itba.paw.webapp.form.validators;
 
 import ar.edu.itba.paw.services.ClinicService;
+import ar.edu.itba.paw.services.MedicService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ClinicIsValidValidator implements ConstraintValidator<ClinicIsValid, Integer> {
+public class MedicIdIsValidValidator implements ConstraintValidator<MedicIdIsValid, Integer> {
 
     @Autowired
-    private ClinicService clinicService;
+    private MedicService medicService;
 
     @Override
-    public void initialize(ClinicIsValid clinicIsValid) {
+    public void initialize(MedicIdIsValid medicIdIsValid) {
 
     }
 
@@ -21,6 +22,6 @@ public class ClinicIsValidValidator implements ConstraintValidator<ClinicIsValid
         if(integer==null)
             return false;
 
-        return clinicService.findByUserId(integer).isPresent();
+        return medicService.findByUserId(integer).isPresent();
     }
 }

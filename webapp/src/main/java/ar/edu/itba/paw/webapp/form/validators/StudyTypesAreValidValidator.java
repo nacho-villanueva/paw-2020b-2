@@ -12,8 +12,7 @@ public class StudyTypesAreValidValidator implements ConstraintValidator<StudyTyp
     private StudyTypeService studyTypeService;
 
     @Override
-    public void initialize(StudyTypesAreValid userNotExist) {
-
+    public void initialize(StudyTypesAreValid studyTypesAreValid) {
     }
 
     @Override

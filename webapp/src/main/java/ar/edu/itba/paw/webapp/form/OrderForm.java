@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validators.ValidClinicId;
+import ar.edu.itba.paw.webapp.form.validators.ClinicIdIsValid;
 
 public class OrderForm extends  OrderWithoutClinicForm{
 
-    @ValidClinicId
+    @ClinicIdIsValid
     private Integer clinicId;
 
     public OrderForm(){ }
