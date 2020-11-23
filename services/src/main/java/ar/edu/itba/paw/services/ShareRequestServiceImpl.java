@@ -31,6 +31,13 @@ public class ShareRequestServiceImpl implements ShareRequestService{
 
     @Transactional
     @Override
+    public boolean requestExists(ShareRequest request){
+        // TODO replace this with function
+        return true;
+    }
+
+    @Transactional
+    @Override
     public void acceptOrDenyShare(ShareRequest request, boolean accepted) {
         if(accepted){
             final Collection<Order> orders = os.getAllAsPatientOfType(request.getPatientEmail(), request.getStudyType());

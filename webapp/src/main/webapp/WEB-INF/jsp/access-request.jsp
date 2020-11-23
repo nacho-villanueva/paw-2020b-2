@@ -29,29 +29,34 @@
                     <c:if test="${success}"><div class="alert alert-success" role="alert">
                         <spring:message code="request-order.body.form.successMessage"/>
                     </div></c:if>
-                    <c:url var="post_requestorders"  value="/access-request"/>
-                    <f:form action="${post_requestorders}" method="post" modelAttribute="requestForm">
+                    <c:url var="post_requestorders"  value="/access-request/complete"/>
+                    <f:form action="${post_requestorders}" method="post" modelAttribute="requestOrdersForm">
+
                         <hr class="divider"/>
                         <div class="row mx-1">
                             <fieldset class="form-group col">
                                 <label class="bmd-label-static"><spring:message code="access-request.body.form.medic.label"/> </label>
-                                <p id="medicName" class="lead"><c:out value="${requestForm.medic.name}"/> </p>
+                                <p id="medicName" class="lead"><c:out value="${medic.name}"/> </p>
                             </fieldset>
                         </div>
                         <div class="row mx-1">
                             <fieldset class="form-group">
                                 <label class="bmd-label-static"><spring:message code="access-request.body.form.studyId.label"/></label>
-                                <p id="studyType" class="lead"><c:out value="${requestForm.studytype.name}"/> </p>
+                                <p id="studyType" class="lead"><c:out value="${studyType.name}"/> </p>
                             </fieldset>
                         </div>
                         <hr class="mt-4 mb-2"/>
 
+                        <f:input type="hidden" path="medicId" id="medicId"/>
+                        <f:input type="hidden" path="patientEmail" id="patientEmail"/>
+                        <f:input type="hidden" path="studyTypeId" id="studyTypeId"/>
+
                         <button class="btn btn-secondary mt-4 mb-2 float-left"
-                                type="submit" name="submit">
+                                type="submit" name="submit" value="false">
                             <spring:message code="access-request.body.form.button.deny"/>
                         </button>
                         <button class="btn action-btn mt-4 mb-2 float-right"
-                                type="submit" name="submit">
+                                type="submit" name="submit" value="true">
                             <spring:message code="access-request.body.form.button.accept"/>
                         </button>
 

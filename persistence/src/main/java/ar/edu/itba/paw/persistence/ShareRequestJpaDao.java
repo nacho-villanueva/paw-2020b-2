@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Medic;
 import ar.edu.itba.paw.models.ShareRequest;
+import ar.edu.itba.paw.models.ShareRequestId;
 import ar.edu.itba.paw.models.StudyType;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,15 @@ public class ShareRequestJpaDao implements ShareRequestDao{
 
     @Override
     public void remove(ShareRequest shareRequest) {
-        ShareRequest request = em.getReference(ShareRequest.class, shareRequest);
+
+        if(shareRequest.getMedic() == null || shareRequest.getMedic().getUser() == null || shareRequest.getMedic().getUser().getId() == null ||
+                shareRequest.getStudyType() == null || shareRequest.getStudyType().getId() == null){
+            return;
+        }
+
+        ShareRequestId shareRequestId = new ShareRequestId(shareRequest.getMedic().getUser().getId(),shareRequest.getPatientEmail(),shareRequest.getStudyType().getId());
+
+        ShareRequest request = em.getReference(ShareRequest.class, shareRequestId);
         em.remove(request);
         em.flush();
     }

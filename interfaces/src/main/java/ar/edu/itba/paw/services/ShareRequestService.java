@@ -10,6 +10,8 @@ public interface ShareRequestService {
 
     ShareRequest requestShare(Medic medic, String patientEmail, StudyType type);
 
+    boolean requestExists(ShareRequest request);
+
     void acceptOrDenyShare(ShareRequest request, boolean accepted);
 
     Collection<ShareRequest> getAllPatientRequest(String patientEmail);

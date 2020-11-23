@@ -1,4 +1,5 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html lang="en">
@@ -36,8 +37,8 @@
                             <div class="card-body">
                                 <p class="card-title h4"><spring:message code="access-requests.body.card.requests.title"/></p>
                                 <div class="list-group">
-                                    <c:forEach items="${requestsList}" var="o">
-                                        <a class="list-group-item list-group-item-action">
+                                    <c:forEach items="${requestsList}" var="o" varStatus="i">
+                                        <a id="opt${i.index}" class="list-group-item list-group-item-action" href="javascript:fillValues('opt${i.index}')">
                                             <div class="row" style="width: 100%;">
                                                 <div class="col float-left">
                                                     <h6 class="mb-1"><spring:message code="access-requests.body.card.requests.studyType" arguments="${o.studyType.name}" /></h6>
@@ -51,12 +52,22 @@
                                                         <spring:message code="access-requests.body.form.button.preview"/>
                                                     </button>
                                                 </div>
+                                                <input type="hidden" id="opt${i.index}.medicId" value="${o.medic.user.id}"/>
+                                                <input type="hidden" id="opt${i.index}.patientEmail" value="${o.patientEmail}"/>
+                                                <input type="hidden" id="opt${i.index}.studyTypeId" value="${o.studyType.id}"/>
                                             </div>
                                         </a>
                                     </c:forEach>
+                                    <c:url var="post_requestorders"  value="/access-request/view"/>
+                                    <f:form id="requestOrdersForm" action="${post_requestorders}" method="GET" modelAttribute="requestOrdersForm">
+                                        <f:input type="hidden" path="medicId" id="medicId"/>
+                                        <f:input type="hidden" path="patientEmail" id="patientEmail"/>
+                                        <f:input type="hidden" path="studyTypeId" id="studyTypeId"/>
+                                    </f:form>
                                 </div>
                             </div>
                         </div>
+
                     </c:otherwise>
                 </c:choose>
 
@@ -65,4 +76,15 @@
     </div>
 
 </body>
+
+<script type="text/javascript">
+    function fillValues(optionId){
+
+        document.getElementById("medicId").value = document.getElementById(optionId+".medicId").value;
+        document.getElementById("patientEmail").value = document.getElementById(optionId+".patientEmail").value;
+        document.getElementById("studyTypeId").value = document.getElementById(optionId+".studyTypeId").value;
+
+        document.getElementById("requestOrdersForm").submit();
+    }
+</script>
 </html>
