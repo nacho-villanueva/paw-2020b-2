@@ -47,8 +47,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField) {
-        return medicDao.registerFieldToMedic(medic_id,medicalField);
+    public MedicalField registerFieldToMedic(int medicId, MedicalField medicalField) {
+        return medicDao.registerFieldToMedic(medicId,medicalField);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public boolean knowsField(int medic_id, int field_id) {
-        return medicDao.knowsField(medic_id,field_id);
+    public boolean knowsField(int medicId, int field_id) {
+        return medicDao.knowsField(medicId,field_id);
     }
 }

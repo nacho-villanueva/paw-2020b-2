@@ -104,7 +104,7 @@
                                 <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
                                 <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
                                 <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
-                                <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
+                                <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medicId" data-style="text-primary">
                                     <f:option value="-1" label="${selectMedicOption}"/>
                                     <f:options items="${medicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>

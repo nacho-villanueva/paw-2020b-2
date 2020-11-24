@@ -98,8 +98,8 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public boolean knowsField(int medic_id, int field_id) {
-        Optional<Medic> medicDB = findByUserId(medic_id);
+    public boolean knowsField(int medicId, int field_id) {
+        Optional<Medic> medicDB = findByUserId(medicId);
 
         //No medic, false
         if(!medicDB.isPresent()) {
@@ -112,9 +112,9 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public MedicalField registerFieldToMedic(final int medic_id, MedicalField medicalField) {
+    public MedicalField registerFieldToMedic(final int medicId, MedicalField medicalField) {
 
-        Optional<Medic> medicDB = findByUserId(medic_id);
+        Optional<Medic> medicDB = findByUserId(medicId);
 
         if(medicDB.isPresent()) {
             MedicalField medicalFieldDB = medicalFieldDao.findOrRegister(medicalField.getName());

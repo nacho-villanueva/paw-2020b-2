@@ -21,15 +21,15 @@ public class FilterForm {
     private String date;
 
     @Min(-1)
-    private Integer study_id, clinicId, medic_id;
+    private Integer study_id, clinicId, medicId;
 
     public FilterForm() {
     }
 
-    public FilterForm(Integer study_id, Integer clinicId, Integer medic_id, String patient_email, String date){
+    public FilterForm(Integer study_id, Integer clinicId, Integer medicId, String patient_email, String date){
         this.date = date;
         this.patient_email = patient_email;
-        this.medic_id = medic_id;
+        this.medicId = medicId;
         this.clinicId = clinicId;
         this.study_id = study_id;
     }
@@ -60,18 +60,18 @@ public class FilterForm {
         this.clinicId = clinicId;
     }
 
-    public Integer getMedic_id() {
-        return medic_id;
+    public Integer getMedicId() {
+        return medicId;
     }
 
-    public void setMedic_id(Integer medic_id) {
-        this.medic_id = medic_id;
+    public void setMedicId(Integer medicId) {
+        this.medicId = medicId;
     }
 
     public void resetValues() {
         this.date = null;
         this.patient_email = null;
-        this.medic_id = -1;
+        this.medicId = -1;
         this.study_id = -1;
         this.clinicId =-1;
     }
@@ -82,8 +82,8 @@ public class FilterForm {
             parameters.put(OrderService.Parameters.DATE, this.date);
         if(this.clinicId != null && this.clinicId != -1)
             parameters.put(OrderService.Parameters.CLINIC, this.clinicId.toString());
-        if(this.medic_id != null && this.medic_id != -1)
-            parameters.put(OrderService.Parameters.MEDIC, this.medic_id.toString());
+        if(this.medicId != null && this.medicId != -1)
+            parameters.put(OrderService.Parameters.MEDIC, this.medicId.toString());
         if(this.study_id != null && this.study_id != -1)
             parameters.put(OrderService.Parameters.STUDYTYPE, this.study_id.toString());
         if(this.patient_email != null && !this.patient_email.isEmpty())
@@ -98,7 +98,7 @@ public class FilterForm {
 
         this.clinicId = decodeInt(decodeVal(p, "clinicId"));
         this.study_id = decodeInt(decodeVal(p, "study_id"));
-        this.medic_id = decodeInt(decodeVal(p, "medic_id"));
+        this.medicId = decodeInt(decodeVal(p, "medicId"));
         this.patient_email = decodeVal(p, "patient_email");
         this.date = decodeVal(p, "date");
     }
