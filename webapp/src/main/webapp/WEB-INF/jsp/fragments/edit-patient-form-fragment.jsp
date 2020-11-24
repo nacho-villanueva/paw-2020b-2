@@ -19,21 +19,21 @@
             </td>
         </tr>
         <tr>
-            <td><spring:message code="profile-view.body.tab.patient.medic_plan.label"/></td>
+            <td><spring:message code="profile-view.body.tab.patient.medicPlan.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.patient.medic_plan.label" var="medical_planPlaceholder"/>
+                    <spring:message code="profile-view.body.tab.patient.medicPlan.label" var="medical_planPlaceholder"/>
                     <f:input type="text" cssClass="form-control" path="medical_plan" placeholder="${medical_planPlaceholder}"/>
                     <f:errors path="medicalPlan" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
         <tr>
-            <td><spring:message code="profile-view.body.tab.patient.medic_plan_number.label"/></td>
+            <td><spring:message code="profile-view.body.tab.patient.medicPlanNumber.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.patient.medic_plan_number.label" var="medic_plan_numberPlaceholder"/>
-                    <f:input type="text" cssClass="form-control" path="medical_plan_number" placeholder="${medic_plan_numberPlaceholder}"/>
+                    <spring:message code="profile-view.body.tab.patient.medicPlanNumber.label" var="medicPlanNumberPlaceholder"/>
+                    <f:input type="text" cssClass="form-control" path="medical_plan_number" placeholder="${medicPlanNumberPlaceholder}"/>
                     <f:errors path="medical_plan_number" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>

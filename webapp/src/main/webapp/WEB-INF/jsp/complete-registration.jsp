@@ -241,13 +241,13 @@
                             <f:errors path="telephone" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group">
-                            <label><spring:message code='complete-registration.body.form.clinic.available_studies.label'/></label>
-                            <spring:message code='complete-registration.body.form.clinic.available_studies.placeholder' var="studiesPlaceholder"/>
-                            <f:select id="studyFields" class="selectpicker" cssErrorClass="selectpicker is-invalid" title="${studiesPlaceholder}" data-live-search="true" path="available_studies" data-style="btn-custom">
+                            <label><spring:message code='complete-registration.body.form.clinic.availableStudies.label'/></label>
+                            <spring:message code='complete-registration.body.form.clinic.availableStudies.placeholder' var="studiesPlaceholder"/>
+                            <f:select id="studyFields" class="selectpicker" cssErrorClass="selectpicker is-invalid" title="${studiesPlaceholder}" data-live-search="true" path="availableStudies" data-style="btn-custom">
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="name"/>
                             </f:select>
                             <br>
-                            <f:errors path="available_studies" cssClass="text-danger" element="small" />
+                            <f:errors path="availableStudies" cssClass="text-danger" element="small" />
                         </fieldset>
                         <!-- Button trigger modal -->
                         <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>

@@ -241,13 +241,13 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public boolean isValidMedicPlan(String medic_plan) {
-        return isValidName(medic_plan);
+    public boolean isValidMedicPlan(String medicPlan) {
+        return isValidName(medicPlan);
     }
 
     @Override
-    public boolean isValidMedicPlanNumber(String medic_plan_number) {
-        return isValidName(medic_plan_number);
+    public boolean isValidMedicPlanNumber(String medicPlanNumber) {
+        return isValidName(medicPlanNumber);
     }
 
     @Override

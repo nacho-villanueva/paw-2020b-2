@@ -35,9 +35,9 @@ public interface ValidationService {
 
     boolean isValidLicenceNumber(String licence_number);
 
-    boolean isValidMedicPlan(String medic_plan);
+    boolean isValidMedicPlan(String medicPlan);
 
-    boolean isValidMedicPlanNumber(String medic_plan_number);
+    boolean isValidMedicPlanNumber(String medicPlanNumber);
 
     boolean isValidResultDataType(String result_data_type);
 

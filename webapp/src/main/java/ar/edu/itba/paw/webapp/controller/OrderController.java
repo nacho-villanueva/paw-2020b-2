@@ -287,8 +287,8 @@ public class OrderController {
             Patient patient = patientOptional.get();
 
             if(patientInfo.getName()==null || patientInfo.getName().equals("")){patientInfo.setName(patient.getName());}
-            if(patientInfo.getInsurancePlan()==null || patientInfo.getInsurancePlan().equals("")){patientInfo.setInsurancePlan(patient.getMedic_plan());}
-            if(patientInfo.getInsuranceNumber()==null || patientInfo.getInsuranceNumber().equals("")){patientInfo.setInsuranceNumber(patient.getMedic_plan_number());}
+            if(patientInfo.getInsurancePlan()==null || patientInfo.getInsurancePlan().equals("")){patientInfo.setInsurancePlan(patient.getMedicPlan());}
+            if(patientInfo.getInsuranceNumber()==null || patientInfo.getInsuranceNumber().equals("")){patientInfo.setInsuranceNumber(patient.getMedicPlanNumber());}
         }
     }
 }

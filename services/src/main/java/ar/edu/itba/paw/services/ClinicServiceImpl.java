@@ -39,15 +39,15 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours) {
-        Clinic clinic = clinicDao.register(user, name, telephone, available_studies, medic_plans, hours, false);
+    public Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours) {
+        Clinic clinic = clinicDao.register(user, name, telephone, availableStudies, medicPlans, hours, false);
         userService.updateRole(user, User.CLINIC_ROLE_ID);
         return clinic;
     }
 
     @Override
-    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours, boolean verified) {
-        return clinicDao.updateClinicInfo(user,name,telephone,available_studies,medic_plans,hours,verified);
+    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified) {
+        return clinicDao.updateClinicInfo(user,name,telephone,availableStudies,medicPlans,hours,verified);
     }
 
     @Override

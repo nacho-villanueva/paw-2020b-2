@@ -100,10 +100,10 @@
         <spring:message code="profile-view.body.tab.clinic.medical_studies.label"/>
         </label>
         <spring:message code="profile-edit.form.clinic.study_types.placeholder" var="study_typesPlaceholder"/>
-        <f:select id="studyTypes" name="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="available_studies" data-style="text-primary">
+        <f:select id="studyTypes" name="studyTypes" cssClass="selectpicker" title="${study_typesPlaceholderPlaceholder}" data-live-search="true" path="availableStudies" data-style="text-primary">
             <f:options items="${studiesList}" itemLabel="name" itemValue="name" />
         </f:select>
-        <f:errors path="available_studies" cssClass="text-danger" element="small"/>
+        <f:errors path="availableStudies" cssClass="text-danger" element="small"/>
         <!-- Button trigger modal -->
         <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="profile-edit.form.clinic.add_medical_study" /></p></a>
         <!-- Modal -->

@@ -100,12 +100,12 @@
                                             <td class="output"><c:out value="${patient.name}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan.label"/></td>
-                                            <td class="output"><c:out value="${patient.medic_plan}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.patient.medicPlan.label"/></td>
+                                            <td class="output"><c:out value="${patient.medicPlan}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan_number.label"/></td>
-                                            <td class="output"><c:out value="${patient.medic_plan_number}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.patient.medicPlanNumber.label"/></td>
+                                            <td class="output"><c:out value="${patient.medicPlanNumber}"/></td>
                                         </tr>
 
                                         </tbody>

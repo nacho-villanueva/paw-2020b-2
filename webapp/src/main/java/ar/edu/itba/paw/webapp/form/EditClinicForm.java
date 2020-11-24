@@ -25,7 +25,7 @@ public class EditClinicForm {
     private String telephone;
 
     @NotNull
-    private String[] available_studies;
+    private String[] availableStudies;
 
     @PasswordIsCorrect
     @Size(min = 6, max = 100)
@@ -57,12 +57,12 @@ public class EditClinicForm {
         this.telephone = telephone;
     }
 
-    public String[] getAvailable_studies() {
-        return available_studies;
+    public String[] getAvailableStudies() {
+        return availableStudies;
     }
 
-    public void setAvailable_studies(String[] available_studies) {
-        this.available_studies = available_studies;
+    public void setAvailableStudies(String[] availableStudies) {
+        this.availableStudies = availableStudies;
     }
 
     public String getPassword() {

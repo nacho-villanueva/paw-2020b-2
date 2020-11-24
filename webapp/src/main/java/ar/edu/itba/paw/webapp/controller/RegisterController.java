@@ -123,7 +123,7 @@ public class RegisterController {
     public ModelAndView applyClinic(@Valid @ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm, BindingResult bindingResult){
 
         Collection<StudyType> availableStudies = new HashSet<>();
-        for (String studyTypeName : applyClinicForm.getAvailable_studies()) {
+        for (String studyTypeName : applyClinicForm.getAvailableStudies()) {
             availableStudies.add(new StudyType(studyTypeName));
         }
 

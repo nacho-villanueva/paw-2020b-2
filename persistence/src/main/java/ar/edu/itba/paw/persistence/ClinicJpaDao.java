@@ -63,16 +63,16 @@ public class ClinicJpaDao implements ClinicDao {
 
 
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
 
         //Getting references
         User userRef = em.getReference(User.class,user.getId());
         Collection<StudyType> studyTypesRef = new HashSet<>();
-        available_studies.forEach(studyType -> {
+        availableStudies.forEach(studyType -> {
             studyTypesRef.add(getStudyRef(studyType));
         });
 
-        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medic_plans,false);
+        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medicPlans,false);
 
         em.persist(clinic);
 
@@ -82,17 +82,17 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
         Optional<Clinic> clinicDB = findByUserId(user.getId());
 
         clinicDB.ifPresent(clinic -> {
             clinic.setName(name);
             clinic.setTelephone(telephone);
             clinic.setVerified(verified);
-            clinic.setAccepted_plans(medic_plans);
+            clinic.setAccepted_plans(medicPlans);
 
             Collection<StudyType> studiesRef = new HashSet<>();
-            available_studies.forEach(study -> {
+            availableStudies.forEach(study -> {
                 studiesRef.add(getStudyRef(study));
             });
             clinic.setMedical_studies(studiesRef);

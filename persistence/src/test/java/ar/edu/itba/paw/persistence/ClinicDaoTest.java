@@ -160,9 +160,9 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterValid() {
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeOne);
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeOne);
+        availableStudies.add(studyTypeSix);
         Set<String> plans = new HashSet<>();
         plans.add(MEDIC_PLAN);
         plans.add(MEDIC_PLAN_ALT);
@@ -172,9 +172,9 @@ public class ClinicDaoTest {
         int rowsClinicHoursTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME);
 
 
-        final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, available_studies,plans,getClinicHours(),false);
+        final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, availableStudies,plans,getClinicHours(),false);
 
-        Assert.assertEquals(available_studies.size(),clinic.getMedical_studies().size());
+        Assert.assertEquals(availableStudies.size(),clinic.getMedical_studies().size());
         Assert.assertEquals(plans.size(),clinic.getAccepted_plans().size());
         Assert.assertTrue(clinic.getHours().getDays()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.MONDAY]);
@@ -190,14 +190,14 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterAlreadyExists() {
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeOne);
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeOne);
+        availableStudies.add(studyTypeSix);
         Set<String> plans = new HashSet<>();
         plans.add(MEDIC_PLAN);
         plans.add(MEDIC_PLAN_ALT);
 
-        dao.register(userTwo,NAME_ZERO,null,available_studies,plans,getClinicHours(),false);
+        dao.register(userTwo,NAME_ZERO,null,availableStudies,plans,getClinicHours(),false);
     }
 
     @Test
@@ -226,8 +226,8 @@ public class ClinicDaoTest {
     public void testUpdateClinicInfo() {
 
         //New studies
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeSix);
 
         //New plans
         Set<String> new_plans = new HashSet<>();
@@ -238,9 +238,9 @@ public class ClinicDaoTest {
 
         int amountofPlansEntiresBefore = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME);
 
-        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,available_studies,new_plans,new_hours,true);
+        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,new_plans,new_hours,true);
 
-        Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
+        Assert.assertEquals(availableStudies.size(), clinic.getMedical_studies().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NEW_NAME_TWO.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeOne.getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeSix.getId()));
@@ -338,10 +338,10 @@ public class ClinicDaoTest {
         String name = null;
         ClinicHours availableHours = new ClinicHours();
         availableHours.setDayHour(ClinicHours.MONDAY,Time.valueOf("00:00:00"),Time.valueOf("23:59:59"));        //TODO: See why 24:00:00 breaks the test
-        String medic_plan = null;
+        String medicPlan = null;
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medic_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medicPlan,study_name);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
         Assert.assertTrue(clinicIds.contains(11));

@@ -172,8 +172,8 @@ public class ProfileController {
             Patient patient = patientOptional.get();
             mav.addObject("patient", patient);
             editPatientForm.setFull_name(patient.getName());
-            editPatientForm.setMedical_plan(patient.getMedic_plan());
-            editPatientForm.setMedical_plan_number(patient.getMedic_plan_number());
+            editPatientForm.setMedical_plan(patient.getMedicPlan());
+            editPatientForm.setMedical_plan_number(patient.getMedicPlanNumber());
         }else{
             throw new PatientNotFoundException();
         }
@@ -315,9 +315,9 @@ public class ProfileController {
             for (StudyType studyType : clinic.getMedical_studies()) {
                 availableStudiesList.add(studyType.getName());
             }
-            editClinicForm.setAvailable_studies(availableStudiesList.toArray(new String[0]));
+            editClinicForm.setAvailableStudies(availableStudiesList.toArray(new String[0]));
 
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailableStudies()));
             mav.addObject("studiesList",studyTypeService.getAll());
         }else{
             throw new ClinicNotFoundException();
@@ -330,7 +330,7 @@ public class ProfileController {
     public ModelAndView editProfileClinicPost(@Valid @ModelAttribute("editClinicForm") final EditClinicForm editClinicForm, final BindingResult errors, Locale locale){
 
         Collection<StudyType> availableStudies = new HashSet<>();
-        for (String studyTypeName : editClinicForm.getAvailable_studies()) {
+        for (String studyTypeName : editClinicForm.getAvailableStudies()) {
             availableStudies.add(new StudyType(studyTypeName));
         }
 
@@ -342,7 +342,7 @@ public class ProfileController {
 
             availableStudies.addAll(studyTypeService.getAll());
 
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailableStudies()));
             mav.addObject("studiesList",availableStudies);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
