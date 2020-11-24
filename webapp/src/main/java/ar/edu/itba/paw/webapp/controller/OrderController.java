@@ -255,7 +255,7 @@ public class OrderController {
                 patientInfo.getInsurancePlan(),
                 patientInfo.getInsuranceNumber());
 
-        return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(order.getOrder_id()));
+        return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(order.getOrderId()));
     }
 
     @RequestMapping(method = RequestMethod.POST)

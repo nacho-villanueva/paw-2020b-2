@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @Transactional
 @Service
@@ -31,8 +28,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order register(Medic medic, Date date, Clinic clinic, String patient_name, String patient_email, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) {
-        Order order = orderDao.register(medic,date,clinic,patient_name,patient_email,studyType,description,identificationType,identification,medicPlan,medicPlanNumber);
+    public Order register(Medic medic, Date date, Clinic clinic, String patientName, String patientEmail, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) {
+        Order order = orderDao.register(medic,date,clinic,patientName,patientEmail,studyType,description,identificationType,identification,medicPlan,medicPlanNumber);
         mailNotificationService.sendOrderMail(order);
         return order;
     }
@@ -82,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<Order> filterOrders(User user, HashMap<Parameters, String> parameters){
+    public Collection<Order> filterOrders(User user, Map<Parameters, String> parameters){
         Collection<Order> orders;
 
         orders = getAllAsUser(user);
@@ -98,18 +95,18 @@ public class OrderServiceImpl implements OrderService {
                 orders.removeIf(order -> order.getMedic().getUserId() != aux);
         }
         if(parameters.containsKey(Parameters.PATIENT)){
-            orders.removeIf(order -> !order.getPatient_email().equals(parameters.get(Parameters.PATIENT)));
+            orders.removeIf(order -> !order.getPatientEmail().equals(parameters.get(Parameters.PATIENT)));
         }
         if(parameters.containsKey(Parameters.DATE)){
-            boolean wrong_formatting = false;
+            boolean wrongFormatting = false;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             dateFormat.setLenient(false);
             try{
                 dateFormat.parse(parameters.get(Parameters.DATE).trim());
             }catch (ParseException pe){
-                wrong_formatting = true;
+                wrongFormatting = true;
             }
-            if(!wrong_formatting) {
+            if(!wrongFormatting) {
                 orders.removeIf(order -> !order.getDate().equals(Date.valueOf(parameters.get(Parameters.DATE))));
             }
         }

@@ -120,28 +120,28 @@
                         <div class="row">
                             <div class="col pl-0">
                                 <fieldset class="form-group">
-                                    <label for="first_name" class="bmd-label-floating"><spring:message code="complete-registration.body.form.first_name.label"/></label>
-                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="first_name"  path="first_name"/>
-                                    <f:errors path="first_name" cssClass="text-danger" element="small" />
+                                    <label for="firstName" class="bmd-label-floating"><spring:message code="complete-registration.body.form.firstName.label"/></label>
+                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="firstName"  path="firstName"/>
+                                    <f:errors path="firstName" cssClass="text-danger" element="small" />
                                 </fieldset>
                             </div>
                             <div class="col">
                                 <fieldset class="form-group">
-                                    <label for="last_name" class="bmd-label-floating"><spring:message code="complete-registration.body.form.last_name.label"/></label>
-                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="last_name" path="last_name"/>
-                                    <f:errors path="last_name" cssClass="text-danger" element="small" />
+                                    <label for="lastName" class="bmd-label-floating"><spring:message code="complete-registration.body.form.lastName.label"/></label>
+                                    <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="lastName" path="lastName"/>
+                                    <f:errors path="lastName" cssClass="text-danger" element="small" />
                                 </fieldset>
                             </div>
                         </div>
                         <fieldset class="form-group row">
-                            <f:label path="medical_insurance_plan" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.patient.patient_insurance_plan.label"/></f:label>
-                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="medical_insurance_plan" />
-                            <f:errors path="medical_insurance_plan" cssClass="text-danger" element="small" />
+                            <f:label path="medicalInsurancePlan" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.patient.patientInsurancePlan.label"/></f:label>
+                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="medicalInsurancePlan" />
+                            <f:errors path="medicalInsurancePlan" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group row">
-                            <f:label path="medical_insurance_number" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.patient.patient_insurance_number.label"/></f:label>
-                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="medical_insurance_number" />
-                            <f:errors path="medical_insurance_number" cssClass="text-danger" element="small" />
+                            <f:label path="medicalInsuranceNumber" cssClass="bmd-label-floating"><spring:message code="complete-registration.body.form.patient.patientInsuranceNumber.label"/></f:label>
+                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" path="medicalInsuranceNumber" />
+                            <f:errors path="medicalInsuranceNumber" cssClass="text-danger" element="small" />
                         </fieldset>
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_1" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
@@ -153,16 +153,16 @@
                         <div class="row">
                             <div class="col pl-0">
                             <fieldset class="form-group">
-                                <label for="firstNameMedic" class="bmd-label-floating"><spring:message code="complete-registration.body.form.first_name.label"/></label>
-                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="firstNameMedic"  path="first_name"/>
-                                <f:errors path="first_name" cssClass="text-danger" element="small" />
+                                <label for="firstNameMedic" class="bmd-label-floating"><spring:message code="complete-registration.body.form.firstName.label"/></label>
+                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="firstNameMedic"  path="firstName"/>
+                                <f:errors path="firstName" cssClass="text-danger" element="small" />
                             </fieldset>
                             </div>
                             <div class="col">
                             <fieldset class="form-group">
-                                <label for="lastNameMedic" class="bmd-label-floating"><spring:message code="complete-registration.body.form.last_name.label"/></label>
-                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="lastNameMedic" path="last_name"/>
-                                <f:errors path="last_name" cssClass="text-danger" element="small" />
+                                <label for="lastNameMedic" class="bmd-label-floating"><spring:message code="complete-registration.body.form.lastName.label"/></label>
+                                <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="lastNameMedic" path="lastName"/>
+                                <f:errors path="lastName" cssClass="text-danger" element="small" />
                             </fieldset>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                         </f:select>
                         <f:errors path="knownFields" cssClass="text-danger" element="small" />
                         <!-- Button trigger modal -->
-                        <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
+                        <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="complete-registration.body.form.medic.addMedicalField" /></p></a>
                         <!-- Modal -->
                         <div class="modal fade" id="createMedicalField" tabindex="-1" role="dialog" aria-labelledby="medicalFieldModal" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -250,7 +250,7 @@
                             <f:errors path="availableStudies" cssClass="text-danger" element="small" />
                         </fieldset>
                         <!-- Button trigger modal -->
-                        <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="complete-registration.body.form.clinic.add_medical_study" /></p></a>
+                        <a href="#" data-toggle="modal" data-target="#createStudyType"><p><spring:message code="complete-registration.body.form.clinic.addMedicalStudy" /></p></a>
                         <!-- Modal -->
                         <div class="modal fade" id="createStudyType" tabindex="-1" role="dialog" aria-labelledby="studyTypeModal" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -301,8 +301,8 @@
                     <div>
                         <!-- Open Day and Time Picker -->
                             <fieldset class="form-group">
-                                <label><spring:message code="complete-registration.body.form.clinic.open_days.label" /></label>
-                                <f:select path="clinicHoursForm.open_days" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
+                                <label><spring:message code="complete-registration.body.form.clinic.openDays.label" /></label>
+                                <f:select path="clinicHoursForm.openDays" id="openDaysSelect" class="selectpicker" onchange="onDayUpdate()" data-style="text-primary" multiple="true">
                                     <f:option value="0"><spring:message code="days.day-0" /></f:option>
                                     <f:option value="1"><spring:message code="days.day-1" /></f:option>
                                     <f:option value="2"><spring:message code="days.day-2" /></f:option>
@@ -312,29 +312,29 @@
                                     <f:option value="6"><spring:message code="days.day-6" /></f:option>
                                 </f:select>
                                 <br>
-                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.open_days.help" /></small> <br>
+                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.openDays.help" /></small> <br>
                                 <f:errors path="clinicHoursForm" cssClass="text-danger" /> <br>
-                                <f:errors path="clinicHoursForm.open_days" cssClass="text-danger" />
+                                <f:errors path="clinicHoursForm.openDays" cssClass="text-danger" />
                             </fieldset>
                             <table>
                                 <tbody id="daysHourList">
                                 </tbody>
                             </table>
-                            <f:hidden id="OT_0" path="clinicHoursForm.opening_time[0]" />
-                            <f:hidden id="OT_1" path="clinicHoursForm.opening_time[1]" />
-                            <f:hidden id="OT_2" path="clinicHoursForm.opening_time[2]" />
-                            <f:hidden id="OT_3" path="clinicHoursForm.opening_time[3]" />
-                            <f:hidden id="OT_4" path="clinicHoursForm.opening_time[4]" />
-                            <f:hidden id="OT_5" path="clinicHoursForm.opening_time[5]" />
-                            <f:hidden id="OT_6" path="clinicHoursForm.opening_time[6]" />
+                            <f:hidden id="OT_0" path="clinicHoursForm.openingTime[0]" />
+                            <f:hidden id="OT_1" path="clinicHoursForm.openingTime[1]" />
+                            <f:hidden id="OT_2" path="clinicHoursForm.openingTime[2]" />
+                            <f:hidden id="OT_3" path="clinicHoursForm.openingTime[3]" />
+                            <f:hidden id="OT_4" path="clinicHoursForm.openingTime[4]" />
+                            <f:hidden id="OT_5" path="clinicHoursForm.openingTime[5]" />
+                            <f:hidden id="OT_6" path="clinicHoursForm.openingTime[6]" />
 
-                            <f:hidden id="CT_0" path="clinicHoursForm.closing_time[0]" />
-                            <f:hidden id="CT_1" path="clinicHoursForm.closing_time[1]" />
-                            <f:hidden id="CT_2" path="clinicHoursForm.closing_time[2]" />
-                            <f:hidden id="CT_3" path="clinicHoursForm.closing_time[3]" />
-                            <f:hidden id="CT_4" path="clinicHoursForm.closing_time[4]" />
-                            <f:hidden id="CT_5" path="clinicHoursForm.closing_time[5]" />
-                            <f:hidden id="CT_6" path="clinicHoursForm.closing_time[6]" />
+                            <f:hidden id="CT_0" path="clinicHoursForm.closingTime[0]" />
+                            <f:hidden id="CT_1" path="clinicHoursForm.closingTime[1]" />
+                            <f:hidden id="CT_2" path="clinicHoursForm.closingTime[2]" />
+                            <f:hidden id="CT_3" path="clinicHoursForm.closingTime[3]" />
+                            <f:hidden id="CT_4" path="clinicHoursForm.closingTime[4]" />
+                            <f:hidden id="CT_5" path="clinicHoursForm.closingTime[5]" />
+                            <f:hidden id="CT_6" path="clinicHoursForm.closingTime[6]" />
                         </div>
                         <input type="submit" value="<spring:message code='complete-registration.body.form.submit'/>" name="submit_3" class="row btn btn-lg btn-light  bg-primary btn-block">
                     </f:form>
@@ -347,8 +347,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js" integrity="sha384-SfMwgGnc3UiUUZF50PsPetXLqH2HSl/FmkMW/Ja3N2WaJ/fHLbCHPUsXzzrM6aet" crossorigin="anonymous"></script>
 <script>
     const strings = {
-        "openTime":"<spring:message code='openDaysPicker.open_time' javaScriptEscape='true' />",
-        "closeTime":"<spring:message code='openDaysPicker.close_time' javaScriptEscape='true' />"
+        "openTime":"<spring:message code='openDaysPicker.openTime' javaScriptEscape='true' />",
+        "closeTime":"<spring:message code='openDaysPicker.closeTime' javaScriptEscape='true' />"
 
     };
 </script>

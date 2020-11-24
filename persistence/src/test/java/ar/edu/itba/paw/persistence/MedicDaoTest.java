@@ -101,7 +101,7 @@ public class MedicDaoTest {
         Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
-        Assert.assertEquals(knownFields.size(),medic.getMedical_fields().size());
+        Assert.assertEquals(knownFields.size(),medic.getMedicalFields().size());
         Assert.assertEquals(knownFields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
     }
@@ -118,7 +118,7 @@ public class MedicDaoTest {
         Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
-        Assert.assertEquals(knownFields.size(),medic.getMedical_fields().size());
+        Assert.assertEquals(knownFields.size(),medic.getMedicalFields().size());
         Assert.assertEquals(knownFields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,FIELDS_TABLE_NAME,"lower(name) = lower('" + fieldTest.getName() + "')"));

@@ -39,7 +39,7 @@ public interface ValidationService {
 
     boolean isValidMedicPlanNumber(String medicPlanNumber);
 
-    boolean isValidResultDataType(String result_data_type);
+    boolean isValidResultDataType(String resultDataType);
 
     boolean isValidDate(Date date);
 }

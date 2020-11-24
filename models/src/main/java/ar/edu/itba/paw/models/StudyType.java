@@ -17,7 +17,7 @@ public class StudyType implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "medical_studies",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "medicalStudies",fetch = FetchType.LAZY)
     private Collection<Clinic> clinics;
 
     protected StudyType() {

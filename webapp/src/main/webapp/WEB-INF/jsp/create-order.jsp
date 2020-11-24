@@ -64,12 +64,12 @@
                     </div>
                     <div class="row mx-1">
                         <fieldset class="form-group col ">
-                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patient_insurance_plan.label"/></label>
+                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientInsurancePlan.label"/></label>
                             <f:input type="text" path="patientInfo.insurancePlan" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
                             <f:errors path="patientInfo.insurancePlan" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group col">
-                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patient_insurance_number.label"/> </label>
+                            <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientInsuranceNumber.label"/> </label>
                             <f:input type="text" path="patientInfo.insuranceNumber" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
                             <f:errors path="patientInfo.insuranceNumber" cssClass="text-danger" element="small" />
                         </fieldset>

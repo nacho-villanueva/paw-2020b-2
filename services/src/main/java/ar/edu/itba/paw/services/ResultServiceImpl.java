@@ -31,8 +31,8 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Result register(long order_id, String result_data_type, byte[] result_data, String identificationType, byte[] identification, Date date, String responsible_name, String responsible_licenceNumber) {
-        Result result = resultDao.register(order_id,result_data_type,result_data,identificationType,identification,date,responsible_name,responsible_licenceNumber);
+    public Result register(long orderId, String resultDataType, byte[] resultData, String identificationType, byte[] identification, Date date, String responsibleName, String responsibleLicenceNumber) {
+        Result result = resultDao.register(orderId,resultDataType,resultData,identificationType,identification,date,responsibleName,responsibleLicenceNumber);
         mailNotificationService.sendResultMail(result);
         return result;
     }

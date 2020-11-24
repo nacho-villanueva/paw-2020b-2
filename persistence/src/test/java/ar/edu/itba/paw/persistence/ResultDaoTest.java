@@ -88,7 +88,7 @@ public class ResultDaoTest {
     @Rollback
     @Test
     public void testFindByOrderIdExists() {
-        final Collection<Result> results = dao.findByOrderId(result.getOrder_id());
+        final Collection<Result> results = dao.findByOrderId(result.getOrderId());
 
         Assert.assertNotNull(results);
         Assert.assertTrue(results.stream().findFirst().isPresent());
@@ -112,17 +112,17 @@ public class ResultDaoTest {
     @Test
     public void testRegisterValid() {
 
-        final Result testResult = dao.register(testResultTwo.getOrder_id(),testResultTwo.getData_type(),testResultTwo.getData(),testResultTwo.getIdentificationType(),testResultTwo.getIdentification(),testResultTwo.getDate(),testResultTwo.getResponsible_name(),testResultTwo.getResponsible_licenceNumber());
+        final Result testResult = dao.register(testResultTwo.getOrderId(),testResultTwo.getDataType(),testResultTwo.getData(),testResultTwo.getIdentificationType(),testResultTwo.getIdentification(),testResultTwo.getDate(),testResultTwo.getResponsibleName(),testResultTwo.getResponsibleLicenceNumber());
 
-        Assert.assertEquals(testResultTwo.getResponsible_name(), testResult.getResponsible_name());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,RESULTS_TABLE_NAME, "responsible_name='" + testResult.getResponsible_name() +"'"));
+        Assert.assertEquals(testResultTwo.getResponsibleName(), testResult.getResponsibleName());
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,RESULTS_TABLE_NAME, "responsible_name='" + testResult.getResponsibleName() +"'"));
     }
 
     @Transactional
     @Rollback
     @Test(expected = PersistenceException.class)
     public void testRegisterInvalid() {
-        dao.register(INVALID_ORDER_ID, result.getData_type(),result.getData(),result.getIdentificationType(),result.getIdentification(),result.getDate(),result.getResponsible_name(),result.getResponsible_licenceNumber());
+        dao.register(INVALID_ORDER_ID, result.getDataType(),result.getData(),result.getIdentificationType(),result.getIdentification(),result.getDate(),result.getResponsibleName(),result.getResponsibleLicenceNumber());
     }
 
 }

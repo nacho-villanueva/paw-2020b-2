@@ -24,10 +24,10 @@
                 <hr class="mt-3 mb-4"/>
                 <div class="row justify-content-start">
                     <div class="col type"><p class="type-title"><spring:message code="upload-result.body.order.id.label"/></p> <c:out value="${id}" /></div>
-                    <div class="col type"><p class="type-title"><spring:message code="upload-result.body.order.patient_name.label"/></p><c:out value="${order.patient_name}" /></div>
+                    <div class="col type"><p class="type-title"><spring:message code="upload-result.body.order.patientName.label"/></p><c:out value="${order.patientName}" /></div>
                     <div class="w-100"></div>
-                    <div class="col"><p class="type-title"><spring:message code="upload-result.body.order.patient_insurance_plan.label"/></p><c:out value="${order.patient_insurance_plan}" /></div>
-                    <div class="col"><p class="type-title"><spring:message code="upload-result.body.order.patient_insurance_number.label"/></p><c:out value="${order.patient_insurance_number}" /></div>
+                    <div class="col"><p class="type-title"><spring:message code="upload-result.body.order.patientInsurancePlan.label"/></p><c:out value="${order.patientInsurancePlan}" /></div>
+                    <div class="col"><p class="type-title"><spring:message code="upload-result.body.order.patientInsuranceNumber.label"/></p><c:out value="${order.patientInsuranceNumber}" /></div>
                 </div>
                 <hr class="mt-2 mb-4"/>
                 <form:form method="POST" action="${postPath}" enctype="multipart/form-data" modelAttribute="resultForm">
@@ -42,18 +42,18 @@
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="responsibleInput1"><spring:message code="upload-result.body.form.responsible_name.label"/> </label>
-                                <spring:message code="upload-result.body.form.responsible_name.placeholder" var="responsible_namePlaceholder"/>
-                                <form:input type="text" cssClass="form-control" id="responsibleInput1" placeholder="${responsible_namePlaceholder}" path="responsible_name"/>
-                                <form:errors path="responsible_name" cssClass="text-danger"/>
+                                <label for="responsibleInput1"><spring:message code="upload-result.body.form.responsibleName.label"/> </label>
+                                <spring:message code="upload-result.body.form.responsibleName.placeholder" var="responsibleNamePlaceholder"/>
+                                <form:input type="text" cssClass="form-control" id="responsibleInput1" placeholder="${responsibleNamePlaceholder}" path="responsibleName"/>
+                                <form:errors path="responsibleName" cssClass="text-danger"/>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="responsibleInput2"><spring:message code="upload-result.body.form.responsible_licenceNumber.label"/> </label>
-                                <spring:message code="upload-result.body.form.responsible_licenceNumber.placeholder" var="responsible_numberPlaceholder"/>
-                                <form:input type="text" class="form-control" id="responsibleInput2" placeholder="${responsible_numberPlaceholder}" path="responsible_licenceNumber"/>
-                                <form:errors path="responsible_licenceNumber" cssClass="text-danger"/>
+                                <label for="responsibleInput2"><spring:message code="upload-result.body.form.responsibleLicenceNumber.label"/> </label>
+                                <spring:message code="upload-result.body.form.responsibleLicenceNumber.placeholder" var="responsible_numberPlaceholder"/>
+                                <form:input type="text" class="form-control" id="responsibleInput2" placeholder="${responsible_numberPlaceholder}" path="responsibleLicenceNumber"/>
+                                <form:errors path="responsibleLicenceNumber" cssClass="text-danger"/>
                             </div>
                         </div>
                     </div>

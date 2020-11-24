@@ -44,7 +44,7 @@
         </c:if>
 
         <c:choose>
-            <c:when test="${has_studies != true}">
+            <c:when test="${hasStudies != true}">
                 <div class="align-items-end result-not">
                     <h1 class="text-center mt-5 py-5 anim-content"><spring:message code="home.body.noStudies"/></h1>
                 </div>
@@ -57,7 +57,7 @@
                             <p class="card-title h4"><spring:message code="home.body.card.studies.title"/></p>
                             <div class="list-group">
                                 <c:forEach items="${orders}" var="o">
-                                    <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">
+                                    <a href="${studyPath}${ordersEncoded.get(o.orderId)}" class="list-group-item list-group-item-action">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1"><spring:message code="home.body.card.studies.studyType" arguments="${o.study.name}" /></h5>
                                             <small><spring:message code="home.body.card.studies.date" arguments="${o.date}" /></small>
@@ -66,10 +66,10 @@
                                             <c:choose>
                                                 <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifying() == false}">
                                                     <p class="mb-1"><spring:message code="home.body.card.studies.clinic" arguments="${o.clinic.name}"/></p>
-                                                    <small><spring:message code="home.body.card.studies.patient" arguments="${o.patient_name}"/></small>
+                                                    <small><spring:message code="home.body.card.studies.patient" arguments="${o.patientName}"/></small>
                                                 </c:when>
                                                 <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifying() == false}">
-                                                    <p class="mb-1"><spring:message code="home.body.card.studies.patient" arguments="${o.patient_name}"/></p>
+                                                    <p class="mb-1"><spring:message code="home.body.card.studies.patient" arguments="${o.patientName}"/></p>
                                                     <small><spring:message code="home.body.card.studies.medic" arguments="${o.medic.name}"/></small>
                                                 </c:when>
                                                 <c:when test="${loggedUser.isPatient() == true}">

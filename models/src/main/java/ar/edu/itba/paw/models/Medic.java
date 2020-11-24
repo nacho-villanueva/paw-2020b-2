@@ -36,7 +36,7 @@ public class Medic {
             joinColumns = @JoinColumn(name="medic_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"medic_id","field_id"}))
-    private Collection<MedicalField> medical_fields;
+    private Collection<MedicalField> medicalFields;
 
     @Column(nullable=false)
     private boolean verified;
@@ -46,9 +46,9 @@ public class Medic {
         //Just for hibernate
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified, final Collection<MedicalField> medical_fields) {
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified, final Collection<MedicalField> medicalFields) {
         this(user,name,telephone,identificationType,identification,licenceNumber,verified);
-        this.medical_fields = medical_fields;
+        this.medicalFields = medicalFields;
     }
 
     public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified) {
@@ -57,7 +57,7 @@ public class Medic {
         this.identificationType = identificationType;
         this.identification = identification;
         this.verified = verified;
-        this.medical_fields = new ArrayList<>();
+        this.medicalFields = new ArrayList<>();
     }
 
     //Basic constructor for medics objects inside orders
@@ -98,8 +98,8 @@ public class Medic {
         this.licenceNumber = licenceNumber;
     }
 
-    public void setMedical_fields(Collection<MedicalField> medical_fields) {
-        this.medical_fields = medical_fields;
+    public void setMedicalFields(Collection<MedicalField> medicalFields) {
+        this.medicalFields = medicalFields;
     }
 
     //legacy getter for id
@@ -124,8 +124,8 @@ public class Medic {
         return licenceNumber;
     }
 
-    public Collection<MedicalField> getMedical_fields() {
-        return medical_fields;
+    public Collection<MedicalField> getMedicalFields() {
+        return medicalFields;
     }
 
     public String getIdentificationType() {

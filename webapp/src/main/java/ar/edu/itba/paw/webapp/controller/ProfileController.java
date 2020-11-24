@@ -171,9 +171,9 @@ public class ProfileController {
         if(patientOptional.isPresent()){
             Patient patient = patientOptional.get();
             mav.addObject("patient", patient);
-            editPatientForm.setFull_name(patient.getName());
-            editPatientForm.setMedical_plan(patient.getMedicPlan());
-            editPatientForm.setMedical_plan_number(patient.getMedicPlanNumber());
+            editPatientForm.setFullName(patient.getName());
+            editPatientForm.setMedicalPlan(patient.getMedicPlan());
+            editPatientForm.setMedicalPlanNumber(patient.getMedicPlanNumber());
         }else{
             throw new PatientNotFoundException();
         }
@@ -196,7 +196,7 @@ public class ProfileController {
 
         ModelAndView mav = new ModelAndView("redirect:/profile");
 
-        patientService.updatePatientInfo(loggedUser(),editPatientForm.getFull_name(),editPatientForm.getMedical_plan(),editPatientForm.getMedical_plan_number());
+        patientService.updatePatientInfo(loggedUser(),editPatientForm.getFullName(),editPatientForm.getMedicalPlan(),editPatientForm.getMedicalPlanNumber());
 
         mav.addObject("editSuccess",User.PATIENT_ROLE_ID);
 
@@ -216,12 +216,12 @@ public class ProfileController {
         if(medicOptional.isPresent()){
             Medic medic = medicOptional.get();
             mav.addObject("medic", medic);
-            editMedicForm.setFull_name(medic.getName());
+            editMedicForm.setFullName(medic.getName());
             editMedicForm.setTelephone(medic.getTelephone());
             editMedicForm.setLicenceNumber(medic.getLicenceNumber());
 
             ArrayList<String> knownFieldsList = new ArrayList<>();
-            for (MedicalField mf : medic.getMedical_fields()) {
+            for (MedicalField mf : medic.getMedicalFields()) {
                 knownFieldsList.add(mf.getName());
             }
             editMedicForm.setKnownFields(knownFieldsList.toArray(new String[0]));
@@ -280,7 +280,7 @@ public class ProfileController {
             }
         }
 
-        medicService.updateMedicInfo(loggedUser(),editMedicForm.getFull_name(),editMedicForm.getTelephone(),
+        medicService.updateMedicInfo(loggedUser(),editMedicForm.getFullName(),editMedicForm.getTelephone(),
                 newContentType, newContent, editMedicForm.getLicenceNumber(),knownFields,medic.isVerified());
 
 
@@ -302,17 +302,17 @@ public class ProfileController {
         if(clinicOptional.isPresent()){
             Clinic clinic = clinicOptional.get();
             mav.addObject("clinic", clinic);
-            editClinicForm.setFull_name(clinic.getName());
+            editClinicForm.setFullName(clinic.getName());
             editClinicForm.setTelephone(clinic.getTelephone());
 
-            editClinicForm.getClinicHoursForm().setClosing_time(clinic.getHours().getClose_hours_asString());
-            editClinicForm.getClinicHoursForm().setOpening_time(clinic.getHours().getOpen_hours_asString());
-            editClinicForm.getClinicHoursForm().setOpen_days(clinic.getHours().getDays_asIntArray());
+            editClinicForm.getClinicHoursForm().setClosingTime(clinic.getHours().getCloseHoursAsString());
+            editClinicForm.getClinicHoursForm().setOpeningTime(clinic.getHours().getOpenHoursAsString());
+            editClinicForm.getClinicHoursForm().setOpenDays(clinic.getHours().getDaysAsIntArray());
 
             editClinicForm.setAcceptedPlans(clinic.getAcceptedPlans().toArray(new String[0]));
 
             ArrayList<String> availableStudiesList = new ArrayList<>();
-            for (StudyType studyType : clinic.getMedical_studies()) {
+            for (StudyType studyType : clinic.getMedicalStudies()) {
                 availableStudiesList.add(studyType.getName());
             }
             editClinicForm.setAvailableStudies(availableStudiesList.toArray(new String[0]));
@@ -361,10 +361,10 @@ public class ProfileController {
         }
 
         ClinicHours clinicHours = new ClinicHours();
-        Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpen_days()));
-        clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpening_time(),editClinicForm.getClinicHoursForm().getClosing_time());
+        Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpenDays()));
+        clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpeningTime(),editClinicForm.getClinicHoursForm().getClosingTime());
 
-        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlansList())),clinicHours,clinic.isVerified());
+        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFullName(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlansList())),clinicHours,clinic.isVerified());
 
         mav.addObject("editSuccess",User.CLINIC_ROLE_ID);
 
@@ -440,7 +440,7 @@ public class ProfileController {
                         int maxDays = ClinicHours.getDaysOfWeek();
                         for(int i = 0; i < maxDays; i++){
                             if(clinic.getHours().getDays()[i]){
-                                String[] val = {clinic.getHours().getOpen_hours_asString()[i],clinic.getHours().getClose_hours_asString()[i]};
+                                String[] val = {clinic.getHours().getOpenHoursAsString()[i],clinic.getHours().getCloseHoursAsString()[i]};
                                 openDayHour.put(String.valueOf(i), val);
                             }
                         }

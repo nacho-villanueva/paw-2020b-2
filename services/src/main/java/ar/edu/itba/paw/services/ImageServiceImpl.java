@@ -81,7 +81,7 @@ public class ImageServiceImpl implements ImageService {
 
         Optional<Result> resultOptional = resultService.findById(resultId);
 
-        if(resultOptional.isPresent() && resultOptional.get().getOrder_id() == orderId){
+        if(resultOptional.isPresent() && resultOptional.get().getOrderId() == orderId){
 
             Result result = resultOptional.get();
 
@@ -96,7 +96,7 @@ public class ImageServiceImpl implements ImageService {
                     break;
                 case "result-data":
                     image.setName("resultData");
-                    image.setContentType(result.getData_type());
+                    image.setContentType(result.getDataType());
                     image.setFile(result.getData());
                     ret = Optional.of(image);
                     break;

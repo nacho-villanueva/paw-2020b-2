@@ -12,7 +12,7 @@ public class ClinicDayHours {
 
     public static class ClinicDayHoursPK implements Serializable {
         private int clinicId;
-        private int day_of_week;
+        private int dayOfWeek;
 
         public ClinicDayHoursPK() {
         }
@@ -23,21 +23,21 @@ public class ClinicDayHours {
             if (o == null || getClass() != o.getClass()) return false;
             ClinicDayHoursPK that = (ClinicDayHoursPK) o;
             return clinicId == that.clinicId &&
-                    day_of_week == that.day_of_week;
+                    dayOfWeek == that.dayOfWeek;
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(clinicId, day_of_week);
+            return Objects.hash(clinicId, dayOfWeek);
         }
 
         public void setClinicId(int clinicId) {
             this.clinicId = clinicId;
         }
 
-        public void setDay_of_week(int day_of_week) {
-            this.day_of_week = day_of_week;
+        public void setDayOfWeek(int dayOfWeek) {
+            this.dayOfWeek = dayOfWeek;
         }
     }
 
@@ -47,7 +47,7 @@ public class ClinicDayHours {
 
     @Id
     @Column(name = "day_of_week",nullable = false)
-    private Integer day_of_week;
+    private Integer dayOfWeek;
 
     @MapsId("clinic_id") //TODO: should i change this one to clinicId?
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,24 +55,24 @@ public class ClinicDayHours {
     private Clinic clinic;
 
     @Column(name="open_time", nullable = false)
-    private Time open_time;
+    private Time openTime;
 
     @Column(name="close_time", nullable = false)
-    private Time close_time;
+    private Time closeTime;
 
     protected ClinicDayHours() {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, int clinicId, Time open_time, Time close_time) {
-        this(day,open_time,close_time);
+    public ClinicDayHours(int day, int clinicId, Time openTime, Time closeTime) {
+        this(day,openTime,closeTime);
         this.clinicId = clinicId;
     }
 
-    public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {
-        this.day_of_week = day_of_week;
-        this.open_time = open_time;
-        this.close_time = close_time;
+    public ClinicDayHours(int dayOfWeek, Time openTime, Time closeTime) {
+        this.dayOfWeek = dayOfWeek;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
     }
 
     public int getClinicId() {
@@ -83,12 +83,12 @@ public class ClinicDayHours {
         this.clinicId = clinicId;
     }
 
-    public int getDay_of_week() {
-        return day_of_week;
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setDay_of_week(int day_of_week) {
-        this.day_of_week = day_of_week;
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public Clinic getClinic() {
@@ -99,19 +99,19 @@ public class ClinicDayHours {
         this.clinic = clinic;
     }
 
-    public Time getOpen_time() {
-        return open_time;
+    public Time getOpenTime() {
+        return openTime;
     }
 
-    public void setOpen_time(Time open_time) {
-        this.open_time = open_time;
+    public void setOpenTime(Time openTime) {
+        this.openTime = openTime;
     }
 
-    public Time getClose_time() {
-        return close_time;
+    public Time getCloseTime() {
+        return closeTime;
     }
 
-    public void setClose_time(Time close_time) {
-        this.close_time = close_time;
+    public void setCloseTime(Time closeTime) {
+        this.closeTime = closeTime;
     }
 }

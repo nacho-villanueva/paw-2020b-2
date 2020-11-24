@@ -21,10 +21,10 @@ public class Result {
     private Date date;
 
     @Column(name="responsible_name", nullable=false)
-    private String responsible_name;
+    private String responsibleName;
 
     @Column(name="responsible_licence_number", nullable=false)
-    private String responsible_licenceNumber;
+    private String responsibleLicenceNumber;
 
     @Column(name="identification_type", nullable=false)
     private String identificationType;
@@ -33,7 +33,7 @@ public class Result {
     private byte[] identification;
 
     @Column(name="result_data_type", nullable=false)
-    private String data_type;
+    private String dataType;
 
     @Column(name="result_data", nullable=false, length = 32000000)
     private byte[] data;
@@ -45,38 +45,38 @@ public class Result {
     public Result(final Long id,
                   final Order order,
                   final Date date,
-                  final String responsible_name,
-                  final String responsible_licenceNumber,
+                  final String responsibleName,
+                  final String responsibleLicenceNumber,
                   final String identificationType,
                   final byte[] identification,
-                  final String data_type,
+                  final String dataType,
                   final byte[] data) {
         this.id = id;
         this.order = order;
         this.date = date;
-        this.responsible_name = responsible_name;
-        this.responsible_licenceNumber = responsible_licenceNumber;
+        this.responsibleName = responsibleName;
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
         this.identificationType = identificationType;
         this.identification = identification;
-        this.data_type = data_type;
+        this.dataType = dataType;
         this.data = data;
     }
 
     public Result(final Order order,
                   final Date date,
-                  final String responsible_name,
-                  final String responsible_licenceNumber,
+                  final String responsibleName,
+                  final String responsibleLicenceNumber,
                   final String identificationType,
                   final byte[] identification,
-                  final String data_type,
+                  final String dataType,
                   final byte[] data) {
         this.order = order;
         this.date = date;
-        this.responsible_name = responsible_name;
-        this.responsible_licenceNumber = responsible_licenceNumber;
+        this.responsibleName = responsibleName;
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
         this.identificationType = identificationType;
         this.identification = identification;
-        this.data_type = data_type;
+        this.dataType = dataType;
         this.data = data;
     }
 
@@ -88,18 +88,18 @@ public class Result {
         return order;
     }
 
-    public long getOrder_id() { return order.getOrder_id(); }
+    public long getOrderId() { return order.getOrderId(); }
 
     public Date getDate() {
         return date;
     }
 
-    public String getResponsible_name() {
-        return responsible_name;
+    public String getResponsibleName() {
+        return responsibleName;
     }
 
-    public String getResponsible_licenceNumber() {
-        return responsible_licenceNumber;
+    public String getResponsibleLicenceNumber() {
+        return responsibleLicenceNumber;
     }
 
     public String getIdentificationType() {
@@ -110,8 +110,8 @@ public class Result {
         return identification;
     }
 
-    public String getData_type() {
-        return data_type;
+    public String getDataType() {
+        return dataType;
     }
 
     public byte[] getData() {
@@ -142,15 +142,15 @@ public class Result {
         this.data = data;
     }
 
-    public void setData_type(String data_type) {
-        this.data_type = data_type;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
-    public void setResponsible_licenceNumber(String responsible_licenceNumber) {
-        this.responsible_licenceNumber = responsible_licenceNumber;
+    public void setResponsibleLicenceNumber(String responsibleLicenceNumber) {
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
     }
 
-    public void setResponsible_name(String responsible_name) {
-        this.responsible_name = responsible_name;
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
     }
 }

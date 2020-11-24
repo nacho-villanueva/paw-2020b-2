@@ -51,9 +51,9 @@ public class ClinicJpaDao implements ClinicDao {
             return new ArrayList<>();
 
         String queryString = "SELECT c FROM Clinic c " +
-                "INNER JOIN FETCH c.medical_studies " +
+                "INNER JOIN FETCH c.medicalStudies " +
                 "WHERE c.verified = true " +
-                "AND :studyType MEMBER OF c.medical_studies";
+                "AND :studyType MEMBER OF c.medicalStudies";
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
         query.setParameter("studyType",studyTypeOptional.get());
@@ -95,7 +95,7 @@ public class ClinicJpaDao implements ClinicDao {
             availableStudies.forEach(study -> {
                 studiesRef.add(getStudyRef(study));
             });
-            clinic.setMedical_studies(studiesRef);
+            clinic.setMedicalStudies(studiesRef);
 
             //Updating hours
             clinic.setHours(hours);
@@ -125,7 +125,7 @@ public class ClinicJpaDao implements ClinicDao {
         Optional<Clinic> clinicOptional = findByUserId(clinicId);
         Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyTypeId);
 
-        return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedical_studies().contains(studyTypeOptional.get());
+        return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedicalStudies().contains(studyTypeOptional.get());
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ClinicJpaDao implements ClinicDao {
             Clinic clinic = clinicOptional.get();
 
             //TODO check it works
-            clinic.getMedical_studies().add(studyTypeFromDB);
+            clinic.getMedicalStudies().add(studyTypeFromDB);
             em.flush();
         }
 
@@ -168,8 +168,8 @@ public class ClinicJpaDao implements ClinicDao {
                 //If we have a filter on this day, we add condition
                 if(hours.getDays()[i]) {
                     query.setParameter("day_of_the_week_"+String.valueOf(i),i);
-                    query.setParameter("from_time_"+String.valueOf(i),hours.getOpen_hours()[i]);
-                    query.setParameter("until_time_"+String.valueOf(i),hours.getClose_hours()[i]);
+                    query.setParameter("from_time_"+String.valueOf(i),hours.getOpenHours()[i]);
+                    query.setParameter("until_time_"+String.valueOf(i),hours.getCloseHours()[i]);
                 }
             }
         }
@@ -194,7 +194,7 @@ public class ClinicJpaDao implements ClinicDao {
 
         if(studyName != null) {
             //Add study name part
-            query.append(" INNER JOIN c.medical_studies as ms");
+            query.append(" INNER JOIN c.medicalStudies as ms");
         }
 
         //Search
@@ -213,13 +213,13 @@ public class ClinicJpaDao implements ClinicDao {
                 if(hours.getDays()[i]) {
                     //This person, on this day is available from X to Y
                     //I want clinics that are open at least some part of the time frame of this day filter
-                    Time availableFrom = hours.getOpen_hours()[i];
-                    Time availableUntil = hours.getClose_hours()[i];
-                    query.append("( cdh.day_of_week = :day_of_the_week_");
+                    Time availableFrom = hours.getOpenHours()[i];
+                    Time availableUntil = hours.getCloseHours()[i];
+                    query.append("( cdh.dayOfWeek = :day_of_the_week_");
                     query.append(i);
-                    query.append(" AND NOT (cdh.close_time <= :from_time_");
+                    query.append(" AND NOT (cdh.closeTime <= :from_time_");
                     query.append(i);
-                    query.append(" OR cdh.open_time >= :until_time_");
+                    query.append(" OR cdh.openTime >= :until_time_");
                     query.append(i);
                     query.append(" ))");
                 } else {

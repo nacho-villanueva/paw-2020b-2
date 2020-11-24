@@ -147,7 +147,7 @@
                                 <spring:message code="advanced-search-clinic.form.toTime.placeholder" var="placeholderCT"/>
 
                                 <a class="btn btn-outline" data-toggle="collapse" href="#collapseHours" role="button" aria-expanded="false" aria-controls="collapseHours">
-                                    <spring:message code="advanced-search-clinic.form.available_hours.label"/>
+                                    <spring:message code="advanced-search-clinic.form.availableHours.label"/>
                                 </a>
 
 
@@ -157,8 +157,8 @@
                                         <tr>
                                             <th></th>
                                             <th><spring:message code="advanced-search-clinic.form.available.label"/></th>
-                                            <th><spring:message code="advanced-search-clinic.form.from_time.label"/></th>
-                                            <th><spring:message code="advanced-search-clinic.form.to_time.label"/></th>
+                                            <th><spring:message code="advanced-search-clinic.form.fromTime.label"/></th>
+                                            <th><spring:message code="advanced-search-clinic.form.toTime.label"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -168,14 +168,14 @@
                                                     <th><f:checkbox id="day" path="isAvailable[${day}]"/></th>
                                                     <th>
                                                         <fieldset>
-                                                            <f:input id="day-${day}-OT" type="text" class="form-control time-input" placeholder="${placeholderOT}" path="availableTime.opening_time[${day}]" maxlength="5" cssClass="form-control time-input"/>
-                                                            <f:errors path="availableTime.opening_time[${day}]" cssClass="text-danger" element="small" />
+                                                            <f:input id="day-${day}-OT" type="text" class="form-control time-input" placeholder="${placeholderOT}" path="availableTime.openingTime[${day}]" maxlength="5" cssClass="form-control time-input"/>
+                                                            <f:errors path="availableTime.openingTime[${day}]" cssClass="text-danger" element="small" />
                                                         </fieldset>
                                                     </th>
                                                     <th>
                                                         <fieldset>
-                                                            <f:input id="day-${day}-CT" type="text" class="form-control time-input" placeholder="${placeholderCT}" path="availableTime.closing_time[${day}]" maxlength="5" cssClass="form-control time-input"/>
-                                                            <f:errors path="availableTime.closing_time[${day}]" cssClass="text-danger" element="small" />
+                                                            <f:input id="day-${day}-CT" type="text" class="form-control time-input" placeholder="${placeholderCT}" path="availableTime.closingTime[${day}]" maxlength="5" cssClass="form-control time-input"/>
+                                                            <f:errors path="availableTime.closingTime[${day}]" cssClass="text-danger" element="small" />
                                                         </fieldset>
                                                     </th>
                                                 </tr>
@@ -247,12 +247,12 @@
                                                     <td class="output"><c:out value="${clinic.telephone}"/></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
+                                                    <td><spring:message code="profile-view.body.tab.clinic.openHours.label" /></td>
                                                     <td>
                                                         <c:forEach var="day" begin="0" end="${daysOfWeek - 1}">
                                                             <c:if test="${clinic.hours.days[day]}">
                                                                 <spring:message code="days.day-${day}" var="dayName"/>
-                                                                <p><spring:message code="profile-view.body.tab.clinic.open_hours.format" arguments="${dayName},${clinic.hours.open_hours[day]},${clinic.hours.close_hours[day]}"/> </p>
+                                                                <p><spring:message code="profile-view.body.tab.clinic.openHours.format" arguments="${dayName},${clinic.hours.openHours[day]},${clinic.hours.closeHours[day]}"/> </p>
                                                             </c:if>
 
                                                         </c:forEach>
@@ -263,8 +263,8 @@
                                                     <td class="output"><c:forEach items="${clinic.acceptedPlans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
-                                                    <td class="output"><c:forEach items="${clinic.medical_studies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
+                                                    <td><spring:message code="profile-view.body.tab.clinic.medicalStudies.label"/></td>
+                                                    <td class="output"><c:forEach items="${clinic.medicalStudies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
                                                 </tr>
                                                 </tbody>
                                             </table>

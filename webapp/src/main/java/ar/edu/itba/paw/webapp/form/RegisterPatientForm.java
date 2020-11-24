@@ -5,52 +5,52 @@ import org.hibernate.validator.constraints.NotBlank;
 public class RegisterPatientForm {
 
     @NotBlank
-    private String first_name;
+    private String firstName;
 
     @NotBlank
-    private String last_name;
+    private String lastName;
 
-    private String medical_insurance_plan;
+    private String medicalInsurancePlan;
 
-    private String medical_insurance_number;
+    private String medicalInsuranceNumber;
 
 
     public RegisterPatientForm() {
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getMedical_insurance_plan() {
-        return medical_insurance_plan;
+    public String getMedicalInsurancePlan() {
+        return medicalInsurancePlan;
     }
 
-    public void setMedical_insurance_plan(String medical_insurance_plan) {
-        this.medical_insurance_plan = medical_insurance_plan;
+    public void setMedicalInsurancePlan(String medicalInsurancePlan) {
+        this.medicalInsurancePlan = medicalInsurancePlan;
     }
 
-    public String getMedical_insurance_number() {
-        return medical_insurance_number;
+    public String getMedicalInsuranceNumber() {
+        return medicalInsuranceNumber;
     }
 
-    public void setMedical_insurance_number(String medical_insurance_number) {
-        this.medical_insurance_number = medical_insurance_number;
+    public void setMedicalInsuranceNumber(String medicalInsuranceNumber) {
+        this.medicalInsuranceNumber = medicalInsuranceNumber;
     }
 
     public String getFullname(){
-        return getFirst_name() + " " + getLast_name();
+        return getFirstName() + " " + getLastName();
     }
 }

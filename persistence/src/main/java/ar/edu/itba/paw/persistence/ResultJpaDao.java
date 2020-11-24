@@ -24,25 +24,25 @@ public class ResultJpaDao implements ResultDao {
 
     @Override
     public Collection<Result> findByOrderId(long id) {
-        final TypedQuery<Result> query = em.createQuery("SELECT r FROM Result r WHERE r.order.order_id = :id", Result.class);
+        final TypedQuery<Result> query = em.createQuery("SELECT r FROM Result r WHERE r.order.orderId = :id", Result.class);
         query.setParameter("id", id);
         return query.getResultList();
     }
 
     @Override
-    public Result register(long order_id, String result_data_type, byte[] result_data, String identificationType,
-                           byte[] identification, Date date, String responsible_name, String responsible_licenceNumber) {
+    public Result register(long orderId, String resultDataType, byte[] resultData, String identificationType,
+                           byte[] identification, Date date, String responsibleName, String responsibleLicenceNumber) {
 
-        Order orderRef = em.getReference(Order.class,order_id);
+        Order orderRef = em.getReference(Order.class,orderId);
         Result result = new Result(
                 orderRef,
                 date,
-                responsible_name,
-                responsible_licenceNumber,
+                responsibleName,
+                responsibleLicenceNumber,
                 identificationType,
                 identification,
-                result_data_type,
-                result_data);
+                resultDataType,
+                resultData);
 
         em.persist(result);
         em.flush();

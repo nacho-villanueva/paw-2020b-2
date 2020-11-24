@@ -174,12 +174,12 @@ public class ClinicDaoTest {
 
         final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, availableStudies,plans,getClinicHours(),false);
 
-        Assert.assertEquals(availableStudies.size(),clinic.getMedical_studies().size());
+        Assert.assertEquals(availableStudies.size(),clinic.getMedicalStudies().size());
         Assert.assertEquals(plans.size(),clinic.getAcceptedPlans().size());
         Assert.assertTrue(clinic.getHours().getDays()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.SATURDAY]);
-        StudyType study = clinic.getMedical_studies().stream().findFirst().get();
+        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpenHours()[ClinicHours.MONDAY]);
+        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getCloseHours()[ClinicHours.SATURDAY]);
+        StudyType study = clinic.getMedicalStudies().stream().findFirst().get();
         Assert.assertTrue(study.getName().equals(studyTypeOne.getName()) || study.getName().equals(studyTypeSix.getName()));
         Assert.assertEquals(1+rowsClinicTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
         Assert.assertEquals(plans.size()+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
@@ -230,23 +230,23 @@ public class ClinicDaoTest {
         availableStudies.add(studyTypeSix);
 
         //New plans
-        Set<String> new_plans = new HashSet<>();
-        new_plans.add(MEDIC_PLAN_ALT);
+        Set<String> newPlans = new HashSet<>();
+        newPlans.add(MEDIC_PLAN_ALT);
 
         //New hours
-        ClinicHours new_hours = getClinicHoursAlt();
+        ClinicHours newHours = getClinicHoursAlt();
 
         int amountofPlansEntiresBefore = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME);
 
-        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,new_plans,new_hours,true);
+        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,newPlans,newHours,true);
 
-        Assert.assertEquals(availableStudies.size(), clinic.getMedical_studies().size());
+        Assert.assertEquals(availableStudies.size(), clinic.getMedicalStudies().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NEW_NAME_TWO.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeOne.getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeSix.getId()));
         Assert.assertFalse(clinic.getHours().getDays()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.SUNDAY]);
-        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.TUESDAY]);
+        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpenHours()[ClinicHours.SUNDAY]);
+        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getCloseHours()[ClinicHours.TUESDAY]);
         Assert.assertEquals(amountofPlansEntiresBefore,JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_PLANS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND lower(medic_plan) = lower('" + MEDIC_PLAN_ALT + "')"));
         Assert.assertEquals(3, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_HOURS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND close_time = '" + CLOSE_TIME_ALT + "'"));

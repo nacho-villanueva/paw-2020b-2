@@ -82,7 +82,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Order> maybeOrder = os.findById(order.getOrder_id());
+        Optional<Order> maybeOrder = os.findById(order.getOrderId());
 
         if(!maybeOrder.isPresent()) {
             return false;
@@ -251,8 +251,8 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public boolean isValidResultDataType(String result_data_type) {
-        return isValidType(result_data_type,VALID_DATA_TYPES);
+    public boolean isValidResultDataType(String resultDataType) {
+        return isValidType(resultDataType,VALID_DATA_TYPES);
     }
 
     @Override

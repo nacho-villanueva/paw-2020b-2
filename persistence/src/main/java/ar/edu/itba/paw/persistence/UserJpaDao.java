@@ -39,7 +39,7 @@ public class UserJpaDao implements UserDao {
     @Override
     public void freeVerificationToken(User user) {
         Query query = em.createQuery("DELETE FROM VerificationToken as t WHERE t.user.id = :userid");
-        query.setParameter("user_id", user.getId());
+        query.setParameter("userid", user.getId());
         query.executeUpdate();
     }
 

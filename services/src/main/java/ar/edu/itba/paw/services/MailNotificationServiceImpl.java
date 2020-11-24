@@ -124,10 +124,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send order mail with html
     private void sendOrderMailHtml(Order order){
 
-        String patientMail  = order.getPatient_email();
+        String patientMail  = order.getPatientEmail();
         String medicMail   = order.getMedic().getEmail();
         String clinicMail   = order.getClinic().getEmail();
-        String patientName  = order.getPatient_name();
+        String patientName  = order.getPatientName();
         String medicName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
         String studyName = order.getStudy().getName();
@@ -137,7 +137,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Locale medicLocale = getLocale(medicMail);
         Locale clinicLocale = getLocale(clinicMail);
 
-        Object[] subjectParams = {order.getOrder_id()};
+        Object[] subjectParams = {order.getOrderId()};
         Object[] patientContactParams = {patientName};
         Object[] medicContactParams = {medicName};
         Object[] clinicContactParams = {clinicName};
@@ -224,7 +224,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         mailContent = replaceMessages(mailContent,patientLocale);
         mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, patientLocale));
         if(description != null && !description.isEmpty()){
-            if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+            if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
                 mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
             }else{
                 mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, patientLocale));
@@ -232,7 +232,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }else{
             mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, patientLocale));
         }
-        if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+        if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
             mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
         }else{
             mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",patientContactParams,patientLocale));
@@ -294,10 +294,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send order mail without html
     private void sendOrderMailNoHtml(Order order){
 
-        String patientMail  = order.getPatient_email();
+        String patientMail  = order.getPatientEmail();
         String medicMail   = order.getMedic().getEmail();
         String clinicMail   = order.getClinic().getEmail();
-        String patientName  = order.getPatient_name();
+        String patientName  = order.getPatientName();
         String medicName   = order.getMedic().getName();
         String clinicName   = order.getClinic().getName();
 
@@ -305,7 +305,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Locale medicLocale = getLocale(medicMail);
         Locale clinicLocale = getLocale(clinicMail);
 
-        Object[] subjectParams = {order.getOrder_id()};
+        Object[] subjectParams = {order.getOrderId()};
         Object[] patientContactParams = {patientName};
         Object[] medicContactParams = {medicName};
         Object[] clinicContactParams = {clinicName};
@@ -357,15 +357,15 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     // send result mail with html
     private void sendResultMailHtml(Result result){
-        Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
+        Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
         if(resultOrder.isPresent()){
 
             Order order = resultOrder.get();
-            String patientMail  = order.getPatient_email();
+            String patientMail  = order.getPatientEmail();
             String medicMail   = order.getMedic().getEmail();
             String clinicMail   = order.getClinic().getEmail();
-            String patientName  = order.getPatient_name();
+            String patientName  = order.getPatientName();
             String medicName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
             String studyName = order.getStudy().getName();
@@ -375,7 +375,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             Locale medicLocale = getLocale(medicMail);
             Locale clinicLocale = getLocale(clinicMail);
 
-            Object[] subjectParams = {result.getOrder_id(),result.getId()};
+            Object[] subjectParams = {result.getOrderId(),result.getId()};
             Object[] patientContactParams = {patientName};
             Object[] medicContactParams = {medicName};
             Object[] clinicContactParams = {clinicName};
@@ -463,7 +463,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             mailContent = replaceMessages(mailContent,patientLocale);
             mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.study", studyParam, patientLocale));
             if(description != null && !description.isEmpty()){
-                if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+                if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
                     mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, medicLocale));
                 }else{
                     mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.orderInfo.description", descriptionParam, patientLocale));
@@ -471,7 +471,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             }else{
                 mailContent = mailContent.replaceAll("<replace-study-type/>",messageSource.getMessage("mail.newInfo.others", descriptionParam, patientLocale));
             }
-            if(!userService.findByEmail(order.getPatient_email()).isPresent()){
+            if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
                 mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.patient",patientContactParams,patientLocale));
             }else{
                 mailContent = mailContent.replaceAll("<replace-new-info/>",messageSource.getMessage("mail.newInfo.others",patientContactParams,patientLocale));
@@ -536,15 +536,15 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send result mail without html
     private void sendResultMailNoHtml(Result result){
 
-        Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
+        Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
         if(resultOrder.isPresent()){
 
             Order order = resultOrder.get();
-            String patientMail  = order.getPatient_email();
+            String patientMail  = order.getPatientEmail();
             String medicMail   = order.getMedic().getEmail();
             String clinicMail   = order.getClinic().getEmail();
-            String patientName  = order.getPatient_name();
+            String patientName  = order.getPatientName();
             String medicName   = order.getMedic().getName();
             String clinicName   = order.getClinic().getName();
 
@@ -552,7 +552,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             Locale medicLocale = getLocale(medicMail);
             Locale clinicLocale = getLocale(clinicMail);
 
-            Object[] subjectParams = {result.getOrder_id(),result.getId()};
+            Object[] subjectParams = {result.getOrderId(),result.getId()};
             Object[] patientContactParams = {patientName};
             Object[] medicContactParams = {medicName};
             Object[] clinicContactParams = {clinicName};
@@ -828,11 +828,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private String replaceOrderInfo(String mail, Order order){
         String ret = mail;
 
-        ret = ret.replaceAll("<replace-order-url/>",address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrder_id()));
-        ret = ret.replaceAll("<replace-order-id/>",String.valueOf(order.getOrder_id()));
+        ret = ret.replaceAll("<replace-order-url/>",address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrderId()));
+        ret = ret.replaceAll("<replace-order-id/>",String.valueOf(order.getOrderId()));
 
-        ret = ret.replaceAll("<replace-patient-name/>",order.getPatient_name());
-        ret = ret.replaceAll("<replace-patient-email/>",order.getPatient_email());
+        ret = ret.replaceAll("<replace-patient-name/>",order.getPatientName());
+        ret = ret.replaceAll("<replace-patient-email/>",order.getPatientEmail());
 
         ret = replaceMedicInfo(ret, order.getMedic());
         ret = replaceClinicInfo(ret, order.getClinic());

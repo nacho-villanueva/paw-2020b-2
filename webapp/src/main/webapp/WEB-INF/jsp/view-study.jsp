@@ -42,11 +42,11 @@
                     </div>
                     <hr class="mt-3 mb-4"/>
                     <div class="row justify-content-start">
-                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patient_name.label"/> </p> <c:out value="${order.patient_name}"/></div>
+                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patientName.label"/> </p> <c:out value="${order.patientName}"/></div>
                         <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.clinic.label"/></p> <c:out value="${order.clinic.name}"/></div>
                         <div class="w-100"></div>
-                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patient_insurance_plan.label"/></p><c:out value="${order.patient_insurance_plan}"/></div>
-                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patient_insurance_number.label"/></p><c:out value="${order.patient_insurance_number}"/></div>
+                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patientInsurancePlan.label"/></p><c:out value="${order.patientInsurancePlan}"/></div>
+                        <div class="col type"><p class="type-title"><spring:message code="view-study.body.card.order.patientInsuranceNumber.label"/></p><c:out value="${order.patientInsuranceNumber}"/></div>
                     </div>
                     <hr class="mt-3 mb-5"/>
                     <p class="card-text text-center h5"><spring:message code="view-study.body.card.order.study.label"/><c:out value="${order.study.name}"/></p>
@@ -105,7 +105,7 @@
                                                     <div class="d-flex w-100 justify-content-between">
                                                         <p class="type-title"><spring:message code="view-study.body.card.results.result.date.label" arguments="${result.date}"/>
                                                     </div>
-                                                    <p><c:out value="${result.responsible_name}"/></p>
+                                                    <p><c:out value="${result.responsibleName}"/></p>
                                                 </a>
                                             </li>
                                             <br/>
@@ -127,8 +127,8 @@
                                                         <hr class="mt-5 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
-                                                                <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsible_name}"/></h5>
-                                                                <p class="text-center"><spring:message code="view-study.body.card.results.result.responsible_licenceNumber.prefix" arguments="${result.responsible_licenceNumber}"/></p>
+                                                                <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsibleName}"/></h5>
+                                                                <p class="text-center"><spring:message code="view-study.body.card.results.result.responsibleLicenceNumber.prefix" arguments="${result.responsibleLicenceNumber}"/></p>
                                                             </div>
                                                             <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="<spring:message code="view-study.body.card.result.signature.alt"/>" style="max-height: 5em;">
                                                         </div>

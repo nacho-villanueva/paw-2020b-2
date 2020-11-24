@@ -12,9 +12,9 @@
             <td><spring:message code="profile-view.body.tab.patient.name.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.patient.name.label" var="full_namePlaceholder"/>
-                    <f:input type="text" cssClass="form-control" path="full_name" placeholder="${full_namePlaceholder}"/>
-                    <f:errors path="full_name" cssClass="text-danger" element="small"/>
+                    <spring:message code="profile-view.body.tab.patient.name.label" var="fullNamePlaceholder"/>
+                    <f:input type="text" cssClass="form-control" path="fullName" placeholder="${fullNamePlaceholder}"/>
+                    <f:errors path="fullName" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
@@ -22,8 +22,8 @@
             <td><spring:message code="profile-view.body.tab.patient.medicPlan.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.patient.medicPlan.label" var="medical_planPlaceholder"/>
-                    <f:input type="text" cssClass="form-control" path="medical_plan" placeholder="${medical_planPlaceholder}"/>
+                    <spring:message code="profile-view.body.tab.patient.medicPlan.label" var="medicalPlanPlaceholder"/>
+                    <f:input type="text" cssClass="form-control" path="medicalPlan" placeholder="${medicalPlanPlaceholder}"/>
                     <f:errors path="medicalPlan" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
@@ -33,8 +33,8 @@
             <td class="output">
                 <fieldset>
                     <spring:message code="profile-view.body.tab.patient.medicPlanNumber.label" var="medicPlanNumberPlaceholder"/>
-                    <f:input type="text" cssClass="form-control" path="medical_plan_number" placeholder="${medicPlanNumberPlaceholder}"/>
-                    <f:errors path="medical_plan_number" cssClass="text-danger" element="small"/>
+                    <f:input type="text" cssClass="form-control" path="medicalPlanNumber" placeholder="${medicPlanNumberPlaceholder}"/>
+                    <f:errors path="medicalPlanNumber" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>

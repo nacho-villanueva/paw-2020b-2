@@ -90,7 +90,7 @@ public class MedicJpaDao implements MedicDao {
             knownFields.forEach(medicalField -> {
                 fieldsRef.add(getFieldRef(medicalField));
             });
-            medic.setMedical_fields(fieldsRef);
+            medic.setMedicalFields(fieldsRef);
             em.flush();
         });
 
@@ -108,7 +108,7 @@ public class MedicJpaDao implements MedicDao {
 
         Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,fieldId));
 
-        return medicalFieldDB.filter(medicalField -> medicDB.get().getMedical_fields().contains(medicalField)).isPresent();
+        return medicalFieldDB.filter(medicalField -> medicDB.get().getMedicalFields().contains(medicalField)).isPresent();
     }
 
     @Override
@@ -118,7 +118,7 @@ public class MedicJpaDao implements MedicDao {
 
         if(medicDB.isPresent()) {
             MedicalField medicalFieldDB = medicalFieldDao.findOrRegister(medicalField.getName());
-            medicDB.get().getMedical_fields().add(medicalFieldDB);
+            medicDB.get().getMedicalFields().add(medicalFieldDB);
             em.flush();
             return medicalFieldDB;
         }

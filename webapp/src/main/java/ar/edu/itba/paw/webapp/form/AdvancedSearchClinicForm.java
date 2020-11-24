@@ -64,11 +64,11 @@ public class AdvancedSearchClinicForm {
         String[] auxCT = new String[ClinicHours.getDaysOfWeek()];
 
         for (int i=0; i < ClinicHours.getDaysOfWeek(); i++){
-            auxOT[i] = decodeVal(p,"availableTime.opening_time["+Integer.toString(i)+"]");
-            auxCT[i] = decodeVal(p,"availableTime.closing_time["+Integer.toString(i)+"]");
+            auxOT[i] = decodeVal(p,"availableTime.openingTime["+Integer.toString(i)+"]");
+            auxCT[i] = decodeVal(p,"availableTime.closingTime["+Integer.toString(i)+"]");
         }
-        this.availableTime.setOpening_time(auxOT);
-        this.availableTime.setClosing_time(auxCT);
+        this.availableTime.setOpeningTime(auxOT);
+        this.availableTime.setClosingTime(auxCT);
 
         // orderFormData
         // medicId is Integer
@@ -85,8 +85,8 @@ public class AdvancedSearchClinicForm {
     public ClinicHours getClinicHours(){
         ClinicHours ret = new ClinicHours();
 
-        String[] auxOT = this.availableTime.getOpening_time();
-        String[] auxCT = this.availableTime.getClosing_time();
+        String[] auxOT = this.availableTime.getOpeningTime();
+        String[] auxCT = this.availableTime.getClosingTime();
         String defaultFromTime = "00:00";
         String defaultToTime = "23:59";
         String timeSuffix = ":00";
