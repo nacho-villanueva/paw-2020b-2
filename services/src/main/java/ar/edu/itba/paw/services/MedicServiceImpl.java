@@ -57,7 +57,7 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public boolean knowsField(int medicId, int field_id) {
-        return medicDao.knowsField(medicId,field_id);
+    public boolean knowsField(int medicId, int fieldId) {
+        return medicDao.knowsField(medicId,fieldId);
     }
 }

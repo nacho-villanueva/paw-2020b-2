@@ -98,7 +98,7 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public boolean knowsField(int medicId, int field_id) {
+    public boolean knowsField(int medicId, int fieldId) {
         Optional<Medic> medicDB = findByUserId(medicId);
 
         //No medic, false
@@ -106,7 +106,7 @@ public class MedicJpaDao implements MedicDao {
             return false;
         }
 
-        Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,field_id));
+        Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,fieldId));
 
         return medicalFieldDB.filter(medicalField -> medicDB.get().getMedical_fields().contains(medicalField)).isPresent();
     }
