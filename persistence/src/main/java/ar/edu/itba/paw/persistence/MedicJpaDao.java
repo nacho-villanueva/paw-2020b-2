@@ -43,13 +43,13 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic register(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
         //Getting user reference
         User userRef = em.getReference(User.class,user.getId());
 
         //Getting field references
         Collection<MedicalField> fieldsRef = new HashSet<>();
-        known_fields.forEach(medicalField -> {
+        knownFields.forEach(medicalField -> {
             MedicalField fieldRef = getFieldRef(medicalField);
             fieldsRef.add(fieldRef);
         });
@@ -75,7 +75,7 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
 
         Optional<Medic> medicDB = findByUserId(user.getId());
 
@@ -87,7 +87,7 @@ public class MedicJpaDao implements MedicDao {
             medic.setLicenceNumber(licenceNumber);
             medic.setVerified(verified);
             Collection<MedicalField> fieldsRef = new HashSet<>();
-            known_fields.forEach(medicalField -> {
+            knownFields.forEach(medicalField -> {
                 fieldsRef.add(getFieldRef(medicalField));
             });
             medic.setMedical_fields(fieldsRef);

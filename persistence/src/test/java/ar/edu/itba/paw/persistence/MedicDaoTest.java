@@ -93,16 +93,16 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterValid() {
-        Collection<MedicalField> known_fields = new HashSet<>();
-        known_fields.add(fieldOne);
-        known_fields.add(fieldTwo);
-        known_fields.add(fieldThree);
+        Collection<MedicalField> knownFields = new HashSet<>();
+        knownFields.add(fieldOne);
+        knownFields.add(fieldTwo);
+        knownFields.add(fieldThree);
 
-        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
+        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
-        Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
-        Assert.assertEquals(known_fields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
+        Assert.assertEquals(knownFields.size(),medic.getMedical_fields().size());
+        Assert.assertEquals(knownFields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
     }
 
@@ -110,16 +110,16 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterNonExistentField() {
-        Collection<MedicalField> known_fields = new HashSet<>();
-        known_fields.add(fieldOne);
-        known_fields.add(fieldTwo);
-        known_fields.add(fieldTest);
+        Collection<MedicalField> knownFields = new HashSet<>();
+        knownFields.add(fieldOne);
+        knownFields.add(fieldTwo);
+        knownFields.add(fieldTest);
 
-        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
+        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
-        Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
-        Assert.assertEquals(known_fields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
+        Assert.assertEquals(knownFields.size(),medic.getMedical_fields().size());
+        Assert.assertEquals(knownFields.size(),JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,FIELDS_TABLE_NAME,"lower(name) = lower('" + fieldTest.getName() + "')"));
     }
@@ -128,12 +128,12 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testUpdateMedicInfoMedicExists() {
-        Collection<MedicalField> known_fields = new HashSet<>();
-        known_fields.add(fieldOne);
-        known_fields.add(fieldTwo);
-        known_fields.add(fieldThree);
+        Collection<MedicalField> knownFields = new HashSet<>();
+        knownFields.add(fieldOne);
+        knownFields.add(fieldTwo);
+        knownFields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicOne.getUser().getId() + " AND name = '" + medicTest.getName() + "'"));
@@ -146,12 +146,12 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testUpdateMedicInfoMedicNotExists() {
-        Collection<MedicalField> known_fields = new HashSet<>();
-        known_fields.add(fieldOne);
-        known_fields.add(fieldTwo);
-        known_fields.add(fieldThree);
+        Collection<MedicalField> knownFields = new HashSet<>();
+        knownFields.add(fieldOne);
+        knownFields.add(fieldTwo);
+        knownFields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
 
         Assert.assertNull(medic);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));

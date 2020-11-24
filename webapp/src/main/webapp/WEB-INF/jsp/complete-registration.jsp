@@ -185,12 +185,12 @@
                         </fieldset>
 
 
-                        <label class="mb-4"><spring:message code="complete-registration.body.form.medic.known_fields.label"/></label>
-                        <spring:message code='complete-registration.body.form.medic.known_fields.placeholder' var="medicalFieldsPlaceholder"/>
-                        <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom">
+                        <label class="mb-4"><spring:message code="complete-registration.body.form.medic.knownFields.label"/></label>
+                        <spring:message code='complete-registration.body.form.medic.knownFields.placeholder' var="medicalFieldsPlaceholder"/>
+                        <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="knownFields" data-style="btn-custom">
                             <f:options items="${fieldsList}" itemLabel="name" itemValue="name" />
                         </f:select>
-                        <f:errors path="known_fields" cssClass="text-danger" element="small" />
+                        <f:errors path="knownFields" cssClass="text-danger" element="small" />
                         <!-- Button trigger modal -->
                         <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="complete-registration.body.form.medic.add_medical_field" /></p></a>
                         <!-- Modal -->

@@ -224,9 +224,9 @@ public class ProfileController {
             for (MedicalField mf : medic.getMedical_fields()) {
                 knownFieldsList.add(mf.getName());
             }
-            editMedicForm.setKnown_fields(knownFieldsList.toArray(new String[0]));
+            editMedicForm.setKnownFields(knownFieldsList.toArray(new String[0]));
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnownFields()));
             mav.addObject("fieldsList",medicalFieldService.getAll());
         }else{
             throw new MedicNotFoundException();
@@ -239,7 +239,7 @@ public class ProfileController {
     public ModelAndView editProfileMedicPost(@Valid @ModelAttribute("editMedicForm") final EditMedicForm editMedicForm, final BindingResult errors, Locale locale){
 
         Collection<MedicalField> knownFields = new HashSet<>();
-        for (String medicalFieldName : editMedicForm.getKnown_fields()) {
+        for (String medicalFieldName : editMedicForm.getKnownFields()) {
             knownFields.add(new MedicalField(medicalFieldName));
         }
 
@@ -251,7 +251,7 @@ public class ProfileController {
 
             knownFields.addAll(medicalFieldService.getAll());
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnownFields()));
             mav.addObject("fieldsList",knownFields);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));

@@ -35,8 +35,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> known_fields) {
-        Medic medic = medicDao.register(user,name,telephone,identificationType,identification,licenceNumber,known_fields, false);
+    public Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields) {
+        Medic medic = medicDao.register(user,name,telephone,identificationType,identification,licenceNumber,knownFields, false);
         userService.updateRole(user,User.MEDIC_ROLE_ID);
         return medic;
     }
@@ -52,8 +52,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> known_fields, boolean verified) {
-        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,known_fields,verified);
+    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified) {
+        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields,verified);
     }
 
     @Override

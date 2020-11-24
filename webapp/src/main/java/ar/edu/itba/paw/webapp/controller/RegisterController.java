@@ -87,7 +87,7 @@ public class RegisterController {
     public ModelAndView applyMedic(@Valid @ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm, BindingResult bindingResult){
 
         Collection<MedicalField> knownFields = new HashSet<>();
-        for (String medicalFieldName : applyMedicForm.getKnown_fields()) {
+        for (String medicalFieldName : applyMedicForm.getKnownFields()) {
             knownFields.add(new MedicalField(medicalFieldName));
         }
 

@@ -63,10 +63,10 @@
             <td class="output">
                 <fieldset>
                     <spring:message code="profile-edit.form.medic.medical_fields.placeholder" var="medical_fieldsPlaceholder"/>
-                    <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom" data-container="body">
+                    <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="knownFields" data-style="btn-custom" data-container="body">
                         <f:options items="${fieldsList}" itemLabel="name" itemValue="name" />
                     </f:select>
-                    <f:errors path="known_fields" cssClass="text-danger" element="small"/>
+                    <f:errors path="knownFields" cssClass="text-danger" element="small"/>
                     <!-- Button trigger modal -->
                     <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="profile-edit.form.medic.add_medical_field" /></p></a>
                     <!-- Modal -->
