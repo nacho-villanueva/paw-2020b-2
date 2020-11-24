@@ -1,9 +1,13 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -156,6 +160,10 @@ public class Order {
 
     public Date getDate() {
         return date;
+    }
+
+    public Date getLegacyDate(){
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Clinic getClinic() {
