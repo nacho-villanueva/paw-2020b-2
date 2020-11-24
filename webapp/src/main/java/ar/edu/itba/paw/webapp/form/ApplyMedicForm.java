@@ -70,11 +70,11 @@ public class ApplyMedicForm {
     }
 
     public String getLicenceNumber() {
-        return licence_number;
+        return licenceNumber;
     }
 
-    public void setLicence_number(String licence_number) {
-        this.licence_number = licence_number;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
     public MultipartFile getIdentification() {

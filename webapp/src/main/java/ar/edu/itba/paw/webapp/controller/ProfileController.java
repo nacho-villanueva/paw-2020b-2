@@ -364,7 +364,7 @@ public class ProfileController {
         Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpen_days()));
         clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpening_time(),editClinicForm.getClinicHoursForm().getClosing_time());
 
-        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlans_List())),clinicHours,clinic.isVerified());
+        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlansList())),clinicHours,clinic.isVerified());
 
         mav.addObject("editSuccess",User.CLINIC_ROLE_ID);
 

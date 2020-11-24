@@ -23,7 +23,7 @@ public class EditMedicForm {
     @NotNull
     @Size(min = 1, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]*")
-    private String licence_number;
+    private String licenceNumber;
 
     @NotNull
     private String[] knownFields;
@@ -55,12 +55,12 @@ public class EditMedicForm {
         this.telephone = telephone;
     }
 
-    public String getLicence_number() {
-        return licence_number;
+    public String getLicenceNumber() {
+        return licenceNumber;
     }
 
-    public void setLicence_number(String licence_number) {
-        this.licence_number = licence_number;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
     public String[] getKnownFields() {

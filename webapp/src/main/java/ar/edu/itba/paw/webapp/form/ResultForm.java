@@ -13,7 +13,7 @@ public class ResultForm {
     @NotBlank
     private String responsible_name;
     @NotBlank
-    private String responsible_licence_number;
+    private String responsible_licenceNumber;
 
     @MultifileNotEmpty
     MultipartFile[] files;
@@ -21,9 +21,9 @@ public class ResultForm {
     @FileNotEmpty
     MultipartFile sign;
 
-    public ResultForm(String responsible_name, String responsible_licence_number){
+    public ResultForm(String responsible_name, String responsible_licenceNumber){
         this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
+        this.responsible_licenceNumber = responsible_licenceNumber;
     }
 
     public ResultForm(){}
@@ -35,11 +35,11 @@ public class ResultForm {
         return responsible_name;
     }
 
-    public void setResponsible_licence_number(String responsible_licence_number){
-        this.responsible_licence_number = responsible_licence_number;
+    public void setResponsible_licenceNumber(String responsible_licenceNumber){
+        this.responsible_licenceNumber = responsible_licenceNumber;
     }
-    public String getResponsible_licence_number(){
-        return responsible_licence_number;
+    public String getResponsible_licenceNumber(){
+        return responsible_licenceNumber;
     }
 
     public MultipartFile[] getFiles() {
