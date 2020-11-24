@@ -8,7 +8,7 @@ import java.util.*;
 public class Clinic {
 
     @Id //just to asign pk to clinic
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -79,8 +79,8 @@ public class Clinic {
         this.user = user;
     }
 
-    public void setUser_id(int user_id) {
-        this.user.setId(user_id);
+    public void setUserId(int userId) {
+        this.user.setId(userId);
     }
 
     public void setName(String name) {
@@ -103,7 +103,7 @@ public class Clinic {
         this.verified = verified;
     }
 
-    public int getUser_id() {
+    public int getUserId() {
         return user.getId();
     }
 

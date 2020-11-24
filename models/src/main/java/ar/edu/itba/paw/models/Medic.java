@@ -9,7 +9,7 @@ import java.util.Collection;
 public class Medic {
 
     @Id //just to asign pk to medic
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -22,13 +22,13 @@ public class Medic {
     @Column
     private String telephone;
 
-    @Column(nullable=false)
+    @Column(name = "identification_type",nullable=false)
     private String identification_type;
 
     @Column(nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
-    @Column(nullable=false)
+    @Column(name = "licence_number",nullable=false)
     private String licence_number;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -90,8 +90,8 @@ public class Medic {
     }
 
     //legacy setter for id
-    public void setUser_id(int user_id) {
-        this.user.setId(user_id);
+    public void setUserId(int userId) {
+        this.user.setId(userId);
     }
 
     public void setLicence_number(String licence_number) {
@@ -103,7 +103,7 @@ public class Medic {
     }
 
     //legacy getter for id
-    public int getUser_id() {
+    public int getUserId() {
         return user.getId();
     }
 

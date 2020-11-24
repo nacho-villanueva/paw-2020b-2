@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PatientService {
 
-    Optional<Patient> findByUser_id(int user_id);
+    Optional<Patient> findByUserId(int userId);
 
     Optional<Patient> findByEmail(String email);
 

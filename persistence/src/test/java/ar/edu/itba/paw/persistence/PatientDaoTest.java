@@ -85,7 +85,7 @@ public class PatientDaoTest {
 
         Assert.assertTrue(maybePatient.isPresent());
         Assert.assertEquals(patientZero.getName(),maybePatient.get().getName());
-        Assert.assertEquals(patientZero.getUser().getId(),maybePatient.get().getUser_id());
+        Assert.assertEquals(patientZero.getUser().getId(),maybePatient.get().getUserId());
     }
 
     @Transactional
@@ -104,7 +104,7 @@ public class PatientDaoTest {
         final Optional<Patient> maybePatient = dao.findByEmail(patientZero.getUser().getEmail());
 
         Assert.assertTrue(maybePatient.isPresent());
-        Assert.assertEquals(patientZero.getUser().getId(), maybePatient.get().getUser_id());
+        Assert.assertEquals(patientZero.getUser().getId(), maybePatient.get().getUserId());
         Assert.assertEquals(patientZero.getName(), maybePatient.get().getName());
     }
 

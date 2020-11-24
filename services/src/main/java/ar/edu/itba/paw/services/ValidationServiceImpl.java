@@ -65,7 +65,7 @@ public class ValidationServiceImpl implements ValidationService {
         if(medic == null) {
             return false;
         }
-        Optional<Medic> maybeMedic = ms.findByUserId(medic.getUser_id());
+        Optional<Medic> maybeMedic = ms.findByUserId(medic.getUserId());
 
         if(!maybeMedic.isPresent()) {
             return false;
@@ -99,7 +99,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Patient> maybePatient = ps.findByUser_id(patient.getUser_id());
+        Optional<Patient> maybePatient = ps.findByUserId(patient.getUserId());
 
         if(!maybePatient.isPresent()) {
             return false;
@@ -167,7 +167,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Clinic> maybeClinic = cs.findByUserId(clinic.getUser_id());
+        Optional<Clinic> maybeClinic = cs.findByUserId(clinic.getUserId());
 
         if(!maybeClinic.isPresent()) {
             return false;

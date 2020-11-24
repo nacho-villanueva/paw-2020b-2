@@ -59,14 +59,14 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Collection<Order> getAllAsClinic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.clinic c WHERE c.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.clinic c WHERE c.userId = :id", Order.class);
         query.setParameter("id", user.getId());
             return query.getResultList();
     }
 
     @Override
     public Collection<Order> getAllAsMedic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.userId = :id", Order.class);
         query.setParameter("id", user.getId());
         return query.getResultList();
     }
@@ -74,14 +74,14 @@ public class OrderJpaDao implements OrderDao {
     @Override
     public Collection<Order> getAllSharedAsMedic(User user) {
         final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o, User m WHERE m.id=:userId AND m MEMBER o.shared_with", Order.class);
-        query.setParameter("userId", user.getId());
+        query.setParameter("user_id", user.getId());
         return query.getResultList();
     }
 
     @Override
     public Order shareWithMedic(Order order, User user){
         final Optional<Order> maybeOrder = findById(order.getOrder_id());
-        if(order.getMedic().getUser_id() == user.getId())
+        if(order.getMedic().getUserId() == user.getId())
             return null;
         final Optional<User> maybeUser = ud.findById(user.getId());
         if(maybeOrder.isPresent() && maybeUser.isPresent()){

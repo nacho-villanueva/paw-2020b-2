@@ -42,8 +42,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Optional<Medic> findByUserId(int user_id) {
-        return medicDao.findByUserId(user_id);
+    public Optional<Medic> findByUserId(int userId) {
+        return medicDao.findByUserId(userId);
     }
 
     @Override

@@ -94,7 +94,7 @@
                                 <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
                                 <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
                                     <f:option value="-1" label="${selectClinicOption}"/>
-                                    <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
+                                    <f:options items="${clinicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>
                             </fieldset>
                         </c:if>
@@ -106,7 +106,7 @@
                                 <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
                                 <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
                                     <f:option value="-1" label="${selectMedicOption}"/>
-                                    <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
+                                    <f:options items="${medicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>
                             </fieldset>
                         </c:if>

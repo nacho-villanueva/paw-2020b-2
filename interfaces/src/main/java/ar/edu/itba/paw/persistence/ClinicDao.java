@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface ClinicDao {
 
-    Optional<Clinic> findByUserId(int user_id);
+    Optional<Clinic> findByUserId(int userId);
 
     Collection<Clinic> getAll();
 

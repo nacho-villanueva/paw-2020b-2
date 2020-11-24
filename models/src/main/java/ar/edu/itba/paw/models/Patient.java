@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Patient {
 
     @Id
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -16,9 +16,9 @@ public class Patient {
 
     @Column(nullable = false)
     private String name;
-    @Column
+    @Column(name = "medic_plan")
     private String medic_plan;
-    @Column
+    @Column(name = "medic_plan_number")
     private String medic_plan_number;
 
     protected Patient() {
@@ -66,11 +66,11 @@ public class Patient {
         this.user = user;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

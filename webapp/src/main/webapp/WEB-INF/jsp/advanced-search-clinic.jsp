@@ -214,7 +214,7 @@
                                 <ul class="nav flex-column" id="myTab" role="tablist">
                                     <c:forEach items="${clinicsList}" var="clinic">
                                         <li class="nav-item">
-                                            <a id="${clinic.user_id}" onclick="selectClinic(this);return false;" class="list-group-item list-group-item-action" data-toggle="tab" href="#clinic_${clinic.user_id}" role="tab" aria-controls="clinic_${clinic.user_id}" aria-selected="false">
+                                            <a id="${clinic.userId}" onclick="selectClinic(this);return false;" class="list-group-item list-group-item-action" data-toggle="tab" href="#clinic_${clinic.userId}" role="tab" aria-controls="clinic_${clinic.userId}" aria-selected="false">
                                                 <div class="justify-content-between">
                                                     <h5 class="mb-1"><c:out value="${clinic.name}"/></h5>
                                                 </div>
@@ -234,7 +234,7 @@
 
                                 <div id="clinicSelected"class="tab-content">
                                     <c:forEach items="${clinicsList}" var="clinic">
-                                        <div id="clinic_${clinic.user_id}" class="tab-pane fade tab-result">
+                                        <div id="clinic_${clinic.userId}" class="tab-pane fade tab-result">
                                             <h3><c:out value="${clinic.name}"/></h3>
                                             <table class="table table-borderless">
                                                 <tbody>

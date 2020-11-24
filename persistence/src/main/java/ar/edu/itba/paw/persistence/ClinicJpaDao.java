@@ -21,8 +21,8 @@ public class ClinicJpaDao implements ClinicDao {
     private StudyTypeDao studyTypeDao;
 
     @Override
-    public Optional<Clinic> findByUserId(int user_id) {
-        return Optional.ofNullable(em.find(Clinic.class,user_id));
+    public Optional<Clinic> findByUserId(int userId) {
+        return Optional.ofNullable(em.find(Clinic.class,userId));
     }
 
     @Override

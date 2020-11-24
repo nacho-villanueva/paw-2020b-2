@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MedicDao {
 
-    Optional<Medic> findByUserId(int user_id);
+    Optional<Medic> findByUserId(int userId);
 
     Collection<Medic> getAll();
 

@@ -21,8 +21,8 @@ public class MedicJpaDao implements MedicDao {
     private MedicalFieldDao medicalFieldDao;
 
     @Override
-    public Optional<Medic> findByUserId(int user_id) {
-        return Optional.ofNullable(em.find(Medic.class,user_id));
+    public Optional<Medic> findByUserId(int userId) {
+        return Optional.ofNullable(em.find(Medic.class,userId));
     }
 
     @Override

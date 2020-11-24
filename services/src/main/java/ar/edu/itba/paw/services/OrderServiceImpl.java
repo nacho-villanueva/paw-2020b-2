@@ -90,12 +90,12 @@ public class OrderServiceImpl implements OrderService {
         if(parameters.containsKey(Parameters.CLINIC)){
             int aux = Integer.parseInt(parameters.get(Parameters.CLINIC));
             if(clinicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getClinic().getUser_id() != aux);
+                orders.removeIf(order -> order.getClinic().getUserId() != aux);
         }
         if(parameters.containsKey(Parameters.MEDIC)){
             int aux = Integer.parseInt(parameters.get(Parameters.MEDIC));
             if(medicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getMedic().getUser_id() != aux);
+                orders.removeIf(order -> order.getMedic().getUserId() != aux);
         }
         if(parameters.containsKey(Parameters.PATIENT)){
             orders.removeIf(order -> !order.getPatient_email().equals(parameters.get(Parameters.PATIENT)));

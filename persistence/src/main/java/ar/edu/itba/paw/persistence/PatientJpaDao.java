@@ -18,8 +18,8 @@ public class PatientJpaDao implements PatientDao {
     private EntityManager em;
 
     @Override
-    public Optional<Patient> findByUserId(final int user_id) {
-        return Optional.ofNullable(em.find(Patient.class,user_id));
+    public Optional<Patient> findByUserId(final int userId) {
+        return Optional.ofNullable(em.find(Patient.class,userId));
     }
 
     @Override

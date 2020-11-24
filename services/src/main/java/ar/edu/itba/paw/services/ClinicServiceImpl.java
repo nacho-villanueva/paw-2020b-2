@@ -29,8 +29,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Optional<Clinic> findByUserId(int user_id) {
-        return clinicDao.findByUserId(user_id);
+    public Optional<Clinic> findByUserId(int userId) {
+        return clinicDao.findByUserId(userId);
     }
 
     @Override

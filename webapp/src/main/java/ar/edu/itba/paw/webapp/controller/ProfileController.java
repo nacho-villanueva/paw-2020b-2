@@ -167,7 +167,7 @@ public class ProfileController {
 
         mav.addObject("role","patient");
 
-        Optional<Patient> patientOptional = patientService.findByUser_id(user.getId());
+        Optional<Patient> patientOptional = patientService.findByUserId(user.getId());
         if(patientOptional.isPresent()){
             Patient patient = patientOptional.get();
             mav.addObject("patient", patient);
@@ -412,7 +412,7 @@ public class ProfileController {
 
             switch (user.getRole()){
                 case User.PATIENT_ROLE_ID:
-                    Optional<Patient> patientOptional = patientService.findByUser_id(user.getId());
+                    Optional<Patient> patientOptional = patientService.findByUserId(user.getId());
                     if(patientOptional.isPresent()){
                         mav.addObject("patient", patientOptional.get());
                     }else{

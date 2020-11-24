@@ -21,8 +21,8 @@ public class PatientServiceImpl implements PatientService {
     private UserService userService;
 
     @Override
-    public Optional<Patient> findByUser_id(int user_id) {
-        return dao.findByUserId(user_id);
+    public Optional<Patient> findByUserId(int userId) {
+        return dao.findByUserId(userId);
     }
 
     @Override

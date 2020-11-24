@@ -42,6 +42,7 @@ public class ClinicDayHours {
     }
 
     @Id // to allow mapping
+    @Column(name = "clinic_id",nullable = false)
     private Integer clinic_id;
 
     @Id

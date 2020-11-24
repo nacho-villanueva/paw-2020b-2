@@ -76,7 +76,7 @@ public class MyOrdersController {
         if(user.isMedic() && !user.isVerifying() && medicService.findByUserId(user.getId()).isPresent()){
             medicsList.add(medicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUserId() == order.getClinic().getUserId())){
                     clinicsList.add(order.getClinic());
                 }
             }
@@ -84,17 +84,17 @@ public class MyOrdersController {
         }else if(user.isClinic() && !user.isVerifying() && clinicService.findByUserId(user.getId()).isPresent()){
             clinicsList.add(clinicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
+                if(!medicsList.stream().anyMatch(medic -> medic.getUserId() == order.getMedic().getUserId())){
                     medicsList.add(order.getMedic());
                 }
             }
 
         }else if(user.isPatient()) {
             for (Order order : orders) {
-                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
+                if(!medicsList.stream().anyMatch(medic -> medic.getUserId() == order.getMedic().getUserId())){
                     medicsList.add(order.getMedic());
                 }
-                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUserId() == order.getClinic().getUserId())){
                     clinicsList.add(order.getClinic());
                 }
 

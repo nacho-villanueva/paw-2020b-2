@@ -15,7 +15,7 @@ public interface MedicService {
 
     Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
 
-    Optional<Medic> findByUserId(int user_id);
+    Optional<Medic> findByUserId(int userId);
 
     MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
 

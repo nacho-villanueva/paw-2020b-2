@@ -13,7 +13,7 @@ public interface ClinicService {
 
     Collection<Clinic> getAll();
 
-    Optional<Clinic> findByUserId(int user_id);
+    Optional<Clinic> findByUserId(int userId);
 
     Collection<Clinic> getAllUnverified();
 
