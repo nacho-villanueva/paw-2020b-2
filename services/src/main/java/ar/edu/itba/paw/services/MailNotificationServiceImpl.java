@@ -633,7 +633,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     private void replaceMedicMailContacts(Order order, Map<String, String> replace, Locale locale){
         replace.put("contact1-name", messageSource.getMessage("mail.contact.patient",new Object[] {order.getPatient_name()}, locale));
-        replace.put("contact1-email", order.getPatient_name());
+        replace.put("contact1-email", order.getPatient_email());
         replace.put("contact2-name", messageSource.getMessage("mail.contact.clinic",new Object[] {order.getClinic().getName()}, locale));
         replace.put("contact2-email", order.getClinic().getEmail());
     }
