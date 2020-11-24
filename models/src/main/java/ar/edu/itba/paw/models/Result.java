@@ -2,6 +2,8 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Entity
 @Table(name = "results")
@@ -92,6 +94,10 @@ public class Result {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public Date getLegacyDate() {
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public String getResponsible_name() {
