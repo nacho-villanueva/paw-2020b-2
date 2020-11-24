@@ -1,0 +1,5 @@
+${replace-m-mail.body.VerificationMessageHtml.title}
+${replace-m-mail.body.VerificationMessageHtml.body.main}
+$(replace-verificationUrl}
+${replace-m-mail.body.VerificationMessageHtml.body.secondary}
+${replace-m-mail.body.VerificationMessageHtml.body.last}
