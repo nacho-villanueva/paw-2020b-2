@@ -1,14 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.models.StudyType;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 
 @Repository
@@ -213,8 +215,8 @@ public class ClinicJpaDao implements ClinicDao {
                 if(hours.getDays()[i]) {
                     //This person, on this day is available from X to Y
                     //I want clinics that are open at least some part of the time frame of this day filter
-                    Time availableFrom = hours.getOpen_hours()[i];
-                    Time availableUntil = hours.getClose_hours()[i];
+                    LocalTime availableFrom = hours.getOpen_hours()[i];
+                    LocalTime availableUntil = hours.getClose_hours()[i];
                     query.append("( cdh.day_of_week = :day_of_the_week_");
                     query.append(i);
                     query.append(" AND NOT (cdh.close_time <= :from_time_");

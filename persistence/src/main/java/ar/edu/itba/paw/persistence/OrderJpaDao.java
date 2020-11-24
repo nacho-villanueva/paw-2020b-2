@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class OrderJpaDao implements OrderDao {
     }
 
     @Override
-    public Order register(final Medic medic, final Date date, final Clinic clinic,
+    public Order register(final Medic medic, final LocalDate date, final Clinic clinic,
                           final String patient_email, final String patient_name,
                           final StudyType studyType, final String description,
                           final String identification_type, final byte[] identification,
