@@ -62,9 +62,9 @@ function removeFromList(id){
 document.getElementById("plansInputList").onload = onLoadPlanList();
 
 function onLoadPlanList(){
-    const accepted_plans = $("#plansInputList").val();
-    if(accepted_plans != null && accepted_plans !== "") {
-        const plans = accepted_plans.split(",");
+    const acceptedPlans = $("#plansInputList").val();
+    if(acceptedPlans != null && acceptedPlans !== "") {
+        const plans = acceptedPlans.split(",");
         for(const p of plans){
             addPlan(p, true);
         }

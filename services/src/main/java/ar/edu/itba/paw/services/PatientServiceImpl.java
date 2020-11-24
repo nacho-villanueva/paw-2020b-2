@@ -21,8 +21,8 @@ public class PatientServiceImpl implements PatientService {
     private UserService userService;
 
     @Override
-    public Optional<Patient> findByUser_id(int user_id) {
-        return dao.findByUserId(user_id);
+    public Optional<Patient> findByUserId(int userId) {
+        return dao.findByUserId(userId);
     }
 
     @Override
@@ -38,20 +38,20 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient register(User user, String name, String medic_plan, String medic_plan_number) {
-        Patient patient = dao.register(user,name,medic_plan,medic_plan_number);
+    public Patient register(User user, String name, String medicPlan, String medicPlanNumber) {
+        Patient patient = dao.register(user,name,medicPlan,medicPlanNumber);
         userService.updateRole(user,User.PATIENT_ROLE_ID);
         return patient;
     }
 
     @Override
-    public Patient updatePatientInfo(User user, String name, String medic_plan, String medic_plan_number) {
+    public Patient updatePatientInfo(User user, String name, String medicPlan, String medicPlanNumber) {
         Optional<Patient> patient = dao.findByUserId(user.getId());
-        return patient.map(value -> dao.updatePatientInfo(value, name, medic_plan, medic_plan_number)).orElse(null);
+        return patient.map(value -> dao.updatePatientInfo(value, name, medicPlan, medicPlanNumber)).orElse(null);
     }
 
     @Override
-    public Patient updateMedicPlan(Patient patient, String medic_plan, String medic_plan_number) {
-        return dao.updateMedicPlan(patient,medic_plan,medic_plan_number);
+    public Patient updateMedicPlan(Patient patient, String medicPlan, String medicPlanNumber) {
+        return dao.updateMedicPlan(patient,medicPlan,medicPlanNumber);
     }
 }

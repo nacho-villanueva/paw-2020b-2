@@ -7,13 +7,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PatientInfoFormHasNotNullNameValidator.class)
+@Constraint(validatedBy = MedicIdIsValidValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PatientInfoFormHasNotNullName {
-    String message() default "Name field is empty";
+public @interface MedicIdIsValid {
+
+    String message() default "Selected Medic doesn't exist";
 
     public Class<?>[] groups() default {};
 
     public Class<? extends Payload>[] payload() default {};
+
 }

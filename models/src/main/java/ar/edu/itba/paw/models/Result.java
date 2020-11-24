@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Entity
 @Table(name = "results")
@@ -18,22 +20,22 @@ public class Result {
     private Order order;
 
     @Column(name="date", nullable=false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name="responsible_name", nullable=false)
-    private String responsible_name;
+    private String responsibleName;
 
     @Column(name="responsible_licence_number", nullable=false)
-    private String responsible_licence_number;
+    private String responsibleLicenceNumber;
 
     @Column(name="identification_type", nullable=false)
-    private String identification_type;
+    private String identificationType;
 
     @Column(name="identification", nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
     @Column(name="result_data_type", nullable=false)
-    private String data_type;
+    private String dataType;
 
     @Column(name="result_data", nullable=false, length = 32000000)
     private byte[] data;
@@ -44,39 +46,39 @@ public class Result {
 
     public Result(final Long id,
                   final Order order,
-                  final Date date,
-                  final String responsible_name,
-                  final String responsible_licence_number,
-                  final String identification_type,
+                  final LocalDate date,
+                  final String responsibleName,
+                  final String responsibleLicenceNumber,
+                  final String identificationType,
                   final byte[] identification,
-                  final String data_type,
+                  final String dataType,
                   final byte[] data) {
         this.id = id;
         this.order = order;
         this.date = date;
-        this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
-        this.identification_type = identification_type;
+        this.responsibleName = responsibleName;
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
+        this.identificationType = identificationType;
         this.identification = identification;
-        this.data_type = data_type;
+        this.dataType = dataType;
         this.data = data;
     }
 
     public Result(final Order order,
-                  final Date date,
-                  final String responsible_name,
-                  final String responsible_licence_number,
-                  final String identification_type,
+                  final LocalDate date,
+                  final String responsibleName,
+                  final String responsibleLicenceNumber,
+                  final String identificationType,
                   final byte[] identification,
-                  final String data_type,
+                  final String dataType,
                   final byte[] data) {
         this.order = order;
         this.date = date;
-        this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
-        this.identification_type = identification_type;
+        this.responsibleName = responsibleName;
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
+        this.identificationType = identificationType;
         this.identification = identification;
-        this.data_type = data_type;
+        this.dataType = dataType;
         this.data = data;
     }
 
@@ -88,30 +90,34 @@ public class Result {
         return order;
     }
 
-    public long getOrder_id() { return order.getOrder_id(); }
+    public long getOrderId() { return order.getOrderId(); }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getResponsible_name() {
-        return responsible_name;
+    public Date getLegacyDate() {
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getResponsible_licence_number() {
-        return responsible_licence_number;
+    public String getResponsibleName() {
+        return responsibleName;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getResponsibleLicenceNumber() {
+        return responsibleLicenceNumber;
+    }
+
+    public String getIdentificationType() {
+        return identificationType;
     }
 
     public byte[] getIdentification() {
         return identification;
     }
 
-    public String getData_type() {
-        return data_type;
+    public String getDataType() {
+        return dataType;
     }
 
     public byte[] getData() {
@@ -122,15 +128,15 @@ public class Result {
         this.order = order;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public void setIdentification(byte[] identification) {
         this.identification = identification;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -142,15 +148,15 @@ public class Result {
         this.data = data;
     }
 
-    public void setData_type(String data_type) {
-        this.data_type = data_type;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
-    public void setResponsible_licence_number(String responsible_licence_number) {
-        this.responsible_licence_number = responsible_licence_number;
+    public void setResponsibleLicenceNumber(String responsibleLicenceNumber) {
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
     }
 
-    public void setResponsible_name(String responsible_name) {
-        this.responsible_name = responsible_name;
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
     }
 }

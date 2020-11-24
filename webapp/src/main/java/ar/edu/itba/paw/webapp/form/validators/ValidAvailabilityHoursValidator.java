@@ -15,8 +15,8 @@ public class ValidAvailabilityHoursValidator implements ConstraintValidator<Vali
 
     @Override
     public boolean isValid(ClinicHoursForm hours, ConstraintValidatorContext constraintValidatorContext) {
-        String[] fromValues = hours.getOpening_time();
-        String[] toValues = hours.getClosing_time();
+        String[] fromValues = hours.getOpeningTime();
+        String[] toValues = hours.getClosingTime();
 
         if(fromValues.length!=ClinicHours.getDaysOfWeek() || toValues.length!=ClinicHours.getDaysOfWeek())
             return false;

@@ -43,19 +43,19 @@
                             <h3 class="text-center py-5 lead"><spring:message code="my-studies.results-card.no-results"/></h3>
                         </c:if>
                         <c:forEach items="${ordersList}" var="order">
-                            <a href="${studyPath}${encodedList.get(order.order_id)}" class="list-group-item list-group-item-action">
+                            <a href="${studyPath}${encodedList.get(order.orderId)}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1"><spring:message code="my-studies.results-card.order.studytype" arguments="${order.study.name}"/></h5>
-                                    <small><spring:message code="my-studies.results-card.order.date" arguments="${order.date}"/></small>
+                                    <small><spring:message code="my-studies.results-card.order.date" arguments="${order.getLegacyDate()}"/></small>
                                 </div>
                                 <div class="d-flex w-100 justify-content-between">
                                     <c:choose>
                                         <c:when test="${loggedUser.isMedic() == true && loggedUser.isVerifying() == false}">
                                             <p class="mb-1"><spring:message code="my-studies.results-card.order.clinic" arguments="${order.clinic.name}"/></p>
-                                            <small><spring:message code="my-studies.results-card.order.patient" arguments="${order.patient_name}"/></small>
+                                            <small><spring:message code="my-studies.results-card.order.patient" arguments="${order.patientName}"/></small>
                                         </c:when>
                                         <c:when test="${loggedUser.isClinic() == true && loggedUser.isVerifying() == false}">
-                                            <p class="mb-1"><spring:message code="my-studies.results-card.order.patient" arguments="${order.patient_name}"/></p>
+                                            <p class="mb-1"><spring:message code="my-studies.results-card.order.patient" arguments="${order.patientName}"/></p>
                                             <small><spring:message code="my-studies.results-card.order.medic" arguments="${order.medic.name}"/></small>
                                         </c:when>
                                         <c:when test="${loggedUser.isPatient() == true}">
@@ -81,7 +81,7 @@
                             <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.studytype"/></label>
                             <spring:message code="my-studies.filters-card.select.title.studytype" var="selectStudyTitle"/>
                             <spring:message code="my-studies.filters-card.select.option.studytype" var="selectStudyOption"/>
-                            <f:select id="studyTypes" cssClass="selectpicker" title="${selectStudyTitle}" data-live-search="true" path="study_id" data-style="text-primary">
+                            <f:select id="studyTypes" cssClass="selectpicker" title="${selectStudyTitle}" data-live-search="true" path="studyId" data-style="text-primary">
                                 <f:option value="-1" label="${selectStudyOption}"/>
                                 <f:options items="${studiesList}" itemLabel="name" itemValue="id"/>
                             </f:select>
@@ -92,9 +92,9 @@
                                 <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
                                 <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
                                 <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
-                                <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
+                                <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinicId" data-style="text-primary">
                                     <f:option value="-1" label="${selectClinicOption}"/>
-                                    <f:options items="${clinicsList}" itemLabel="name" itemValue="user_id"/>
+                                    <f:options items="${clinicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>
                             </fieldset>
                         </c:if>
@@ -104,9 +104,9 @@
                                 <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.medic"/></label>
                                 <spring:message code="my-studies.filters-card.select.title.medic" var="selectMedicTitle"/>
                                 <spring:message code="my-studies.filters-card.select.option.medic" var="selectMedicOption"/>
-                                <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medic_id" data-style="text-primary">
+                                <f:select id="medicalFields" cssClass="selectpicker" title="${selectMedicTitle}" data-live-search="true" path="medicId" data-style="text-primary">
                                     <f:option value="-1" label="${selectMedicOption}"/>
-                                    <f:options items="${medicsList}" itemLabel="name" itemValue="user_id"/>
+                                    <f:options items="${medicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>
                             </fieldset>
                         </c:if>
@@ -115,8 +115,8 @@
                             <fieldset>
                                 <fieldset class="form-group">
                                     <label for="patientEmail" class="bmd-label-static"><spring:message code="my-studies.filters-card.label.patient-email"/></label>
-                                    <f:input type="email" class="form-control" id="patientEmail" path="patient_email"/>
-                                    <f:errors path="patient_email"/>
+                                    <f:input type="email" class="form-control" id="patientEmail" path="patientEmail"/>
+                                    <f:errors path="patientEmail"/>
                                 </fieldset>
                             </fieldset>
                         </c:if>

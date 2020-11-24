@@ -16,9 +16,9 @@ public class ValidOpeningClosingHoursValidator implements ConstraintValidator<Va
 
     @Override
     public boolean isValid(ClinicHoursForm hours, ConstraintValidatorContext constraintValidatorContext) {
-        String[] openingValues = hours.getOpening_time();
-        String[] closingValues = hours.getClosing_time();
-        Integer[] daysValues = hours.getOpen_days();
+        String[] openingValues = hours.getOpeningTime();
+        String[] closingValues = hours.getClosingTime();
+        Integer[] daysValues = hours.getOpenDays();
 
         for (Integer d: daysValues) {
             if(isEmpty(openingValues[d]) || isEmpty(closingValues[d]))

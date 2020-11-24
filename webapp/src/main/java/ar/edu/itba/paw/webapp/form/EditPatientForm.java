@@ -10,16 +10,16 @@ public class EditPatientForm {
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String full_name;
+    private String fullName;
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String medical_plan;
+    private String medicalPlan;
 
     @NotNull
     @Size(min = 1, max = 100)
     @Pattern(regexp = "[a-z0-9A-Z]+")
-    private String medical_plan_number;
+    private String medicalPlanNumber;
 
     @PasswordIsCorrect
     @NotNull
@@ -29,28 +29,28 @@ public class EditPatientForm {
     public EditPatientForm() {
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getMedical_plan() {
-        return medical_plan;
+    public String getMedicalPlan() {
+        return medicalPlan;
     }
 
-    public void setMedical_plan(String medical_plan) {
-        this.medical_plan = medical_plan;
+    public void setMedicalPlan(String medicalPlan) {
+        this.medicalPlan = medicalPlan;
     }
 
-    public String getMedical_plan_number() {
-        return medical_plan_number;
+    public String getMedicalPlanNumber() {
+        return medicalPlanNumber;
     }
 
-    public void setMedical_plan_number(String medical_plan_number) {
-        this.medical_plan_number = medical_plan_number;
+    public void setMedicalPlanNumber(String medicalPlanNumber) {
+        this.medicalPlanNumber = medicalPlanNumber;
     }
 
     public String getPassword() {

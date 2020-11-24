@@ -13,7 +13,7 @@ public class EditMedicForm {
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String full_name;
+    private String fullName;
 
     @NotNull
     @Size(min = 1, max = 100)
@@ -23,10 +23,10 @@ public class EditMedicForm {
     @NotNull
     @Size(min = 1, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]*")
-    private String licence_number;
+    private String licenceNumber;
 
     @NotNull
-    private String[] known_fields;
+    private String[] knownFields;
 
     @MultipartFileIsImage
     private MultipartFile identification;
@@ -39,12 +39,12 @@ public class EditMedicForm {
 
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getTelephone() {
@@ -55,20 +55,20 @@ public class EditMedicForm {
         this.telephone = telephone;
     }
 
-    public String getLicence_number() {
-        return licence_number;
+    public String getLicenceNumber() {
+        return licenceNumber;
     }
 
-    public void setLicence_number(String licence_number) {
-        this.licence_number = licence_number;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
-    public String[] getKnown_fields() {
-        return known_fields;
+    public String[] getKnownFields() {
+        return knownFields;
     }
 
-    public void setKnown_fields(String[] known_fields) {
-        this.known_fields = known_fields;
+    public void setKnownFields(String[] knownFields) {
+        this.knownFields = knownFields;
     }
 
     public MultipartFile getIdentification() {

@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface MedicDao {
 
-    Optional<Medic> findByUserId(int user_id);
+    Optional<Medic> findByUserId(int userId);
 
     Collection<Medic> getAll();
 
     Collection<Medic> getAllUnverified();
 
-    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
+    Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
 
-    Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
+    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
 
-    boolean knowsField(int medic_id, int field_id);
+    boolean knowsField(int medicId, int fieldId);
 
-    MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
+    MedicalField registerFieldToMedic(int medicId, MedicalField medicalField);
 }

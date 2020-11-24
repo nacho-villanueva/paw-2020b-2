@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 
 public class ResultForm {
     @NotBlank
-    private String responsible_name;
+    private String responsibleName;
     @NotBlank
-    private String responsible_licence_number;
+    private String responsibleLicenceNumber;
 
     @MultifileNotEmpty
     MultipartFile[] files;
@@ -21,25 +21,25 @@ public class ResultForm {
     @FileNotEmpty
     MultipartFile sign;
 
-    public ResultForm(String responsible_name, String responsible_licence_number){
-        this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
+    public ResultForm(String responsibleName, String responsibleLicenceNumber){
+        this.responsibleName = responsibleName;
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
     }
 
     public ResultForm(){}
 
-    public void setResponsible_name(String responsible_name){
-        this.responsible_name = responsible_name;
+    public void setResponsibleName(String responsibleName){
+        this.responsibleName = responsibleName;
     }
-    public String getResponsible_name(){
-        return responsible_name;
+    public String getResponsibleName(){
+        return responsibleName;
     }
 
-    public void setResponsible_licence_number(String responsible_licence_number){
-        this.responsible_licence_number = responsible_licence_number;
+    public void setResponsibleLicenceNumber(String responsibleLicenceNumber){
+        this.responsibleLicenceNumber = responsibleLicenceNumber;
     }
-    public String getResponsible_licence_number(){
-        return responsible_licence_number;
+    public String getResponsibleLicenceNumber(){
+        return responsibleLicenceNumber;
     }
 
     public MultipartFile[] getFiles() {

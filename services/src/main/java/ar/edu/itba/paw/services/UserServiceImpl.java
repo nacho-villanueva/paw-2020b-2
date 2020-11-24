@@ -90,8 +90,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkPassword(int user_id, String password) {
-        Optional<User> maybeUser = findById(user_id);
+    public boolean checkPassword(int userId, String password) {
+        Optional<User> maybeUser = findById(userId);
         return maybeUser.filter(user -> encoder.matches(password, user.getPassword())).isPresent();
     }
 
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 maybeMedic.ifPresent(medic -> user.setVerifying(!medic.isVerified()));
                 break;
             case User.PATIENT_ROLE_ID:
-                Optional<Patient> maybePatient = patientService.findByUser_id(user.getId());
+                Optional<Patient> maybePatient = patientService.findByUserId(user.getId());
                 user.setRegistered(maybePatient.isPresent());
                 break;
             case User.UNDEFINED_ROLE_ID:

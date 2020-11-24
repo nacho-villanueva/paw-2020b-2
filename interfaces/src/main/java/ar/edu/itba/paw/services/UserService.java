@@ -19,7 +19,7 @@ public interface UserService {
 
     User updatePassword(User user, String password);
 
-    boolean checkPassword(int user_id, String password);
+    boolean checkPassword(int userId, String password);
 
     User verify(User user);
 

@@ -9,7 +9,7 @@ import java.util.Collection;
 public class Medic {
 
     @Id //just to asign pk to medic
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -22,21 +22,21 @@ public class Medic {
     @Column
     private String telephone;
 
-    @Column(nullable=false)
-    private String identification_type;
+    @Column(name = "identification_type",nullable=false)
+    private String identificationType;
 
     @Column(nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
-    @Column(nullable=false)
-    private String licence_number;
+    @Column(name = "licence_number",nullable=false)
+    private String licenceNumber;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="medic_medical_fields",
             joinColumns = @JoinColumn(name="medic_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name="field_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"medic_id","field_id"}))
-    private Collection<MedicalField> medical_fields;
+    private Collection<MedicalField> medicalFields;
 
     @Column(nullable=false)
     private boolean verified;
@@ -46,25 +46,25 @@ public class Medic {
         //Just for hibernate
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
-        this(user,name,telephone,identification_type,identification,licence_number,verified);
-        this.medical_fields = medical_fields;
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified, final Collection<MedicalField> medicalFields) {
+        this(user,name,telephone,identificationType,identification,licenceNumber,verified);
+        this.medicalFields = medicalFields;
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified) {
-        this(user,name,licence_number);
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified) {
+        this(user,name,licenceNumber);
         this.telephone = telephone;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.verified = verified;
-        this.medical_fields = new ArrayList<>();
+        this.medicalFields = new ArrayList<>();
     }
 
     //Basic constructor for medics objects inside orders
-    public Medic(final User user, final String name, final String licence_number) {
+    public Medic(final User user, final String name, final String licenceNumber) {
         this.user = user;
         this.name = name;
-        this.licence_number = licence_number;
+        this.licenceNumber = licenceNumber;
         this.verified = false;
     }
 
@@ -90,20 +90,20 @@ public class Medic {
     }
 
     //legacy setter for id
-    public void setUser_id(int user_id) {
-        this.user.setId(user_id);
+    public void setUserId(int userId) {
+        this.user.setId(userId);
     }
 
-    public void setLicence_number(String licence_number) {
-        this.licence_number = licence_number;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
-    public void setMedical_fields(Collection<MedicalField> medical_fields) {
-        this.medical_fields = medical_fields;
+    public void setMedicalFields(Collection<MedicalField> medicalFields) {
+        this.medicalFields = medicalFields;
     }
 
     //legacy getter for id
-    public int getUser_id() {
+    public int getUserId() {
         return user.getId();
     }
 
@@ -120,20 +120,20 @@ public class Medic {
         return telephone;
     }
 
-    public String getLicence_number() {
-        return licence_number;
+    public String getLicenceNumber() {
+        return licenceNumber;
     }
 
-    public Collection<MedicalField> getMedical_fields() {
-        return medical_fields;
+    public Collection<MedicalField> getMedicalFields() {
+        return medicalFields;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public byte[] getIdentification() {

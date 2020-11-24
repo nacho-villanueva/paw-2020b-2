@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -14,14 +17,14 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_orders_id_seq")
     @SequenceGenerator(sequenceName = "medical_orders_id_seq", name = "medical_orders_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private Long order_id;
+    private Long orderId;
 
     @ManyToOne
     @JoinColumn(name = "medic_id", nullable = false, referencedColumnName = "user_id")
     private Medic medic;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false, referencedColumnName = "user_id")
@@ -35,82 +38,82 @@ public class Order {
     private String description;
 
     @Column(name = "identification_type", nullable = false)
-    private String identification_type;
+    private String identificationType;
 
     @Column(name = "identification", nullable = false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
 
     @Column(name="medic_plan")
-    private String patient_insurance_plan;
+    private String patientInsurancePlan;
 
     @Column(name = "medic_plan_number")
-    private String patient_insurance_number;
+    private String patientInsuranceNumber;
 
     @Column(name="patient_email", nullable = false)
-    private String patient_email;
+    private String patientEmail;
 
     @Column(name = "patient_name", nullable = false)
-    private String patient_name;
+    private String patientName;
 
     @OneToMany(mappedBy = "order")
-    private Collection<Result> study_results;
+    private Collection<Result> studyResults;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<User> shared_with;
+    private Set<User> sharedWith;
 
     protected Order() {
         //Just for hibernate
     }
 
     public Order(final Medic medic,
-                 final Date date,
+                 final LocalDate date,
                  final Clinic clinic,
                  final StudyType study,
                  final String description,
-                 final String identification_type,
+                 final String identificationType,
                  final byte[] identification,
-                 final String patient_insurance_plan,
-                 final String patient_insurance_number,
-                 final String patient_email,
-                 final String patient_name) {
+                 final String patientInsurancePlan,
+                 final String patientInsuranceNumber,
+                 final String patientEmail,
+                 final String patientName) {
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
         this.study = study;
         this.description = description;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
-        this.patient_insurance_plan = patient_insurance_plan;
-        this.patient_insurance_number = patient_insurance_number;
-        this.patient_email = patient_email;
-        this.patient_name = patient_name;
+        this.patientInsurancePlan = patientInsurancePlan;
+        this.patientInsuranceNumber = patientInsuranceNumber;
+        this.patientEmail = patientEmail;
+        this.patientName = patientName;
     }
 
-    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
-        this.order_id = order_id;
+    public Order(final long orderId, final Medic medic, final LocalDate date, final Clinic clinic, final StudyType study, final String description, final String identificationType, final byte[] identification, final String patientInsurancePlan, final String patientInsuranceNumber, final String patientEmail, final String patientName) {
+        this.orderId = orderId;
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
         this.study = study;
         this.description = description;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
-        this.patient_insurance_plan = patient_insurance_plan;
-        this.patient_insurance_number = patient_insurance_number;
-        this.patient_email = patient_email;
-        this.patient_name = patient_name;
-        this.study_results = new ArrayList<>();
+        this.patientInsurancePlan = patientInsurancePlan;
+        this.patientInsuranceNumber = patientInsuranceNumber;
+        this.patientEmail = patientEmail;
+        this.patientName = patientName;
+        this.studyResults = new ArrayList<>();
     }
 
-    public void setStudy_results(Collection<Result> study_results) {
-        this.study_results = study_results;
+    public void setStudyResults(Collection<Result> studyResults) {
+        this.studyResults = studyResults;
     }
 
     public void setClinic(Clinic clinic) {
         this.clinic = clinic;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -122,40 +125,44 @@ public class Order {
         this.identification = identification;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public void setMedic(Medic medic) {
         this.medic = medic;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
-    public void setPatient_insurance_number(String patient_insurance_number) {
-        this.patient_insurance_number = patient_insurance_number;
+    public void setPatientInsuranceNumber(String patientInsuranceNumber) {
+        this.patientInsuranceNumber = patientInsuranceNumber;
     }
 
-    public void setPatient_insurance_plan(String patient_insurance_plan) {
-        this.patient_insurance_plan = patient_insurance_plan;
+    public void setPatientInsurancePlan(String patientInsurancePlan) {
+        this.patientInsurancePlan = patientInsurancePlan;
     }
 
     public void setStudy(StudyType study) {
         this.study = study;
     }
 
-    public long getOrder_id() {
-        return order_id;
+    public long getOrderId() {
+        return orderId;
     }
 
     public Medic getMedic() {
         return medic;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public Date getLegacyDate(){
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Clinic getClinic() {
@@ -170,51 +177,51 @@ public class Order {
         return description;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
     public byte[] getIdentification() {
         return identification;
     }
 
-    public String getPatient_insurance_plan() {
-        return patient_insurance_plan;
+    public String getPatientInsurancePlan() {
+        return patientInsurancePlan;
     }
 
-    public String getPatient_insurance_number() {
-        return patient_insurance_number;
+    public String getPatientInsuranceNumber() {
+        return patientInsuranceNumber;
     }
 
-    public Collection<Result> getStudy_results() {
-        return study_results;
+    public Collection<Result> getStudyResults() {
+        return studyResults;
     }
 
-    public String getPatient_email() {
-        return patient_email;
+    public String getPatientEmail() {
+        return patientEmail;
     }
 
-    public void setPatient_email(String patient_email) {
-        this.patient_email = patient_email;
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
     }
 
-    public String getPatient_name() {
-        return patient_name;
+    public String getPatientName() {
+        return patientName;
     }
 
-    public void setPatient_name(String patient_name) {
-        this.patient_name = patient_name;
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 
-    public Set<User> getShared_with() {
-        return shared_with;
+    public Set<User> getSharedWith() {
+        return sharedWith;
     }
 
-    public void setShared_with(Set<User> shared_with) {
-        this.shared_with = shared_with;
+    public void setSharedWith(Set<User> sharedWith) {
+        this.sharedWith = sharedWith;
     }
 
-    public void addToShared_with(User user){
-        this.shared_with.add(user);
+    public void addToSharedWith(User user){
+        this.sharedWith.add(user);
     }
 }

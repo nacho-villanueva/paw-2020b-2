@@ -8,7 +8,7 @@ import java.util.*;
 public class Clinic {
 
     @Id //just to asign pk to clinic
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -26,7 +26,7 @@ public class Clinic {
             joinColumns = @JoinColumn(name="clinic_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name="study_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"clinic_id","study_id"}))
-    private Collection<StudyType> medical_studies;
+    private Collection<StudyType> medicalStudies;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "clinic")
     private Collection<ClinicDayHours> hours;
@@ -34,7 +34,7 @@ public class Clinic {
     @ElementCollection
     @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id", referencedColumnName = "user_id"))
     @Column(name="medic_plan", nullable = false)
-    private Set<String> accepted_plans;
+    private Set<String> acceptedPlans;
 
     @Column(name="verified",nullable=false)
     private boolean verified;
@@ -44,24 +44,24 @@ public class Clinic {
         this.verified = false;
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
-        this(user,name,telephone,medical_studies,accepted_plans,verified);
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final ClinicHours hours, final Set<String> acceptedPlans, final boolean verified) {
+        this(user,name,telephone,medicalStudies,acceptedPlans,verified);
         this.hours = hours.createClinicDayHoursCollection();
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final Set<String> accepted_plans, final boolean verified) {
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final Set<String> acceptedPlans, final boolean verified) {
         this(user,name,telephone,verified);
-        this.medical_studies = medical_studies;
-        this.accepted_plans = accepted_plans;
+        this.medicalStudies = medicalStudies;
+        this.acceptedPlans = acceptedPlans;
     }
 
 
     public Clinic(final User user, final String name, final String telephone, final boolean verified) {
         this(user,name);
         this.telephone = telephone;
-        this.medical_studies = new ArrayList<>();
+        this.medicalStudies = new ArrayList<>();
         this.hours = new ArrayList<>();
-        this.accepted_plans = new HashSet<>();
+        this.acceptedPlans = new HashSet<>();
         this.verified = verified;
     }
 
@@ -79,8 +79,8 @@ public class Clinic {
         this.user = user;
     }
 
-    public void setUser_id(int user_id) {
-        this.user.setId(user_id);
+    public void setUserId(int userId) {
+        this.user.setId(userId);
     }
 
     public void setName(String name) {
@@ -95,15 +95,15 @@ public class Clinic {
         this.telephone = telephone;
     }
 
-    public void setMedical_studies(Collection<StudyType> medical_studies) {
-        this.medical_studies = medical_studies;
+    public void setMedicalStudies(Collection<StudyType> medicalStudies) {
+        this.medicalStudies = medicalStudies;
     }
 
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
 
-    public int getUser_id() {
+    public int getUserId() {
         return user.getId();
     }
 
@@ -119,8 +119,8 @@ public class Clinic {
         return telephone;
     }
 
-    public Collection<StudyType> getMedical_studies() {
-        return medical_studies;
+    public Collection<StudyType> getMedicalStudies() {
+        return medicalStudies;
     }
 
     public boolean isVerified() {
@@ -139,46 +139,46 @@ public class Clinic {
         //First we check which entries need to be removed, then we add the new ones and update the ones that got modified
 
         //We will find entries to be removed by the day of the week
-        Set<Integer> new_days = new HashSet<>();
+        Set<Integer> newDays = new HashSet<>();
         hours.forEach(clinicDayHours -> {
-            new_days.add(clinicDayHours.getDay_of_week());
+            newDays.add(clinicDayHours.getDayOfWeek());
         });
-        Set<ClinicDayHours> to_delete = new HashSet<>();
-        Map<Integer, ClinicDayHours> to_update = new HashMap<>();
+        Set<ClinicDayHours> toDelete = new HashSet<>();
+        Map<Integer, ClinicDayHours> toUpdate = new HashMap<>();
 
         //We go through the old days, and if they are on the new days as well then we gotta update, else we gotta delete them
         this.hours.forEach(clinicDayHours -> {
-            if(new_days.contains(clinicDayHours.getDay_of_week())) {
-                to_update.put(clinicDayHours.getDay_of_week(),clinicDayHours);
-                new_days.remove(clinicDayHours.getDay_of_week());   //Since we found out it's on both new and old days, then it's no longer a new day
+            if(newDays.contains(clinicDayHours.getDayOfWeek())) {
+                toUpdate.put(clinicDayHours.getDayOfWeek(),clinicDayHours);
+                newDays.remove(clinicDayHours.getDayOfWeek());   //Since we found out it's on both new and old days, then it's no longer a new day
             } else {
-                to_delete.add(clinicDayHours);
+                toDelete.add(clinicDayHours);
             }
         });
 
         //We delete those that need to be deleted
-        to_delete.forEach(clinicDayHours -> {
+        toDelete.forEach(clinicDayHours -> {
             this.hours.remove(clinicDayHours);
         });
 
         //We update those that need to be updated and add those that need to be added
         hours.forEach(newClinicDayHours -> {
-            if(to_update.containsKey(newClinicDayHours.getDay_of_week())) {
-                ClinicDayHours oldHoursRef = to_update.get(newClinicDayHours.getDay_of_week());
-                oldHoursRef.setOpen_time(newClinicDayHours.getOpen_time());
-                oldHoursRef.setClose_time(newClinicDayHours.getClose_time());
+            if(toUpdate.containsKey(newClinicDayHours.getDayOfWeek())) {
+                ClinicDayHours oldHoursRef = toUpdate.get(newClinicDayHours.getDayOfWeek());
+                oldHoursRef.setOpenTime(newClinicDayHours.getOpenTime());
+                oldHoursRef.setCloseTime(newClinicDayHours.getCloseTime());
             } else {
-                newClinicDayHours.setClinic_id(this.user.getId());
+                newClinicDayHours.setClinicId(this.user.getId());
                 this.hours.add(newClinicDayHours);
             }
         });
     }
 
-    public Set<String> getAccepted_plans() {
-        return accepted_plans;
+    public Set<String> getAcceptedPlans() {
+        return acceptedPlans;
     }
 
-    public void setAccepted_plans(Set<String> accepted_plans) {
-        this.accepted_plans = accepted_plans;
+    public void setAcceptedPlans(Set<String> acceptedPlans) {
+        this.acceptedPlans = acceptedPlans;
     }
 }

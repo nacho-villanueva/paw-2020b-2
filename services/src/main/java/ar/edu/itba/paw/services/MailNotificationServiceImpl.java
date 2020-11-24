@@ -168,11 +168,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send order mail with html
     private void sendOrderMailHtml(Order order, String body){
 
-        Locale patientLocale = getLocale(order.getPatient_email());
+        Locale patientLocale = getLocale(order.getPatientEmail());
         Locale medicLocale = getLocale(order.getMedic().getEmail());
         Locale clinicLocale = getLocale(order.getClinic().getEmail());
 
-        Object[] subjectParams = {order.getOrder_id()};
+        Object[] subjectParams = {order.getOrderId()};
 
         ArrayList<String> mailInline = new ArrayList<>();
         mailInline.add("logo.png");
@@ -190,14 +190,14 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Map<String, String> replacePatient = new HashMap<>();
         replacePatient.put("url", address.toString());
 
-        if(!userService.findByEmail(order.getPatient_email()).isPresent()){
-            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient",new Object[] {order.getPatient_name()}, patientLocale));
+        if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
+            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient",new Object[] {order.getPatientName()}, patientLocale));
         }
 
         replacePatientMailContacts(order, replacePatient, patientLocale);
         replaceOrderInfo(order, replacePatient, patientLocale);
 
-        ms.sendMimeMessage(order.getPatient_email(),
+        ms.sendMimeMessage(order.getPatientEmail(),
                 messageSource.getMessage("mail.subject.order.patient",subjectParams,patientLocale),
                 replaceAllMessages(mailContent, replacePatient, patientLocale),
                 mailInline
@@ -226,7 +226,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Map<String, String> replaceClinic = new HashMap<>();
         replaceClinic.put("url", address.toString());
 
-        replaceClinic.put("order-url", address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrder_id()));
+        replaceClinic.put("order-url", address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrderId()));
 
         replaceOrderInfo(order, replaceClinic, clinicLocale);
         replaceClinicMailContacts(order, replaceClinic, clinicLocale);
@@ -244,11 +244,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send order mail without html
     private void sendOrderMailNoHtml(Order order, String body){
 
-        Locale patientLocale = getLocale(order.getPatient_email());
+        Locale patientLocale = getLocale(order.getPatientEmail());
         Locale medicLocale = getLocale(order.getMedic().getEmail());
         Locale clinicLocale = getLocale(order.getClinic().getEmail());
 
-        Object[] subjectParams = {order.getOrder_id()};
+        Object[] subjectParams = {order.getOrderId()};
 
         String basicMailContent = getTextTemplate();
         basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
@@ -261,7 +261,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         replacePatientMailContacts(order, replacePatient, patientLocale);
         replaceOrderInfo(order, replacePatient, patientLocale);
 
-        ms.sendSimpleMessage(order.getPatient_email(),
+        ms.sendSimpleMessage(order.getPatientEmail(),
                 messageSource.getMessage("mail.subject.order.patient",subjectParams,patientLocale),
                 replaceAllMessages(mailContent, replacePatient, patientLocale));
         // ---------------------------------
@@ -298,16 +298,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     // send result mail with html
     private void sendResultMailHtml(Result result, String body){
-        Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
+        Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
         if(resultOrder.isPresent()){
             Order order = resultOrder.get();
 
-            Locale patientLocale = getLocale(order.getPatient_email());
+            Locale patientLocale = getLocale(order.getPatientEmail());
             Locale medicLocale = getLocale(order.getMedic().getEmail());
             Locale clinicLocale = getLocale(order.getClinic().getEmail());
 
-            Object[] subjectParams = {result.getOrder_id(),result.getId()};
+            Object[] subjectParams = {result.getOrderId(),result.getId()};
 
             String basicMailContent = getMailTemplate();
 
@@ -328,7 +328,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             replaceResultInfo(result, order, replacePatient, patientLocale);
             replacePatientMailContacts(order, replacePatient, patientLocale);
 
-            ms.sendMimeMessage(order.getPatient_email(),
+            ms.sendMimeMessage(order.getPatientEmail(),
                     messageSource.getMessage("mail.subject.result.patient",subjectParams,patientLocale),
                     replaceAllMessages(mailContent, replacePatient, patientLocale),
                     mailInline
@@ -375,17 +375,17 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     // send result mail without html
     private void sendResultMailNoHtml(Result result, String body){
 
-        Optional<Order> resultOrder = orderService.findById(result.getOrder_id());
+        Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
         if(resultOrder.isPresent()){
 
             Order order = resultOrder.get();
 
-            Locale patientLocale = getLocale(order.getPatient_email());
+            Locale patientLocale = getLocale(order.getPatientEmail());
             Locale medicLocale = getLocale(order.getMedic().getEmail());
             Locale clinicLocale = getLocale(order.getClinic().getEmail());
 
-            Object[] subjectParams = {result.getOrder_id(),result.getId()};
+            Object[] subjectParams = {result.getOrderId(),result.getId()};
 
             String basicMailContent = getTextTemplate();
             basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
@@ -400,7 +400,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             replaceResultInfo(result, order, replacePatient, patientLocale);
             replacePatientMailContacts(order, replacePatient, patientLocale);
 
-            ms.sendSimpleMessage(order.getPatient_email(),
+            ms.sendSimpleMessage(order.getPatientEmail(),
                     messageSource.getMessage("mail.subject.result.patient",subjectParams,patientLocale),
                     replaceAllMessages(mailContent, replacePatient, patientLocale));
             // ----------------------------------
@@ -610,10 +610,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
 
 
-        replace.put("order-url", address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrder_id()));
-        replace.put("order-id", String.valueOf(order.getOrder_id()));
-        replace.put("patient-name", order.getPatient_name());
-        replace.put("patient-email",order.getPatient_email());
+        replace.put("order-url", address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrderId()));
+        replace.put("order-id", String.valueOf(order.getOrderId()));
+        replace.put("patient-name", order.getPatientName());
+        replace.put("patient-email",order.getPatientEmail());
 
         replaceMedicInfo(order.getMedic(), replace);
         replaceClinicInfo(order.getClinic(), replace);
@@ -632,8 +632,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     private void replaceMedicMailContacts(Order order, Map<String, String> replace, Locale locale){
-        replace.put("contact1-name", messageSource.getMessage("mail.contact.patient",new Object[] {order.getPatient_name()}, locale));
-        replace.put("contact1-email", order.getPatient_email());
+        replace.put("contact1-name", messageSource.getMessage("mail.contact.patient",new Object[] {order.getPatientName()}, locale));
+        replace.put("contact1-email", order.getPatientEmail());
         replace.put("contact2-name", messageSource.getMessage("mail.contact.clinic",new Object[] {order.getClinic().getName()}, locale));
         replace.put("contact2-email", order.getClinic().getEmail());
     }
@@ -641,8 +641,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private void replaceClinicMailContacts(Order order, Map<String, String> replace, Locale locale){
         replace.put("contact1-name", messageSource.getMessage("mail.contact.medic",new Object[] {order.getMedic().getName()}, locale));
         replace.put("contact1-email", order.getMedic().getEmail());
-        replace.put("contact2-name", messageSource.getMessage("mail.contact.patient",new Object[] {order.getPatient_name()}, locale));
-        replace.put("contact2-email",order.getPatient_email());
+        replace.put("contact2-name", messageSource.getMessage("mail.contact.patient",new Object[] {order.getPatientName()}, locale));
+        replace.put("contact2-email",order.getPatientEmail());
     }
 
     private void replaceMedicInfo(Medic medic, Map<String, String> replace){

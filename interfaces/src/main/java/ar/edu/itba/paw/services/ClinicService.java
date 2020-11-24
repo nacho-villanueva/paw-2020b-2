@@ -13,20 +13,20 @@ public interface ClinicService {
 
     Collection<Clinic> getAll();
 
-    Optional<Clinic> findByUserId(int user_id);
+    Optional<Clinic> findByUserId(int userId);
 
     Collection<Clinic> getAllUnverified();
 
-    Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours);
+    Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours);
 
-    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours, boolean verified);
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
 
-    boolean hasStudy(int clinic_id, int studyType_id);
+    boolean hasStudy(int clinicId, int studyTypeId);
 
-    StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
+    StudyType registerStudyToClinic(int clinicId, StudyType studyType);
 
-    Collection<Clinic> getByStudyTypeId(int studyType_id);
+    Collection<Clinic> getByStudyTypeId(int studyTypeId);
 
     //If parameters are null, search will ignore those values
-    Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name);
+    Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName);
 }

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,8 +50,8 @@ public class OrderDaoTest {
     private static final Clinic clinic = new Clinic(userClinic, "Clinic two", null, true);
     private static final StudyType studyType = new StudyType(1, "X-ray");
 
-    private static final Order order = new Order(1, medic, Date.valueOf("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
-    private static final Order newOrder = new Order(2, medic, Date.valueOf("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patientnew@patient.com", "Patient New");
+    private static final Order order = new Order(1, medic, LocalDate.parse("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patient@patient.com", "Patient one");
+    private static final Order newOrder = new Order(2, medic, LocalDate.parse("2020-10-05"), clinic, studyType, "Description 1", "image/png",new byte[0], "insurance plan one", "insurance123", "patientnew@patient.com", "Patient New");
 
     @Autowired
     private DataSource ds;
@@ -71,13 +71,13 @@ public class OrderDaoTest {
     @Rollback
     @Test
     public void testFindByIdExists() {
-        final Optional<Order> maybeOrder = dao.findById(order.getOrder_id());
+        final Optional<Order> maybeOrder = dao.findById(order.getOrderId());
 
         Assert.assertTrue(maybeOrder.isPresent());
         Assert.assertEquals(order.getMedic().getName(),maybeOrder.get().getMedic().getName());
         Assert.assertEquals(order.getClinic().getName(),maybeOrder.get().getClinic().getName());
         Assert.assertEquals(order.getStudy().getName(),maybeOrder.get().getStudy().getName());
-        Assert.assertEquals(order.getPatient_name(),maybeOrder.get().getPatient_name());
+        Assert.assertEquals(order.getPatientName(),maybeOrder.get().getPatientName());
         Assert.assertEquals(order.getDate(),maybeOrder.get().getDate());
     }
 
@@ -94,17 +94,17 @@ public class OrderDaoTest {
     @Rollback
     @Test
     public void testRegisterValid() {
-        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatient_email(), newOrder.getPatient_name(),newOrder.getStudy(),"",newOrder.getIdentification_type(),newOrder.getIdentification(),newOrder.getPatient_insurance_plan(),newOrder.getPatient_insurance_number());
+        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatientEmail(), newOrder.getPatientName(),newOrder.getStudy(),"",newOrder.getIdentificationType(),newOrder.getIdentification(),newOrder.getPatientInsurancePlan(),newOrder.getPatientInsuranceNumber());
 
-        Assert.assertEquals(newOrder.getPatient_name(), testOrder.getPatient_name());
+        Assert.assertEquals(newOrder.getPatientName(), testOrder.getPatientName());
         Assert.assertArrayEquals(newOrder.getIdentification(), testOrder.getIdentification());
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME, "patient_name='" + newOrder.getPatient_name() +"'"));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME, "patient_name='" + newOrder.getPatientName() +"'"));
     }
 
     @Transactional
     @Rollback
     @Test (expected = PersistenceException.class)
     public void testRegisterInvalid() {
-        dao.register(invalidMedic,newOrder.getDate(),invalidClinic,newOrder.getPatient_name(), newOrder.getPatient_email(),invalidStudyType,"",newOrder.getIdentification_type(),newOrder.getIdentification(),"","");
+        dao.register(invalidMedic,newOrder.getDate(),invalidClinic,newOrder.getPatientName(), newOrder.getPatientEmail(),invalidStudyType,"",newOrder.getIdentificationType(),newOrder.getIdentification(),"","");
     }
 }

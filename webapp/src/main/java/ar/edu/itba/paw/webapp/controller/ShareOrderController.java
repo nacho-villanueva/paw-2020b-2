@@ -50,7 +50,7 @@ public class ShareOrderController {
         else
             throw new OrderNotFoundException();
 
-        if(!order.getPatient_email().equals(loggedUser().getEmail()))
+        if(!order.getPatientEmail().equals(loggedUser().getEmail()))
             return new ModelAndView("redirect:/");
 
         ModelAndView mav = new ModelAndView("share-order");
@@ -69,7 +69,7 @@ public class ShareOrderController {
         else
             throw new OrderNotFoundException();
 
-        if(!order.getPatient_email().equals(loggedUser().getEmail()))
+        if(!order.getPatientEmail().equals(loggedUser().getEmail()))
             return new ModelAndView("redirect:/");
 
         if(bindingResult.hasErrors()){

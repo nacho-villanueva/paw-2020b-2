@@ -21,8 +21,8 @@ public class MedicJpaDao implements MedicDao {
     private MedicalFieldDao medicalFieldDao;
 
     @Override
-    public Optional<Medic> findByUserId(int user_id) {
-        return Optional.ofNullable(em.find(Medic.class,user_id));
+    public Optional<Medic> findByUserId(int userId) {
+        return Optional.ofNullable(em.find(Medic.class,userId));
     }
 
     @Override
@@ -43,17 +43,17 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic register(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
         //Getting user reference
         User userRef = em.getReference(User.class,user.getId());
 
         //Getting field references
         Collection<MedicalField> fieldsRef = new HashSet<>();
-        known_fields.forEach(medicalField -> {
+        knownFields.forEach(medicalField -> {
             MedicalField fieldRef = getFieldRef(medicalField);
             fieldsRef.add(fieldRef);
         });
-        final Medic medic = new Medic(userRef,name,telephone,identification_type,identification,licence_number,verified,fieldsRef);
+        final Medic medic = new Medic(userRef,name,telephone,identificationType,identification,licenceNumber,verified,fieldsRef);
         em.persist(medic);
         em.flush();
         return medic;
@@ -75,22 +75,22 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
 
         Optional<Medic> medicDB = findByUserId(user.getId());
 
         medicDB.ifPresent(medic -> {
             medic.setName(name);
             medic.setTelephone(telephone);
-            medic.setIdentification_type(identification_type);
+            medic.setIdentificationType(identificationType);
             medic.setIdentification(identification);
-            medic.setLicence_number(licence_number);
+            medic.setLicenceNumber(licenceNumber);
             medic.setVerified(verified);
             Collection<MedicalField> fieldsRef = new HashSet<>();
-            known_fields.forEach(medicalField -> {
+            knownFields.forEach(medicalField -> {
                 fieldsRef.add(getFieldRef(medicalField));
             });
-            medic.setMedical_fields(fieldsRef);
+            medic.setMedicalFields(fieldsRef);
             em.flush();
         });
 
@@ -98,27 +98,27 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public boolean knowsField(int medic_id, int field_id) {
-        Optional<Medic> medicDB = findByUserId(medic_id);
+    public boolean knowsField(int medicId, int fieldId) {
+        Optional<Medic> medicDB = findByUserId(medicId);
 
         //No medic, false
         if(!medicDB.isPresent()) {
             return false;
         }
 
-        Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,field_id));
+        Optional<MedicalField> medicalFieldDB = Optional.ofNullable(em.find(MedicalField.class,fieldId));
 
-        return medicalFieldDB.filter(medicalField -> medicDB.get().getMedical_fields().contains(medicalField)).isPresent();
+        return medicalFieldDB.filter(medicalField -> medicDB.get().getMedicalFields().contains(medicalField)).isPresent();
     }
 
     @Override
-    public MedicalField registerFieldToMedic(final int medic_id, MedicalField medicalField) {
+    public MedicalField registerFieldToMedic(final int medicId, MedicalField medicalField) {
 
-        Optional<Medic> medicDB = findByUserId(medic_id);
+        Optional<Medic> medicDB = findByUserId(medicId);
 
         if(medicDB.isPresent()) {
             MedicalField medicalFieldDB = medicalFieldDao.findOrRegister(medicalField.getName());
-            medicDB.get().getMedical_fields().add(medicalFieldDB);
+            medicDB.get().getMedicalFields().add(medicalFieldDB);
             em.flush();
             return medicalFieldDB;
         }

@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -28,11 +28,11 @@ public class OrderJpaDao implements OrderDao {
     }
 
     @Override
-    public Order register(final Medic medic, final Date date, final Clinic clinic,
-                          final String patient_email, final String patient_name,
+    public Order register(final Medic medic, final LocalDate date, final Clinic clinic,
+                          final String patientEmail, final String patientName,
                           final StudyType studyType, final String description,
-                          final String identification_type, final byte[] identification,
-                          final String insurance_plan, final String insurance_number) {
+                          final String identificationType, final byte[] identification,
+                          final String insurancePlan, final String insuranceNumber) {
 
         final Medic medicReference = em.getReference(Medic.class, medic.getUser().getId());
         final Clinic clinicReference = em.getReference(Clinic.class, clinic.getUser().getId());
@@ -45,12 +45,12 @@ public class OrderJpaDao implements OrderDao {
                 clinicReference,
                 studyTypeReference,
                 description,
-                identification_type,
+                identificationType,
                 identification,
-                insurance_plan,
-                insurance_number,
-                patient_email,
-                patient_name);
+                insurancePlan,
+                insuranceNumber,
+                patientEmail,
+                patientName);
 
         em.persist(order);
         em.flush();
@@ -59,33 +59,33 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Collection<Order> getAllAsClinic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.clinic c WHERE c.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.clinic c WHERE c.userId = :id", Order.class);
         query.setParameter("id", user.getId());
             return query.getResultList();
     }
 
     @Override
     public Collection<Order> getAllAsMedic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.user_id = :id", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o JOIN o.medic m WHERE m.userId = :id", Order.class);
         query.setParameter("id", user.getId());
         return query.getResultList();
     }
 
     @Override
     public Collection<Order> getAllSharedAsMedic(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o, User m WHERE m.id=:userId AND m MEMBER o.shared_with", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o, User m WHERE m.id=:userId AND m MEMBER o.sharedWith", Order.class);
         query.setParameter("userId", user.getId());
         return query.getResultList();
     }
 
     @Override
     public Order shareWithMedic(Order order, User user){
-        final Optional<Order> maybeOrder = findById(order.getOrder_id());
-        if(order.getMedic().getUser_id() == user.getId())
+        final Optional<Order> maybeOrder = findById(order.getOrderId());
+        if(order.getMedic().getUserId() == user.getId())
             return null;
         final Optional<User> maybeUser = ud.findById(user.getId());
         if(maybeOrder.isPresent() && maybeUser.isPresent()){
-            maybeOrder.get().addToShared_with(maybeUser.get());
+            maybeOrder.get().addToSharedWith(maybeUser.get());
             em.flush();
         }
 
@@ -94,7 +94,7 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Collection<Order> getAllAsPatient(User user) {
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patient_email = :email", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patientEmail = :email", Order.class);
         query.setParameter("email", user.getEmail());
         return query.getResultList();
     }

@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService {
             switch (attribute){
                 case "identification":
                     image.setName("medicIdentification");
-                    image.setContentType(medic.getIdentification_type());
+                    image.setContentType(medic.getIdentificationType());
                     image.setFile(medic.getIdentification());
                     ret = Optional.of(image);
                     break;
@@ -65,7 +65,7 @@ public class ImageServiceImpl implements ImageService {
             switch (attribute){
                 case "identification":
                     image.setName("orderIdentification");
-                    image.setContentType(order.getIdentification_type());
+                    image.setContentType(order.getIdentificationType());
                     image.setFile(order.getIdentification());
                     ret = Optional.of(image);
                     break;
@@ -81,7 +81,7 @@ public class ImageServiceImpl implements ImageService {
 
         Optional<Result> resultOptional = resultService.findById(resultId);
 
-        if(resultOptional.isPresent() && resultOptional.get().getOrder_id() == orderId){
+        if(resultOptional.isPresent() && resultOptional.get().getOrderId() == orderId){
 
             Result result = resultOptional.get();
 
@@ -90,13 +90,13 @@ public class ImageServiceImpl implements ImageService {
             switch (attribute){
                 case "identification":
                     image.setName("resultIdentification");
-                    image.setContentType(result.getIdentification_type());
+                    image.setContentType(result.getIdentificationType());
                     image.setFile(result.getIdentification());
                     ret = Optional.of(image);
                     break;
                 case "result-data":
                     image.setName("resultData");
-                    image.setContentType(result.getData_type());
+                    image.setContentType(result.getDataType());
                     image.setFile(result.getData());
                     ret = Optional.of(image);
                     break;

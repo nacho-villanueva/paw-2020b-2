@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-@EnableWebMvc
 @EnableAsync
 @ComponentScan("ar.edu.itba.paw.services")
 @Configuration

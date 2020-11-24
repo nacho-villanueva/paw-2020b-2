@@ -163,8 +163,8 @@
 <c:if test="${not empty clinic}">
     <script>
         const strings = {
-            "openTime":"<spring:message code='openDaysPicker.open_time' javaScriptEscape='true' />",
-            "closeTime":"<spring:message code='openDaysPicker.close_time' javaScriptEscape='true' />"
+            "openTime":"<spring:message code='openDaysPicker.openTime' javaScriptEscape='true' />",
+            "closeTime":"<spring:message code='openDaysPicker.closeTime' javaScriptEscape='true' />"
 
         };
 

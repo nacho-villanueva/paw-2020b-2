@@ -29,8 +29,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Optional<Clinic> findByUserId(int user_id) {
-        return clinicDao.findByUserId(user_id);
+    public Optional<Clinic> findByUserId(int userId) {
+        return clinicDao.findByUserId(userId);
     }
 
     @Override
@@ -39,34 +39,34 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Clinic register(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours) {
-        Clinic clinic = clinicDao.register(user, name, telephone, available_studies, medic_plans, hours, false);
+    public Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours) {
+        Clinic clinic = clinicDao.register(user, name, telephone, availableStudies, medicPlans, hours, false);
         userService.updateRole(user, User.CLINIC_ROLE_ID);
         return clinic;
     }
 
     @Override
-    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> available_studies, Set<String> medic_plans, ClinicHours hours, boolean verified) {
-        return clinicDao.updateClinicInfo(user,name,telephone,available_studies,medic_plans,hours,verified);
+    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified) {
+        return clinicDao.updateClinicInfo(user,name,telephone,availableStudies,medicPlans,hours,verified);
     }
 
     @Override
-    public boolean hasStudy(int clinic_id, int studyType_id) {
-        return clinicDao.hasStudy(clinic_id,studyType_id);
+    public boolean hasStudy(int clinicId, int studyTypeId) {
+        return clinicDao.hasStudy(clinicId,studyTypeId);
     }
 
     @Override
-    public StudyType registerStudyToClinic(int clinic_id, StudyType studyType) {
-        return clinicDao.registerStudyToClinic(clinic_id, studyType);
+    public StudyType registerStudyToClinic(int clinicId, StudyType studyType) {
+        return clinicDao.registerStudyToClinic(clinicId, studyType);
     }
     @Override
-    public Collection<Clinic> getByStudyTypeId(int studyType_id) {
-        return clinicDao.getByStudyTypeId(studyType_id);
+    public Collection<Clinic> getByStudyTypeId(int studyTypeId) {
+        return clinicDao.getByStudyTypeId(studyTypeId);
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
-        return clinicDao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
+        return clinicDao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
     }
 
 }
