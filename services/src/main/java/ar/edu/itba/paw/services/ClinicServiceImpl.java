@@ -51,13 +51,13 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public boolean hasStudy(int clinic_id, int studyType_id) {
-        return clinicDao.hasStudy(clinic_id,studyType_id);
+    public boolean hasStudy(int clinicId, int studyType_id) {
+        return clinicDao.hasStudy(clinicId,studyType_id);
     }
 
     @Override
-    public StudyType registerStudyToClinic(int clinic_id, StudyType studyType) {
-        return clinicDao.registerStudyToClinic(clinic_id, studyType);
+    public StudyType registerStudyToClinic(int clinicId, StudyType studyType) {
+        return clinicDao.registerStudyToClinic(clinicId, studyType);
     }
     @Override
     public Collection<Clinic> getByStudyTypeId(int studyType_id) {

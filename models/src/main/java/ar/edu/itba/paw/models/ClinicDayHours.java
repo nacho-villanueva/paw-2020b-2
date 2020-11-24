@@ -11,7 +11,7 @@ import java.util.Objects;
 public class ClinicDayHours {
 
     public static class ClinicDayHoursPK implements Serializable {
-        private int clinic_id;
+        private int clinicId;
         private int day_of_week;
 
         public ClinicDayHoursPK() {
@@ -22,18 +22,18 @@ public class ClinicDayHours {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ClinicDayHoursPK that = (ClinicDayHoursPK) o;
-            return clinic_id == that.clinic_id &&
+            return clinicId == that.clinicId &&
                     day_of_week == that.day_of_week;
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(clinic_id, day_of_week);
+            return Objects.hash(clinicId, day_of_week);
         }
 
-        public void setClinic_id(int clinic_id) {
-            this.clinic_id = clinic_id;
+        public void setClinicId(int clinicId) {
+            this.clinicId = clinicId;
         }
 
         public void setDay_of_week(int day_of_week) {
@@ -43,13 +43,13 @@ public class ClinicDayHours {
 
     @Id // to allow mapping
     @Column(name = "clinic_id",nullable = false)
-    private Integer clinic_id;
+    private Integer clinicId;
 
     @Id
     @Column(name = "day_of_week",nullable = false)
     private Integer day_of_week;
 
-    @MapsId("clinic_id")
+    @MapsId("clinic_id") //TODO: should i change this one to clinicId?
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
@@ -64,9 +64,9 @@ public class ClinicDayHours {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, int clinic_id, Time open_time, Time close_time) {
+    public ClinicDayHours(int day, int clinicId, Time open_time, Time close_time) {
         this(day,open_time,close_time);
-        this.clinic_id = clinic_id;
+        this.clinicId = clinicId;
     }
 
     public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {
@@ -75,12 +75,12 @@ public class ClinicDayHours {
         this.close_time = close_time;
     }
 
-    public int getClinic_id() {
-        return clinic_id;
+    public int getClinicId() {
+        return clinicId;
     }
 
-    public void setClinic_id(int clinic_id) {
-        this.clinic_id = clinic_id;
+    public void setClinicId(int clinicId) {
+        this.clinicId = clinicId;
     }
 
     public int getDay_of_week() {

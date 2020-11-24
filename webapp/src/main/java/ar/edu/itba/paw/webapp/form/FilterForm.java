@@ -21,16 +21,16 @@ public class FilterForm {
     private String date;
 
     @Min(-1)
-    private Integer study_id, clinic_id, medic_id;
+    private Integer study_id, clinicId, medic_id;
 
     public FilterForm() {
     }
 
-    public FilterForm(Integer study_id, Integer clinic_id, Integer medic_id, String patient_email, String date){
+    public FilterForm(Integer study_id, Integer clinicId, Integer medic_id, String patient_email, String date){
         this.date = date;
         this.patient_email = patient_email;
         this.medic_id = medic_id;
-        this.clinic_id = clinic_id;
+        this.clinicId = clinicId;
         this.study_id = study_id;
     }
 
@@ -52,12 +52,12 @@ public class FilterForm {
         this.study_id = study_id;
     }
 
-    public Integer getClinic_id() {
-        return clinic_id;
+    public Integer getClinicId() {
+        return clinicId;
     }
 
-    public void setClinic_id(Integer clinic_id) {
-        this.clinic_id = clinic_id;
+    public void setClinicId(Integer clinicId) {
+        this.clinicId = clinicId;
     }
 
     public Integer getMedic_id() {
@@ -73,15 +73,15 @@ public class FilterForm {
         this.patient_email = null;
         this.medic_id = -1;
         this.study_id = -1;
-        this.clinic_id =-1;
+        this.clinicId =-1;
     }
 
     public HashMap<OrderService.Parameters, String> getParameters(){
         HashMap<OrderService.Parameters, String> parameters = new HashMap<>();
         if(this.date != null && !this.date.isEmpty())
             parameters.put(OrderService.Parameters.DATE, this.date);
-        if(this.clinic_id != null && this.clinic_id != -1)
-            parameters.put(OrderService.Parameters.CLINIC, this.clinic_id.toString());
+        if(this.clinicId != null && this.clinicId != -1)
+            parameters.put(OrderService.Parameters.CLINIC, this.clinicId.toString());
         if(this.medic_id != null && this.medic_id != -1)
             parameters.put(OrderService.Parameters.MEDIC, this.medic_id.toString());
         if(this.study_id != null && this.study_id != -1)
@@ -96,7 +96,7 @@ public class FilterForm {
 
         MultiValueMap<String, String> p = UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
-        this.clinic_id = decodeInt(decodeVal(p, "clinic_id"));
+        this.clinicId = decodeInt(decodeVal(p, "clinicId"));
         this.study_id = decodeInt(decodeVal(p, "study_id"));
         this.medic_id = decodeInt(decodeVal(p, "medic_id"));
         this.patient_email = decodeVal(p, "patient_email");

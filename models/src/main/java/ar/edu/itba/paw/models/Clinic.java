@@ -168,7 +168,7 @@ public class Clinic {
                 oldHoursRef.setOpen_time(newClinicDayHours.getOpen_time());
                 oldHoursRef.setClose_time(newClinicDayHours.getClose_time());
             } else {
-                newClinicDayHours.setClinic_id(this.user.getId());
+                newClinicDayHours.setClinicId(this.user.getId());
                 this.hours.add(newClinicDayHours);
             }
         });

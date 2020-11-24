@@ -21,11 +21,11 @@ public interface ClinicDao {
 
     Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
 
-    boolean hasStudy(int clinic_id, int studyType_id);
+    boolean hasStudy(int clinicId, int studyType_id);
 
     Collection<Clinic> getByStudyTypeId(int studyType_id);
 
-    StudyType registerStudyToClinic(int clinic_id, StudyType studyType);
+    StudyType registerStudyToClinic(int clinicId, StudyType studyType);
 
     //If parameters are null, search will ignore those values
     Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name);

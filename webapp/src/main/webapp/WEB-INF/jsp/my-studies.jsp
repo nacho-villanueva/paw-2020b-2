@@ -92,7 +92,7 @@
                                 <label class="bmd-label-static"><spring:message code="my-studies.filters-card.label.clinic"/></label>
                                 <spring:message code="my-studies.filters-card.select.title.clinic" var="selectClinicTitle"/>
                                 <spring:message code="my-studies.filters-card.select.option.clinic" var="selectClinicOption"/>
-                                <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinic_id" data-style="text-primary">
+                                <f:select id="medicalClinic" cssClass="selectpicker" title="${selectClinicTitle}" data-live-search="true" path="clinicId" data-style="text-primary">
                                     <f:option value="-1" label="${selectClinicOption}"/>
                                     <f:options items="${clinicsList}" itemLabel="name" itemValue="userId"/>
                                 </f:select>

@@ -121,17 +121,17 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public boolean hasStudy(final int clinic_id, final int studyType_id) {
-        Optional<Clinic> clinicOptional = findByUserId(clinic_id);
+    public boolean hasStudy(final int clinicId, final int studyType_id) {
+        Optional<Clinic> clinicOptional = findByUserId(clinicId);
         Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyType_id);
 
         return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedical_studies().contains(studyTypeOptional.get());
     }
 
     @Override
-    public StudyType registerStudyToClinic(final int clinic_id, final StudyType studyType) {
+    public StudyType registerStudyToClinic(final int clinicId, final StudyType studyType) {
 
-        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinicId));
 
         StudyType studyTypeFromDB = null;
 

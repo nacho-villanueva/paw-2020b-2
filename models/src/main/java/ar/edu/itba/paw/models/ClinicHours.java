@@ -53,12 +53,12 @@ public class ClinicHours {
         return clinicDayHoursCollection;
     }
 
-    public Collection<ClinicDayHours> createClinicDayHoursCollection(int clinic_id){
+    public Collection<ClinicDayHours> createClinicDayHoursCollection(int clinicId){
         Collection<ClinicDayHours> clinicDayHoursCollection = new ArrayList<>();
 
         for(int i = 0; i < DAYS_OF_WEEK; i++){
             if(days[i])
-                clinicDayHoursCollection.add(new ClinicDayHours(i,clinic_id,open_hours[i],close_hours[i]));
+                clinicDayHoursCollection.add(new ClinicDayHours(i,clinicId,open_hours[i],close_hours[i]));
         }
 
         return clinicDayHoursCollection;
