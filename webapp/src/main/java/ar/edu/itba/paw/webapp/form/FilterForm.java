@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FilterForm {
 
@@ -76,8 +77,8 @@ public class FilterForm {
         this.clinicId =-1;
     }
 
-    public HashMap<OrderService.Parameters, String> getParameters(){
-        HashMap<OrderService.Parameters, String> parameters = new HashMap<>();
+    public Map<OrderService.Parameters, String> getParameters(){
+        Map<OrderService.Parameters, String> parameters = new HashMap<>();
         if(this.date != null && !this.date.isEmpty())
             parameters.put(OrderService.Parameters.DATE, this.date);
         if(this.clinicId != null && this.clinicId != -1)

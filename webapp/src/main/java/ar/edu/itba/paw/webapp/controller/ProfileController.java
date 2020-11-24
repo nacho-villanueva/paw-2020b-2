@@ -220,7 +220,7 @@ public class ProfileController {
             editMedicForm.setTelephone(medic.getTelephone());
             editMedicForm.setLicenceNumber(medic.getLicenceNumber());
 
-            ArrayList<String> knownFieldsList = new ArrayList<>();
+            List<String> knownFieldsList = new ArrayList<>();
             for (MedicalField mf : medic.getMedicalFields()) {
                 knownFieldsList.add(mf.getName());
             }
@@ -311,7 +311,7 @@ public class ProfileController {
 
             editClinicForm.setAcceptedPlans(clinic.getAcceptedPlans().toArray(new String[0]));
 
-            ArrayList<String> availableStudiesList = new ArrayList<>();
+            List<String> availableStudiesList = new ArrayList<>();
             for (StudyType studyType : clinic.getMedicalStudies()) {
                 availableStudiesList.add(studyType.getName());
             }
@@ -435,7 +435,7 @@ public class ProfileController {
 
                         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
 
-                        HashMap<String, String[]> openDayHour = new HashMap<>();
+                        Map<String, String[]> openDayHour = new HashMap<>();
 
                         int maxDays = ClinicHours.getDaysOfWeek();
                         for(int i = 0; i < maxDays; i++){
