@@ -150,8 +150,8 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String study_name) {
-        String queryString = getSearchQueryString(clinicName,hours,acceptedPlan,study_name);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
+        String queryString = getSearchQueryString(clinicName,hours,acceptedPlan,studyName);
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
@@ -161,8 +161,8 @@ public class ClinicJpaDao implements ClinicDao {
             query.setParameter("clinicName","%"+clinicName.toLowerCase()+"%");
         if(acceptedPlan!=null)
             query.setParameter("clinicAcceptedPlan","%"+acceptedPlan.toLowerCase()+"%");
-        if(study_name!=null)
-            query.setParameter("clinicMedicalStudy","%"+study_name.toLowerCase()+"%");
+        if(studyName!=null)
+            query.setParameter("clinicMedicalStudy","%"+studyName.toLowerCase()+"%");
         if(hours!=null){
             for (int i = 0; i < hours.getDays().length; i++) {
                 //If we have a filter on this day, we add condition
@@ -177,7 +177,7 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList();
     }
 
-    private String getSearchQueryString(String clinicName, ClinicHours hours, String acceptedPlan, String study_name) {
+    private String getSearchQueryString(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
         //Base Query
         StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinic c");
 
@@ -192,7 +192,7 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(" INNER JOIN c.acceptedPlans as cap");
         }
 
-        if(study_name != null) {
+        if(studyName != null) {
             //Add study name part
             query.append(" INNER JOIN c.medical_studies as ms");
         }
@@ -238,7 +238,7 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(" AND LOWER(cap) LIKE :clinicAcceptedPlan");
         }
 
-        if(study_name != null) {
+        if(studyName != null) {
             //Add study name condition
             query.append(" AND LOWER(ms.name) LIKE :clinicMedicalStudy");
         }
