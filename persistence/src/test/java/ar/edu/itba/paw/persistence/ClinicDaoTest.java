@@ -258,12 +258,12 @@ public class ClinicDaoTest {
     public void testSearchNoParams() {
 
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = null;
         String accepted_plan = null;
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
 
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         clinics.forEach(clinic -> {
@@ -277,7 +277,7 @@ public class ClinicDaoTest {
     public void testSearchNoName() {
 
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = new ClinicHours();
         hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("08:00:00"),Time.valueOf("23:00:00"));
         hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
@@ -286,7 +286,7 @@ public class ClinicDaoTest {
         String accepted_plan = "OSDE";
         String study_name = "allergy";
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
 
         Assert.assertEquals(1,clinics.size());
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
@@ -297,12 +297,12 @@ public class ClinicDaoTest {
     @Rollback
     public void testSearchNoHours() {
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = new ClinicHours();
         String accepted_plan = null;
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
 
         Assert.assertEquals(0,clinics.size());
     }
@@ -312,12 +312,12 @@ public class ClinicDaoTest {
     @Rollback
     public void testSearchPlanWithLike() {
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = null;
         String accepted_plan = "oSdE";
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
 
