@@ -1,0 +1,7 @@
+${replace-m-body-sendResultMailNoHtml-details}
+
+${replace-order-url}
+
+Contact Info
+${replace-contact1-name}: ${replace-contact1-email}
+${replace-contact2-name}: ${replace-contact2-email}
