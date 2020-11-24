@@ -309,7 +309,7 @@ public class ProfileController {
             editClinicForm.getClinicHoursForm().setOpening_time(clinic.getHours().getOpen_hours_asString());
             editClinicForm.getClinicHoursForm().setOpen_days(clinic.getHours().getDays_asIntArray());
 
-            editClinicForm.setAccepted_plans(clinic.getAccepted_plans().toArray(new String[0]));
+            editClinicForm.setAcceptedPlans(clinic.getAcceptedPlans().toArray(new String[0]));
 
             ArrayList<String> availableStudiesList = new ArrayList<>();
             for (StudyType studyType : clinic.getMedical_studies()) {
@@ -364,7 +364,7 @@ public class ProfileController {
         Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpen_days()));
         clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpening_time(),editClinicForm.getClinicHoursForm().getClosing_time());
 
-        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAccepted_plans_List())),clinicHours,clinic.isVerified());
+        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlans_List())),clinicHours,clinic.isVerified());
 
         mav.addObject("editSuccess",User.CLINIC_ROLE_ID);
 

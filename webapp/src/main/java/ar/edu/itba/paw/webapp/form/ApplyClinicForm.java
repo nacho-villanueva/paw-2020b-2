@@ -22,7 +22,7 @@ public class ApplyClinicForm {
     @NotEmpty
     private String[] availableStudies;
 
-    private String accepted_plans;
+    private String acceptedPlans;
 
     @Valid
     @ValidOpeningClosingHours()
@@ -57,16 +57,16 @@ public class ApplyClinicForm {
         this.availableStudies = availableStudies;
     }
 
-    public void setAccepted_plans(String plans){
-        this.accepted_plans = plans;
+    public void setAcceptedPlans(String plans){
+        this.acceptedPlans = plans;
     }
 
-    public String getAccepted_plans(){
-        return this.accepted_plans;
+    public String getAcceptedPlans(){
+        return this.acceptedPlans;
     }
 
-    public String[] getAccepted_plans_List(){
-        return this.accepted_plans.split(",");
+    public String[] getAcceptedPlansList(){
+        return this.acceptedPlans.split(",");
     }
 
 

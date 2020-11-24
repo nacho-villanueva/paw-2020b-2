@@ -35,7 +35,7 @@ public class EditClinicForm {
     @ValidOpeningClosingHours
     private ClinicHoursForm clinicHoursForm;
 
-    private String accepted_plans;
+    private String acceptedPlans;
 
     public EditClinicForm(){
         clinicHoursForm = new ClinicHoursForm();
@@ -73,20 +73,20 @@ public class EditClinicForm {
         this.password = password;
     }
 
-    public String getAccepted_plans() {
-        return accepted_plans;
+    public String getAcceptedPlans() {
+        return acceptedPlans;
     }
 
-    public void setAccepted_plans(String accepted_plans) {
-        this.accepted_plans = accepted_plans;
+    public void setAcceptedPlans(String acceptedPlans) {
+        this.acceptedPlans = acceptedPlans;
     }
 
-    public void setAccepted_plans(String[] accepted_plans) {
-        this.accepted_plans = String.join(",", accepted_plans);
+    public void setAcceptedPlans(String[] acceptedPlans) {
+        this.acceptedPlans = String.join(",", acceptedPlans);
     }
 
-    public String[] getAccepted_plans_List(){
-        return this.accepted_plans.split(",");
+    public String[] getAcceptedPlansList(){
+        return this.acceptedPlans.split(",");
     }
 
     public ClinicHoursForm getClinicHoursForm() {

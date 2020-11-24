@@ -92,7 +92,7 @@ public class ClinicDaoTest {
         Assert.assertTrue(maybeClinic.isPresent());
         Assert.assertEquals(clinicTwo.getName(), maybeClinic.get().getName());
         Assert.assertTrue(maybeClinic.get().getHours().getDays()[ClinicHours.SUNDAY]);
-        Assert.assertTrue(maybeClinic.get().getAccepted_plans().contains(CLINIC_TWO_ACCEPTED_PLAN));
+        Assert.assertTrue(maybeClinic.get().getAcceptedPlans().contains(CLINIC_TWO_ACCEPTED_PLAN));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class ClinicDaoTest {
         final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, availableStudies,plans,getClinicHours(),false);
 
         Assert.assertEquals(availableStudies.size(),clinic.getMedical_studies().size());
-        Assert.assertEquals(plans.size(),clinic.getAccepted_plans().size());
+        Assert.assertEquals(plans.size(),clinic.getAcceptedPlans().size());
         Assert.assertTrue(clinic.getHours().getDays()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.MONDAY]);
         Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.SATURDAY]);
@@ -260,10 +260,10 @@ public class ClinicDaoTest {
         //Search params
         String clinicName = null;
         ClinicHours hours = null;
-        String accepted_plan = null;
+        String acceptedPlan = null;
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,study_name);
 
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         clinics.forEach(clinic -> {
@@ -283,10 +283,10 @@ public class ClinicDaoTest {
         hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
         hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
         hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
-        String accepted_plan = "OSDE";
+        String acceptedPlan = "OSDE";
         String study_name = "allergy";
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,study_name);
 
         Assert.assertEquals(1,clinics.size());
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
@@ -299,10 +299,10 @@ public class ClinicDaoTest {
         //Search params
         String clinicName = null;
         ClinicHours hours = new ClinicHours();
-        String accepted_plan = null;
+        String acceptedPlan = null;
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,study_name);
 
         Assert.assertEquals(0,clinics.size());
     }
@@ -314,10 +314,10 @@ public class ClinicDaoTest {
         //Search params
         String clinicName = null;
         ClinicHours hours = null;
-        String accepted_plan = "oSdE";
+        String acceptedPlan = "oSdE";
         String study_name = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,study_name);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
 

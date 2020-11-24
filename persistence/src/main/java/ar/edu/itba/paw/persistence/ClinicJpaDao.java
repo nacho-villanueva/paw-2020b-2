@@ -89,7 +89,7 @@ public class ClinicJpaDao implements ClinicDao {
             clinic.setName(name);
             clinic.setTelephone(telephone);
             clinic.setVerified(verified);
-            clinic.setAccepted_plans(medicPlans);
+            clinic.setAcceptedPlans(medicPlans);
 
             Collection<StudyType> studiesRef = new HashSet<>();
             availableStudies.forEach(study -> {
@@ -150,8 +150,8 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String accepted_plan, String study_name) {
-        String queryString = getSearchQueryString(clinicName,hours,accepted_plan,study_name);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String study_name) {
+        String queryString = getSearchQueryString(clinicName,hours,acceptedPlan,study_name);
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
@@ -159,8 +159,8 @@ public class ClinicJpaDao implements ClinicDao {
 
         if(clinicName!=null)
             query.setParameter("clinicName","%"+clinicName.toLowerCase()+"%");
-        if(accepted_plan!=null)
-            query.setParameter("clinicAcceptedPlan","%"+accepted_plan.toLowerCase()+"%");
+        if(acceptedPlan!=null)
+            query.setParameter("clinicAcceptedPlan","%"+acceptedPlan.toLowerCase()+"%");
         if(study_name!=null)
             query.setParameter("clinicMedicalStudy","%"+study_name.toLowerCase()+"%");
         if(hours!=null){
@@ -177,7 +177,7 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList();
     }
 
-    private String getSearchQueryString(String clinicName, ClinicHours hours, String accepted_plan, String study_name) {
+    private String getSearchQueryString(String clinicName, ClinicHours hours, String acceptedPlan, String study_name) {
         //Base Query
         StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinic c");
 
@@ -187,9 +187,9 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(" INNER JOIN c.hours as cdh");
         }
 
-        if(accepted_plan != null) {
+        if(acceptedPlan != null) {
             //Add plans part
-            query.append(" INNER JOIN c.accepted_plans as cap");
+            query.append(" INNER JOIN c.acceptedPlans as cap");
         }
 
         if(study_name != null) {
@@ -233,7 +233,7 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(")");
         }
 
-        if(accepted_plan != null) {
+        if(acceptedPlan != null) {
             //Add plan condition
             query.append(" AND LOWER(cap) LIKE :clinicAcceptedPlan");
         }

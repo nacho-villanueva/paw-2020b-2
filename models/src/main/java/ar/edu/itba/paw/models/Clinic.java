@@ -34,7 +34,7 @@ public class Clinic {
     @ElementCollection
     @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id", referencedColumnName = "user_id"))
     @Column(name="medic_plan", nullable = false)
-    private Set<String> accepted_plans;
+    private Set<String> acceptedPlans;
 
     @Column(name="verified",nullable=false)
     private boolean verified;
@@ -44,15 +44,15 @@ public class Clinic {
         this.verified = false;
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> accepted_plans, final boolean verified) {
-        this(user,name,telephone,medical_studies,accepted_plans,verified);
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final ClinicHours hours, final Set<String> acceptedPlans, final boolean verified) {
+        this(user,name,telephone,medical_studies,acceptedPlans,verified);
         this.hours = hours.createClinicDayHoursCollection();
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final Set<String> accepted_plans, final boolean verified) {
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medical_studies, final Set<String> acceptedPlans, final boolean verified) {
         this(user,name,telephone,verified);
         this.medical_studies = medical_studies;
-        this.accepted_plans = accepted_plans;
+        this.acceptedPlans = acceptedPlans;
     }
 
 
@@ -61,7 +61,7 @@ public class Clinic {
         this.telephone = telephone;
         this.medical_studies = new ArrayList<>();
         this.hours = new ArrayList<>();
-        this.accepted_plans = new HashSet<>();
+        this.acceptedPlans = new HashSet<>();
         this.verified = verified;
     }
 
@@ -174,11 +174,11 @@ public class Clinic {
         });
     }
 
-    public Set<String> getAccepted_plans() {
-        return accepted_plans;
+    public Set<String> getAcceptedPlans() {
+        return acceptedPlans;
     }
 
-    public void setAccepted_plans(Set<String> accepted_plans) {
-        this.accepted_plans = accepted_plans;
+    public void setAcceptedPlans(Set<String> acceptedPlans) {
+        this.acceptedPlans = acceptedPlans;
     }
 }

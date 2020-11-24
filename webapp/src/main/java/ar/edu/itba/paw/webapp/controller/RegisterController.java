@@ -146,7 +146,7 @@ public class RegisterController {
         Set<Integer> daysSet = new HashSet<>(Arrays.asList(applyClinicForm.getClinicHoursForm().getOpen_days()));
         clinicHours.setDaysHours(daysSet,applyClinicForm.getClinicHoursForm().getOpening_time(),applyClinicForm.getClinicHoursForm().getClosing_time());
 
-        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAccepted_plans_List())),clinicHours);
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAcceptedPlans_List())),clinicHours);
 
         mns.sendClinicApplicationValidatingMail(newClinic);
         authWithoutPassword(loggedUser());

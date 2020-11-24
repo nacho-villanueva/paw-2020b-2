@@ -65,8 +65,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String accepted_plan, String study_name) {
-        return clinicDao.searchClinicsBy(clinicName,hours,accepted_plan,study_name);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String study_name) {
+        return clinicDao.searchClinicsBy(clinicName,hours,acceptedPlan,study_name);
     }
 
 }

@@ -28,5 +28,5 @@ public interface ClinicService {
     Collection<Clinic> getByStudyTypeId(int studyTypeId);
 
     //If parameters are null, search will ignore those values
-    Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String accepted_plan, String study_name);
+    Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String study_name);
 }

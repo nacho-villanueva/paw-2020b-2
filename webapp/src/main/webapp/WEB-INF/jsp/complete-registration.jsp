@@ -281,16 +281,16 @@
                         <!-- Accepted Medical Plans -->
                         <div>
                             <fieldset class="input-group pt-4">
-                                    <label for="addPlanInput" class="bmd-label-static"><spring:message code="complete-registration.body.form.clinic.accepted_plans.label" /></label>
+                                    <label for="addPlanInput" class="bmd-label-static"><spring:message code="complete-registration.body.form.clinic.acceptedPlans.label" /></label>
                                     <input id="addPlanInput" type="text" class="form-control">
                                     <div class="input-group-append">
-                                        <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="<spring:message code="complete-registration.body.form.clinic.accepted_plans.add" />" />
+                                        <input class="btn btn-primary" id="enter" type="button" onclick="addPlanToList();" value="<spring:message code="complete-registration.body.form.clinic.acceptedPlans.add" />" />
                                     </div>
-                                <f:hidden id="plansInputList" path="accepted_plans" onload="onLoadPlanList(${applyClinicForm.accepted_plans})" value="" />
+                                <f:hidden id="plansInputList" path="acceptedPlans" onload="onLoadPlanList(${applyClinicForm.acceptedPlans})" value="" />
                             </fieldset>
 
                             <div id="plansList" class="mb-2 mt-2">
-                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.accepted_plans.confirmation" />: </small>
+                                <small class="text-muted"><spring:message code="complete-registration.body.form.clinic.acceptedPlans.confirmation" />: </small>
                                 <template id="planPillTemplate">
                                     <a class="mr-2 mb-1"><span class="badge-md badge-pill badge-primary"><i class="fa fa-times ml-1"></i></span></a>
                                 </template>
