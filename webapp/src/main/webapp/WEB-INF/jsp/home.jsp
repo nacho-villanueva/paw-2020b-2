@@ -60,7 +60,7 @@
                                     <a href="${studyPath}${orders_encoded.get(o.order_id)}" class="list-group-item list-group-item-action">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1"><spring:message code="home.body.card.studies.studyType" arguments="${o.study.name}" /></h5>
-                                            <small><spring:message code="home.body.card.studies.date" arguments="${o.date}" /></small>
+                                            <small><spring:message code="home.body.card.studies.date" arguments="${o.getLegacyDate()}" /></small>
                                         </div>
                                         <div class="d-flex w-100 justify-content-between">
                                             <c:choose>
