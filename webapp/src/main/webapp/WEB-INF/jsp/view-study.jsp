@@ -59,7 +59,7 @@
                     <div class="media">
                         <div class="media-body">
                             <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
-                            <p class="text-center"><spring:message code="view-study.body.card.order.licence_number.prefix" arguments="${order.medic.licence_number}"/></p>
+                            <p class="text-center"><spring:message code="view-study.body.card.order.licenceNumber.prefix" arguments="${order.medic.licenceNumber}"/></p>
                         </div>
                         <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem; max-height: 5em;">
                     </div>
@@ -128,7 +128,7 @@
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsible_name}"/></h5>
-                                                                <p class="text-center"><spring:message code="view-study.body.card.results.result.responsible_licence_number.prefix" arguments="${result.responsible_licence_number}"/></p>
+                                                                <p class="text-center"><spring:message code="view-study.body.card.results.result.responsible_licenceNumber.prefix" arguments="${result.responsible_licenceNumber}"/></p>
                                                             </div>
                                                             <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="<spring:message code="view-study.body.card.result.signature.alt"/>" style="max-height: 5em;">
                                                         </div>

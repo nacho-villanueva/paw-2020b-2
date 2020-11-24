@@ -112,7 +112,7 @@ public class RegisterController {
         }
 
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
-                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
+                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicenceNumber(), knownFields);
 
         mns.sendMedicApplicationValidatingMail(newMedic);
         authWithoutPassword(loggedUser());

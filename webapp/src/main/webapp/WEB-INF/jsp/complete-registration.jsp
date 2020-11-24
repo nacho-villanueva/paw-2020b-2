@@ -172,10 +172,10 @@
                             <f:errors path="telephone" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group row">
-                            <label for="licenseNumber" class="bmd-label-floating"><spring:message code="complete-registration.body.form.medic.licence_number.label"/></label>
-                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number"/>
-                            <small class="text-muted"><spring:message code="complete-registration.body.form.medic.licence_number.format"/></small>
-                            <f:errors path="licence_number" cssClass="text-danger" element="small" />
+                            <label for="licenseNumber" class="bmd-label-floating"><spring:message code="complete-registration.body.form.medic.licenceNumber.label"/></label>
+                            <f:input type="text" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licenceNumber"/>
+                            <small class="text-muted"><spring:message code="complete-registration.body.form.medic.licenceNumber.format"/></small>
+                            <f:errors path="licenceNumber" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="mt-4 form-group">
                             <label for="identificationFile"><spring:message code="complete-registration.body.form.medic.identification.label"/></label><br/>

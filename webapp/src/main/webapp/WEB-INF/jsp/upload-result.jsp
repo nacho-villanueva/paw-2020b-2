@@ -50,10 +50,10 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="responsibleInput2"><spring:message code="upload-result.body.form.responsible_licence_number.label"/> </label>
-                                <spring:message code="upload-result.body.form.responsible_licence_number.placeholder" var="responsible_numberPlaceholder"/>
-                                <form:input type="text" class="form-control" id="responsibleInput2" placeholder="${responsible_numberPlaceholder}" path="responsible_licence_number"/>
-                                <form:errors path="responsible_licence_number" cssClass="text-danger"/>
+                                <label for="responsibleInput2"><spring:message code="upload-result.body.form.responsible_licenceNumber.label"/> </label>
+                                <spring:message code="upload-result.body.form.responsible_licenceNumber.placeholder" var="responsible_numberPlaceholder"/>
+                                <form:input type="text" class="form-control" id="responsibleInput2" placeholder="${responsible_numberPlaceholder}" path="responsible_licenceNumber"/>
+                                <form:errors path="responsible_licenceNumber" cssClass="text-danger"/>
                             </div>
                         </div>
                     </div>

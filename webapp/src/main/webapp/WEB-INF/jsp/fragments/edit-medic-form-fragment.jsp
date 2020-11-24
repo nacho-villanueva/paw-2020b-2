@@ -48,13 +48,13 @@
             </td>
         </tr>
         <tr>
-            <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
+            <td><spring:message code="profile-view.body.tab.medic.licenceNumber.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.medic.licence_number.label" var="licence_numberPlaceholder"/>
-                    <f:input type="text" cssClass="form-control" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number" placeholder="${licence_numberPlaceholder}"/>
-                    <small class="text-muted"><spring:message code="profile-edit.form.medic.licence_number.format"/></small>
-                    <f:errors path="licence_number" cssClass="text-danger" element="small"/>
+                    <spring:message code="profile-view.body.tab.medic.licenceNumber.label" var="licenceNumberPlaceholder"/>
+                    <f:input type="text" cssClass="form-control" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licenceNumber" placeholder="${licenceNumberPlaceholder}"/>
+                    <small class="text-muted"><spring:message code="profile-edit.form.medic.licenceNumber.format"/></small>
+                    <f:errors path="licenceNumber" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>

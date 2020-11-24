@@ -24,7 +24,7 @@ public class Result {
     private String responsible_name;
 
     @Column(name="responsible_licence_number", nullable=false)
-    private String responsible_licence_number;
+    private String responsible_licenceNumber;
 
     @Column(name="identification_type", nullable=false)
     private String identificationType;
@@ -46,7 +46,7 @@ public class Result {
                   final Order order,
                   final Date date,
                   final String responsible_name,
-                  final String responsible_licence_number,
+                  final String responsible_licenceNumber,
                   final String identificationType,
                   final byte[] identification,
                   final String data_type,
@@ -55,7 +55,7 @@ public class Result {
         this.order = order;
         this.date = date;
         this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
+        this.responsible_licenceNumber = responsible_licenceNumber;
         this.identificationType = identificationType;
         this.identification = identification;
         this.data_type = data_type;
@@ -65,7 +65,7 @@ public class Result {
     public Result(final Order order,
                   final Date date,
                   final String responsible_name,
-                  final String responsible_licence_number,
+                  final String responsible_licenceNumber,
                   final String identificationType,
                   final byte[] identification,
                   final String data_type,
@@ -73,7 +73,7 @@ public class Result {
         this.order = order;
         this.date = date;
         this.responsible_name = responsible_name;
-        this.responsible_licence_number = responsible_licence_number;
+        this.responsible_licenceNumber = responsible_licenceNumber;
         this.identificationType = identificationType;
         this.identification = identification;
         this.data_type = data_type;
@@ -98,8 +98,8 @@ public class Result {
         return responsible_name;
     }
 
-    public String getResponsible_licence_number() {
-        return responsible_licence_number;
+    public String getResponsible_licenceNumber() {
+        return responsible_licenceNumber;
     }
 
     public String getIdentificationType() {
@@ -146,8 +146,8 @@ public class Result {
         this.data_type = data_type;
     }
 
-    public void setResponsible_licence_number(String responsible_licence_number) {
-        this.responsible_licence_number = responsible_licence_number;
+    public void setResponsible_licenceNumber(String responsible_licenceNumber) {
+        this.responsible_licenceNumber = responsible_licenceNumber;
     }
 
     public void setResponsible_name(String responsible_name) {

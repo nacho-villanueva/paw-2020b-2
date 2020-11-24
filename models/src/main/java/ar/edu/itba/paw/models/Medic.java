@@ -29,7 +29,7 @@ public class Medic {
     private byte[] identification;
 
     @Column(name = "licence_number",nullable=false)
-    private String licence_number;
+    private String licenceNumber;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="medic_medical_fields",
@@ -46,13 +46,13 @@ public class Medic {
         //Just for hibernate
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
-        this(user,name,telephone,identificationType,identification,licence_number,verified);
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified, final Collection<MedicalField> medical_fields) {
+        this(user,name,telephone,identificationType,identification,licenceNumber,verified);
         this.medical_fields = medical_fields;
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final boolean verified) {
-        this(user,name,licence_number);
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final boolean verified) {
+        this(user,name,licenceNumber);
         this.telephone = telephone;
         this.identificationType = identificationType;
         this.identification = identification;
@@ -61,10 +61,10 @@ public class Medic {
     }
 
     //Basic constructor for medics objects inside orders
-    public Medic(final User user, final String name, final String licence_number) {
+    public Medic(final User user, final String name, final String licenceNumber) {
         this.user = user;
         this.name = name;
-        this.licence_number = licence_number;
+        this.licenceNumber = licenceNumber;
         this.verified = false;
     }
 
@@ -94,8 +94,8 @@ public class Medic {
         this.user.setId(userId);
     }
 
-    public void setLicence_number(String licence_number) {
-        this.licence_number = licence_number;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
     public void setMedical_fields(Collection<MedicalField> medical_fields) {
@@ -120,8 +120,8 @@ public class Medic {
         return telephone;
     }
 
-    public String getLicence_number() {
-        return licence_number;
+    public String getLicenceNumber() {
+        return licenceNumber;
     }
 
     public Collection<MedicalField> getMedical_fields() {

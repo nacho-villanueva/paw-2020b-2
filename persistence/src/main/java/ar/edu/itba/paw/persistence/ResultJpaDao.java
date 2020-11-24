@@ -31,14 +31,14 @@ public class ResultJpaDao implements ResultDao {
 
     @Override
     public Result register(long order_id, String result_data_type, byte[] result_data, String identificationType,
-                           byte[] identification, Date date, String responsible_name, String responsible_licence_number) {
+                           byte[] identification, Date date, String responsible_name, String responsible_licenceNumber) {
 
         Order orderRef = em.getReference(Order.class,order_id);
         Result result = new Result(
                 orderRef,
                 date,
                 responsible_name,
-                responsible_licence_number,
+                responsible_licenceNumber,
                 identificationType,
                 identification,
                 result_data_type,

@@ -141,8 +141,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
-                                            <td class="output"><c:out value="${medic.licence_number}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.medic.licenceNumber.label"/></td>
+                                            <td class="output"><c:out value="${medic.licenceNumber}"/></td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.medic.medical_fields.label"/></td>

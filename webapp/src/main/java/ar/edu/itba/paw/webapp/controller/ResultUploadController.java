@@ -68,7 +68,7 @@ public class ResultUploadController {
                             signBytes,
                             new Date(System.currentTimeMillis()),
                             resultForm.getResponsible_name(),
-                            resultForm.getResponsible_licence_number());
+                            resultForm.getResponsible_licenceNumber());
                 }
                 return new ModelAndView("redirect:/view-study/" + urlEncoderService.encode(orderId));
             } catch (IOException e){

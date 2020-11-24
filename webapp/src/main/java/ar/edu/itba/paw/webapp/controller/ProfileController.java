@@ -218,7 +218,7 @@ public class ProfileController {
             mav.addObject("medic", medic);
             editMedicForm.setFull_name(medic.getName());
             editMedicForm.setTelephone(medic.getTelephone());
-            editMedicForm.setLicence_number(medic.getLicence_number());
+            editMedicForm.setLicenceNumber(medic.getLicenceNumber());
 
             ArrayList<String> knownFieldsList = new ArrayList<>();
             for (MedicalField mf : medic.getMedical_fields()) {
@@ -281,7 +281,7 @@ public class ProfileController {
         }
 
         medicService.updateMedicInfo(loggedUser(),editMedicForm.getFull_name(),editMedicForm.getTelephone(),
-                newContentType, newContent, editMedicForm.getLicence_number(),knownFields,medic.isVerified());
+                newContentType, newContent, editMedicForm.getLicenceNumber(),knownFields,medic.isVerified());
 
 
         mav.addObject("editSuccess",User.MEDIC_ROLE_ID);

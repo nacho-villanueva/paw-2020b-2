@@ -43,7 +43,7 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic register(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic register(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> known_fields, final boolean verified) {
         //Getting user reference
         User userRef = em.getReference(User.class,user.getId());
 
@@ -53,7 +53,7 @@ public class MedicJpaDao implements MedicDao {
             MedicalField fieldRef = getFieldRef(medicalField);
             fieldsRef.add(fieldRef);
         });
-        final Medic medic = new Medic(userRef,name,telephone,identificationType,identification,licence_number,verified,fieldsRef);
+        final Medic medic = new Medic(userRef,name,telephone,identificationType,identification,licenceNumber,verified,fieldsRef);
         em.persist(medic);
         em.flush();
         return medic;
@@ -75,7 +75,7 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final Collection<MedicalField> known_fields, final boolean verified) {
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> known_fields, final boolean verified) {
 
         Optional<Medic> medicDB = findByUserId(user.getId());
 
@@ -84,7 +84,7 @@ public class MedicJpaDao implements MedicDao {
             medic.setTelephone(telephone);
             medic.setIdentificationType(identificationType);
             medic.setIdentification(identification);
-            medic.setLicence_number(licence_number);
+            medic.setLicenceNumber(licenceNumber);
             medic.setVerified(verified);
             Collection<MedicalField> fieldsRef = new HashSet<>();
             known_fields.forEach(medicalField -> {

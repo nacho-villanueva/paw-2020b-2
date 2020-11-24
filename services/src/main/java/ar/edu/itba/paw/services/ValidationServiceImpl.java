@@ -236,8 +236,8 @@ public class ValidationServiceImpl implements ValidationService {
 
     //TODO: Investigate, see if we can make a better validation
     @Override
-    public boolean isValidLicenceNumber(String licence_number) {
-        return isValidName(licence_number);
+    public boolean isValidLicenceNumber(String licenceNumber) {
+        return isValidName(licenceNumber);
     }
 
     @Override

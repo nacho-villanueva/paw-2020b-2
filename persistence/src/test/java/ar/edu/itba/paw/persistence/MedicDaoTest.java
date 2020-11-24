@@ -98,7 +98,7 @@ public class MedicDaoTest {
         known_fields.add(fieldTwo);
         known_fields.add(fieldThree);
 
-        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicence_number(),known_fields,medicTest.isVerified());
+        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
@@ -115,7 +115,7 @@ public class MedicDaoTest {
         known_fields.add(fieldTwo);
         known_fields.add(fieldTest);
 
-        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicence_number(),known_fields,medicTest.isVerified());
+        Medic medic = dao.register(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(known_fields.size(),medic.getMedical_fields().size());
@@ -133,7 +133,7 @@ public class MedicDaoTest {
         known_fields.add(fieldTwo);
         known_fields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicence_number(),known_fields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicOne.getUser().getId() + " AND name = '" + medicTest.getName() + "'"));
@@ -151,7 +151,7 @@ public class MedicDaoTest {
         known_fields.add(fieldTwo);
         known_fields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicence_number(),known_fields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),known_fields,medicTest.isVerified());
 
         Assert.assertNull(medic);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));

@@ -33,7 +33,7 @@ public interface ValidationService {
 
     boolean isValidPassword(String password);
 
-    boolean isValidLicenceNumber(String licence_number);
+    boolean isValidLicenceNumber(String licenceNumber);
 
     boolean isValidMedicPlan(String medicPlan);
 

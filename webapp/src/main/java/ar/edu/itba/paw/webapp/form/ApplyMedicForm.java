@@ -21,7 +21,7 @@ public class ApplyMedicForm {
 
     @NotBlank
     @Pattern(regexp = "[0-9a-zA-Z]+")
-    private String licence_number;
+    private String licenceNumber;
 
     @NotEmpty
     private String[] known_fields;
@@ -69,7 +69,7 @@ public class ApplyMedicForm {
         this.known_fields = known_fields;
     }
 
-    public String getLicence_number() {
+    public String getLicenceNumber() {
         return licence_number;
     }
 
