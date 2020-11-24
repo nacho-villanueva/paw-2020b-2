@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -256,7 +256,7 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public boolean isValidDate(Date date) {
+    public boolean isValidDate(LocalDate date) {
         return date != null;
     }
 

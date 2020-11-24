@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Entity
 @Table(name = "results")
@@ -18,7 +20,7 @@ public class Result {
     private Order order;
 
     @Column(name="date", nullable=false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name="responsible_name", nullable=false)
     private String responsibleName;
@@ -44,7 +46,7 @@ public class Result {
 
     public Result(final Long id,
                   final Order order,
-                  final Date date,
+                  final LocalDate date,
                   final String responsibleName,
                   final String responsibleLicenceNumber,
                   final String identificationType,
@@ -63,7 +65,7 @@ public class Result {
     }
 
     public Result(final Order order,
-                  final Date date,
+                  final LocalDate date,
                   final String responsibleName,
                   final String responsibleLicenceNumber,
                   final String identificationType,
@@ -90,8 +92,12 @@ public class Result {
 
     public long getOrderId() { return order.getOrderId(); }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public Date getLegacyDate() {
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public String getResponsibleName() {
@@ -130,7 +136,7 @@ public class Result {
         this.identification = identification;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

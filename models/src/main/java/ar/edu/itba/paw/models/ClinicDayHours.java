@@ -2,7 +2,9 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity
@@ -55,21 +57,21 @@ public class ClinicDayHours {
     private Clinic clinic;
 
     @Column(name="open_time", nullable = false)
-    private Time openTime;
+    private LocalTime openTime;
 
     @Column(name="close_time", nullable = false)
-    private Time closeTime;
+    private LocalTime closeTime;
 
     protected ClinicDayHours() {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, int clinicId, Time openTime, Time closeTime) {
+    public ClinicDayHours(int day, int clinicId, LocalTime openTime, LocalTime closeTime) {
         this(day,openTime,closeTime);
         this.clinicId = clinicId;
     }
 
-    public ClinicDayHours(int dayOfWeek, Time openTime, Time closeTime) {
+    public ClinicDayHours(int dayOfWeek, LocalTime openTime, LocalTime closeTime) {
         this.dayOfWeek = dayOfWeek;
         this.openTime = openTime;
         this.closeTime = closeTime;
@@ -99,19 +101,19 @@ public class ClinicDayHours {
         this.clinic = clinic;
     }
 
-    public Time getOpenTime() {
+    public LocalTime getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(Time openTime) {
+    public void setOpenTime(LocalTime openTime) {
         this.openTime = openTime;
     }
 
-    public Time getCloseTime() {
+    public LocalTime getCloseTime() {
         return closeTime;
     }
 
-    public void setCloseTime(Time closeTime) {
+    public void setCloseTime(LocalTime closeTime) {
         this.closeTime = closeTime;
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class ResultJpaDao implements ResultDao {
 
     @Override
     public Result register(long orderId, String resultDataType, byte[] resultData, String identificationType,
-                           byte[] identification, Date date, String responsibleName, String responsibleLicenceNumber) {
+                           byte[] identification, LocalDate date, String responsibleName, String responsibleLicenceNumber) {
 
         Order orderRef = em.getReference(Order.class,orderId);
         Result result = new Result(

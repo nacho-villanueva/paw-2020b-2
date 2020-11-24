@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Result register(long orderId, String resultDataType, byte[] resultData, String identificationType, byte[] identification, Date date, String responsibleName, String responsibleLicenceNumber) {
+    public Result register(long orderId, String resultDataType, byte[] resultData, String identificationType, byte[] identification, LocalDate date, String responsibleName, String responsibleLicenceNumber) {
         Result result = resultDao.register(orderId,resultDataType,resultData,identificationType,identification,date,responsibleName,responsibleLicenceNumber);
         mailNotificationService.sendResultMail(result);
         return result;

@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.models;
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,8 +22,8 @@ public class ClinicHours {
     private final Pattern HOUR_PATTERN = Pattern.compile(HOUR_REGEX);
 
     private final boolean[] days = new boolean[DAYS_OF_WEEK];
-    private final Time[] openHours = new Time[DAYS_OF_WEEK];
-    private final Time[] closeHours = new Time[DAYS_OF_WEEK];
+    private final LocalTime[] openHours = new LocalTime[DAYS_OF_WEEK];
+    private final LocalTime[] closeHours = new LocalTime[DAYS_OF_WEEK];
 
     //Default constructor needed for hibernate, if functionality changes DO NOT delete constructor, just change from public to /* package */
     public ClinicHours() {
@@ -64,7 +63,7 @@ public class ClinicHours {
         return clinicDayHoursCollection;
     }
 
-    public void setDayHour(final int dayOfWeek, final Time openTime, final Time closeTime) {
+    public void setDayHour(final int dayOfWeek, final LocalTime openTime, final LocalTime closeTime) {
         if(validInput(dayOfWeek,openTime,closeTime)) {
             this.days[dayOfWeek] = true;
             this.openHours[dayOfWeek] = openTime;
@@ -72,7 +71,7 @@ public class ClinicHours {
         }
     }
 
-    public static boolean validInput(int dayOfWeek, Time openTime, Time closeTime) {
+    public static boolean validInput(int dayOfWeek, LocalTime openTime, LocalTime closeTime) {
         if (openTime == null || closeTime == null) {
             return false;
         }
@@ -103,7 +102,7 @@ public class ClinicHours {
         return days.toArray(new Integer[0]);
     }
 
-    public Time[] getCloseHours() {
+    public LocalTime[] getCloseHours() {
         return closeHours;
     }
 
@@ -111,21 +110,20 @@ public class ClinicHours {
         return timeToStringArray(getCloseHours());
     }
 
-    public Time[] getOpenHours() {
+    public LocalTime[] getOpenHours() {
         return openHours;
     }
 
     public String[] getOpenHoursAsString(){
-
         return timeToStringArray(getOpenHours());
     }
 
-    private String[] timeToStringArray(Time[] time){
+    private String[] timeToStringArray(LocalTime[] time){
         String[] stime = new String[time.length];
-        DateFormat format = new SimpleDateFormat("HH:mm");
+        DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_TIME;
         for(int i = 0; i < time.length; i++){
             if(time[i] != null){
-                stime[i] = format.format(time[i].getTime());
+                stime[i] = time[i].format(format).substring(0,5);
             }
         }
         return stime;
@@ -170,14 +168,14 @@ public class ClinicHours {
     private void setOpenHours(String[] hours){
         for(int i = 0; i < DAYS_OF_WEEK; i++){
             if(!hours[i].equals("") && hours[i] != null)
-                openHours[i] = Time.valueOf(hours[i]+":00");
+                openHours[i] = LocalTime.parse(hours[i]);
         }
     }
 
     private void setCloseHours(String[] hours){
         for(int i = 0; i < DAYS_OF_WEEK; i++){
             if(!hours[i].equals("") && hours[i] != null)
-                closeHours[i] = Time.valueOf(hours[i]+":00");
+                closeHours[i] = LocalTime.parse(hours[i]);
         }
     }
 

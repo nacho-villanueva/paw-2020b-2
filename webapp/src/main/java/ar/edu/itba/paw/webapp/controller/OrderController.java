@@ -8,20 +8,23 @@ import ar.edu.itba.paw.webapp.exceptions.PatientNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
 import ar.edu.itba.paw.webapp.form.AdvancedSearchClinicForm;
 import ar.edu.itba.paw.webapp.form.OrderForm;
-import ar.edu.itba.paw.webapp.form.OrderWithoutClinicForm;
 import ar.edu.itba.paw.webapp.form.PatientInfoForm;
+import ar.edu.itba.paw.webapp.form.constraintGroups.ExistingPatientGroup;
+import ar.edu.itba.paw.webapp.form.constraintGroups.OrderGroup;
+import ar.edu.itba.paw.webapp.form.constraintGroups.OrderWithoutClinicGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -55,35 +58,59 @@ public class OrderController {
     private UserService us;
 
     @RequestMapping(method = RequestMethod.GET,params={"submit!=search","submit!=reset"})
-    public ModelAndView getOrderCreationForm(@ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm) {
+    public ModelAndView getOrderCreationForm(@ModelAttribute("orderForm") OrderForm orderForm) {
         final ModelAndView mav = new ModelAndView("create-order");
         Optional<Medic> m = medicService.findByUserId(loggedUser().getId());
         if (m.isPresent()){
             mav.addObject("loggedMedic", m.get());
         }else
             throw new MedicNotFoundException();
-        orderWithoutClinicForm.setMedicId(loggedUser().getId());
+        orderForm.setMedicId(loggedUser().getId());
         mav.addObject("studiesList", studyTypeService.getAll());
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, params={"submit=back","submit!=toClinicSelection","submit!=create-order"})
-    public ModelAndView getOrderCreationFormBack(@ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm) {
+    @RequestMapping(method = RequestMethod.POST, params={"submit=back","submit!=toClinicSelection","submit!=create-order","submit!=getExistingPatient"})
+    public ModelAndView getOrderCreationFormBack(@ModelAttribute("orderForm") OrderForm orderForm) {
         final ModelAndView mav = new ModelAndView("create-order");
         Optional<Medic> m = medicService.findByUserId(loggedUser().getId());
         if (m.isPresent()){
             mav.addObject("loggedMedic", m.get());
         }else
             throw new MedicNotFoundException();
-        orderWithoutClinicForm.setMedicId(loggedUser().getId());
+        orderForm.setMedicId(loggedUser().getId());
         mav.addObject("studiesList", studyTypeService.getAll());
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, params={"submit=toClinicSelection"})
-    public ModelAndView getClinicAdvancedSearch(@Valid @ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm, final BindingResult bindingResult,
-                                                @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm,
-                                                @ModelAttribute("orderForm") OrderForm orderForm, Locale locale){
+    @RequestMapping(method = RequestMethod.POST, params={"submit=getExistingPatient","submit!=toClinicSelection","submit!=back","submit!=create-order"})
+    public ModelAndView getExistingPatient(@Validated(ExistingPatientGroup.class) @ModelAttribute("orderForm") OrderForm orderForm, final BindingResult bindingResult){
+        final ModelAndView mav = new ModelAndView("create-order");
+        Optional<Medic> m = medicService.findByUserId(loggedUser().getId());
+        if (m.isPresent()){
+            mav.addObject("loggedMedic", m.get());
+        }else
+            throw new MedicNotFoundException();
+        mav.addObject("studiesList", studyTypeService.getAll());
+
+        // patient email is valid, therefore i need to load patient info
+        if(!bindingResult.hasErrors()){
+            Optional<Patient> patientOptional = patientService.findByEmail(orderForm.getPatientEmail());
+            if(!patientOptional.isPresent()){throw new PatientNotFoundException();}
+
+            Patient patient = patientOptional.get();
+
+            orderForm.setPatientInsurancePlan(patient.getMedicPlan());
+            orderForm.setPatientInsuranceNumber(patient.getMedicPlanNumber());
+            orderForm.setPatientName(patient.getName());
+        }
+
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, params={"submit=toClinicSelection","submit!=getExistingPatient","submit!=back","submit!=create-order"})
+    public ModelAndView getClinicAdvancedSearch(@Validated(OrderWithoutClinicGroup.class) @ModelAttribute("orderForm") OrderForm orderForm, final BindingResult bindingResult,
+                                                @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm, Locale locale){
         if (bindingResult.hasErrors()) {
             ModelAndView errorMav = new ModelAndView("create-order");
             if(medicService.findByUserId(loggedUser().getId()).isPresent())
@@ -95,20 +122,10 @@ public class OrderController {
 
         ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
-        fillPatientInfo(orderWithoutClinicForm.getPatientInfo());
-
         // passing all the data
-        advancedSearchClinicForm.setMedicId(orderWithoutClinicForm.getMedicId());
-        advancedSearchClinicForm.setStudyId(orderWithoutClinicForm.getStudyId());
-        advancedSearchClinicForm.setDescription(orderWithoutClinicForm.getDescription());
-        advancedSearchClinicForm.setPatientInfo(orderWithoutClinicForm.getPatientInfo());
+        advancedSearchClinicForm.setOrderForm(orderForm);
 
-        orderForm.setMedicId(orderWithoutClinicForm.getMedicId());
-        orderForm.setStudyId(orderWithoutClinicForm.getStudyId());
-        orderForm.setDescription(orderWithoutClinicForm.getDescription());
-        orderForm.setPatientInfo(orderWithoutClinicForm.getPatientInfo());
-
-        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInfo().getInsurancePlan());
+        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInsurancePlan());
         advancedSearchClinicForm.setMedicalStudy(studyNameFromOrderForm(orderForm,locale));
         Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                 advancedSearchClinicForm.getClinicHours(),
@@ -125,7 +142,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET,params = {"submit=search","submit!=reset"})
     public ModelAndView getOrderCreationForm(@Valid @ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm, BindingResult bindingResult,
-                                             @ModelAttribute("orderForm") OrderForm orderForm, @ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm,
+                                             @ModelAttribute("orderForm") OrderForm orderForm,
                                              HttpServletRequest httpServletRequest, Locale locale) {
 
         String uri = httpServletRequest.getRequestURL().toString() + "?" + httpServletRequest.getQueryString();
@@ -134,15 +151,7 @@ public class OrderController {
         final ModelAndView mav = new ModelAndView("/advanced-search-clinic");
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
 
-        orderForm.setMedicId(advancedSearchClinicForm.getMedicId());
-        orderForm.setStudyId(advancedSearchClinicForm.getStudyId());
-        orderForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
-
-        orderWithoutClinicForm.setMedicId(advancedSearchClinicForm.getMedicId());
-        orderWithoutClinicForm.setStudyId(advancedSearchClinicForm.getStudyId());
-        orderWithoutClinicForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderWithoutClinicForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
+        orderForm.copyOrderForm(advancedSearchClinicForm.getOrderForm());
 
         Collection<Clinic> clinicsList;
         if(bindingResult.hasErrors()){
@@ -167,7 +176,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET,params = {"submit=reset","submit!=search"})
     public ModelAndView getOrderCreationFormReset(@ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm,
-                                                  @ModelAttribute("orderForm") OrderForm orderForm, @ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm,
+                                                  @ModelAttribute("orderForm") OrderForm orderForm,
                                                   HttpServletRequest httpServletRequest, Locale locale) {
 
         String uri = httpServletRequest.getRequestURL().toString() + "?" + httpServletRequest.getQueryString();
@@ -177,19 +186,11 @@ public class OrderController {
 
         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
 
+        orderForm.copyOrderForm(advancedSearchClinicForm.getOrderForm());
+
         advancedSearchClinicForm.resetValues();
 
-        orderForm.setMedicId(advancedSearchClinicForm.getMedicId());
-        orderForm.setStudyId(advancedSearchClinicForm.getStudyId());
-        orderForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
-
-        orderWithoutClinicForm.setMedicId(advancedSearchClinicForm.getMedicId());
-        orderWithoutClinicForm.setStudyId(advancedSearchClinicForm.getStudyId());
-        orderWithoutClinicForm.setDescription(advancedSearchClinicForm.getDescription());
-        orderWithoutClinicForm.setPatientInfo(advancedSearchClinicForm.getPatientInfo());
-
-        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInfo().getInsurancePlan());
+        advancedSearchClinicForm.setMedicalPlan(orderForm.getPatientInsurancePlan());
         advancedSearchClinicForm.setMedicalStudy(studyNameFromOrderForm(orderForm,locale));
         Collection<Clinic> clinicsList = clinicService.searchClinicsBy(advancedSearchClinicForm.getClinicName(),
                 advancedSearchClinicForm.getClinicHours(),
@@ -203,22 +204,13 @@ public class OrderController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, params={"submit=create-order","submit!=back","submit!=toClinicSelection"})
-    public ModelAndView createOrder(@Valid @ModelAttribute("orderForm") OrderForm orderForm, final BindingResult bindingResult,
-                                    @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm,
-                                    @ModelAttribute("orderWithoutClinicForm") OrderWithoutClinicForm orderWithoutClinicForm){
+    @RequestMapping(method = RequestMethod.POST, params={"submit=create-order","submit!=back","submit!=toClinicSelection","submit!=getExistingPatient"})
+    public ModelAndView createOrder(@Validated(OrderGroup.class) @ModelAttribute("orderForm") OrderForm orderForm, final BindingResult bindingResult,
+                                    @ModelAttribute("advancedSearchClinicForm")AdvancedSearchClinicForm advancedSearchClinicForm){
         if(bindingResult.hasErrors()){
 
             // passing all the data
-            advancedSearchClinicForm.setMedicId(orderForm.getMedicId());
-            advancedSearchClinicForm.setStudyId(orderForm.getStudyId());
-            advancedSearchClinicForm.setDescription(orderForm.getDescription());
-            advancedSearchClinicForm.setPatientInfo(orderForm.getPatientInfo());
-
-            orderWithoutClinicForm.setMedicId(orderForm.getMedicId());
-            orderWithoutClinicForm.setStudyId(orderForm.getStudyId());
-            orderWithoutClinicForm.setDescription(orderForm.getDescription());
-            orderWithoutClinicForm.setPatientInfo(orderForm.getPatientInfo());
+            advancedSearchClinicForm.setOrderForm(orderForm);
 
             ModelAndView mav = new ModelAndView("/advanced-search-clinic");
 
@@ -229,6 +221,9 @@ public class OrderController {
             return mav;
         }
 
+        if(!orderForm.getMedicId().equals(loggedUser().getId()))
+            return new ModelAndView("redirect:/403");
+
         // create order successful
         Optional<Medic> medicOptional = medicService.findByUserId(orderForm.getMedicId());
         Optional<Clinic> clinicOptional = clinicService.findByUserId(orderForm.getClinicId());
@@ -238,22 +233,19 @@ public class OrderController {
         if(!clinicOptional.isPresent()){throw new ClinicNotFoundException();}
         if(!studyTypeOptional.isPresent()){throw new StudyTypeNotFoundException();}
 
-        PatientInfoForm patientInfo = orderForm.getPatientInfo();
-
-        fillPatientInfo(patientInfo);
 
         Order order = orderService.register(
                 medicOptional.get(),
-                new Date(System.currentTimeMillis()),
+                LocalDate.now(),
                 clinicOptional.get(),
-                patientInfo.getEmail(),
-                patientInfo.getName(),
+                orderForm.getPatientEmail(),
+                orderForm.getPatientName(),
                 studyTypeOptional.get(),
                 orderForm.getDescription(),
                 medicOptional.get().getIdentificationType(),
                 medicOptional.get().getIdentification(),
-                patientInfo.getInsurancePlan(),
-                patientInfo.getInsuranceNumber());
+                orderForm.getPatientInsurancePlan(),
+                orderForm.getPatientInsuranceNumber());
 
         return new ModelAndView("redirect:view-study/" + urlEncoderService.encode(order.getOrderId()));
     }
@@ -277,18 +269,5 @@ public class OrderController {
         if(studyTypeService.findById(orderForm.getStudyId()).isPresent())
             return studyTypeService.findById(orderForm.getStudyId()).get().getName();
         return messageSource.getMessage("create-order.unknownStudyType",null,locale);
-    }
-
-    private void fillPatientInfo(PatientInfoForm patientInfo){
-        if(patientInfo.getExistingPatient()){
-            Optional<Patient> patientOptional = patientService.findByEmail(patientInfo.getEmail());
-            if(!patientOptional.isPresent()){throw new PatientNotFoundException();}
-
-            Patient patient = patientOptional.get();
-
-            if(patientInfo.getName()==null || patientInfo.getName().equals("")){patientInfo.setName(patient.getName());}
-            if(patientInfo.getInsurancePlan()==null || patientInfo.getInsurancePlan().equals("")){patientInfo.setInsurancePlan(patient.getMedicPlan());}
-            if(patientInfo.getInsuranceNumber()==null || patientInfo.getInsuranceNumber().equals("")){patientInfo.setInsuranceNumber(patient.getMedicPlanNumber());}
-        }
     }
 }

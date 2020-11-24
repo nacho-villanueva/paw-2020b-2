@@ -29,7 +29,7 @@
                 </div>
 
                 <c:url var="post_createorder"  value="/create-order"/>
-                <f:form action="${post_createorder}" method="post" modelAttribute="orderWithoutClinicForm">
+                <f:form action="${post_createorder}" method="post" modelAttribute="orderForm">
                     <div class="border-1 border-secondary mx-2 mt-3">
                         <label for="medicName" class="text-muted"><spring:message code="create-order.body.form.medicName.label"/> </label>
                         <p id="medicName" class="lead"><c:out value="${loggedMedic.name}"/> </p>
@@ -39,39 +39,37 @@
                     <div class="row mx-1">
                         <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientMail.label"/> </label>
-                            <f:input type="email" path="patientInfo.email" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
-                            <f:errors path="patientInfo.email" cssClass="text-danger" element="small" />
+                            <f:input type="email" path="patientEmail" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required"/>
+                            <f:errors path="patientEmail" cssClass="text-danger" element="small" />
                         </fieldset>
                     </div>
                     <div class="row mx-1">
                         <fieldset class="form-group col">
-                            <f:checkbox id="patientInfo.existingPatient" path="patientInfo.existingPatient" cssErrorClass="is-invalid"/>
-                            <label for="patientInfo.existingPatient"><spring:message code="create-order.body.form.existingPatient.label"/></label>
-                            <div>
-                                <small><spring:message code="create-order.body.form.existingPatient.small"/></small>
-                            </div>
+                            <button class="btn-block btn create-btn mt-4 mb-2 float-right" type="submit" name="submit" value="getExistingPatient"><spring:message code="create-order.body.form.existingPatient.label"/></button>
                         </fieldset>
                     </div>
-                    <div>
-                        <f:errors path="patientInfo" cssClass="text-danger" element="p" />
+                    <div class="row mx-1">
+                        <fieldset class="form-group col">
+                            <small><spring:message code="create-order.body.form.existingPatient.small"/></small>
+                        </fieldset>
                     </div>
                     <div class="row mx-1">
                         <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientName.label"/> </label>
-                            <f:input type="text" path="patientInfo.name" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
-                            <f:errors path="patientInfo.name" cssClass="text-danger" element="small" />
+                            <f:input type="text" path="patientName" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientName" cssClass="text-danger" element="small" />
                         </fieldset>
                     </div>
                     <div class="row mx-1">
                         <fieldset class="form-group col ">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientInsurancePlan.label"/></label>
-                            <f:input type="text" path="patientInfo.insurancePlan" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
-                            <f:errors path="patientInfo.insurancePlan" cssClass="text-danger" element="small" />
+                            <f:input type="text" path="patientInsurancePlan" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientInsurancePlan" cssClass="text-danger" element="small" />
                         </fieldset>
                         <fieldset class="form-group col">
                             <label class="bmd-label-floating"><spring:message code="create-order.body.form.patientInsuranceNumber.label"/> </label>
-                            <f:input type="text" path="patientInfo.insuranceNumber" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
-                            <f:errors path="patientInfo.insuranceNumber" cssClass="text-danger" element="small" />
+                            <f:input type="text" path="patientInsuranceNumber" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                            <f:errors path="patientInsuranceNumber" cssClass="text-danger" element="small" />
                         </fieldset>
 
                     </div>

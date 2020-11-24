@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -21,7 +24,7 @@ public class Order {
     private Medic medic;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false, referencedColumnName = "user_id")
@@ -63,7 +66,7 @@ public class Order {
     }
 
     public Order(final Medic medic,
-                 final Date date,
+                 final LocalDate date,
                  final Clinic clinic,
                  final StudyType study,
                  final String description,
@@ -86,7 +89,7 @@ public class Order {
         this.patientName = patientName;
     }
 
-    public Order(final long orderId, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identificationType, final byte[] identification, final String patientInsurancePlan, final String patientInsuranceNumber, final String patientEmail, final String patientName) {
+    public Order(final long orderId, final Medic medic, final LocalDate date, final Clinic clinic, final StudyType study, final String description, final String identificationType, final byte[] identification, final String patientInsurancePlan, final String patientInsuranceNumber, final String patientEmail, final String patientName) {
         this.orderId = orderId;
         this.medic = medic;
         this.date = date;
@@ -110,7 +113,7 @@ public class Order {
         this.clinic = clinic;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -154,8 +157,12 @@ public class Order {
         return medic;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public Date getLegacyDate(){
+        return Date.from(getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Clinic getClinic() {
