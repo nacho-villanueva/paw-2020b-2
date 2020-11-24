@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 public class OrderForm {
 
-    // TODO add medic id validation
+    @MedicIdIsValid(groups = {OrderWithoutClinicGroup.class,OrderGroup.class})
     private Integer medicId;
 
     @ValidStudyTypeId(groups = {OrderWithoutClinicGroup.class,OrderGroup.class})
