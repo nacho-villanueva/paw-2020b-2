@@ -23,7 +23,7 @@ public interface ValidationService {
 
     boolean isValidEmail(String email);
 
-    boolean isValidIdentification_Type(String identification_type);
+    boolean isValidIdentificationType(String identificationType);
 
     boolean isValidTelephone(String telephone);
 

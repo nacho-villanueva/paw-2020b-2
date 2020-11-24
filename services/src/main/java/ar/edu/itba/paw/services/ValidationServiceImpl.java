@@ -187,8 +187,8 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public boolean isValidIdentification_Type(String identification_type) {
-        return isValidType(identification_type,VALID_IDENTIFICATION_TYPES);
+    public boolean isValidIdentificationType(String identificationType) {
+        return isValidType(identificationType,VALID_IDENTIFICATION_TYPES);
     }
 
     @Override

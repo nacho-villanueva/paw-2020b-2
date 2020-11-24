@@ -250,7 +250,7 @@ public class OrderController {
                 patientInfo.getName(),
                 studyTypeOptional.get(),
                 orderForm.getDescription(),
-                medicOptional.get().getIdentification_type(),
+                medicOptional.get().getIdentificationType(),
                 medicOptional.get().getIdentification(),
                 patientInfo.getInsurancePlan(),
                 patientInfo.getInsuranceNumber());

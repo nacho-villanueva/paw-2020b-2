@@ -269,7 +269,7 @@ public class ProfileController {
             throw new MedicNotFoundException();
         }
 
-        String newContentType = medic.getIdentification_type();
+        String newContentType = medic.getIdentificationType();
         byte[] newContent = medic.getIdentification();
         if(!editMedicForm.getIdentification().isEmpty()){
             newContentType = editMedicForm.getIdentification().getContentType();

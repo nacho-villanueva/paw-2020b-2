@@ -27,7 +27,7 @@ public class Result {
     private String responsible_licence_number;
 
     @Column(name="identification_type", nullable=false)
-    private String identification_type;
+    private String identificationType;
 
     @Column(name="identification", nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
@@ -47,7 +47,7 @@ public class Result {
                   final Date date,
                   final String responsible_name,
                   final String responsible_licence_number,
-                  final String identification_type,
+                  final String identificationType,
                   final byte[] identification,
                   final String data_type,
                   final byte[] data) {
@@ -56,7 +56,7 @@ public class Result {
         this.date = date;
         this.responsible_name = responsible_name;
         this.responsible_licence_number = responsible_licence_number;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.data_type = data_type;
         this.data = data;
@@ -66,7 +66,7 @@ public class Result {
                   final Date date,
                   final String responsible_name,
                   final String responsible_licence_number,
-                  final String identification_type,
+                  final String identificationType,
                   final byte[] identification,
                   final String data_type,
                   final byte[] data) {
@@ -74,7 +74,7 @@ public class Result {
         this.date = date;
         this.responsible_name = responsible_name;
         this.responsible_licence_number = responsible_licence_number;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.data_type = data_type;
         this.data = data;
@@ -102,8 +102,8 @@ public class Result {
         return responsible_licence_number;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
     public byte[] getIdentification() {
@@ -122,8 +122,8 @@ public class Result {
         this.order = order;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public void setIdentification(byte[] identification) {

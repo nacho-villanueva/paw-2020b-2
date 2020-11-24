@@ -23,7 +23,7 @@ public class Medic {
     private String telephone;
 
     @Column(name = "identification_type",nullable=false)
-    private String identification_type;
+    private String identificationType;
 
     @Column(nullable=false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
@@ -46,15 +46,15 @@ public class Medic {
         //Just for hibernate
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
-        this(user,name,telephone,identification_type,identification,licence_number,verified);
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final boolean verified, final Collection<MedicalField> medical_fields) {
+        this(user,name,telephone,identificationType,identification,licence_number,verified);
         this.medical_fields = medical_fields;
     }
 
-    public Medic(final User user, final String name, final String telephone, final String identification_type, final byte[] identification, final String licence_number, final boolean verified) {
+    public Medic(final User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licence_number, final boolean verified) {
         this(user,name,licence_number);
         this.telephone = telephone;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.verified = verified;
         this.medical_fields = new ArrayList<>();
@@ -128,12 +128,12 @@ public class Medic {
         return medical_fields;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public byte[] getIdentification() {

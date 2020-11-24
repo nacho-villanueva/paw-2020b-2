@@ -35,7 +35,7 @@ public class Order {
     private String description;
 
     @Column(name = "identification_type", nullable = false)
-    private String identification_type;
+    private String identificationType;
 
     @Column(name = "identification", nullable = false, length = 32000000)  //Aprox 30Mb max file
     private byte[] identification;
@@ -67,7 +67,7 @@ public class Order {
                  final Clinic clinic,
                  final StudyType study,
                  final String description,
-                 final String identification_type,
+                 final String identificationType,
                  final byte[] identification,
                  final String patient_insurance_plan,
                  final String patient_insurance_number,
@@ -78,7 +78,7 @@ public class Order {
         this.clinic = clinic;
         this.study = study;
         this.description = description;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.patient_insurance_plan = patient_insurance_plan;
         this.patient_insurance_number = patient_insurance_number;
@@ -86,14 +86,14 @@ public class Order {
         this.patient_name = patient_name;
     }
 
-    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identification_type, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
+    public Order(final long order_id, final Medic medic, final Date date, final Clinic clinic, final StudyType study, final String description, final String identificationType, final byte[] identification, final String patient_insurance_plan, final String patient_insurance_number, final String patient_email, final String patient_name) {
         this.order_id = order_id;
         this.medic = medic;
         this.date = date;
         this.clinic = clinic;
         this.study = study;
         this.description = description;
-        this.identification_type = identification_type;
+        this.identificationType = identificationType;
         this.identification = identification;
         this.patient_insurance_plan = patient_insurance_plan;
         this.patient_insurance_number = patient_insurance_number;
@@ -122,8 +122,8 @@ public class Order {
         this.identification = identification;
     }
 
-    public void setIdentification_type(String identification_type) {
-        this.identification_type = identification_type;
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
     }
 
     public void setMedic(Medic medic) {
@@ -170,8 +170,8 @@ public class Order {
         return description;
     }
 
-    public String getIdentification_type() {
-        return identification_type;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
     public byte[] getIdentification() {

@@ -112,7 +112,7 @@ public class ResultDaoTest {
     @Test
     public void testRegisterValid() {
 
-        final Result testResult = dao.register(testResultTwo.getOrder_id(),testResultTwo.getData_type(),testResultTwo.getData(),testResultTwo.getIdentification_type(),testResultTwo.getIdentification(),testResultTwo.getDate(),testResultTwo.getResponsible_name(),testResultTwo.getResponsible_licence_number());
+        final Result testResult = dao.register(testResultTwo.getOrder_id(),testResultTwo.getData_type(),testResultTwo.getData(),testResultTwo.getIdentificationType(),testResultTwo.getIdentification(),testResultTwo.getDate(),testResultTwo.getResponsible_name(),testResultTwo.getResponsible_licence_number());
 
         Assert.assertEquals(testResultTwo.getResponsible_name(), testResult.getResponsible_name());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,RESULTS_TABLE_NAME, "responsible_name='" + testResult.getResponsible_name() +"'"));
@@ -122,7 +122,7 @@ public class ResultDaoTest {
     @Rollback
     @Test(expected = PersistenceException.class)
     public void testRegisterInvalid() {
-        dao.register(INVALID_ORDER_ID, result.getData_type(),result.getData(),result.getIdentification_type(),result.getIdentification(),result.getDate(),result.getResponsible_name(),result.getResponsible_licence_number());
+        dao.register(INVALID_ORDER_ID, result.getData_type(),result.getData(),result.getIdentificationType(),result.getIdentification(),result.getDate(),result.getResponsible_name(),result.getResponsible_licence_number());
     }
 
 }

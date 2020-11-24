@@ -30,7 +30,7 @@ public class ResultJpaDao implements ResultDao {
     }
 
     @Override
-    public Result register(long order_id, String result_data_type, byte[] result_data, String identification_type,
+    public Result register(long order_id, String result_data_type, byte[] result_data, String identificationType,
                            byte[] identification, Date date, String responsible_name, String responsible_licence_number) {
 
         Order orderRef = em.getReference(Order.class,order_id);
@@ -39,7 +39,7 @@ public class ResultJpaDao implements ResultDao {
                 date,
                 responsible_name,
                 responsible_licence_number,
-                identification_type,
+                identificationType,
                 identification,
                 result_data_type,
                 result_data);

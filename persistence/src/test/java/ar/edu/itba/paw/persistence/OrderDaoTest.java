@@ -94,7 +94,7 @@ public class OrderDaoTest {
     @Rollback
     @Test
     public void testRegisterValid() {
-        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatient_email(), newOrder.getPatient_name(),newOrder.getStudy(),"",newOrder.getIdentification_type(),newOrder.getIdentification(),newOrder.getPatient_insurance_plan(),newOrder.getPatient_insurance_number());
+        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatient_email(), newOrder.getPatient_name(),newOrder.getStudy(),"",newOrder.getIdentificationType(),newOrder.getIdentification(),newOrder.getPatient_insurance_plan(),newOrder.getPatient_insurance_number());
 
         Assert.assertEquals(newOrder.getPatient_name(), testOrder.getPatient_name());
         Assert.assertArrayEquals(newOrder.getIdentification(), testOrder.getIdentification());
@@ -105,6 +105,6 @@ public class OrderDaoTest {
     @Rollback
     @Test (expected = PersistenceException.class)
     public void testRegisterInvalid() {
-        dao.register(invalidMedic,newOrder.getDate(),invalidClinic,newOrder.getPatient_name(), newOrder.getPatient_email(),invalidStudyType,"",newOrder.getIdentification_type(),newOrder.getIdentification(),"","");
+        dao.register(invalidMedic,newOrder.getDate(),invalidClinic,newOrder.getPatient_name(), newOrder.getPatient_email(),invalidStudyType,"",newOrder.getIdentificationType(),newOrder.getIdentification(),"","");
     }
 }

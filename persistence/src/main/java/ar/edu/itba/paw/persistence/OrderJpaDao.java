@@ -31,7 +31,7 @@ public class OrderJpaDao implements OrderDao {
     public Order register(final Medic medic, final Date date, final Clinic clinic,
                           final String patient_email, final String patient_name,
                           final StudyType studyType, final String description,
-                          final String identification_type, final byte[] identification,
+                          final String identificationType, final byte[] identification,
                           final String insurance_plan, final String insurance_number) {
 
         final Medic medicReference = em.getReference(Medic.class, medic.getUser().getId());
@@ -45,7 +45,7 @@ public class OrderJpaDao implements OrderDao {
                 clinicReference,
                 studyTypeReference,
                 description,
-                identification_type,
+                identificationType,
                 identification,
                 insurance_plan,
                 insurance_number,

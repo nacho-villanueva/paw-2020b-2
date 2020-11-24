@@ -13,13 +13,13 @@ public interface MedicService {
 
     Collection<Medic> getAllUnverified();
 
-    Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
+    Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licence_number, Collection<MedicalField> known_fields);
 
     Optional<Medic> findByUserId(int userId);
 
     MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField);
 
-    Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
+    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified);
 
     boolean knowsField(int medic_id, int field_id);
 }
