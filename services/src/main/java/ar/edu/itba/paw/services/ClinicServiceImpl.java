@@ -51,8 +51,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public boolean hasStudy(int clinicId, int studyType_id) {
-        return clinicDao.hasStudy(clinicId,studyType_id);
+    public boolean hasStudy(int clinicId, int studyTypeId) {
+        return clinicDao.hasStudy(clinicId,studyTypeId);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class ClinicServiceImpl implements ClinicService {
         return clinicDao.registerStudyToClinic(clinicId, studyType);
     }
     @Override
-    public Collection<Clinic> getByStudyTypeId(int studyType_id) {
-        return clinicDao.getByStudyTypeId(studyType_id);
+    public Collection<Clinic> getByStudyTypeId(int studyTypeId) {
+        return clinicDao.getByStudyTypeId(studyTypeId);
     }
 
     @Override

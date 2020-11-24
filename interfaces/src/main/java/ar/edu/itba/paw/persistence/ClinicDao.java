@@ -21,9 +21,9 @@ public interface ClinicDao {
 
     Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
 
-    boolean hasStudy(int clinicId, int studyType_id);
+    boolean hasStudy(int clinicId, int studyTypeId);
 
-    Collection<Clinic> getByStudyTypeId(int studyType_id);
+    Collection<Clinic> getByStudyTypeId(int studyTypeId);
 
     StudyType registerStudyToClinic(int clinicId, StudyType studyType);
 

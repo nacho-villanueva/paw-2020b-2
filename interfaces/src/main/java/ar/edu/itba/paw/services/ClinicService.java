@@ -21,11 +21,11 @@ public interface ClinicService {
 
     Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
 
-    boolean hasStudy(int clinicId, int studyType_id);
+    boolean hasStudy(int clinicId, int studyTypeId);
 
     StudyType registerStudyToClinic(int clinicId, StudyType studyType);
 
-    Collection<Clinic> getByStudyTypeId(int studyType_id);
+    Collection<Clinic> getByStudyTypeId(int studyTypeId);
 
     //If parameters are null, search will ignore those values
     Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name);

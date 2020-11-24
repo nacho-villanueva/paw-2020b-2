@@ -43,9 +43,9 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> getByStudyTypeId(final int studyType_id) {
+    public Collection<Clinic> getByStudyTypeId(final int studyTypeId) {
 
-        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyType_id));
+        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyTypeId));
 
         if(!studyTypeOptional.isPresent())
             return new ArrayList<>();
@@ -121,9 +121,9 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public boolean hasStudy(final int clinicId, final int studyType_id) {
+    public boolean hasStudy(final int clinicId, final int studyTypeId) {
         Optional<Clinic> clinicOptional = findByUserId(clinicId);
-        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyType_id);
+        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyTypeId);
 
         return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedical_studies().contains(studyTypeOptional.get());
     }
