@@ -51,7 +51,7 @@ public class ClinicDayHours {
     @Column(name = "day_of_week",nullable = false)
     private Integer dayOfWeek;
 
-    @MapsId("clinic_id") //TODO: should i change this one to clinicId?
+    @MapsId("clinicId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
