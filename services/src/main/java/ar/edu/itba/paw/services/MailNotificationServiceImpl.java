@@ -45,6 +45,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Value("classpath:mail/mailTemplate.html")
     private Resource mailTemplateResource;
 
+    @Value("classpath:mail/mailTemplate.txt")
+    private Resource textTemplateResource;
+
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -55,9 +58,22 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     @PostConstruct
     private void init(){
-        this.textTemplate    = "<replace-content/>\n\n<replace-m-complementaryClose/>\n\t<replace-m-appname/> (<replace-url/>)";
+
+        InputStream resourceInputStream;
+
         try {
-            InputStream resourceInputStream = this.mailTemplateResource.getInputStream();
+            resourceInputStream = this.textTemplateResource.getInputStream();
+            this.textTemplate = new BufferedReader(new InputStreamReader(resourceInputStream))
+                    .lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            this.textTemplate = "<replace-content/>";
+            //TODO log accordingly
+            e.printStackTrace();
+        }
+
+
+        try {
+            resourceInputStream = this.mailTemplateResource.getInputStream();
             this.mailTemplate = new BufferedReader(new InputStreamReader(resourceInputStream))
                     .lines().collect(Collectors.joining("\n"));
             this.useHTML = true;
@@ -73,9 +89,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String body = loadBodyFromFile("orderMail.html", "orderMail.txt");
         if(body != null) {
             if (this.useHTML) {
-                sendOrderMailHtml(order, body);
+                String bodyPlain = loadBodyFromFile("orderMail.txt");
+                sendOrderMailHtml(order, body,bodyPlain);
             } else {
-                sendOrderMailNoHtml(order, body);
+                sendOrderMailPlainText(order, body);
             }
         }
     }
@@ -85,9 +102,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String body = loadBodyFromFile("resultMail.html", "resultMail.txt");
         if(body != null) {
             if (this.useHTML) {
-                sendResultMailHtml(result, body);
+                String bodyPlain = loadBodyFromFile("resultMail.txt");
+                sendResultMailHtml(result, body, bodyPlain);
             } else {
-                sendResultMailNoHtml(result, body);
+                sendResultMailPlainText(result, body);
             }
         }
     }
@@ -97,9 +115,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String body = loadBodyFromFile("medicApplicationMail.html", "medicApplicationMail.txt");
         if(body != null) {
             if (this.useHTML) {
-                sendMedicApplicationValidatingMailHtml(medic, body);
+                String bodyPlain = loadBodyFromFile("medicApplicationMail.txt");
+                sendMedicApplicationValidatingMailHtml(medic, body, bodyPlain);
             } else {
-                sendMedicApplicationValidatingMailNoHtml(medic, body);
+                sendMedicApplicationValidatingMailPlainText(medic, body);
             }
         }
     }
@@ -109,9 +128,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String body = loadBodyFromFile("clinicApplicationMail.html", "clinicApplicationMail.txt");
         if(body != null) {
             if (this.useHTML) {
-                sendClinicApplicationValidatingMailHtml(clinic, body);
+                String bodyPlain = loadBodyFromFile("clinicApplicationMail.txt");
+                sendClinicApplicationValidatingMailHtml(clinic, body, bodyPlain);
             } else {
-                sendClinicApplicationValidatingMailNoHtml(clinic, body);
+                sendClinicApplicationValidatingMailPlainText(clinic, body);
             }
         }
     }
@@ -123,9 +143,10 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         String body = loadBodyFromFile("verificationMail.html", "verificationMail.txt");
         if(body != null) {
             if (this.useHTML) {
-                sendVerificationMessageHtml(email, body, verificationUrl, l);
+                String bodyPlain = loadBodyFromFile("verificationMail.txt");
+                sendVerificationMessageHtml(email, body, bodyPlain, verificationUrl, l);
             } else {
-                sendVerificationMessageNoHtml(email, body, verificationUrl, l);
+                sendVerificationMessagePlainText(email, body, verificationUrl, l);
             }
         }
 
@@ -165,8 +186,35 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         return body;
     }
 
+    private String loadBodyFromFile(String mailFile){
+        URL bodyFile;
+        String body = null;
+
+        try {
+            bodyFile = ResourceUtils.getURL("classpath:mail/" + mailFile);
+        } catch (FileNotFoundException e) {
+            // error case
+            return body;
+        }
+
+        try {
+            if (bodyFile != null) {
+                InputStream stream = bodyFile.openStream();
+                body = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+                stream.close();
+            }
+
+        }
+        catch (IOException e) {
+            //error case
+        }
+
+        return body;
+
+    }
+
     // send order mail with html
-    private void sendOrderMailHtml(Order order, String body){
+    private void sendOrderMailHtml(Order order, String bodyHtml, String bodyPlain){
 
         Locale patientLocale = getLocale(order.getPatientEmail());
         Locale medicLocale = getLocale(order.getMedic().getEmail());
@@ -180,7 +228,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         String basicMailContent = getMailTemplate();
 
-        basicMailContent = basicMailContent.replace("<replace-content/>",body);
+        basicMailContent = basicMailContent.replace("<replace-content/>",bodyHtml);
 
         String mailContent;
 
@@ -191,7 +239,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         replacePatient.put("url", address.toString());
 
         if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
-            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient",new Object[] {order.getPatientName()}, patientLocale));
+            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient.html",new Object[] {order.getPatientName()}, patientLocale));
         }
 
         replacePatientMailContacts(order, replacePatient, patientLocale);
@@ -199,6 +247,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         ms.sendMimeMessage(order.getPatientEmail(),
                 messageSource.getMessage("mail.subject.order.patient",subjectParams,patientLocale),
+                getOrderMailPatientBodyPlainText(order, bodyPlain, patientLocale),
                 replaceAllMessages(mailContent, replacePatient, patientLocale),
                 mailInline
         );
@@ -215,6 +264,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         ms.sendMimeMessage(order.getMedic().getEmail(),
                 messageSource.getMessage("mail.subject.order.medic",subjectParams,medicLocale),
+                getOrderMailMedicBodyPlainText(order, bodyPlain, medicLocale),
                 replaceAllMessages(mailContent, replaceMedic, medicLocale),
                 mailInline
         );
@@ -233,6 +283,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         ms.sendMimeMessage(order.getClinic().getEmail(),
                 messageSource.getMessage("mail.subject.order.clinic",subjectParams,clinicLocale),
+                getOrderMailClinicBodyPlainText(order, bodyPlain, clinicLocale),
                 replaceAllMessages(mailContent, replaceClinic, medicLocale),
                 mailInline
         );
@@ -242,7 +293,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     // send order mail without html
-    private void sendOrderMailNoHtml(Order order, String body){
+    private void sendOrderMailPlainText(Order order, String body){
 
         Locale patientLocale = getLocale(order.getPatientEmail());
         Locale medicLocale = getLocale(order.getMedic().getEmail());
@@ -250,54 +301,80 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         Object[] subjectParams = {order.getOrderId()};
 
-        String basicMailContent = getTextTemplate();
-        basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
+
 
         // ------- MAIL TO PATIENT ---------
-        String mailContent = basicMailContent;
-        Map<String, String> replacePatient = new HashMap<>();
-        replacePatient.put("url", address.toString());
-
-        replacePatientMailContacts(order, replacePatient, patientLocale);
-        replaceOrderInfo(order, replacePatient, patientLocale);
 
         ms.sendSimpleMessage(order.getPatientEmail(),
                 messageSource.getMessage("mail.subject.order.patient",subjectParams,patientLocale),
-                replaceAllMessages(mailContent, replacePatient, patientLocale));
+                getOrderMailPatientBodyPlainText(order, body, patientLocale));
         // ---------------------------------
 
         // ------- MAIL TO MEDIC -----------
-        mailContent = basicMailContent;
-        Map<String, String> replaceMedic = new HashMap<>();
-        replacePatient.put("url", address.toString());
-
-        replaceMedicMailContacts(order, replaceMedic, medicLocale);
-        replaceOrderInfo(order, replacePatient, patientLocale);
 
         ms.sendSimpleMessage(order.getMedic().getEmail(),
                 messageSource.getMessage("mail.subject.order.medic",subjectParams,medicLocale),
-                replaceAllMessages(mailContent, replaceMedic, medicLocale)
-                );
+                getOrderMailMedicBodyPlainText(order, body, medicLocale));
 
         // ---------------------------------
 
         // ------- MAIL TO CLINIC ----------
-        mailContent = basicMailContent;
-        Map<String, String> replaceClinic = new HashMap<>();
-        replacePatient.put("url", address.toString());
-
-        replaceClinicMailContacts(order, replaceClinic, clinicLocale);
-        replaceOrderInfo(order, replaceClinic, patientLocale);
 
         ms.sendSimpleMessage(order.getClinic().getEmail(),
                 messageSource.getMessage("mail.subject.order.clinic",subjectParams,clinicLocale),
-                replaceAllMessages(mailContent, replaceClinic, clinicLocale));
+                getOrderMailClinicBodyPlainText(order, body, clinicLocale));
         // ----------------------------------
 
     }
 
+    private String getOrderMailPatientBodyPlainText(Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replacePatient = new HashMap<>();
+        replacePatient.put("url", address.toString());
+
+        if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
+            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient.plain",new Object[] {order.getPatientName()}, locale));
+        }
+
+        replacePatientMailContacts(order, replacePatient, locale);
+        replaceOrderInfo(order, replacePatient, locale);
+
+        return replaceAllMessages(mailContent, replacePatient, locale);
+    }
+
+    private String getOrderMailMedicBodyPlainText(Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replaceMedic = new HashMap<>();
+        replaceMedic.put("url", address.toString());
+
+        replaceMedicMailContacts(order, replaceMedic, locale);
+        replaceOrderInfo(order, replaceMedic, locale);
+
+        return replaceAllMessages(mailContent, replaceMedic, locale);
+    }
+
+    private String getOrderMailClinicBodyPlainText(Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replaceClinic = new HashMap<>();
+        replaceClinic.put("url", address.toString());
+
+        replaceMedicMailContacts(order, replaceClinic, locale);
+        replaceOrderInfo(order, replaceClinic, locale);
+
+        return replaceAllMessages(mailContent, replaceClinic, locale);
+    }
+
     // send result mail with html
-    private void sendResultMailHtml(Result result, String body){
+    private void sendResultMailHtml(Result result, String bodyHtml, String bodyPlain){
         Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
         if(resultOrder.isPresent()){
@@ -315,7 +392,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             mailInline.add("logo.png");
             mailInline.add("envelope-regular.png");
 
-            basicMailContent = basicMailContent.replace("<replace-content/>",body);
+            basicMailContent = basicMailContent.replace("<replace-content/>",bodyHtml);
 
             String mailContent;
 
@@ -325,11 +402,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             Map<String, String> replacePatient = new HashMap<>();
             replacePatient.put("url", address.toString());
 
+            if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
+                replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient.html",new Object[] {order.getPatientName()}, patientLocale));
+            }
+
             replaceResultInfo(result, order, replacePatient, patientLocale);
             replacePatientMailContacts(order, replacePatient, patientLocale);
 
             ms.sendMimeMessage(order.getPatientEmail(),
                     messageSource.getMessage("mail.subject.result.patient",subjectParams,patientLocale),
+                    getResultMailPatientBodyPlainText(result, order, bodyPlain, patientLocale),
                     replaceAllMessages(mailContent, replacePatient, patientLocale),
                     mailInline
             );
@@ -346,6 +428,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
             ms.sendMimeMessage(order.getMedic().getEmail(),
                     messageSource.getMessage("mail.subject.result.medic",subjectParams,medicLocale),
+                    getResultMailMedicBodyPlainText(result, order, bodyPlain, medicLocale),
                     replaceAllMessages(mailContent, replaceMedic, medicLocale),
                     mailInline
             );
@@ -362,6 +445,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
             ms.sendMimeMessage(order.getClinic().getEmail(),
                     messageSource.getMessage("mail.subject.result.clinic",subjectParams,clinicLocale),
+                    getResultMailClinicBodyPlainText(result, order, bodyPlain, clinicLocale),
                     replaceAllMessages(mailContent, replaceClinic, clinicLocale),
                     mailInline
             );
@@ -373,7 +457,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     // send result mail without html
-    private void sendResultMailNoHtml(Result result, String body){
+    private void sendResultMailPlainText(Result result, String body){
 
         Optional<Order> resultOrder = orderService.findById(result.getOrderId());
 
@@ -387,59 +471,80 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
             Object[] subjectParams = {result.getOrderId(),result.getId()};
 
-            String basicMailContent = getTextTemplate();
-            basicMailContent = basicMailContent.replaceAll("<replace-content/>",body);
-            String mailContent;
-
             // ------- MAIL TO PATIENT ----------
-            mailContent = basicMailContent;
-
-            Map<String, String> replacePatient = new HashMap<>();
-            replacePatient.put("url", address.toString());
-
-            replaceResultInfo(result, order, replacePatient, patientLocale);
-            replacePatientMailContacts(order, replacePatient, patientLocale);
 
             ms.sendSimpleMessage(order.getPatientEmail(),
                     messageSource.getMessage("mail.subject.result.patient",subjectParams,patientLocale),
-                    replaceAllMessages(mailContent, replacePatient, patientLocale));
+                    getResultMailPatientBodyPlainText(result, order, body, patientLocale));
             // ----------------------------------
 
             // ------- MAIL TO MEDIC ----------
-            mailContent = basicMailContent;
-
-            Map<String, String> replaceMedic = new HashMap<>();
-            replaceMedic.put("url", address.toString());
-
-            replaceResultInfo(result, order, replaceMedic, medicLocale);
-            replaceMedicMailContacts(order, replaceMedic, medicLocale);
 
             ms.sendSimpleMessage(order.getMedic().getEmail(),
                     messageSource.getMessage("mail.subject.result.medic",subjectParams,medicLocale),
-                    replaceAllMessages(mailContent, replaceMedic, medicLocale));
+                    getResultMailMedicBodyPlainText(result, order, body, medicLocale));
             // ----------------------------------
 
             // ------- MAIL TO CLINIC ----------
-            mailContent = basicMailContent;
-
-            Map<String, String> replaceClinic = new HashMap<>();
-            replaceClinic.put("url", address.toString());
-
-            replaceResultInfo(result, order, replaceClinic, clinicLocale);
-            replaceClinicMailContacts(order, replaceClinic, clinicLocale);
 
             ms.sendSimpleMessage(order.getClinic().getEmail(),
                     messageSource.getMessage("mail.subject.result.clinic",subjectParams,clinicLocale),
-                    replaceAllMessages(mailContent, replaceClinic, clinicLocale));
+                    getResultMailClinicBodyPlainText(result, order, body, clinicLocale));
             // ----------------------------------
 
         }else{
             throw new OrderNotFoundForExistingResultException();
         }
     }
+    
+    private String getResultMailPatientBodyPlainText(Result result, Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replacePatient = new HashMap<>();
+        replacePatient.put("url", address.toString());
+
+        if(!userService.findByEmail(order.getPatientEmail()).isPresent()){
+            replacePatient.put("new-info", messageSource.getMessage("mail.newInfo.patient.plain",new Object[] {order.getPatientName()}, locale));
+        }
+
+        replaceResultInfo(result, order, replacePatient, locale);
+        replacePatientMailContacts(order, replacePatient, locale);
+
+        return replaceAllMessages(mailContent, replacePatient, locale);
+    }
+
+    private String getResultMailMedicBodyPlainText(Result result, Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replaceMedic = new HashMap<>();
+        replaceMedic.put("url", address.toString());
+
+        replaceResultInfo(result, order, replaceMedic, locale);
+        replaceMedicMailContacts(order, replaceMedic, locale);
+
+        return replaceAllMessages(mailContent, replaceMedic, locale);
+    }
+
+    private String getResultMailClinicBodyPlainText(Result result, Order order, String body, Locale locale){
+
+        String mailContent = getTextTemplate();
+        mailContent = mailContent.replace("<replace-content/>",body);
+
+        Map<String, String> replaceClinic = new HashMap<>();
+        replaceClinic.put("url", address.toString());
+
+        replaceResultInfo(result, order, replaceClinic, locale);
+        replaceClinicMailContacts(order, replaceClinic, locale);
+
+        return replaceAllMessages(mailContent, replaceClinic, locale);
+    }
 
     // send medic application validating mail with html
-    private void sendMedicApplicationValidatingMailHtml(Medic medic, String body){
+    private void sendMedicApplicationValidatingMailHtml(Medic medic, String bodyHtml, String bodyPlain){
         Locale locale = getLocale(medic.getEmail());
 
         Object[] subjectParams = {medic.getName()};
@@ -448,15 +553,18 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         replace.put("url", address.toString());
 
         String basicMailContent = getMailTemplate();
-        String mailContent = basicMailContent.replace("<replace-content/>",body);
+        String mailContent = basicMailContent.replace("<replace-content/>",bodyHtml);
 
         replaceMedicInfo(medic, replace);
 
         ArrayList<String> mailInline = new ArrayList<>();
         mailInline.add("logo.png");
 
+        String mailContentPlainText = getMedicApplicationmValidBodyPlainText(medic,bodyPlain);
+
         ms.sendMimeMessage(medic.getEmail(),
                 messageSource.getMessage("mail.subject.application.medic",subjectParams,locale),
+                mailContentPlainText,
                 replaceAllMessages(mailContent, replace, locale),
                 mailInline
         );
@@ -464,10 +572,21 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     // send medic application validating mail without html
-    private void sendMedicApplicationValidatingMailNoHtml(Medic medic, String body){
+    private void sendMedicApplicationValidatingMailPlainText(Medic medic, String body){
         Locale locale = getLocale(medic.getEmail());
         Object[] subjectParams = {medic.getName()};
 
+
+        String mailContentPlainText = getMedicApplicationmValidBodyPlainText(medic,body);
+
+        ms.sendSimpleMessage(medic.getEmail(),
+                messageSource.getMessage("mail.subject.application.medic",subjectParams,locale),
+                mailContentPlainText
+        );
+    }
+
+    private String getMedicApplicationmValidBodyPlainText(Medic medic, String body){
+        Locale locale = getLocale(medic.getEmail());
         Map<String, String> replace = new HashMap<>();
         replace.put("url", address.toString());
 
@@ -476,19 +595,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         replaceMedicInfo(medic, replace);
 
-        ms.sendSimpleMessage(medic.getEmail(),
-                messageSource.getMessage("mail.subject.application.medic",subjectParams,locale),
-                replaceAllMessages(mailContent, replace, locale)
-        );
+        return replaceAllMessages(mailContent, replace, locale);
     }
 
     // send clinic application validating mail with html
-    private void sendClinicApplicationValidatingMailHtml(Clinic clinic, String body){
+    private void sendClinicApplicationValidatingMailHtml(Clinic clinic, String bodyHtml, String bodyPlain){
         Locale locale = getLocale(clinic.getEmail());
         Object[] subjectParams = {clinic.getName()};
 
         String basicMailContent = getMailTemplate();
-        String mailContent = basicMailContent.replace("<replace-content/>",body);
+        String mailContent = basicMailContent.replace("<replace-content/>",bodyHtml);
 
         Map<String, String> replace = new HashMap<>();
         replace.put("url", address.toString());
@@ -497,17 +613,34 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         ArrayList<String> mailInline = new ArrayList<>();
         mailInline.add("logo.png");
+
+        String mailContentPlainText = getClinicApplicationValidatingMailBodyPlainText(clinic, bodyPlain);
+
         ms.sendMimeMessage(clinic.getEmail(),
                 messageSource.getMessage("mail.subject.application.clinic",subjectParams,locale),
+                mailContentPlainText,
                 replaceAllMessages(mailContent, replace, locale),
                 mailInline
         );
     }
 
     // send clinic application validating mail without html
-    private void sendClinicApplicationValidatingMailNoHtml(Clinic clinic, String body){
+    private void sendClinicApplicationValidatingMailPlainText(Clinic clinic, String body){
         Locale locale = getLocale(clinic.getEmail());
         Object[] subjectParams = {clinic.getName()};
+
+        String mailSubject = messageSource.getMessage("mail.subject.application.clinic",subjectParams,locale);
+        String mailContentPlainText = getClinicApplicationValidatingMailBodyPlainText(clinic, body);
+
+        ms.sendSimpleMessage(clinic.getEmail(),
+                mailSubject,
+                mailContentPlainText
+        );
+
+    }
+
+    private String getClinicApplicationValidatingMailBodyPlainText(Clinic clinic, String body){
+        Locale locale = getLocale(clinic.getEmail());
 
         String basicMailContent = getTextTemplate();
         String mailContent = basicMailContent.replace("<replace-content/>",body);
@@ -517,46 +650,52 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         replaceClinicInfo(clinic, replace);
 
-        ms.sendSimpleMessage(clinic.getEmail(),
-                messageSource.getMessage("mail.subject.application.clinic",subjectParams,locale),
-                replaceAllMessages(mailContent, replace, locale)
-        );
-
+        return replaceAllMessages(mailContent, replace, locale);
     }
 
-    private void sendVerificationMessageHtml(String email, String body, String verificationUrl,Locale locale){
+    private void sendVerificationMessageHtml(String email, String bodyHtml, String bodyPlain, String verificationUrl,Locale locale){
 
         ArrayList<String> mailInline = new ArrayList<>();
         mailInline.add("logo.png");
 
         String mailSubject = messageSource.getMessage("mail.subject.verification.user",null,locale);
 
-        String basicMailContent = getMailTemplate().replace("<replace-content/>", body);
+        String basicMailContent = getMailTemplate().replace("<replace-content/>", bodyHtml);
         Map<String, String> replace = new HashMap<>();
         replace.put("url", address.toString());
         replace.put("verificationUrl", verificationUrl);
         String mailContent = replaceAllMessages(basicMailContent, replace, locale);
 
+        String mailContentPlainText = getVerificationBodyPlainText(email, bodyPlain, verificationUrl, locale);
+
         ms.sendMimeMessage(email,
                 mailSubject,
+                mailContentPlainText,
                 mailContent,
                 mailInline
         );
     }
 
-    private void sendVerificationMessageNoHtml(String email, String body, String verificationUrl, Locale locale){
+    private void sendVerificationMessagePlainText(String email, String body, String verificationUrl, Locale locale){
 
         String mailSubject = messageSource.getMessage("mail.subject.verification.user",null,locale);
-        String mailContent = getTextTemplate().replace("<replace-content/>",body);
-        Map<String, String> replace = new HashMap<>();
-        replace.put("verificationUrl", verificationUrl);
-
-        mailContent = replaceAllMessages(mailContent, replace, locale);
+        String mailContentPlainText = getVerificationBodyPlainText(email, body, verificationUrl, locale);
 
         ms.sendSimpleMessage(email,
                 mailSubject,
-                mailContent
+                mailContentPlainText
         );
+    }
+
+    private String getVerificationBodyPlainText(String email, String body, String verificationUrl, Locale locale){
+        String mailContent = getTextTemplate().replace("<replace-content/>",body);
+        Map<String, String> replace = new HashMap<>();
+        replace.put("verificationUrl", verificationUrl);
+        replace.put("url", address.toString());
+
+        mailContent = replaceAllMessages(mailContent, replace, locale);
+
+        return mailContent;
     }
 
     // get data
