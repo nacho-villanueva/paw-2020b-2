@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.OrderNotFoundForExistingResultException;
 
 import ar.edu.itba.paw.models.*;
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @Primary
 @Service
 public class MailNotificationServiceImpl implements MailNotificationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailNotificationService.class);
 
     @Autowired
     private MailService ms;
@@ -73,6 +77,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                     .lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             this.textTemplate = "<replace-content/>";
+            LOGGER.error(e.getMessage());
         }
 
 
@@ -83,6 +88,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             this.useHTML = true;
         } catch (IOException e) {
             this.useHTML = false;
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -217,12 +223,14 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 bodyFile = ResourceUtils.getURL("classpath:mail/" + htmlFile);
             } catch (FileNotFoundException e) {
                 useHTML = false;
+                LOGGER.error(e.getMessage());
             }
         }
         if(!useHTML){
             try {
                 bodyFile = ResourceUtils.getURL("classpath:mail/" + txtFile);
             } catch (FileNotFoundException e) {
+                LOGGER.error(e.getMessage());
             }
         }
 
@@ -237,6 +245,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         }
         catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
 
         return body;
@@ -249,7 +258,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         try {
             bodyFile = ResourceUtils.getURL("classpath:mail/" + mailFile);
         } catch (FileNotFoundException e) {
-            // error case
+            LOGGER.error(e.getMessage());
             return body;
         }
 
@@ -262,7 +271,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         }
         catch (IOException e) {
-            //error case
+            LOGGER.error(e.getMessage());
         }
 
         return body;
