@@ -3,8 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.OrderNotFoundForExistingResultException;
 
 import ar.edu.itba.paw.models.*;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
