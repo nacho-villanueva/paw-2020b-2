@@ -11,6 +11,8 @@
 <c:url value="/upload-result/${encodedId}" var="uploadPath"/>
 <c:url value="/api/image" var="imageAssets"/>
 <c:url value="/share-order/${encodedId}" var="shareOrderPath"/>
+<c:url value="/change-clinic/${encodedId}" var="changeClinicPath"/>
+
 <body>
 <%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <div id="wrapper" class="wrapper">
@@ -91,9 +93,15 @@
 
                     <c:choose>
                         <c:when test="${results.size() < 1}">
-                            <div class="align-items-end result-not">
+                            <div class="align-items-end result-not" >
                                 <h1 class="text-center mt-5 py-5"><spring:message code="view-study.body.card.results.noResults"/></h1>
                             </div>
+                            <c:if test="${loggedUser.isPatient()}">
+                                <div class="content-align-center" align="center">
+                                    <h4 class="text-center mt-5 pt-5"><spring:message code="view-study.body.card.change-clinic.title" /></h4>
+                                    <a href="${changeClinicPath}" class="btn upload-btn" role="button"><spring:message code="view-study.body.card.change-clinic.button" /></a>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <div class="row">

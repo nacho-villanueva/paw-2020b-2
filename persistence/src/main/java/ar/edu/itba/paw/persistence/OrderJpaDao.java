@@ -22,6 +22,9 @@ public class OrderJpaDao implements OrderDao {
     @Autowired
     private UserDao ud;
 
+    @Autowired
+    private ClinicDao cd;
+
     @Override
     public Optional<Order> findById(final long id) {
         return Optional.ofNullable(em.find(Order.class, id));
@@ -97,5 +100,19 @@ public class OrderJpaDao implements OrderDao {
         final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patientEmail = :email", Order.class);
         query.setParameter("email", user.getEmail());
         return query.getResultList();
+    }
+
+    @Override
+    public Order changeOrderClinic(Order order, Clinic clinic){
+        Optional<Clinic> maybeClinic = cd.findByUserId(clinic.getUserId());
+        if(!maybeClinic.isPresent())
+            return null;
+        Optional<Order> orderDB = findById(order.getOrderId());
+        if(!orderDB.isPresent())
+            return null;
+
+        orderDB.get().setClinic(maybeClinic.get());
+        em.flush();
+        return orderDB.get();
     }
 }

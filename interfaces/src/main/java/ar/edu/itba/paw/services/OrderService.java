@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +19,8 @@ public interface OrderService {
     Collection<Order> getAllAsPatient(User user);
 
     Order shareWithMedic(Order order, User user);
+
+    Order changeOrderClinic(Order order, Clinic clinic);
 
     enum Parameters{
         DATE,
