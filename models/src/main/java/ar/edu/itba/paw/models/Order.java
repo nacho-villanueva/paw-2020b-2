@@ -59,6 +59,10 @@ public class Order {
     private Collection<Result> studyResults;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="medical_orders_users",
+            joinColumns = @JoinColumn(name="order_id"),
+            inverseJoinColumns = @JoinColumn(name="shared_with_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"order_id","shared_with_id"}))
     private Set<User> sharedWith;
 
     protected Order() {
