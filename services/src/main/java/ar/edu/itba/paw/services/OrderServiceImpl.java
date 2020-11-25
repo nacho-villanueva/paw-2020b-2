@@ -129,7 +129,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order shareWithMedic(Order order, User user){
-        return orderDao.shareWithMedic(order, user);
+        Order o = orderDao.shareWithMedic(order, user);
+        if(o != null){
+            mailNotificationService.sendSharedOrderMail(order, user);
+        }
+        return o;
     }
 
     @Override
