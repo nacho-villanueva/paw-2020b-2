@@ -21,4 +21,6 @@ public interface OrderDao {
     Order shareWithMedic(Order order, User user);
 
     Collection<Order> getAllAsPatient(User user);
+
+    Order changeOrderClinic(Order order, Clinic clinic);
 }

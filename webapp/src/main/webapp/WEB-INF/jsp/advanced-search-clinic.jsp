@@ -37,8 +37,19 @@
                 <c:otherwise>
                     <%@include file="fragments/navbar-alternative-fragment.jsp"%>
                     <div id="wrapper" class="wrapper">
+                        <c:choose>
+                        <c:when test="${not empty orderForm}">
+                            <c:set var="highlight" value="create-order" />
+                        </c:when>
+                            <c:when test="${changeClinic}">
+                                <c:set var="highlight" value="my-orders" />
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="highlight" value="search" />
+                            </c:otherwise>
+                        </c:choose>
                         <jsp:include page="fragments/sidebar-fragment.jsp" >
-                            <jsp:param name="current" value="search"/>
+                            <jsp:param name="current" value="${highlight}"/>
                         </jsp:include>
                 </c:otherwise>
             </c:choose>
@@ -58,13 +69,17 @@
                     <div class="card-body">
                         <c:choose>
                             <c:when test="${not empty orderForm}"><c:url var="formSubmitUrl" value="/create-order"/></c:when>
+                            <c:when test="${changeClinic}"><c:url var="formSubmitUrl" value="/change-clinic/${encodedId}"/></c:when>
                             <c:otherwise><c:url var="formSubmitUrl" value="/advanced-search/clinic"/></c:otherwise>
                         </c:choose>
-                        <f:form enctype="application/x-www-form-urlencoded" action="${formSubmitUrl}" method="get" modelAttribute="advancedSearchClinicForm">
+                        <f:form action="${formSubmitUrl}" method="get" modelAttribute="advancedSearchClinicForm">
                             <p class="card-title h4">
                                 <c:choose>
                                     <c:when test="${not empty orderForm}">
                                         <spring:message code="create-order.body.form.title2"/>
+                                    </c:when>
+                                    <c:when test="${changeClinic}">
+                                        <spring:message code="advanced-search-clinic.change-clinic.title"/>
                                     </c:when>
                                     <c:otherwise>
                                         <spring:message code="advanced-search-clinic.body.title"/>
@@ -102,6 +117,27 @@
                                 </div>
                             </c:if>
 
+                            <c:if test="${not empty changeClinicOrder}">
+                                <div class="row justify-content-center">
+                                    <a class="btn btn-outline" onclick="clickOnShowOrderButton(this);return false;" data-toggle="collapse" href="#collapseInfo" role="button" aria-expanded="true" aria-controls="collapseInfo">
+                                        <spring:message code="advanced-search-clinic.form.order-info.toggle-label"/>
+                                    </a>
+
+                                    <div class="collapse show" id="collapseInfo">
+                                        <div class="bs-callout bs-callout-med">
+                                            <div class="row justify-content-start">
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.medic-name"/></p><c:out value="${changeClinicOrder.medic.name}"/></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.study-type"/></p><c:out value="${changeClinicOrder.study.name}"/></div>
+                                                <div class="w-100"></div>
+                                                <div class="col type"><p class="type-title"><spring:message code="advanced-search-clinic.form.order-info.current-clinic"/></p><c:out value="${changeClinicOrder.clinic.name}"/></div>
+                                                <div class="w-100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
+
                             <fieldset class="form-group">
                                 <label class="bmd-label-floating" for="clinicName"><spring:message code="advanced-search-clinic.form.clinicName.label"/></label>
                                 <div class="input-group">
@@ -113,17 +149,8 @@
                             <fieldset class="form-group">
                                 <label class="bmd-label-floating" for="medicalPlan"><spring:message code="advanced-search-clinic.form.medicalPlan.label"/></label>
                                 <div class="input-group">
-                                    <c:choose>
-                                        <c:when test="${not empty orderForm}">
-                                            <f:input type="text" readonly="true" class="form-control" id="medicalPlan" path="medicalPlan"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <f:input type="text" class="form-control" id="medicalPlan" path="medicalPlan"/>
-                                            <f:errors path="medicalPlan"/>
-                                        </c:otherwise>
-                                    </c:choose>
-
-
+                                    <f:input type="text" class="form-control" id="medicalPlan" path="medicalPlan"/>
+                                    <f:errors path="medicalPlan"/>
                                 </div>
                             </fieldset>
 
@@ -272,7 +299,6 @@
                                     </c:forEach>
                                 </div>
 
-
                                 <c:if test="${not empty orderForm}">
                                     <f:form action="${formSubmitUrl}" method="post" modelAttribute="orderForm">
 
@@ -298,6 +324,15 @@
                                         </div>
                                     </f:form>
                                 </c:if>
+                                <c:if test="${changeClinic}">
+                                    <c:url value="/change-clinic/${encodedId}" var="changeClinicPath" />
+                                    <f:form action="${changeClinicPath}" method="post" modelAttribute="changeOrderClinicForm">
+                                        <f:input path="changeClinicId" type="hidden" id="changeClinicId"/>
+                                        <div class="row justify-content-center">
+                                            <button class="row btn btn-lg action-btn" type="submit" id="changeClinicSubmitId" disabled="disabled"><spring:message code="advanced-search-clinic.change-clinic.button"/></button>
+                                        </div>
+                                    </f:form>
+                                </c:if>
                             </div>
                         </div>
 
@@ -318,8 +353,13 @@
         let clinic = document.getElementById("clinicId");
         if(clinic !== null){
             clinic.setAttribute("value",listItem.id);
-
             document.getElementById("createOrder").disabled=false;
+        }
+
+        let changeClinic = document.getElementById("changeClinicId");
+        if(changeClinic !== null){
+            changeClinic.setAttribute("value",listItem.id);
+            document.getElementById("changeClinicSubmitId").disabled=false;
         }
 
     }

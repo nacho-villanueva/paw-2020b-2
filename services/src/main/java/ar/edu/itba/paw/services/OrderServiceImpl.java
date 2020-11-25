@@ -126,4 +126,7 @@ public class OrderServiceImpl implements OrderService {
     public Order shareWithMedic(Order order, User user){
         return orderDao.shareWithMedic(order, user);
     }
+
+    @Override
+    public Order changeOrderClinic(Order order, Clinic clinic) { return orderDao.changeOrderClinic(order, clinic); }
 }
