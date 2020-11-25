@@ -11,13 +11,13 @@
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item <c:if test='${param.current == "home"}'>active</c:if>">
         <a class="nav-link" href="<c:url value='/home' />">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-clinic-medical"></i>
             <span><spring:message key="fragments.sidebar.home" /></span></a>
     </li>
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Orders
+        <spring:message key="fragments.sidebar.heading.orders" />
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
@@ -26,14 +26,28 @@
             <i class="fas fa-fw fa-table"></i>
             <span><spring:message key="fragments.sidebar.myorders" /></span></a>
     </li>
+    <sec:authorize access="hasRole('ROLE_PATIENT')">
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "access-requests"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/access-requests' />">
+                <i class="fas fa-comment-medical"></i>
+                <span><spring:message key="fragments.sidebar.access-requests" /></span></a>
+        </li>
+    </sec:authorize>
 
     <sec:authorize access="hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')">
-    <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
-        <a class="nav-link" href="<c:url value='/create-order' />">
-            <i class="fas fa-fw fa-plus"></i>
-            <span><spring:message key="fragments.sidebar.createorder" /></span></a>
-    </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "create-order"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/create-order' />">
+                <i class="fas fa-fw fa-plus"></i>
+                <span><spring:message key="fragments.sidebar.createorder" /></span></a>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item <c:if test='${param.current == "request-orders"}'>active</c:if>">
+            <a class="nav-link" href="<c:url value='/request-orders' />">
+                <i class="fas fa-file-medical"></i>
+                <span><spring:message key="fragments.sidebar.requestorder" /></span></a>
+        </li>
     </sec:authorize>
 
     <!-- Divider -->

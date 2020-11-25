@@ -7,12 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = ValidClinicIdValidator.class)
+@Constraint(validatedBy = ClinicIdIsValidValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidClinicId {
+public @interface ClinicIdIsValid {
 
-    String message() default "Must be a valid user id";
+    String message() default "Selected Clinic doesn't exist";
 
     public Class<?>[] groups() default {};
 

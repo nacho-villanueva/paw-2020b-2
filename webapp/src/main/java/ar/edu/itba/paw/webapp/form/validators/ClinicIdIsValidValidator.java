@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ClinicIsValidValidator implements ConstraintValidator<ClinicIsValid, Integer> {
+public class ClinicIdIsValidValidator implements ConstraintValidator<ClinicIdIsValid, Integer> {
 
     @Autowired
     private ClinicService clinicService;
 
     @Override
-    public void initialize(ClinicIsValid clinicIsValid) {
+    public void initialize(ClinicIdIsValid clinicIdIsValid) {
 
     }
 

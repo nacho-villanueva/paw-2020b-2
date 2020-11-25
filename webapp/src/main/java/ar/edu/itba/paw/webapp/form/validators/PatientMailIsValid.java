@@ -7,12 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = ClinicIsValidValidator.class)
+@Constraint(validatedBy = PatientMailIsValidValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ClinicIsValid {
+public @interface PatientMailIsValid {
 
-    String message() default "Selected Clinic doesn't exist";
+    String message() default "Selected Patient doesn't exist";
 
     public Class<?>[] groups() default {};
 

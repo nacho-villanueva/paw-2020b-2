@@ -52,8 +52,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .invalidSessionUrl("/")
                 .and().authorizeRequests()//TODO: revise ant matchers
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/profile/edit/patient").hasRole("PATIENT")
-                    .antMatchers("/create-order").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
+                    .antMatchers("/profile/edit/patient", "/access-requests").hasRole("PATIENT")
+                    .antMatchers("/create-order", "/request-orders").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
                     .antMatchers("/profile/edit/medic").hasRole("MEDIC")
                     .antMatchers("/create-type").hasAnyRole("UNDEFINED","CLINIC")
                     .antMatchers("/create-field").hasAnyRole("UNDEFINED","MEDIC")

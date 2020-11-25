@@ -1,0 +1,12 @@
+${replace-share-request-main-title}
+
+${replace-m-mail.body.sendShareRequestMailHtml.secondary}
+
+${replace-study-type}
+
+${replace-share-request-url}
+
+${replace-m-mail.body.sendShareRequestMailHtml.last}
+
+${replace-m-mail.contact.title}
+${replace-medic-name}: ${replace-medic-email}

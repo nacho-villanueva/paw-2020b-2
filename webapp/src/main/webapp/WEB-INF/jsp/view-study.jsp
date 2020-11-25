@@ -165,7 +165,7 @@
                                                                 >
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5 mb-4"/>
+                                                        <hr class="mt-3 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsibleName}"/></h5>

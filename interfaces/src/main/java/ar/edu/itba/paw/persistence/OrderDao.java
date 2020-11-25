@@ -23,4 +23,6 @@ public interface OrderDao {
     Collection<Order> getAllAsPatient(User user);
 
     Order changeOrderClinic(Order order, Clinic clinic);
+
+    Collection<Order> getAllAsPatientOfType(String email, StudyType type);
 }
