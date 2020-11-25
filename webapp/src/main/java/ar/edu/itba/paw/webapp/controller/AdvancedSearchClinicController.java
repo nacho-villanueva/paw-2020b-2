@@ -7,11 +7,13 @@ import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.StudyTypeService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.AdvancedSearchClinicForm;
+import ar.edu.itba.paw.webapp.form.constraintGroups.AdvancedSearchGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +58,7 @@ public class AdvancedSearchClinicController {
     }
 
     @RequestMapping(method = RequestMethod.GET,params = {"submit=search"})
-    public ModelAndView getClinicsWithSearch(@Valid @ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm, BindingResult bindingResult,
+    public ModelAndView getClinicsWithSearch(@Validated(AdvancedSearchGroup.class) @ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm, BindingResult bindingResult,
                                              HttpServletRequest httpServletRequest) {
 
         String uri = httpServletRequest.getRequestURL().toString() + "?" + httpServletRequest.getQueryString();
