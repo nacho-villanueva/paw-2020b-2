@@ -104,6 +104,20 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     @Override
+    public void sendSharedOrderMail(Order order, User medic){
+        String body = loadBodyFromFile("orderMail.html", "orderMail.txt");
+        if(body != null){
+            if(this.useHTML){
+                String bodyPlain = loadBodyFromFile("orderMail.txt");
+                sendSharedOrderMailHtml(order, medic, body, bodyPlain);
+            }
+            else {
+                sendSharedOrderMailPlainText(order, medic, body);
+            }
+        }
+    }
+
+    @Override
     public void sendResultMail(Result result){
         String body = loadBodyFromFile("resultMail.html", "resultMail.txt");
         if(body != null) {
@@ -419,6 +433,42 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         replaceOrderInfo(order, replaceClinic, locale);
 
         return replaceAllMessages(mailContent, replaceClinic, locale);
+    }
+
+    private void sendSharedOrderMailHtml(Order order, User medic, String bodyHtml, String bodyPlain){
+        Locale medicLocale = getLocale(order.getMedic().getEmail());
+
+        Object[] subjectParams = {order.getPatientName()};
+
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+        mailInline.add("envelope-regular.png");
+
+        String mailContent = getMailTemplate();
+        mailContent = mailContent.replace("<replace-content/>",bodyHtml);
+
+        Map<String, String> replaceMedic = new HashMap<>();
+        replaceMedic.put("url", address.toString());
+
+        replaceMedicMailContacts(order, replaceMedic, medicLocale);
+        replaceOrderInfo(order, replaceMedic, medicLocale);
+
+        ms.sendMimeMessage(medic.getEmail(),
+                messageSource.getMessage("mail.subject.shared-order.medic",subjectParams,medicLocale),
+                getOrderMailMedicBodyPlainText(order, bodyPlain, medicLocale),
+                replaceAllMessages(mailContent, replaceMedic, medicLocale),
+                mailInline
+        );
+
+    }
+
+    private void sendSharedOrderMailPlainText(Order order, User medic, String body){
+        Locale medicLocale = getLocale(order.getMedic().getEmail());
+        Object[] subjectParams = {order.getPatientName()};
+
+        ms.sendSimpleMessage(medic.getEmail(),
+                messageSource.getMessage("mail.subject.order.medic",subjectParams,medicLocale),
+                getOrderMailMedicBodyPlainText(order, body, medicLocale));
     }
 
     // send result mail with html
