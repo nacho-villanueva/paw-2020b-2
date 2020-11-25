@@ -14,7 +14,7 @@ mricarte@itba.edu.ar            | password  | patient
 Lista de cuentas sin verificar:
 email                           | password  | role
 --------------------------------+-----------+------
-ivillanueva@itba.edu.ar         |   password | medic
+lricarte@medtransfer.com        |   password | medic
 tabacard@medtransfer.com        |tabacardPass| clinic
-sanlucas@medtransfer.com        | password   | clinic
+san.antonio@medtransfer.com     | password   | clinic
 
