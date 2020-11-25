@@ -80,12 +80,8 @@ public class TestConfig {
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");  // TODO:see why commenting this makes simplejdbcinsert work
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-
-        // Si ponen esto en prod, hay tabla!!! //TODO: remove this from production
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(properties);
         return factoryBean;
