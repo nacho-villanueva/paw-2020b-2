@@ -73,8 +73,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                     .lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             this.textTemplate = "<replace-content/>";
-            //TODO log accordingly
-            e.printStackTrace();
         }
 
 
@@ -85,8 +83,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             this.useHTML = true;
         } catch (IOException e) {
             this.useHTML = false;
-            //TODO log accordingly
-            e.printStackTrace();
         }
     }
 
@@ -227,7 +223,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
             try {
                 bodyFile = ResourceUtils.getURL("classpath:mail/" + txtFile);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
         }
 
@@ -242,7 +237,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
         }
         catch (IOException e) {
-            e.printStackTrace();
         }
 
         return body;
