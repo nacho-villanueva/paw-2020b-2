@@ -14,8 +14,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>services</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>http://pawserver.it.itba.edu.ar/paw-2020b-2/</url>
 
   <dependencies>
     <dependency>

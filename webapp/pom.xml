@@ -15,8 +15,7 @@
   <packaging>war</packaging>
 
   <name>webapp</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>http://pawserver.it.itba.edu.ar/paw-2020b-2/</url>
 
 
   <build>
