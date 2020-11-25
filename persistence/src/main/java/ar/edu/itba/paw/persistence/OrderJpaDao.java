@@ -1,14 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.*;
-import org.hibernate.jpa.criteria.CriteriaBuilderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
@@ -101,7 +99,7 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Collection<Order> getAllAsPatientOfType(String email, StudyType type){
-        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patient_email = :email AND o.study = :type", Order.class);
+        final TypedQuery<Order> query = em.createQuery("SELECT o FROM Order o WHERE o.patientEmail = :email AND o.study = :type", Order.class);
         query.setParameter("email", email);
         query.setParameter("type", type);
         return query.getResultList();

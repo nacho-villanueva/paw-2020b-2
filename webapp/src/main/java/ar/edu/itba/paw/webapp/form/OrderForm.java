@@ -7,8 +7,6 @@ import ar.edu.itba.paw.webapp.form.validators.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 public class OrderForm {
 
     @MedicIdIsValid(groups = {OrderWithoutClinicGroup.class,OrderGroup.class})
@@ -30,7 +28,7 @@ public class OrderForm {
     @NotBlank(groups = {OrderWithoutClinicGroup.class,OrderGroup.class})
     private String patientName;
 
-    @ValidClinicId(groups = OrderGroup.class)
+    @ClinicIdIsValid(groups = OrderGroup.class)
     private Integer clinicId;
 
     public OrderForm(){ }

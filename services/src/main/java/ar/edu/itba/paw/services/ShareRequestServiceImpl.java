@@ -40,7 +40,7 @@ public class ShareRequestServiceImpl implements ShareRequestService{
     public void acceptOrDenyShare(ShareRequest request, boolean accepted) {
         if(accepted){
             final Collection<Order> orders = os.getAllAsPatientOfType(request.getPatientEmail(), request.getStudyType());
-            Optional<Medic> maybeMedic = ms.findByUserId(request.getMedic().getUser_id());
+            Optional<Medic> maybeMedic = ms.findByUserId(request.getMedic().getUser().getId());
             if(maybeMedic.isPresent()) {
                 for (Order o : orders) {
                     os.shareWithMedic(o, maybeMedic.get().getUser());
