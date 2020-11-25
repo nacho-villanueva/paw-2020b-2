@@ -14,9 +14,7 @@
 <c:url value="/change-clinic/${encodedId}" var="changeClinicPath"/>
 
 <body>
-<script>
 
-</script>
 <%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <div id="wrapper" class="wrapper">
     <jsp:include page="fragments/sidebar-fragment.jsp" >
@@ -77,7 +75,6 @@
                         <div id="orderAttrModal" class="modal fade" tabindex="-1"
                              role="dialog" aria-hidden="true" aria-labelledby="orderAttrModalTitle">
                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                <span class="close">&times;</span>
                                 <img class="modal-content"
                                      src="${imageAssets}/study/${encodedId}?attr=identification"
                                      alt="<spring:message code="view-study.body.card.order.signature.alt"/>"
@@ -162,7 +159,6 @@
                                                         <div id="resultImageModal-${result.id}" class="modal fade" tabindex="-1"
                                                              role="dialog" aria-hidden="true" aria-labelledby="resultImageModal-${result.id}Title">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <span class="close">&times;</span>
                                                                 <img class="modal-content"
                                                                      src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data"
                                                                      alt="<spring:message code="view-study.body.card.result.result.alt"/>"
@@ -186,7 +182,6 @@
                                                             <div id="resultAttrModal-${result.id}" class="modal fade" tabindex="-1"
                                                                  role="dialog" aria-hidden="true" aria-labelledby="resultAttrModal-${result.id}Title">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                    <span class="close">&times;</span>
                                                                     <img class="modal-content"
                                                                          src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification"
                                                                          alt="<spring:message code="view-study.body.card.result.signature.alt"/>"

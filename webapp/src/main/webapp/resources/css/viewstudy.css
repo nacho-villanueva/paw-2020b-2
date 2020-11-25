@@ -137,8 +137,8 @@ body {
 
 .close {
     position: absolute;
-    top: 1em;
-    right: -1em;
+    top:1em;
+    right:2em;
     color: #fafafa;
     font-size: 4em;
     font-weight: bold;
