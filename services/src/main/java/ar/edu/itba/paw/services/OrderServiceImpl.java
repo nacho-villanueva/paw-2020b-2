@@ -133,5 +133,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order changeOrderClinic(Order order, Clinic clinic) { return orderDao.changeOrderClinic(order, clinic); }
+    public Order changeOrderClinic(Order order, Clinic clinic) {
+        Order newOrder = orderDao.changeOrderClinic(order, clinic);
+        mailNotificationService.sendChangeClinicMail(order);
+        return newOrder;
+    }
 }

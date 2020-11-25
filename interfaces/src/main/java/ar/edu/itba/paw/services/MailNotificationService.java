@@ -19,4 +19,6 @@ public interface MailNotificationService {
 
     void sendDenyRequestMail(ShareRequest shareRequest);
 
+    void sendChangeClinicMail(Order order);
+
 }
