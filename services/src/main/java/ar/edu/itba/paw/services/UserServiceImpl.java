@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateEmail(User user, String email) {
-        //TODO: Verification of email
         return userDao.updateEmail(user,email);
     }
 

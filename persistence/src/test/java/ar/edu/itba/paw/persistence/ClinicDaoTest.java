@@ -337,7 +337,7 @@ public class ClinicDaoTest {
     public void testSearchJustHours() {
         String name = null;
         ClinicHours availableHours = new ClinicHours();
-        availableHours.setDayHour(ClinicHours.MONDAY, LocalTime.parse("00:00:00"), LocalTime.parse("23:59:59"));        //TODO: See why 24:00:00 breaks the test
+        availableHours.setDayHour(ClinicHours.MONDAY, LocalTime.parse("00:00:00"), LocalTime.parse("23:59:59"));
         String medicPlan = null;
         String studyName = null;
 

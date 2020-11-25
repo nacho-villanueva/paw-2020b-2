@@ -31,9 +31,6 @@ public class ResultUploadController {
     private UrlEncoderService urlEncoderService;
 
     @Autowired
-    private ValidationService vs;
-
-    @Autowired
     private ResultService resultService;
 
     @Autowired
