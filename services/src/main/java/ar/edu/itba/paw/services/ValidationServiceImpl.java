@@ -214,7 +214,6 @@ public class ValidationServiceImpl implements ValidationService {
         return isValid;
     }
 
-    //TODO: check for other validations in project, see that they are the same
     @Override
     public boolean isValidName(String name) {
         if(name == null) {
@@ -224,7 +223,6 @@ public class ValidationServiceImpl implements ValidationService {
         return !name.isEmpty();
     }
 
-    //TODO: check of other validations in project, see that they are the same
     @Override
     public boolean isValidPassword(String password) {
         if(password == null) {
@@ -234,7 +232,6 @@ public class ValidationServiceImpl implements ValidationService {
         return password.length() >= 8;
     }
 
-    //TODO: Investigate, see if we can make a better validation
     @Override
     public boolean isValidLicenceNumber(String licenceNumber) {
         return isValidName(licenceNumber);

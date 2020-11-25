@@ -50,7 +50,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
                     .invalidSessionUrl("/")
-                .and().authorizeRequests()//TODO: revise ant matchers
+                .and().authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/profile/edit/patient", "/access-requests").hasRole("PATIENT")
                     .antMatchers("/create-order", "/request-orders").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
