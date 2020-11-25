@@ -1,0 +1,9 @@
+${replace-m-mail.body.sendOrderMailNoHtml.details}
+
+${replace-order-url}
+
+${replace-new-info}
+
+${replace-m-mail.contact.title}
+${replace-contact1-name}: ${replace-contact1-email}
+${replace-contact2-name}: ${replace-contact2-email}

@@ -1,0 +1,2 @@
+${replace-m-mail.body.ClinicApplicationValidatingMailHtml.title}
+${replace-m-mail.body.ClinicApplicationValidatingMailHtml.body}

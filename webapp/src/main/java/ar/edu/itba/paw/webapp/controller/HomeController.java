@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -80,19 +81,19 @@ public class HomeController {
     private ModelAndView homeSetup(ModelAndView mav){
         Collection<Order> orders = os.getAllAsUser(loggedUser());;
 
-        HashMap<Long, String> orders_encoded = new HashMap<>();
-        encoder(orders, orders_encoded);
+        Map<Long, String> ordersEncoded = new HashMap<>();
+        encoder(orders, ordersEncoded);
         mav.addObject("orders", orders);
-        mav.addObject("orders_encoded", orders_encoded);
-        mav.addObject("has_studies", !orders.isEmpty());
+        mav.addObject("ordersEncoded", ordersEncoded);
+        mav.addObject("hasStudies", !orders.isEmpty());
 
         return mav;
 
     }
 
-    private HashMap<Long, String> encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
+    private Map<Long, String> encoder(Collection<Order> orders, Map<Long, String> encodeds){
         for(Order order : orders){
-            encodeds.put(order.getOrder_id(), urlEncoderService.encode(order.getOrder_id()));
+            encodeds.put(order.getOrderId(), urlEncoderService.encode(order.getOrderId()));
         }
         return encodeds;
     }

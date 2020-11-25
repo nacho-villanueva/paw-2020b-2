@@ -35,29 +35,29 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic register(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields) {
-        Medic medic = medicDao.register(user,name,telephone,identification_type,identification,licence_number,known_fields, false);
+    public Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields) {
+        Medic medic = medicDao.register(user,name,telephone,identificationType,identification,licenceNumber,knownFields, false);
         userService.updateRole(user,User.MEDIC_ROLE_ID);
         return medic;
     }
 
     @Override
-    public Optional<Medic> findByUserId(int user_id) {
-        return medicDao.findByUserId(user_id);
+    public Optional<Medic> findByUserId(int userId) {
+        return medicDao.findByUserId(userId);
     }
 
     @Override
-    public MedicalField registerFieldToMedic(int medic_id, MedicalField medicalField) {
-        return medicDao.registerFieldToMedic(medic_id,medicalField);
+    public MedicalField registerFieldToMedic(int medicId, MedicalField medicalField) {
+        return medicDao.registerFieldToMedic(medicId,medicalField);
     }
 
     @Override
-    public Medic updateMedicInfo(User user, String name, String telephone, String identification_type, byte[] identification, String licence_number, Collection<MedicalField> known_fields, boolean verified) {
-        return medicDao.updateMedicInfo(user,name,telephone,identification_type,identification,licence_number,known_fields,verified);
+    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified) {
+        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields,verified);
     }
 
     @Override
-    public boolean knowsField(int medic_id, int field_id) {
-        return medicDao.knowsField(medic_id,field_id);
+    public boolean knowsField(int medicId, int fieldId) {
+        return medicDao.knowsField(medicId,fieldId);
     }
 }

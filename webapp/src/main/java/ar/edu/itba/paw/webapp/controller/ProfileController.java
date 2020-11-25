@@ -167,13 +167,13 @@ public class ProfileController {
 
         mav.addObject("role","patient");
 
-        Optional<Patient> patientOptional = patientService.findByUser_id(user.getId());
+        Optional<Patient> patientOptional = patientService.findByUserId(user.getId());
         if(patientOptional.isPresent()){
             Patient patient = patientOptional.get();
             mav.addObject("patient", patient);
-            editPatientForm.setFull_name(patient.getName());
-            editPatientForm.setMedical_plan(patient.getMedic_plan());
-            editPatientForm.setMedical_plan_number(patient.getMedic_plan_number());
+            editPatientForm.setFullName(patient.getName());
+            editPatientForm.setMedicalPlan(patient.getMedicPlan());
+            editPatientForm.setMedicalPlanNumber(patient.getMedicPlanNumber());
         }else{
             throw new PatientNotFoundException();
         }
@@ -196,7 +196,7 @@ public class ProfileController {
 
         ModelAndView mav = new ModelAndView("redirect:/profile");
 
-        patientService.updatePatientInfo(loggedUser(),editPatientForm.getFull_name(),editPatientForm.getMedical_plan(),editPatientForm.getMedical_plan_number());
+        patientService.updatePatientInfo(loggedUser(),editPatientForm.getFullName(),editPatientForm.getMedicalPlan(),editPatientForm.getMedicalPlanNumber());
 
         mav.addObject("editSuccess",User.PATIENT_ROLE_ID);
 
@@ -216,17 +216,17 @@ public class ProfileController {
         if(medicOptional.isPresent()){
             Medic medic = medicOptional.get();
             mav.addObject("medic", medic);
-            editMedicForm.setFull_name(medic.getName());
+            editMedicForm.setFullName(medic.getName());
             editMedicForm.setTelephone(medic.getTelephone());
-            editMedicForm.setLicence_number(medic.getLicence_number());
+            editMedicForm.setLicenceNumber(medic.getLicenceNumber());
 
-            ArrayList<String> knownFieldsList = new ArrayList<>();
-            for (MedicalField mf : medic.getMedical_fields()) {
+            List<String> knownFieldsList = new ArrayList<>();
+            for (MedicalField mf : medic.getMedicalFields()) {
                 knownFieldsList.add(mf.getName());
             }
-            editMedicForm.setKnown_fields(knownFieldsList.toArray(new String[0]));
+            editMedicForm.setKnownFields(knownFieldsList.toArray(new String[0]));
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnownFields()));
             mav.addObject("fieldsList",medicalFieldService.getAll());
         }else{
             throw new MedicNotFoundException();
@@ -239,7 +239,7 @@ public class ProfileController {
     public ModelAndView editProfileMedicPost(@Valid @ModelAttribute("editMedicForm") final EditMedicForm editMedicForm, final BindingResult errors, Locale locale){
 
         Collection<MedicalField> knownFields = new HashSet<>();
-        for (String medicalFieldName : editMedicForm.getKnown_fields()) {
+        for (String medicalFieldName : editMedicForm.getKnownFields()) {
             knownFields.add(new MedicalField(medicalFieldName));
         }
 
@@ -251,7 +251,7 @@ public class ProfileController {
 
             knownFields.addAll(medicalFieldService.getAll());
 
-            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnown_fields()));
+            mav.addObject("selectedFields", Arrays.stream(editMedicForm.getKnownFields()));
             mav.addObject("fieldsList",knownFields);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
@@ -269,7 +269,7 @@ public class ProfileController {
             throw new MedicNotFoundException();
         }
 
-        String newContentType = medic.getIdentification_type();
+        String newContentType = medic.getIdentificationType();
         byte[] newContent = medic.getIdentification();
         if(!editMedicForm.getIdentification().isEmpty()){
             newContentType = editMedicForm.getIdentification().getContentType();
@@ -280,8 +280,8 @@ public class ProfileController {
             }
         }
 
-        medicService.updateMedicInfo(loggedUser(),editMedicForm.getFull_name(),editMedicForm.getTelephone(),
-                newContentType, newContent, editMedicForm.getLicence_number(),knownFields,medic.isVerified());
+        medicService.updateMedicInfo(loggedUser(),editMedicForm.getFullName(),editMedicForm.getTelephone(),
+                newContentType, newContent, editMedicForm.getLicenceNumber(),knownFields,medic.isVerified());
 
 
         mav.addObject("editSuccess",User.MEDIC_ROLE_ID);
@@ -302,22 +302,22 @@ public class ProfileController {
         if(clinicOptional.isPresent()){
             Clinic clinic = clinicOptional.get();
             mav.addObject("clinic", clinic);
-            editClinicForm.setFull_name(clinic.getName());
+            editClinicForm.setFullName(clinic.getName());
             editClinicForm.setTelephone(clinic.getTelephone());
 
-            editClinicForm.getClinicHoursForm().setClosing_time(clinic.getHours().getClose_hours_asString());
-            editClinicForm.getClinicHoursForm().setOpening_time(clinic.getHours().getOpen_hours_asString());
-            editClinicForm.getClinicHoursForm().setOpen_days(clinic.getHours().getDays_asIntArray());
+            editClinicForm.getClinicHoursForm().setClosingTime(clinic.getHours().getCloseHoursAsString());
+            editClinicForm.getClinicHoursForm().setOpeningTime(clinic.getHours().getOpenHoursAsString());
+            editClinicForm.getClinicHoursForm().setOpenDays(clinic.getHours().getDaysAsIntArray());
 
-            editClinicForm.setAccepted_plans(clinic.getAccepted_plans().toArray(new String[0]));
+            editClinicForm.setAcceptedPlans(clinic.getAcceptedPlans().toArray(new String[0]));
 
-            ArrayList<String> availableStudiesList = new ArrayList<>();
-            for (StudyType studyType : clinic.getMedical_studies()) {
+            List<String> availableStudiesList = new ArrayList<>();
+            for (StudyType studyType : clinic.getMedicalStudies()) {
                 availableStudiesList.add(studyType.getName());
             }
-            editClinicForm.setAvailable_studies(availableStudiesList.toArray(new String[0]));
+            editClinicForm.setAvailableStudies(availableStudiesList.toArray(new String[0]));
 
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailableStudies()));
             mav.addObject("studiesList",studyTypeService.getAll());
         }else{
             throw new ClinicNotFoundException();
@@ -330,7 +330,7 @@ public class ProfileController {
     public ModelAndView editProfileClinicPost(@Valid @ModelAttribute("editClinicForm") final EditClinicForm editClinicForm, final BindingResult errors, Locale locale){
 
         Collection<StudyType> availableStudies = new HashSet<>();
-        for (String studyTypeName : editClinicForm.getAvailable_studies()) {
+        for (String studyTypeName : editClinicForm.getAvailableStudies()) {
             availableStudies.add(new StudyType(studyTypeName));
         }
 
@@ -342,7 +342,7 @@ public class ProfileController {
 
             availableStudies.addAll(studyTypeService.getAll());
 
-            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailable_studies()));
+            mav.addObject("selectedStudies", Arrays.stream(editClinicForm.getAvailableStudies()));
             mav.addObject("studiesList",availableStudies);
 
             mav.addObject("errorAlert",messageSource.getMessage("profile-edit.body.errorAlert.formErrors",null,locale));
@@ -361,10 +361,10 @@ public class ProfileController {
         }
 
         ClinicHours clinicHours = new ClinicHours();
-        Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpen_days()));
-        clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpening_time(),editClinicForm.getClinicHoursForm().getClosing_time());
+        Set<Integer> daysSet = new HashSet<>(Arrays.asList(editClinicForm.getClinicHoursForm().getOpenDays()));
+        clinicHours.setDaysHours(daysSet,editClinicForm.getClinicHoursForm().getOpeningTime(),editClinicForm.getClinicHoursForm().getClosingTime());
 
-        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFull_name(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAccepted_plans_List())),clinicHours,clinic.isVerified());
+        clinicService.updateClinicInfo(loggedUser(),editClinicForm.getFullName(),editClinicForm.getTelephone(),availableStudies,new HashSet<>(Arrays.asList(editClinicForm.getAcceptedPlansList())),clinicHours,clinic.isVerified());
 
         mav.addObject("editSuccess",User.CLINIC_ROLE_ID);
 
@@ -412,7 +412,7 @@ public class ProfileController {
 
             switch (user.getRole()){
                 case User.PATIENT_ROLE_ID:
-                    Optional<Patient> patientOptional = patientService.findByUser_id(user.getId());
+                    Optional<Patient> patientOptional = patientService.findByUserId(user.getId());
                     if(patientOptional.isPresent()){
                         mav.addObject("patient", patientOptional.get());
                     }else{
@@ -435,12 +435,12 @@ public class ProfileController {
 
                         mav.addObject("daysOfWeek",ClinicHours.getDaysOfWeek());
 
-                        HashMap<String, String[]> openDayHour = new HashMap<>();
+                        Map<String, String[]> openDayHour = new HashMap<>();
 
                         int maxDays = ClinicHours.getDaysOfWeek();
                         for(int i = 0; i < maxDays; i++){
                             if(clinic.getHours().getDays()[i]){
-                                String[] val = {clinic.getHours().getOpen_hours_asString()[i],clinic.getHours().getClose_hours_asString()[i]};
+                                String[] val = {clinic.getHours().getOpenHoursAsString()[i],clinic.getHours().getCloseHoursAsString()[i]};
                                 openDayHour.put(String.valueOf(i), val);
                             }
                         }

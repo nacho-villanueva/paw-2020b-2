@@ -6,39 +6,39 @@ import ar.edu.itba.paw.webapp.form.validators.ValidDays;
 public class ClinicHoursForm {
 
     @ValidDays
-    Integer[] open_days;
+    Integer[] openDays;
 
-    String[] opening_time;
+    String[] openingTime;
 
-    String[] closing_time;
+    String[] closingTime;
 
     public ClinicHoursForm() {
-        this.opening_time = new String[ClinicHours.getDaysOfWeek()];
-        this.closing_time = new String[ClinicHours.getDaysOfWeek()];
+        this.openingTime = new String[ClinicHours.getDaysOfWeek()];
+        this.closingTime = new String[ClinicHours.getDaysOfWeek()];
     }
 
 
-    public String[] getOpening_time() {
-        return opening_time;
+    public String[] getOpeningTime() {
+        return openingTime;
     }
 
-    public void setOpening_time(String[] opening_time) {
-        this.opening_time = opening_time;
+    public void setOpeningTime(String[] openingTime) {
+        this.openingTime = openingTime;
     }
 
-    public String[] getClosing_time() {
-        return closing_time;
+    public String[] getClosingTime() {
+        return closingTime;
     }
 
-    public void setClosing_time(String[] closing_time) {
-        this.closing_time = closing_time;
+    public void setClosingTime(String[] closingTime) {
+        this.closingTime = closingTime;
     }
 
-    public Integer[] getOpen_days() {
-        return open_days;
+    public Integer[] getOpenDays() {
+        return openDays;
     }
 
-    public void setOpen_days(Integer[] open_days) {
-        this.open_days = open_days;
+    public void setOpenDays(Integer[] openDays) {
+        this.openDays = openDays;
     }
 }

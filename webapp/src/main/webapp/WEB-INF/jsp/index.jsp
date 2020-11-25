@@ -39,11 +39,11 @@
                     <form action="${loginUrl}" method="post" class="form-signin" enctype="application/x-www-form-urlencoded" >
                         <fieldset class="form-group">
                             <label for="loginEmail" class="bmd-label-static"><spring:message code="index.body.card.loginForm.label.email"/></label>
-                            <input name="login_email" type="email" class="form-control" id="loginEmail" placeholder="<spring:message code="index.body.card.loginForm.label.email"/>"  />
+                            <input name="loginEmail" type="email" class="form-control" id="loginEmail" placeholder="<spring:message code="index.body.card.loginForm.label.email"/>"  />
                         </fieldset>
                         <fieldset class="form-group">
                             <label for="loginPassword" class="bmd-label-static"><spring:message code="index.body.card.loginForm.label.password"/></label>
-                            <input name="login_password" type="password" class="form-control" id="loginPassword" placeholder="<spring:message code="index.body.card.loginForm.label.password"/>"/>
+                            <input name="loginPassword" type="password" class="form-control" id="loginPassword" placeholder="<spring:message code="index.body.card.loginForm.label.password"/>"/>
                         </fieldset>
 
                         <div class="checkbox">

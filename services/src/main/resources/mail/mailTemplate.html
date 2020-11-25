@@ -10,7 +10,7 @@
         body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0; font-family: Sans-Serif}
         .ExternalClass {width:100%;}
         .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
-        #backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
+        #backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important; background-color: #f6f6f6}
         img {outline:none; text-decoration:none; -ms-interpolation-mode: bicubic;}
         a img {border:none;}
         .image_fix {display:block;}
@@ -24,7 +24,7 @@
             color: green !important;
         }
         table td {border-collapse: collapse;}
-        table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+        table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;   }
         a {color: #009688;}
         @media only screen and (max-device-width: 480px) {
             a[href^="tel"], a[href^="sms"] {
@@ -59,11 +59,11 @@
 <body>
 <table cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
     <tr>
-        <td>
-            <table cellpadding="0" cellspacing="0" border="0" align="center">
+        <td style="padding: 20px">
+            <table cellpadding="0" cellspacing="0" border="0" align="center" style="width: 50%; background-color: white">
                 <tr height="40">
                     <td width="200" align="center" valign="top" style="padding: 12px 0 0 0;">
-                        <img width="200" class="image_fix" src="cid:logo.png" alt="<replace-m-altText-logo/>"/>
+                        <img width="200" class="image_fix" src="cid:logo.png" alt="${replace-m-mail.altText.logo}"/>
                     </td>
                 </tr>
                 <tr>
@@ -73,10 +73,10 @@
                 </tr>
 
                 <tr>
-                    <td style="padding: 64px 0 0 0;">
+                    <td style="padding: 64px 0 0 52px;">
                         <h4>
-                            <replace-m-complementaryClose/>
-                            <a href="<replace-url/>" target ="_blank" title="<replace-m-appname/>" style="text-decoration: none;"><replace-m-appname/></a>
+                            ${replace-m-mail.complementaryClose}
+                            <a href="${replace-url}" target ="_blank" title="${replace-m-appname}" style="text-decoration: none;">${replace-m-appname}</a>
                         </h4>
                     </td>
                 </tr>

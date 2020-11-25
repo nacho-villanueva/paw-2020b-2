@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.validators;
 
-import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.MedicService;
 import org.springframework.beans.factory.annotation.Autowired;
 

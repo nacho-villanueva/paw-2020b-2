@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.webapp.form.constraintGroups.AdvancedSearchGroup;
 import ar.edu.itba.paw.webapp.form.validators.ValidAvailabilityHours;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -8,7 +9,7 @@ import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Time;
+import java.time.LocalTime;
 
 
 public class AdvancedSearchClinicForm {
@@ -20,7 +21,7 @@ public class AdvancedSearchClinicForm {
     private String medicalPlan;
 
     // for time
-    @ValidAvailabilityHours
+    @ValidAvailabilityHours(groups = AdvancedSearchGroup.class)
     private ClinicHoursForm availableTime;
 
     private boolean[] isAvailable;
@@ -28,13 +29,10 @@ public class AdvancedSearchClinicForm {
 
     // to Save order info
     //  should not be needed for regular searches
-    private Integer medicId;
-    private Integer studyId;
-    private String description;
-    private PatientInfoForm patientInfo;
+    private OrderForm orderForm;
 
     public AdvancedSearchClinicForm() {
-        this.patientInfo = new PatientInfoForm();
+        this.orderForm = new OrderForm();
         resetValues();
     }
 
@@ -64,29 +62,28 @@ public class AdvancedSearchClinicForm {
         String[] auxCT = new String[ClinicHours.getDaysOfWeek()];
 
         for (int i=0; i < ClinicHours.getDaysOfWeek(); i++){
-            auxOT[i] = decodeVal(p,"availableTime.opening_time["+Integer.toString(i)+"]");
-            auxCT[i] = decodeVal(p,"availableTime.closing_time["+Integer.toString(i)+"]");
+            auxOT[i] = decodeVal(p,"availableTime.openingTime["+Integer.toString(i)+"]");
+            auxCT[i] = decodeVal(p,"availableTime.closingTime["+Integer.toString(i)+"]");
         }
-        this.availableTime.setOpening_time(auxOT);
-        this.availableTime.setClosing_time(auxCT);
+        this.availableTime.setOpeningTime(auxOT);
+        this.availableTime.setClosingTime(auxCT);
 
         // orderFormData
         // medicId is Integer
         // clinicId is Integer
-        this.description = decodeVal(p,"description");
-
+        this.orderForm.setDescription(decodeVal(p,"orderForm.description"));
         //patient Data
-        this.patientInfo.setInsurancePlan(decodeVal(p, "patientInfo.insurancePlan"));
-        this.patientInfo.setInsuranceNumber(decodeVal(p, "patientInfo.insuranceNumber"));
-        this.patientInfo.setEmail(decodeVal(p, "patientInfo.email"));
-        this.patientInfo.setName(decodeVal(p, "patientInfo.name"));
+        this.orderForm.setPatientInsurancePlan(decodeVal(p, "orderForm.patientInsurancePlan"));
+        this.orderForm.setPatientInsuranceNumber(decodeVal(p, "orderForm.patientInsuranceNumber"));
+        this.orderForm.setPatientEmail(decodeVal(p, "orderForm.patientEmail"));
+        this.orderForm.setPatientName(decodeVal(p, "orderForm.patientName"));
     }
 
     public ClinicHours getClinicHours(){
         ClinicHours ret = new ClinicHours();
 
-        String[] auxOT = this.availableTime.getOpening_time();
-        String[] auxCT = this.availableTime.getClosing_time();
+        String[] auxOT = this.availableTime.getOpeningTime();
+        String[] auxCT = this.availableTime.getClosingTime();
         String defaultFromTime = "00:00";
         String defaultToTime = "23:59";
         String timeSuffix = ":00";
@@ -94,8 +91,8 @@ public class AdvancedSearchClinicForm {
         for(int day=0 ; day < ClinicHours.getDaysOfWeek(); day++){
             if(this.isAvailable[day])
                 ret.setDayHour(day,
-                        Time.valueOf(((auxOT[day] == null)?defaultFromTime:auxOT[day]).concat(timeSuffix)),
-                        Time.valueOf(((auxCT[day] == null)?defaultToTime:auxCT[day]).concat(timeSuffix))
+                        LocalTime.parse(((auxOT[day] == null)?defaultFromTime:auxOT[day]).concat(timeSuffix)),
+                        LocalTime.parse(((auxCT[day] == null)?defaultToTime:auxCT[day]).concat(timeSuffix))
                 );
         }
 
@@ -126,30 +123,6 @@ public class AdvancedSearchClinicForm {
         this.medicalPlan = medicalPlan;
     }
 
-    public Integer getMedicId() {
-        return medicId;
-    }
-
-    public void setMedicId(Integer medicId) {
-        this.medicId = medicId;
-    }
-
-    public Integer getStudyId() {
-        return studyId;
-    }
-
-    public void setStudyId(Integer studyId) {
-        this.studyId = studyId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public ClinicHoursForm getAvailableTime() {
         return availableTime;
     }
@@ -166,12 +139,12 @@ public class AdvancedSearchClinicForm {
         this.isAvailable = isAvailable;
     }
 
-    public PatientInfoForm getPatientInfo() {
-        return patientInfo;
+    public OrderForm getOrderForm() {
+        return orderForm;
     }
 
-    public void setPatientInfo(PatientInfoForm patientInfo) {
-        this.patientInfo = patientInfo;
+    public void setOrderForm(OrderForm orderForm) {
+        this.orderForm = orderForm;
     }
 
     private String decodeVal(MultiValueMap<String, String> parameters, String key){

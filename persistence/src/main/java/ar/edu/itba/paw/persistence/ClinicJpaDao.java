@@ -1,14 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.models.StudyType;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 
 @Repository
@@ -21,8 +23,8 @@ public class ClinicJpaDao implements ClinicDao {
     private StudyTypeDao studyTypeDao;
 
     @Override
-    public Optional<Clinic> findByUserId(int user_id) {
-        return Optional.ofNullable(em.find(Clinic.class,user_id));
+    public Optional<Clinic> findByUserId(int userId) {
+        return Optional.ofNullable(em.find(Clinic.class,userId));
     }
 
     @Override
@@ -43,17 +45,17 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> getByStudyTypeId(final int studyType_id) {
+    public Collection<Clinic> getByStudyTypeId(final int studyTypeId) {
 
-        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyType_id));
+        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyTypeId));
 
         if(!studyTypeOptional.isPresent())
             return new ArrayList<>();
 
         String queryString = "SELECT c FROM Clinic c " +
-                "INNER JOIN FETCH c.medical_studies " +
+                "INNER JOIN FETCH c.medicalStudies " +
                 "WHERE c.verified = true " +
-                "AND :studyType MEMBER OF c.medical_studies";
+                "AND :studyType MEMBER OF c.medicalStudies";
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
         query.setParameter("studyType",studyTypeOptional.get());
@@ -63,16 +65,16 @@ public class ClinicJpaDao implements ClinicDao {
 
 
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
 
         //Getting references
         User userRef = em.getReference(User.class,user.getId());
         Collection<StudyType> studyTypesRef = new HashSet<>();
-        available_studies.forEach(studyType -> {
+        availableStudies.forEach(studyType -> {
             studyTypesRef.add(getStudyRef(studyType));
         });
 
-        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medic_plans,false);
+        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medicPlans,false);
 
         em.persist(clinic);
 
@@ -82,20 +84,20 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> available_studies, final Set<String> medic_plans, final ClinicHours hours, final boolean verified) {
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
         Optional<Clinic> clinicDB = findByUserId(user.getId());
 
         clinicDB.ifPresent(clinic -> {
             clinic.setName(name);
             clinic.setTelephone(telephone);
             clinic.setVerified(verified);
-            clinic.setAccepted_plans(medic_plans);
+            clinic.setAcceptedPlans(medicPlans);
 
             Collection<StudyType> studiesRef = new HashSet<>();
-            available_studies.forEach(study -> {
+            availableStudies.forEach(study -> {
                 studiesRef.add(getStudyRef(study));
             });
-            clinic.setMedical_studies(studiesRef);
+            clinic.setMedicalStudies(studiesRef);
 
             //Updating hours
             clinic.setHours(hours);
@@ -121,17 +123,17 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public boolean hasStudy(final int clinic_id, final int studyType_id) {
-        Optional<Clinic> clinicOptional = findByUserId(clinic_id);
-        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyType_id);
+    public boolean hasStudy(final int clinicId, final int studyTypeId) {
+        Optional<Clinic> clinicOptional = findByUserId(clinicId);
+        Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyTypeId);
 
-        return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedical_studies().contains(studyTypeOptional.get());
+        return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedicalStudies().contains(studyTypeOptional.get());
     }
 
     @Override
-    public StudyType registerStudyToClinic(final int clinic_id, final StudyType studyType) {
+    public StudyType registerStudyToClinic(final int clinicId, final StudyType studyType) {
 
-        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinic_id));
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinicId));
 
         StudyType studyTypeFromDB = null;
 
@@ -141,7 +143,7 @@ public class ClinicJpaDao implements ClinicDao {
             Clinic clinic = clinicOptional.get();
 
             //TODO check it works
-            clinic.getMedical_studies().add(studyTypeFromDB);
+            clinic.getMedicalStudies().add(studyTypeFromDB);
             em.flush();
         }
 
@@ -150,26 +152,26 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
-        String queryString = getSearchQueryString(clinic_name,hours,accepted_plan,study_name);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
+        String queryString = getSearchQueryString(clinicName,hours,acceptedPlan,studyName);
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
         //filling params
 
-        if(clinic_name!=null)
-            query.setParameter("clinicName","%"+clinic_name.toLowerCase()+"%");
-        if(accepted_plan!=null)
-            query.setParameter("clinicAcceptedPlan","%"+accepted_plan.toLowerCase()+"%");
-        if(study_name!=null)
-            query.setParameter("clinicMedicalStudy","%"+study_name.toLowerCase()+"%");
+        if(clinicName!=null)
+            query.setParameter("clinicName","%"+clinicName.toLowerCase()+"%");
+        if(acceptedPlan!=null)
+            query.setParameter("clinicAcceptedPlan","%"+acceptedPlan.toLowerCase()+"%");
+        if(studyName!=null)
+            query.setParameter("clinicMedicalStudy","%"+studyName.toLowerCase()+"%");
         if(hours!=null){
             for (int i = 0; i < hours.getDays().length; i++) {
                 //If we have a filter on this day, we add condition
                 if(hours.getDays()[i]) {
                     query.setParameter("day_of_the_week_"+String.valueOf(i),i);
-                    query.setParameter("from_time_"+String.valueOf(i),hours.getOpen_hours()[i]);
-                    query.setParameter("until_time_"+String.valueOf(i),hours.getClose_hours()[i]);
+                    query.setParameter("from_time_"+String.valueOf(i),hours.getOpenHours()[i]);
+                    query.setParameter("until_time_"+String.valueOf(i),hours.getCloseHours()[i]);
                 }
             }
         }
@@ -177,7 +179,7 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList();
     }
 
-    private String getSearchQueryString(String clinic_name, ClinicHours hours, String accepted_plan, String study_name) {
+    private String getSearchQueryString(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
         //Base Query
         StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinic c");
 
@@ -187,20 +189,20 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(" INNER JOIN c.hours as cdh");
         }
 
-        if(accepted_plan != null) {
+        if(acceptedPlan != null) {
             //Add plans part
-            query.append(" INNER JOIN c.accepted_plans as cap");
+            query.append(" INNER JOIN c.acceptedPlans as cap");
         }
 
-        if(study_name != null) {
+        if(studyName != null) {
             //Add study name part
-            query.append(" INNER JOIN c.medical_studies as ms");
+            query.append(" INNER JOIN c.medicalStudies as ms");
         }
 
         //Search
         query.append(" WHERE c.verified = true");
 
-        if(clinic_name != null) {
+        if(clinicName != null) {
             //Add clinic name condition
             query.append(" AND (LOWER(c.name) LIKE :clinicName)");
         }
@@ -213,13 +215,13 @@ public class ClinicJpaDao implements ClinicDao {
                 if(hours.getDays()[i]) {
                     //This person, on this day is available from X to Y
                     //I want clinics that are open at least some part of the time frame of this day filter
-                    Time availableFrom = hours.getOpen_hours()[i];
-                    Time availableUntil = hours.getClose_hours()[i];
-                    query.append("( cdh.day_of_week = :day_of_the_week_");
+                    LocalTime availableFrom = hours.getOpenHours()[i];
+                    LocalTime availableUntil = hours.getCloseHours()[i];
+                    query.append("( cdh.dayOfWeek = :day_of_the_week_");
                     query.append(i);
-                    query.append(" AND NOT (cdh.close_time <= :from_time_");
+                    query.append(" AND NOT (cdh.closeTime <= :from_time_");
                     query.append(i);
-                    query.append(" OR cdh.open_time >= :until_time_");
+                    query.append(" OR cdh.openTime >= :until_time_");
                     query.append(i);
                     query.append(" ))");
                 } else {
@@ -233,12 +235,12 @@ public class ClinicJpaDao implements ClinicDao {
             query.append(")");
         }
 
-        if(accepted_plan != null) {
+        if(acceptedPlan != null) {
             //Add plan condition
             query.append(" AND LOWER(cap) LIKE :clinicAcceptedPlan");
         }
 
-        if(study_name != null) {
+        if(studyName != null) {
             //Add study name condition
             query.append(" AND LOWER(ms.name) LIKE :clinicMedicalStudy");
         }

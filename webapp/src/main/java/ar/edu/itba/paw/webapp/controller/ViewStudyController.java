@@ -40,7 +40,7 @@ public class ViewStudyController {
             mav.addObject("encodedId",encodedId);
             mav.addObject("id", id);
             mav.addObject("order", aux);
-            mav.addObject("results", aux.getStudy_results());
+            mav.addObject("results", aux.getStudyResults());
             mav.addObject("loggedUser",loggedUser());
             if(medicName != null)
                 mav.addObject("medicName",medicName);

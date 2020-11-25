@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -65,7 +65,7 @@ public class ValidationServiceImpl implements ValidationService {
         if(medic == null) {
             return false;
         }
-        Optional<Medic> maybeMedic = ms.findByUserId(medic.getUser_id());
+        Optional<Medic> maybeMedic = ms.findByUserId(medic.getUserId());
 
         if(!maybeMedic.isPresent()) {
             return false;
@@ -82,7 +82,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Order> maybeOrder = os.findById(order.getOrder_id());
+        Optional<Order> maybeOrder = os.findById(order.getOrderId());
 
         if(!maybeOrder.isPresent()) {
             return false;
@@ -99,7 +99,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Patient> maybePatient = ps.findByUser_id(patient.getUser_id());
+        Optional<Patient> maybePatient = ps.findByUserId(patient.getUserId());
 
         if(!maybePatient.isPresent()) {
             return false;
@@ -167,7 +167,7 @@ public class ValidationServiceImpl implements ValidationService {
             return false;
         }
 
-        Optional<Clinic> maybeClinic = cs.findByUserId(clinic.getUser_id());
+        Optional<Clinic> maybeClinic = cs.findByUserId(clinic.getUserId());
 
         if(!maybeClinic.isPresent()) {
             return false;
@@ -187,8 +187,8 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public boolean isValidIdentification_Type(String identification_type) {
-        return isValidType(identification_type,VALID_IDENTIFICATION_TYPES);
+    public boolean isValidIdentificationType(String identificationType) {
+        return isValidType(identificationType,VALID_IDENTIFICATION_TYPES);
     }
 
     @Override
@@ -236,27 +236,27 @@ public class ValidationServiceImpl implements ValidationService {
 
     //TODO: Investigate, see if we can make a better validation
     @Override
-    public boolean isValidLicenceNumber(String licence_number) {
-        return isValidName(licence_number);
+    public boolean isValidLicenceNumber(String licenceNumber) {
+        return isValidName(licenceNumber);
     }
 
     @Override
-    public boolean isValidMedicPlan(String medic_plan) {
-        return isValidName(medic_plan);
+    public boolean isValidMedicPlan(String medicPlan) {
+        return isValidName(medicPlan);
     }
 
     @Override
-    public boolean isValidMedicPlanNumber(String medic_plan_number) {
-        return isValidName(medic_plan_number);
+    public boolean isValidMedicPlanNumber(String medicPlanNumber) {
+        return isValidName(medicPlanNumber);
     }
 
     @Override
-    public boolean isValidResultDataType(String result_data_type) {
-        return isValidType(result_data_type,VALID_DATA_TYPES);
+    public boolean isValidResultDataType(String resultDataType) {
+        return isValidType(resultDataType,VALID_DATA_TYPES);
     }
 
     @Override
-    public boolean isValidDate(Date date) {
+    public boolean isValidDate(LocalDate date) {
         return date != null;
     }
 

@@ -21,9 +21,9 @@
             <td><spring:message code="profile-view.body.tab.medic.name.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.medic.name.label" var="full_namePlaceholder"/>
-                    <f:input type="text" cssClass="form-control" path="full_name" placeholder="${full_namePlaceholder}"/>
-                    <f:errors path="full_name" cssClass="text-danger" element="small"/>
+                    <spring:message code="profile-view.body.tab.medic.name.label" var="fullNamePlaceholder"/>
+                    <f:input type="text" cssClass="form-control" path="fullName" placeholder="${fullNamePlaceholder}"/>
+                    <f:errors path="fullName" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
@@ -48,27 +48,27 @@
             </td>
         </tr>
         <tr>
-            <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
+            <td><spring:message code="profile-view.body.tab.medic.licenceNumber.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-view.body.tab.medic.licence_number.label" var="licence_numberPlaceholder"/>
-                    <f:input type="text" cssClass="form-control" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licence_number" placeholder="${licence_numberPlaceholder}"/>
-                    <small class="text-muted"><spring:message code="profile-edit.form.medic.licence_number.format"/></small>
-                    <f:errors path="licence_number" cssClass="text-danger" element="small"/>
+                    <spring:message code="profile-view.body.tab.medic.licenceNumber.label" var="licenceNumberPlaceholder"/>
+                    <f:input type="text" cssClass="form-control" pattern="[a-zA-Z0-9]*" id="licenseNumber" path="licenceNumber" placeholder="${licenceNumberPlaceholder}"/>
+                    <small class="text-muted"><spring:message code="profile-edit.form.medic.licenceNumber.format"/></small>
+                    <f:errors path="licenceNumber" cssClass="text-danger" element="small"/>
                 </fieldset>
             </td>
         </tr>
         <tr>
-            <td><spring:message code="profile-view.body.tab.medic.medical_fields.label"/></td>
+            <td><spring:message code="profile-view.body.tab.medic.medicalFields.label"/></td>
             <td class="output">
                 <fieldset>
-                    <spring:message code="profile-edit.form.medic.medical_fields.placeholder" var="medical_fieldsPlaceholder"/>
-                    <f:select id="medicalFields" cssClass="selectpicker" title="${medical_fieldsPlaceholder}" data-live-search="true" path="known_fields" data-style="btn-custom" data-container="body">
+                    <spring:message code="profile-edit.form.medic.medicalFields.placeholder" var="medicalFieldsPlaceholder"/>
+                    <f:select id="medicalFields" cssClass="selectpicker" title="${medicalFieldsPlaceholder}" data-live-search="true" path="knownFields" data-style="btn-custom" data-container="body">
                         <f:options items="${fieldsList}" itemLabel="name" itemValue="name" />
                     </f:select>
-                    <f:errors path="known_fields" cssClass="text-danger" element="small"/>
+                    <f:errors path="knownFields" cssClass="text-danger" element="small"/>
                     <!-- Button trigger modal -->
-                    <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="profile-edit.form.medic.add_medical_field" /></p></a>
+                    <a href="#" data-toggle="modal" data-target="#createMedicalField"><p><spring:message code="profile-edit.form.medic.addMedicalField" /></p></a>
                     <!-- Modal -->
                     <div class="modal fade" id="createMedicalField" tabindex="-1" role="dialog" aria-labelledby="medicalFieldModal" aria-hidden="true">
                         <div class="modal-dialog" role="document">

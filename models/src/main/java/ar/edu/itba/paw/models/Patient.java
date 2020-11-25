@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Patient {
 
     @Id
-    private Integer user_id;
+    private Integer userId;
 
     @MapsId
     @OneToOne
@@ -16,10 +16,10 @@ public class Patient {
 
     @Column(nullable = false)
     private String name;
-    @Column
-    private String medic_plan;
-    @Column
-    private String medic_plan_number;
+    @Column(name = "medic_plan")
+    private String medicPlan;
+    @Column(name = "medic_plan_number")
+    private String medicPlanNumber;
 
     protected Patient() {
         //Just for hibernate
@@ -30,10 +30,10 @@ public class Patient {
         this.name = name;
     }
 
-    public Patient(final User user, final String name, final String medic_plan, final String medic_plan_number) {
+    public Patient(final User user, final String name, final String medicPlan, final String medicPlanNumber) {
         this(user,name);
-        this.medic_plan = medic_plan;
-        this.medic_plan_number = medic_plan_number;
+        this.medicPlan = medicPlan;
+        this.medicPlanNumber = medicPlanNumber;
     }
 
     public String getName() { return name; }
@@ -42,20 +42,20 @@ public class Patient {
         this.name = name;
     }
 
-    public String getMedic_plan() {
-        return medic_plan;
+    public String getMedicPlan() {
+        return medicPlan;
     }
 
-    public void setMedic_plan(String medic_plan) {
-        this.medic_plan = medic_plan;
+    public void setMedicPlan(String medicPlan) {
+        this.medicPlan = medicPlan;
     }
 
-    public String getMedic_plan_number() {
-        return medic_plan_number;
+    public String getMedicPlanNumber() {
+        return medicPlanNumber;
     }
 
-    public void setMedic_plan_number(String medic_plan_number) {
-        this.medic_plan_number = medic_plan_number;
+    public void setMedicPlanNumber(String medicPlanNumber) {
+        this.medicPlanNumber = medicPlanNumber;
     }
 
     public User getUser() {
@@ -66,11 +66,11 @@ public class Patient {
         this.user = user;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

@@ -87,7 +87,7 @@ public class RegisterController {
     public ModelAndView applyMedic(@Valid @ModelAttribute("applyMedicForm") ApplyMedicForm applyMedicForm, BindingResult bindingResult){
 
         Collection<MedicalField> knownFields = new HashSet<>();
-        for (String medicalFieldName : applyMedicForm.getKnown_fields()) {
+        for (String medicalFieldName : applyMedicForm.getKnownFields()) {
             knownFields.add(new MedicalField(medicalFieldName));
         }
 
@@ -112,7 +112,7 @@ public class RegisterController {
         }
 
         Medic newMedic = ms.register(loggedUser(), applyMedicForm.getFullname(), applyMedicForm.getTelephone(),
-                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicence_number(), knownFields);
+                applyMedicForm.getIdentification().getContentType(), fileBytes, applyMedicForm.getLicenceNumber(), knownFields);
 
         mns.sendMedicApplicationValidatingMail(newMedic);
         authWithoutPassword(loggedUser());
@@ -123,7 +123,7 @@ public class RegisterController {
     public ModelAndView applyClinic(@Valid @ModelAttribute("applyClinicForm") ApplyClinicForm applyClinicForm, BindingResult bindingResult){
 
         Collection<StudyType> availableStudies = new HashSet<>();
-        for (String studyTypeName : applyClinicForm.getAvailable_studies()) {
+        for (String studyTypeName : applyClinicForm.getAvailableStudies()) {
             availableStudies.add(new StudyType(studyTypeName));
         }
 
@@ -143,10 +143,10 @@ public class RegisterController {
 
 
         ClinicHours clinicHours = new ClinicHours();
-        Set<Integer> daysSet = new HashSet<>(Arrays.asList(applyClinicForm.getClinicHoursForm().getOpen_days()));
-        clinicHours.setDaysHours(daysSet,applyClinicForm.getClinicHoursForm().getOpening_time(),applyClinicForm.getClinicHoursForm().getClosing_time());
+        Set<Integer> daysSet = new HashSet<>(Arrays.asList(applyClinicForm.getClinicHoursForm().getOpenDays()));
+        clinicHours.setDaysHours(daysSet,applyClinicForm.getClinicHoursForm().getOpeningTime(),applyClinicForm.getClinicHoursForm().getClosingTime());
 
-        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAccepted_plans_List())),clinicHours);
+        Clinic newClinic = cs.register(loggedUser(), applyClinicForm.getName(), applyClinicForm.getTelephone(), availableStudies, new HashSet<>(Arrays.asList(applyClinicForm.getAcceptedPlansList())),clinicHours);
 
         mns.sendClinicApplicationValidatingMail(newClinic);
         authWithoutPassword(loggedUser());
@@ -167,7 +167,7 @@ public class RegisterController {
             return mavError;
         }
         ps.register(loggedUser(), registerPatientForm.getFullname(),
-                registerPatientForm.getMedical_insurance_plan(), registerPatientForm.getMedical_insurance_number());
+                registerPatientForm.getMedicalInsurancePlan(), registerPatientForm.getMedicalInsuranceNumber());
         authWithoutPassword(loggedUser());
         return new ModelAndView("redirect:/home");
     }

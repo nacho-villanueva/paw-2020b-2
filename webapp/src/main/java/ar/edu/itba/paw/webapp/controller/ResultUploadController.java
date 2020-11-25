@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Controller
@@ -66,9 +66,9 @@ public class ResultUploadController {
                             fileBytes,
                             resultForm.getSign().getContentType(),
                             signBytes,
-                            new Date(System.currentTimeMillis()),
-                            resultForm.getResponsible_name(),
-                            resultForm.getResponsible_licence_number());
+                            LocalDate.now(),
+                            resultForm.getResponsibleName(),
+                            resultForm.getResponsibleLicenceNumber());
                 }
                 return new ModelAndView("redirect:/view-study/" + urlEncoderService.encode(orderId));
             } catch (IOException e){

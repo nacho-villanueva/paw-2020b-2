@@ -2,7 +2,9 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity
@@ -11,8 +13,8 @@ import java.util.Objects;
 public class ClinicDayHours {
 
     public static class ClinicDayHoursPK implements Serializable {
-        private int clinic_id;
-        private int day_of_week;
+        private int clinicId;
+        private int dayOfWeek;
 
         public ClinicDayHoursPK() {
         }
@@ -22,72 +24,73 @@ public class ClinicDayHours {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ClinicDayHoursPK that = (ClinicDayHoursPK) o;
-            return clinic_id == that.clinic_id &&
-                    day_of_week == that.day_of_week;
+            return clinicId == that.clinicId &&
+                    dayOfWeek == that.dayOfWeek;
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(clinic_id, day_of_week);
+            return Objects.hash(clinicId, dayOfWeek);
         }
 
-        public void setClinic_id(int clinic_id) {
-            this.clinic_id = clinic_id;
+        public void setClinicId(int clinicId) {
+            this.clinicId = clinicId;
         }
 
-        public void setDay_of_week(int day_of_week) {
-            this.day_of_week = day_of_week;
+        public void setDayOfWeek(int dayOfWeek) {
+            this.dayOfWeek = dayOfWeek;
         }
     }
 
     @Id // to allow mapping
-    private Integer clinic_id;
+    @Column(name = "clinic_id",nullable = false)
+    private Integer clinicId;
 
     @Id
     @Column(name = "day_of_week",nullable = false)
-    private Integer day_of_week;
+    private Integer dayOfWeek;
 
-    @MapsId("clinic_id")
+    @MapsId("clinic_id") //TODO: should i change this one to clinicId?
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
     @Column(name="open_time", nullable = false)
-    private Time open_time;
+    private LocalTime openTime;
 
     @Column(name="close_time", nullable = false)
-    private Time close_time;
+    private LocalTime closeTime;
 
     protected ClinicDayHours() {
         //Just for hibernate
     }
 
-    public ClinicDayHours(int day, int clinic_id, Time open_time, Time close_time) {
-        this(day,open_time,close_time);
-        this.clinic_id = clinic_id;
+    public ClinicDayHours(int day, int clinicId, LocalTime openTime, LocalTime closeTime) {
+        this(day,openTime,closeTime);
+        this.clinicId = clinicId;
     }
 
-    public ClinicDayHours(int day_of_week, Time open_time, Time close_time) {
-        this.day_of_week = day_of_week;
-        this.open_time = open_time;
-        this.close_time = close_time;
+    public ClinicDayHours(int dayOfWeek, LocalTime openTime, LocalTime closeTime) {
+        this.dayOfWeek = dayOfWeek;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
     }
 
-    public int getClinic_id() {
-        return clinic_id;
+    public int getClinicId() {
+        return clinicId;
     }
 
-    public void setClinic_id(int clinic_id) {
-        this.clinic_id = clinic_id;
+    public void setClinicId(int clinicId) {
+        this.clinicId = clinicId;
     }
 
-    public int getDay_of_week() {
-        return day_of_week;
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setDay_of_week(int day_of_week) {
-        this.day_of_week = day_of_week;
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public Clinic getClinic() {
@@ -98,19 +101,19 @@ public class ClinicDayHours {
         this.clinic = clinic;
     }
 
-    public Time getOpen_time() {
-        return open_time;
+    public LocalTime getOpenTime() {
+        return openTime;
     }
 
-    public void setOpen_time(Time open_time) {
-        this.open_time = open_time;
+    public void setOpenTime(LocalTime openTime) {
+        this.openTime = openTime;
     }
 
-    public Time getClose_time() {
-        return close_time;
+    public LocalTime getCloseTime() {
+        return closeTime;
     }
 
-    public void setClose_time(Time close_time) {
-        this.close_time = close_time;
+    public void setCloseTime(LocalTime closeTime) {
+        this.closeTime = closeTime;
     }
 }

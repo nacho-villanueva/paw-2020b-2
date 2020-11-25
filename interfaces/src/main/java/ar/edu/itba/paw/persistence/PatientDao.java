@@ -7,15 +7,15 @@ import java.util.Optional;
 
 public interface PatientDao {
 
-    Optional<Patient> findByUserId(int user_id);
+    Optional<Patient> findByUserId(int userId);
 
     Optional<Patient> findByEmail(String email);
 
     Patient register(User user, String name);
 
-    Patient register(User user, String name, String medic_plan, String medic_plan_number);
+    Patient register(User user, String name, String medicPlan, String medicPlanNumber);
 
-    Patient updatePatientInfo(Patient patient, String name, String medic_plan, String medic_plan_number);
+    Patient updatePatientInfo(Patient patient, String name, String medicPlan, String medicPlanNumber);
 
-    Patient updateMedicPlan(Patient patient, String medic_plan, String medic_plan_number);
+    Patient updateMedicPlan(Patient patient, String medicPlan, String medicPlanNumber);
 }

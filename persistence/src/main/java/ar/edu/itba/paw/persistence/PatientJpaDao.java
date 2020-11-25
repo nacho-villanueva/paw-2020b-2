@@ -18,8 +18,8 @@ public class PatientJpaDao implements PatientDao {
     private EntityManager em;
 
     @Override
-    public Optional<Patient> findByUserId(final int user_id) {
-        return Optional.ofNullable(em.find(Patient.class,user_id));
+    public Optional<Patient> findByUserId(final int userId) {
+        return Optional.ofNullable(em.find(Patient.class,userId));
     }
 
     @Override
@@ -39,32 +39,32 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
-    public Patient register(final User user, final String name, final String medic_plan, final String medic_plan_number) {
+    public Patient register(final User user, final String name, final String medicPlan, final String medicPlanNumber) {
         User userRef = em.getReference(User.class,user.getId());
-        final Patient patient = new Patient(userRef,name,medic_plan,medic_plan_number);
+        final Patient patient = new Patient(userRef,name,medicPlan,medicPlanNumber);
         em.persist(patient);
         em.flush();
         return patient;
     }
 
     @Override
-    public Patient updatePatientInfo(final Patient patient, final String name, final String medic_plan, final String medic_plan_number) {
+    public Patient updatePatientInfo(final Patient patient, final String name, final String medicPlan, final String medicPlanNumber) {
         Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
         patientDB.ifPresent(patient1 -> {
             patient1.setName(name);
-            patient1.setMedic_plan(medic_plan);
-            patient1.setMedic_plan_number(medic_plan_number);
+            patient1.setMedicPlan(medicPlan);
+            patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);
     }
 
     @Override
-    public Patient updateMedicPlan(final Patient patient, final String medic_plan, final String medic_plan_number) {
+    public Patient updateMedicPlan(final Patient patient, final String medicPlan, final String medicPlanNumber) {
         Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
         patientDB.ifPresent(patient1 -> {
-            patient1.setMedic_plan(medic_plan);
-            patient1.setMedic_plan_number(medic_plan_number);
+            patient1.setMedicPlan(medicPlan);
+            patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);

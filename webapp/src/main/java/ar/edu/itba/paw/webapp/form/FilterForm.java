@@ -11,32 +11,33 @@ import javax.validation.constraints.Min;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FilterForm {
 
     @Email
-    private String patient_email;
+    private String patientEmail;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String date;
 
     @Min(-1)
-    private Integer study_id, clinic_id, medic_id;
+    private Integer studyId, clinicId, medicId;
 
     public FilterForm() {
     }
 
-    public FilterForm(Integer study_id, Integer clinic_id, Integer medic_id, String patient_email, String date){
+    public FilterForm(Integer studyId, Integer clinicId, Integer medicId, String patientEmail, String date){
         this.date = date;
-        this.patient_email = patient_email;
-        this.medic_id = medic_id;
-        this.clinic_id = clinic_id;
-        this.study_id = study_id;
+        this.patientEmail = patientEmail;
+        this.medicId = medicId;
+        this.clinicId = clinicId;
+        this.studyId = studyId;
     }
 
-    public String getPatient_email() { return patient_email; }
-    public void setPatient_email(String s){
-        patient_email = s;
+    public String getPatientEmail() { return patientEmail; }
+    public void setPatientEmail(String s){
+        patientEmail = s;
     }
 
     public String getDate(){ return date; }
@@ -44,50 +45,50 @@ public class FilterForm {
         date = s;
     }
 
-    public Integer getStudy_id() {
-        return study_id;
+    public Integer getStudyId() {
+        return studyId;
     }
 
-    public void setStudy_id(Integer study_id) {
-        this.study_id = study_id;
+    public void setStudyId(Integer studyId) {
+        this.studyId = studyId;
     }
 
-    public Integer getClinic_id() {
-        return clinic_id;
+    public Integer getClinicId() {
+        return clinicId;
     }
 
-    public void setClinic_id(Integer clinic_id) {
-        this.clinic_id = clinic_id;
+    public void setClinicId(Integer clinicId) {
+        this.clinicId = clinicId;
     }
 
-    public Integer getMedic_id() {
-        return medic_id;
+    public Integer getMedicId() {
+        return medicId;
     }
 
-    public void setMedic_id(Integer medic_id) {
-        this.medic_id = medic_id;
+    public void setMedicId(Integer medicId) {
+        this.medicId = medicId;
     }
 
     public void resetValues() {
         this.date = null;
-        this.patient_email = null;
-        this.medic_id = -1;
-        this.study_id = -1;
-        this.clinic_id =-1;
+        this.patientEmail = null;
+        this.medicId = -1;
+        this.studyId = -1;
+        this.clinicId =-1;
     }
 
-    public HashMap<OrderService.Parameters, String> getParameters(){
-        HashMap<OrderService.Parameters, String> parameters = new HashMap<>();
+    public Map<OrderService.Parameters, String> getParameters(){
+        Map<OrderService.Parameters, String> parameters = new HashMap<>();
         if(this.date != null && !this.date.isEmpty())
             parameters.put(OrderService.Parameters.DATE, this.date);
-        if(this.clinic_id != null && this.clinic_id != -1)
-            parameters.put(OrderService.Parameters.CLINIC, this.clinic_id.toString());
-        if(this.medic_id != null && this.medic_id != -1)
-            parameters.put(OrderService.Parameters.MEDIC, this.medic_id.toString());
-        if(this.study_id != null && this.study_id != -1)
-            parameters.put(OrderService.Parameters.STUDYTYPE, this.study_id.toString());
-        if(this.patient_email != null && !this.patient_email.isEmpty())
-            parameters.put(OrderService.Parameters.PATIENT, this.patient_email);
+        if(this.clinicId != null && this.clinicId != -1)
+            parameters.put(OrderService.Parameters.CLINIC, this.clinicId.toString());
+        if(this.medicId != null && this.medicId != -1)
+            parameters.put(OrderService.Parameters.MEDIC, this.medicId.toString());
+        if(this.studyId != null && this.studyId != -1)
+            parameters.put(OrderService.Parameters.STUDYTYPE, this.studyId.toString());
+        if(this.patientEmail != null && !this.patientEmail.isEmpty())
+            parameters.put(OrderService.Parameters.PATIENT, this.patientEmail);
 
         return parameters;
     }
@@ -96,10 +97,10 @@ public class FilterForm {
 
         MultiValueMap<String, String> p = UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
-        this.clinic_id = decodeInt(decodeVal(p, "clinic_id"));
-        this.study_id = decodeInt(decodeVal(p, "study_id"));
-        this.medic_id = decodeInt(decodeVal(p, "medic_id"));
-        this.patient_email = decodeVal(p, "patient_email");
+        this.clinicId = decodeInt(decodeVal(p, "clinicId"));
+        this.studyId = decodeInt(decodeVal(p, "studyId"));
+        this.medicId = decodeInt(decodeVal(p, "medicId"));
+        this.patientEmail = decodeVal(p, "patientEmail");
         this.date = decodeVal(p, "date");
     }
 

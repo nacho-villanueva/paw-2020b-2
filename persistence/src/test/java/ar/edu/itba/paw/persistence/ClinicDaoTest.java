@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.CollectionTable;
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,10 +34,10 @@ public class ClinicDaoTest {
     private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
     private static final User userTwo = new User(3,"two@two.com","passTwo",User.CLINIC_ROLE_ID);
-    private static final ClinicDayHours clinicDaysHoursTwoSun = new ClinicDayHours(0,Time.valueOf("08:00:00"),Time.valueOf("22:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoMon = new ClinicDayHours(1,Time.valueOf("09:00:00"),Time.valueOf("21:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoTue = new ClinicDayHours(2,Time.valueOf("10:00:00"),Time.valueOf("20:00:00"));
-    private static final ClinicDayHours clinicDaysHoursTwoWed = new ClinicDayHours(3,Time.valueOf("11:00:00"),Time.valueOf("19:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoSun = new ClinicDayHours(0, LocalTime.parse("08:00:00"), LocalTime.parse("22:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoMon = new ClinicDayHours(1, LocalTime.parse("09:00:00"), LocalTime.parse("21:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoTue = new ClinicDayHours(2, LocalTime.parse("10:00:00"), LocalTime.parse("20:00:00"));
+    private static final ClinicDayHours clinicDaysHoursTwoWed = new ClinicDayHours(3, LocalTime.parse("11:00:00"), LocalTime.parse("19:00:00"));
     private static final ClinicHours clinicHourTwo = new ClinicHours(new ArrayList<>(Arrays.asList(
             clinicDaysHoursTwoSun,
             clinicDaysHoursTwoMon,
@@ -92,7 +92,7 @@ public class ClinicDaoTest {
         Assert.assertTrue(maybeClinic.isPresent());
         Assert.assertEquals(clinicTwo.getName(), maybeClinic.get().getName());
         Assert.assertTrue(maybeClinic.get().getHours().getDays()[ClinicHours.SUNDAY]);
-        Assert.assertTrue(maybeClinic.get().getAccepted_plans().contains(CLINIC_TWO_ACCEPTED_PLAN));
+        Assert.assertTrue(maybeClinic.get().getAcceptedPlans().contains(CLINIC_TWO_ACCEPTED_PLAN));
     }
 
     @Test
@@ -160,9 +160,9 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterValid() {
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeOne);
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeOne);
+        availableStudies.add(studyTypeSix);
         Set<String> plans = new HashSet<>();
         plans.add(MEDIC_PLAN);
         plans.add(MEDIC_PLAN_ALT);
@@ -172,14 +172,14 @@ public class ClinicDaoTest {
         int rowsClinicHoursTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME);
 
 
-        final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, available_studies,plans,getClinicHours(),false);
+        final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, availableStudies,plans,getClinicHours(),false);
 
-        Assert.assertEquals(available_studies.size(),clinic.getMedical_studies().size());
-        Assert.assertEquals(plans.size(),clinic.getAccepted_plans().size());
+        Assert.assertEquals(availableStudies.size(),clinic.getMedicalStudies().size());
+        Assert.assertEquals(plans.size(),clinic.getAcceptedPlans().size());
         Assert.assertTrue(clinic.getHours().getDays()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.SATURDAY]);
-        StudyType study = clinic.getMedical_studies().stream().findFirst().get();
+        Assert.assertEquals(LocalTime.parse(OPEN_TIME),clinic.getHours().getOpenHours()[ClinicHours.MONDAY]);
+        Assert.assertEquals(LocalTime.parse(CLOSE_TIME_ALT),clinic.getHours().getCloseHours()[ClinicHours.SATURDAY]);
+        StudyType study = clinic.getMedicalStudies().stream().findFirst().get();
         Assert.assertTrue(study.getName().equals(studyTypeOne.getName()) || study.getName().equals(studyTypeSix.getName()));
         Assert.assertEquals(1+rowsClinicTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
         Assert.assertEquals(plans.size()+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
@@ -190,14 +190,14 @@ public class ClinicDaoTest {
     @Transactional
     @Rollback
     public void testRegisterAlreadyExists() {
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeOne);
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeOne);
+        availableStudies.add(studyTypeSix);
         Set<String> plans = new HashSet<>();
         plans.add(MEDIC_PLAN);
         plans.add(MEDIC_PLAN_ALT);
 
-        dao.register(userTwo,NAME_ZERO,null,available_studies,plans,getClinicHours(),false);
+        dao.register(userTwo,NAME_ZERO,null,availableStudies,plans,getClinicHours(),false);
     }
 
     @Test
@@ -226,27 +226,27 @@ public class ClinicDaoTest {
     public void testUpdateClinicInfo() {
 
         //New studies
-        Collection<StudyType> available_studies = new ArrayList<>();
-        available_studies.add(studyTypeSix);
+        Collection<StudyType> availableStudies = new ArrayList<>();
+        availableStudies.add(studyTypeSix);
 
         //New plans
-        Set<String> new_plans = new HashSet<>();
-        new_plans.add(MEDIC_PLAN_ALT);
+        Set<String> newPlans = new HashSet<>();
+        newPlans.add(MEDIC_PLAN_ALT);
 
         //New hours
-        ClinicHours new_hours = getClinicHoursAlt();
+        ClinicHours newHours = getClinicHoursAlt();
 
         int amountofPlansEntiresBefore = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME);
 
-        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,available_studies,new_plans,new_hours,true);
+        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,newPlans,newHours,true);
 
-        Assert.assertEquals(available_studies.size(), clinic.getMedical_studies().size());
+        Assert.assertEquals(availableStudies.size(), clinic.getMedicalStudies().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NEW_NAME_TWO.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeOne.getId()));
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_RELATION_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND study_id = " + studyTypeSix.getId()));
         Assert.assertFalse(clinic.getHours().getDays()[ClinicHours.MONDAY]);
-        Assert.assertEquals(Time.valueOf(OPEN_TIME),clinic.getHours().getOpen_hours()[ClinicHours.SUNDAY]);
-        Assert.assertEquals(Time.valueOf(CLOSE_TIME_ALT),clinic.getHours().getClose_hours()[ClinicHours.TUESDAY]);
+        Assert.assertEquals(LocalTime.parse(OPEN_TIME),clinic.getHours().getOpenHours()[ClinicHours.SUNDAY]);
+        Assert.assertEquals(LocalTime.parse(CLOSE_TIME_ALT),clinic.getHours().getCloseHours()[ClinicHours.TUESDAY]);
         Assert.assertEquals(amountofPlansEntiresBefore,JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_PLANS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND lower(medic_plan) = lower('" + MEDIC_PLAN_ALT + "')"));
         Assert.assertEquals(3, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_HOURS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND close_time = '" + CLOSE_TIME_ALT + "'"));
@@ -258,12 +258,12 @@ public class ClinicDaoTest {
     public void testSearchNoParams() {
 
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = null;
-        String accepted_plan = null;
-        String study_name = null;
+        String acceptedPlan = null;
+        String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
 
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         clinics.forEach(clinic -> {
@@ -277,16 +277,16 @@ public class ClinicDaoTest {
     public void testSearchNoName() {
 
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = new ClinicHours();
-        hours.setDayHour(ClinicHours.TUESDAY,Time.valueOf("08:00:00"),Time.valueOf("23:00:00"));
-        hours.setDayHour(ClinicHours.WEDNESDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
-        hours.setDayHour(ClinicHours.THURSDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
-        hours.setDayHour(ClinicHours.FRIDAY,Time.valueOf("00:00:00"),Time.valueOf("23:00:00"));
-        String accepted_plan = "OSDE";
-        String study_name = "allergy";
+        hours.setDayHour(ClinicHours.TUESDAY, LocalTime.parse("08:00:00"),LocalTime.parse("23:00:00"));
+        hours.setDayHour(ClinicHours.WEDNESDAY, LocalTime.parse("00:00:00"),LocalTime.parse("23:00:00"));
+        hours.setDayHour(ClinicHours.THURSDAY, LocalTime.parse("00:00:00"),LocalTime.parse("23:00:00"));
+        hours.setDayHour(ClinicHours.FRIDAY, LocalTime.parse("00:00:00"),LocalTime.parse("23:00:00"));
+        String acceptedPlan = "OSDE";
+        String studyName = "allergy";
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
 
         Assert.assertEquals(1,clinics.size());
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
@@ -297,12 +297,12 @@ public class ClinicDaoTest {
     @Rollback
     public void testSearchNoHours() {
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = new ClinicHours();
-        String accepted_plan = null;
-        String study_name = null;
+        String acceptedPlan = null;
+        String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
 
         Assert.assertEquals(0,clinics.size());
     }
@@ -312,12 +312,12 @@ public class ClinicDaoTest {
     @Rollback
     public void testSearchPlanWithLike() {
         //Search params
-        String clinic_name = null;
+        String clinicName = null;
         ClinicHours hours = null;
-        String accepted_plan = "oSdE";
-        String study_name = null;
+        String acceptedPlan = "oSdE";
+        String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinic_name,hours,accepted_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
 
@@ -337,11 +337,11 @@ public class ClinicDaoTest {
     public void testSearchJustHours() {
         String name = null;
         ClinicHours availableHours = new ClinicHours();
-        availableHours.setDayHour(ClinicHours.MONDAY,Time.valueOf("00:00:00"),Time.valueOf("23:59:59"));        //TODO: See why 24:00:00 breaks the test
-        String medic_plan = null;
-        String study_name = null;
+        availableHours.setDayHour(ClinicHours.MONDAY, LocalTime.parse("00:00:00"), LocalTime.parse("23:59:59"));        //TODO: See why 24:00:00 breaks the test
+        String medicPlan = null;
+        String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medic_plan,study_name);
+        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medicPlan,studyName);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
         Assert.assertTrue(clinicIds.contains(11));
@@ -355,21 +355,21 @@ public class ClinicDaoTest {
 
     private ClinicHours getClinicHours() {
         ClinicHours hours = new ClinicHours();
-        hours.setDayHour(ClinicHours.MONDAY, Time.valueOf(OPEN_TIME), Time.valueOf(CLOSE_TIME));
-        hours.setDayHour(ClinicHours.TUESDAY, Time.valueOf(OPEN_TIME), Time.valueOf(CLOSE_TIME));
-        hours.setDayHour(ClinicHours.THURSDAY, Time.valueOf(OPEN_TIME), Time.valueOf(CLOSE_TIME));
-        hours.setDayHour(ClinicHours.FRIDAY, Time.valueOf(OPEN_TIME), Time.valueOf(CLOSE_TIME));
-        hours.setDayHour(ClinicHours.SATURDAY, Time.valueOf(OPEN_TIME_ALT), Time.valueOf(CLOSE_TIME_ALT));
+        hours.setDayHour(ClinicHours.MONDAY, LocalTime.parse(OPEN_TIME), LocalTime.parse(CLOSE_TIME));
+        hours.setDayHour(ClinicHours.TUESDAY, LocalTime.parse(OPEN_TIME), LocalTime.parse(CLOSE_TIME));
+        hours.setDayHour(ClinicHours.THURSDAY, LocalTime.parse(OPEN_TIME), LocalTime.parse(CLOSE_TIME));
+        hours.setDayHour(ClinicHours.FRIDAY, LocalTime.parse(OPEN_TIME), LocalTime.parse(CLOSE_TIME));
+        hours.setDayHour(ClinicHours.SATURDAY, LocalTime.parse(OPEN_TIME_ALT), LocalTime.parse(CLOSE_TIME_ALT));
 
         return hours;
     }
 
     private ClinicHours getClinicHoursAlt() {
         ClinicHours hours = new ClinicHours();
-        hours.setDayHour(ClinicHours.TUESDAY, Time.valueOf(OPEN_TIME_ALT), Time.valueOf(CLOSE_TIME_ALT));
-        hours.setDayHour(ClinicHours.THURSDAY, Time.valueOf(OPEN_TIME_ALT), Time.valueOf(CLOSE_TIME_ALT));
-        hours.setDayHour(ClinicHours.FRIDAY, Time.valueOf(OPEN_TIME_ALT), Time.valueOf(CLOSE_TIME_ALT));
-        hours.setDayHour(ClinicHours.SUNDAY, Time.valueOf(OPEN_TIME), Time.valueOf(CLOSE_TIME));
+        hours.setDayHour(ClinicHours.TUESDAY, LocalTime.parse(OPEN_TIME_ALT), LocalTime.parse(CLOSE_TIME_ALT));
+        hours.setDayHour(ClinicHours.THURSDAY, LocalTime.parse(OPEN_TIME_ALT), LocalTime.parse(CLOSE_TIME_ALT));
+        hours.setDayHour(ClinicHours.FRIDAY, LocalTime.parse(OPEN_TIME_ALT), LocalTime.parse(CLOSE_TIME_ALT));
+        hours.setDayHour(ClinicHours.SUNDAY, LocalTime.parse(OPEN_TIME), LocalTime.parse(CLOSE_TIME));
 
         return hours;
     }

@@ -100,12 +100,12 @@
                                             <td class="output"><c:out value="${patient.name}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan.label"/></td>
-                                            <td class="output"><c:out value="${patient.medic_plan}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.patient.medicPlan.label"/></td>
+                                            <td class="output"><c:out value="${patient.medicPlan}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.patient.medic_plan_number.label"/></td>
-                                            <td class="output"><c:out value="${patient.medic_plan_number}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.patient.medicPlanNumber.label"/></td>
+                                            <td class="output"><c:out value="${patient.medicPlanNumber}"/></td>
                                         </tr>
 
                                         </tbody>
@@ -141,12 +141,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.medic.licence_number.label"/></td>
-                                            <td class="output"><c:out value="${medic.licence_number}"/></td>
+                                            <td><spring:message code="profile-view.body.tab.medic.licenceNumber.label"/></td>
+                                            <td class="output"><c:out value="${medic.licenceNumber}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.medic.medical_fields.label"/></td>
-                                            <td class="output"><c:forEach items="${medic.medical_fields}" var="medicalField"><p><c:out value="${medicalField.name}"/></p></c:forEach></td>
+                                            <td><spring:message code="profile-view.body.tab.medic.medicalFields.label"/></td>
+                                            <td class="output"><c:forEach items="${medic.medicalFields}" var="medicalField"><p><c:out value="${medicalField.name}"/></p></c:forEach></td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.medic.verified.label"/></td>
@@ -176,19 +176,19 @@
                                             <td class="output"><c:out value="${clinic.telephone}"/></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.clinic.open_hours.label" /></td>
+                                            <td><spring:message code="profile-view.body.tab.clinic.openHours.label" /></td>
                                             <td><c:forEach items="${openDayHour}" var="h">
                                                 <spring:message code="days.day-${h.key}" var="day"/>
-                                                <p><spring:message code="profile-view.body.tab.clinic.open_hours.format" arguments="${day},${h.value[0]},${h.value[1]}"/> </p>
+                                                <p><spring:message code="profile-view.body.tab.clinic.openHours.format" arguments="${day},${h.value[0]},${h.value[1]}"/> </p>
                                             </c:forEach></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.clinic.accepted_plans.label" /> </td>
-                                            <td class="output"><c:forEach items="${clinic.accepted_plans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
+                                            <td><spring:message code="profile-view.body.tab.clinic.acceptedPlans.label" /> </td>
+                                            <td class="output"><c:forEach items="${clinic.acceptedPlans}" var="plan"><span class="badge-sm badge-pill badge-secondary mr-1 d-inline-block"><c:out value="${plan}" /></span></c:forEach></td>
                                         </tr>
                                         <tr>
-                                            <td><spring:message code="profile-view.body.tab.clinic.medical_studies.label"/></td>
-                                            <td class="output"><c:forEach items="${clinic.medical_studies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
+                                            <td><spring:message code="profile-view.body.tab.clinic.medicalStudies.label"/></td>
+                                            <td class="output"><c:forEach items="${clinic.medicalStudies}" var="medicalStudy"><p><c:out value="${medicalStudy.name}"/></p></c:forEach></td>
                                         </tr>
                                         <tr>
                                             <td><spring:message code="profile-view.body.tab.clinic.verified.label"/></td>

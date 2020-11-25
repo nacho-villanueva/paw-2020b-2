@@ -9,27 +9,23 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
-public class PatientInfoFormHasValidPatientValidator implements ConstraintValidator<PatientInfoFormHasValidPatient, PatientInfoForm> {
+public class PatientEmailHasValidPatientValidator implements ConstraintValidator<PatientEmailHasValidPatient, String> {
 
     @Autowired
     private PatientService patientService;
 
     @Override
-    public void initialize(PatientInfoFormHasValidPatient constraintAnnotation) {
+    public void initialize(PatientEmailHasValidPatient constraintAnnotation) {
 
     }
 
     @Override
-    public boolean isValid(PatientInfoForm patientInfoForm, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String string, ConstraintValidatorContext constraintValidatorContext) {
 
-        String email = patientInfoForm.getEmail();
+        if(isEmpty(string))
+            return false;
 
-        if(!patientInfoForm.getExistingPatient() || isEmpty(email))
-            return true;
-
-        // patient is present and mail is not null or empty
-
-        Optional<Patient> patientOptional = patientService.findByEmail(email);
+        Optional<Patient> patientOptional = patientService.findByEmail(string);
 
         return patientOptional.isPresent();
     }

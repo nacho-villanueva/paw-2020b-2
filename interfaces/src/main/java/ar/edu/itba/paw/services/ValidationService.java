@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.*;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public interface ValidationService {
     boolean isValid(User user);
@@ -23,7 +23,7 @@ public interface ValidationService {
 
     boolean isValidEmail(String email);
 
-    boolean isValidIdentification_Type(String identification_type);
+    boolean isValidIdentificationType(String identificationType);
 
     boolean isValidTelephone(String telephone);
 
@@ -33,13 +33,13 @@ public interface ValidationService {
 
     boolean isValidPassword(String password);
 
-    boolean isValidLicenceNumber(String licence_number);
+    boolean isValidLicenceNumber(String licenceNumber);
 
-    boolean isValidMedicPlan(String medic_plan);
+    boolean isValidMedicPlan(String medicPlan);
 
-    boolean isValidMedicPlanNumber(String medic_plan_number);
+    boolean isValidMedicPlanNumber(String medicPlanNumber);
 
-    boolean isValidResultDataType(String result_data_type);
+    boolean isValidResultDataType(String resultDataType);
 
-    boolean isValidDate(Date date);
+    boolean isValidDate(LocalDate date);
 }

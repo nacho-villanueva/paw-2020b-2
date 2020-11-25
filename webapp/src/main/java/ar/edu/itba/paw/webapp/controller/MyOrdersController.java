@@ -47,7 +47,7 @@ public class MyOrdersController {
 
         mav.addObject("filterForm", filterForm);
 
-        HashMap<OrderService.Parameters, String> parameters = filterForm.getParameters();
+        Map<OrderService.Parameters, String> parameters = filterForm.getParameters();
 
         listingSetup(mav, parameters);
 
@@ -65,7 +65,7 @@ public class MyOrdersController {
     }
 
 
-    private void listingSetup(ModelAndView mav, HashMap<OrderService.Parameters, String> parameters){
+    private void listingSetup(ModelAndView mav, Map<OrderService.Parameters, String> parameters){
         User user = loggedUser();
 
         Collection<Order> orders = orderService.filterOrders(user, parameters);
@@ -76,7 +76,7 @@ public class MyOrdersController {
         if(user.isMedic() && !user.isVerifying() && medicService.findByUserId(user.getId()).isPresent()){
             medicsList.add(medicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUserId() == order.getClinic().getUserId())){
                     clinicsList.add(order.getClinic());
                 }
             }
@@ -84,17 +84,17 @@ public class MyOrdersController {
         }else if(user.isClinic() && !user.isVerifying() && clinicService.findByUserId(user.getId()).isPresent()){
             clinicsList.add(clinicService.findByUserId(user.getId()).get());
             for (Order order: orders) {
-                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
+                if(!medicsList.stream().anyMatch(medic -> medic.getUserId() == order.getMedic().getUserId())){
                     medicsList.add(order.getMedic());
                 }
             }
 
         }else if(user.isPatient()) {
             for (Order order : orders) {
-                if(!medicsList.stream().anyMatch(medic -> medic.getUser_id() == order.getMedic().getUser_id())){
+                if(!medicsList.stream().anyMatch(medic -> medic.getUserId() == order.getMedic().getUserId())){
                     medicsList.add(order.getMedic());
                 }
-                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUser_id() == order.getClinic().getUser_id())){
+                if(!clinicsList.stream().anyMatch(clinic -> clinic.getUserId() == order.getClinic().getUserId())){
                     clinicsList.add(order.getClinic());
                 }
 
@@ -112,7 +112,7 @@ public class MyOrdersController {
         mav.addObject("clinicsList", clinicsList);
         mav.addObject("studiesList", studiesList);
 
-        HashMap<Long, String> encodeds = new HashMap<>();
+        Map<Long, String> encodeds = new HashMap<>();
 
         encoder(orders, encodeds);
 
@@ -121,9 +121,9 @@ public class MyOrdersController {
 
     }
 
-    private void encoder(Collection<Order> orders, HashMap<Long, String> encodeds){
+    private void encoder(Collection<Order> orders, Map<Long, String> encodeds){
         for(Order order : orders){
-            encodeds.put(order.getOrder_id(), urlEncoderService.encode(order.getOrder_id()));
+            encodeds.put(order.getOrderId(), urlEncoderService.encode(order.getOrderId()));
         }
     }
 
@@ -141,7 +141,7 @@ public class MyOrdersController {
             mav.addObject("errorAlert",true);
         } else {
 
-            HashMap<OrderService.Parameters, String> parameters = filterForm.getParameters();
+            Map<OrderService.Parameters, String> parameters = filterForm.getParameters();
 
             listingSetup(mav, parameters);
 

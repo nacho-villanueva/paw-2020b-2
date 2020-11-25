@@ -80,7 +80,7 @@
 
 
     <c:choose>
-        <c:when test="${has_studies != true}">
+        <c:when test="${hasStudies != true}">
             <div class="align-items-end result-not">
                 <h1 class="text-center mt-5 py-5 anim-content">It seems there are no studies linked to your account right now.</h1>
             </div>
@@ -96,7 +96,7 @@
                                     <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
                                 </c:if>
                                 <c:forEach items="${patient_studies}" var="pat_study">
-                                    <a href="${studyPath}${patient_encodeds.get(pat_study.order_id)}" class="list-group-item list-group-item-action">
+                                    <a href="${studyPath}${patient_encodeds.get(pat_study.orderId)}" class="list-group-item list-group-item-action">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1">Study type: <c:out value="${pat_study.study.name}" /></h5>
                                             <small>Date: <c:out value="${pat_study.date}" /></small>
@@ -121,14 +121,14 @@
                                         <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
                                     </c:if>
                                     <c:forEach items="${medic_studies}" var="med_study">
-                                        <a href="${studyPath}${medic_encodeds.get(med_study.order_id)}" class="list-group-item list-group-item-action">
+                                        <a href="${studyPath}${medic_encodeds.get(med_study.orderId)}" class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between">
                                                 <h5 class="mb-1">Study type: <c:out value="${med_study.study.name}"/></h5>
                                                 <small>Date: <c:out value="${med_study.date}"/></small>
                                             </div>
                                             <div class="d-flex w-100 justify-content-between">
                                                 <p class="mb-1">Clinic: <c:out value="${med_study.clinic.name}"/></p>
-                                                <small>Patient: <c:out value="${med_study.patient_name}"/></small>
+                                                <small>Patient: <c:out value="${med_study.patientName}"/></small>
                                             </div>
                                         </a>
                                     </c:forEach>
@@ -147,14 +147,14 @@
                                         <h3 class="text-center py-5 lead">It seems there are no studies linked to you right now.</h3>
                                     </c:if>
                                     <c:forEach items="${clinic_studies}" var="cli_study">
-                                        <a href="${studyPath}${clinic_encodeds.get(cli_study.order_id)}" class="list-group-item list-group-item-action">
+                                        <a href="${studyPath}${clinic_encodeds.get(cli_study.orderId)}" class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between">
                                                 <h5 class="mb-1">Study type: <c:out value="${cli_study.study.name}"/></h5>
                                                 <small>Date: ${cli_study.date}</small>
                                             </div>
                                             <div class="d-flex w-100 justify-content-between">
                                                 <p class="mb-1">Clinic: <c:out value="${cli_study.clinic.name}"/></p>
-                                                <small>Patient: <c:out value="${cli_study.patient_name}"/></small>
+                                                <small>Patient: <c:out value="${cli_study.patientName}"/></small>
                                             </div>
                                         </a>
                                     </c:forEach>

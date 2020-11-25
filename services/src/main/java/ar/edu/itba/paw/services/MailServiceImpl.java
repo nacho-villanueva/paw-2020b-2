@@ -34,13 +34,13 @@ public class MailServiceImpl implements MailService {
 
     @Async
     @Override
-    public void sendMimeMessage(String to, String subject, String htmlText, Collection<String> inline){
+    public void sendMimeMessage(String to, String subject, String plainText, String htmlText, Collection<String> inline){
         emailSender.send(mimeMessage -> {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             message.setFrom("MedTransfer");
             message.setTo(to);
             message.setSubject(subject);
-            message.setText(htmlText, true);
+            message.setText(plainText, htmlText);
             for (String attach: inline) {
                 message.addInline(attach,new ClassPathResource("inline/"+attach));
             }
