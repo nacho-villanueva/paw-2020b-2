@@ -102,8 +102,6 @@ public class ShareOrderController {
     public User loggedUser() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         final Optional<User> user = us.findByEmail(auth.getName());
-        //LOGGER.debug("Logged user is {}", user);
-        //TODO: see more elegant solution
         return user.orElse(null);
     }
 
