@@ -14,6 +14,9 @@
 <c:url value="/change-clinic/${encodedId}" var="changeClinicPath"/>
 
 <body>
+<script>
+
+</script>
 <%@include file="fragments/navbar-alternative-fragment.jsp"%>
 <div id="wrapper" class="wrapper">
     <jsp:include page="fragments/sidebar-fragment.jsp" >
@@ -63,7 +66,24 @@
                             <h5 class="mt-0 mb-1 text-center"><c:out value="${order.medic.name}"/></h5>
                             <p class="text-center"><spring:message code="view-study.body.card.order.licenceNumber.prefix" arguments="${order.medic.licenceNumber}"/></p>
                         </div>
-                        <img src="${imageAssets}/study/${encodedId}?attr=identification" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.order.signature.alt"/>" style="width: 5rem; max-height: 5em;">
+                        <img src="${imageAssets}/study/${encodedId}?attr=identification"
+                             class="align-self-end ml-3 clickableImg"
+                             alt="<spring:message code="view-study.body.card.order.signature.alt"/>"
+                             style="width: 5rem; max-height: 5em;"
+                             id="orderAttr"
+                             data-toggle="modal"
+                             data-target="#orderAttrModal"
+                        >
+                        <div id="orderAttrModal" class="modal fade" tabindex="-1"
+                             role="dialog" aria-hidden="true" aria-labelledby="orderAttrModalTitle">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <span class="close">&times;</span>
+                                <img class="modal-content"
+                                     src="${imageAssets}/study/${encodedId}?attr=identification"
+                                     alt="<spring:message code="view-study.body.card.order.signature.alt"/>"
+                                >
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <c:if test="${successMedicName != ''}">
@@ -131,14 +151,48 @@
                                                             <div class="col type"><p><spring:message code="view-study.body.card.results.result.clinic.label" arguments="${order.clinic.name}"/></p></div>
                                                         </div>
                                                         <hr class="mt-3 mb-4 text-center"/>
-                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data" class="align-self-end ml-3" alt="<spring:message code="view-study.body.card.result.result.alt"/>" style="max-height:14em; max-width:20em">
+                                                        <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data"
+                                                             class="align-self-end ml-3 clickableImg"
+                                                             alt="<spring:message code="view-study.body.card.result.result.alt"/>"
+                                                             style="max-height:14em; max-width:20em"
+                                                             id="resultImage-${result.id}"
+                                                             data-toggle="modal"
+                                                             data-target="#resultImageModal-${result.id}"
+                                                        >
+                                                        <div id="resultImageModal-${result.id}" class="modal fade" tabindex="-1"
+                                                             role="dialog" aria-hidden="true" aria-labelledby="resultImageModal-${result.id}Title">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <span class="close">&times;</span>
+                                                                <img class="modal-content"
+                                                                     src="${imageAssets}/result/${encodedId}/${result.id}?attr=result-data"
+                                                                     alt="<spring:message code="view-study.body.card.result.result.alt"/>"
+                                                                >
+                                                            </div>
+                                                        </div>
                                                         <hr class="mt-5 mb-4"/>
                                                         <div class="media">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-1 text-center"><c:out value="${result.responsibleName}"/></h5>
                                                                 <p class="text-center"><spring:message code="view-study.body.card.results.result.responsibleLicenceNumber.prefix" arguments="${result.responsibleLicenceNumber}"/></p>
                                                             </div>
-                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification" class="ml-1" alt="<spring:message code="view-study.body.card.result.signature.alt"/>" style="max-height: 5em;">
+                                                            <img src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification"
+                                                                 class="ml-1 clickableImg"
+                                                                 alt="<spring:message code="view-study.body.card.result.signature.alt"/>"
+                                                                 style="max-height: 5em;"
+                                                                 id="resultAttr-${result.id}"
+                                                                 data-toggle="modal"
+                                                                 data-target="#resultAttrModal-${result.id}"
+                                                            >
+                                                            <div id="resultAttrModal-${result.id}" class="modal fade" tabindex="-1"
+                                                                 role="dialog" aria-hidden="true" aria-labelledby="resultAttrModal-${result.id}Title">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <span class="close">&times;</span>
+                                                                    <img class="modal-content"
+                                                                         src="${imageAssets}/result/${encodedId}/${result.id}?attr=identification"
+                                                                         alt="<spring:message code="view-study.body.card.result.signature.alt"/>"
+                                                                    >
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
