@@ -181,6 +181,41 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
+    @Override
+    public void sendAcceptRequestMail(ShareRequest shareRequest) {
+
+        String locale = shareRequest.getMedic().getUser().getLocale();
+        Locale l = Locale.forLanguageTag(locale);
+
+        String body = loadBodyFromFile("acceptRequestMail.html", "acceptRequestMail.txt");
+        if(body != null) {
+            if (this.useHTML) {
+                String bodyPlain = loadBodyFromFile("acceptRequestMail.txt");
+                sendAcceptRequestMailHtml(shareRequest, body, bodyPlain, l);
+            } else {
+                sendAcceptRequestMailPlainText(shareRequest, body, l);
+            }
+        }
+    }
+
+    @Override
+    public void sendDenyRequestMail(ShareRequest shareRequest) {
+
+        String locale = shareRequest.getMedic().getUser().getLocale();
+
+        Locale l = Locale.forLanguageTag(locale);
+
+        String body = loadBodyFromFile("denyRequestMail.html", "denyRequestMail.txt");
+        if(body != null) {
+            if (this.useHTML) {
+                String bodyPlain = loadBodyFromFile("denyRequestMail.txt");
+                sendDenyRequestMailHtml(shareRequest, body, bodyPlain, l);
+            } else {
+                sendDenyRequestMailPlainText(shareRequest, body, l);
+            }
+        }
+    }
+
     private String loadBodyFromFile(String htmlFile, String txtFile){
         URL bodyFile = null;
         if(useHTML){
@@ -774,6 +809,70 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         return mailContent;
     }
 
+    private void sendAcceptRequestMailHtml(ShareRequest shareRequest, String bodyHtml, String bodyPlain, Locale locale){
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+
+        String mailSubject = messageSource.getMessage("mail.subject.acceptRequest.medic",null,locale);
+        String mailContentPlainText = getShareRequestBodyPlainText(shareRequest,bodyPlain,locale);
+
+        String basicMailContent = getMailTemplate().replace("<replace-content/>", bodyHtml);
+        Map<String, String> replace = new HashMap<>();
+        replace.put("url", address.toString());
+        replaceShareRequestInfo(shareRequest,replace, locale);
+
+        String mailContent = replaceAllMessages(basicMailContent,replace,locale);
+
+        ms.sendMimeMessage(shareRequest.getMedic().getUser().getEmail(),
+                mailSubject,
+                mailContentPlainText,
+                mailContent,
+                mailInline
+        );
+    }
+
+    private void sendAcceptRequestMailPlainText(ShareRequest shareRequest, String body, Locale locale){
+        String mailSubject = messageSource.getMessage("mail.subject.acceptRequest.medic",null,locale);
+        String mailContentPlainText = getShareRequestBodyPlainText(shareRequest,body,locale);
+
+        ms.sendSimpleMessage(shareRequest.getMedic().getUser().getEmail(),
+                mailSubject,
+                mailContentPlainText
+        );
+    }
+
+    private void sendDenyRequestMailHtml(ShareRequest shareRequest, String bodyHtml, String bodyPlain, Locale locale){
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+
+        String mailSubject = messageSource.getMessage("mail.subject.denyRequest.medic",null,locale);
+        String mailContentPlainText = getShareRequestBodyPlainText(shareRequest,bodyPlain,locale);
+
+        String basicMailContent = getMailTemplate().replace("<replace-content/>", bodyHtml);
+        Map<String, String> replace = new HashMap<>();
+        replace.put("url", address.toString());
+        replaceShareRequestInfo(shareRequest,replace, locale);
+
+        String mailContent = replaceAllMessages(basicMailContent,replace,locale);
+
+        ms.sendMimeMessage(shareRequest.getMedic().getUser().getEmail(),
+                mailSubject,
+                mailContentPlainText,
+                mailContent,
+                mailInline
+        );
+    }
+
+    private void sendDenyRequestMailPlainText(ShareRequest shareRequest, String body, Locale locale){
+        String mailSubject = messageSource.getMessage("mail.subject.denyRequest.medic",null,locale);
+        String mailContentPlainText = getShareRequestBodyPlainText(shareRequest,body,locale);
+
+        ms.sendSimpleMessage(shareRequest.getMedic().getUser().getEmail(),
+                mailSubject,
+                mailContentPlainText
+        );
+    }
+
     // get data
     private String getMailTemplate(){
         return this.mailTemplate;
@@ -872,17 +971,30 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     private void replaceShareRequestInfo(ShareRequest shareRequest, Map<String, String> replace, Locale locale){
 
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString(address.toString()+"/access-request/view/")
+        UriComponents uriComponentsShare = UriComponentsBuilder.fromUriString(address.toString()+"/access-request/view/")
                 .queryParam("medicId",shareRequest.getMedic().getUser().getId().toString())
                 .queryParam("patientEmail",shareRequest.getPatientEmail())
                 .queryParam("studyTypeId",shareRequest.getStudyType().getId().toString())
                 .build().encode();
+        String shareRequestUrl = uriComponentsShare.toUriString();
 
-        String shareRequestUrl = uriComponents.toUriString();
+        UriComponents uriComponentsAccept = UriComponentsBuilder.fromUriString(address.toString()+"/my-orders/")
+                .queryParam("studyId",shareRequest.getStudyType().getId().toString())
+                .queryParam("patientEmail",shareRequest.getPatientEmail())
+                .queryParam("submit","search")
+                .build().encode();
+        String acceptRequestUrl = uriComponentsAccept.toUriString();
 
+        Object[] medicName = {shareRequest.getMedic().getName()};
+
+        replace.put("share-request-main-title",messageSource.getMessage("mail.body.sendShareRequestMailHtml.main",medicName,locale));
         replace.put("share-request-url", shareRequestUrl);
-        replace.put("contact-name", messageSource.getMessage("mail.contact.medic",new Object[] {shareRequest.getMedic().getName()}, locale));
-        replace.put("contact-email", shareRequest.getMedic().getEmail());
+
+        replace.put("accept-request-url",acceptRequestUrl);
+
+        replace.put("contact-patient",messageSource.getMessage("mail.contact.patient",new Object[] {shareRequest.getPatientEmail()},locale));
+        replace.put("medic-name", messageSource.getMessage("mail.contact.medic",medicName, locale));
+        replace.put("medic-email", shareRequest.getMedic().getEmail());
         replace.put("study-type", messageSource.getMessage("mail.shareRequestMailPlainText.body.studyType",
                 new Object[] {shareRequest.getStudyType().getName()},locale));
     }

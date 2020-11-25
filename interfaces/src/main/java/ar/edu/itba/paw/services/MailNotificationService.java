@@ -15,4 +15,8 @@ public interface MailNotificationService {
 
     void sendShareRequestMail(ShareRequest shareRequest);
 
+    void sendAcceptRequestMail(ShareRequest shareRequest);
+
+    void sendDenyRequestMail(ShareRequest shareRequest);
+
 }

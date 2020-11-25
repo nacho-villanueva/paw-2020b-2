@@ -1,0 +1,6 @@
+${replace-m-mail.body.denyRequestMailNoHtml.second}
+
+${replace-contact-patient}
+${replace-study-type}
+
+${replace-m-mail.body.denyRequestMailNoHtml.third}

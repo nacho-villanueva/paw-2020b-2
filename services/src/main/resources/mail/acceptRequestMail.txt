@@ -1,0 +1,11 @@
+${replace-m-mail.body.acceptRequestMailNoHtml.second}
+
+${replace-contact-patient}
+${replace-study-type}
+
+${replace-m-mail.body.acceptRequestMailNoHtml.third}
+
+${replace-m-mail.body.acceptRequestMailNoHtml.fourth}
+${replace-accept-request-url}
+
+${replace-m-mail.body.acceptRequestMailNoHtml.last}

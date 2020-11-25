@@ -1,5 +1,4 @@
-${replace-m-mail.body.sendShareRequestMailHtml.main}
-${replace-contact-name}
+${replace-share-request-main-title}
 
 ${replace-m-mail.body.sendShareRequestMailHtml.secondary}
 
@@ -10,4 +9,4 @@ ${replace-share-request-url}
 ${replace-m-mail.body.sendShareRequestMailHtml.last}
 
 ${replace-m-mail.contact.title}
-${replace-contact-name}: ${replace-contact-email}
+${replace-medic-name}: ${replace-medic-email}

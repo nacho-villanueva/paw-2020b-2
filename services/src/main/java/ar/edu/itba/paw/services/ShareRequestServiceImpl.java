@@ -54,6 +54,9 @@ public class ShareRequestServiceImpl implements ShareRequestService{
                     os.shareWithMedic(o, maybeMedic.get().getUser());
                 }
             }
+            mns.sendAcceptRequestMail(request);
+        }else{
+            mns.sendDenyRequestMail(request);
         }
         srd.remove(request);
     }
