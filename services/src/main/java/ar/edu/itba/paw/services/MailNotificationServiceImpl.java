@@ -466,13 +466,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Locale medicLocale = getLocale(order.getMedic().getEmail());
         Object[] subjectParams = {order.getPatientName()};
 
-        // ------- MAIL TO MEDIC -----------
-
         ms.sendSimpleMessage(medic.getEmail(),
                 messageSource.getMessage("mail.subject.order.medic",subjectParams,medicLocale),
                 getOrderMailMedicBodyPlainText(order, body, medicLocale));
-
-        // ---------------------------------
     }
 
     // send result mail with html
