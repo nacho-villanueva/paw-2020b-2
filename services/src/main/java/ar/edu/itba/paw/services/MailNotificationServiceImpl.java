@@ -104,6 +104,20 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     @Override
+    public void sendSharedOrderMail(Order order, User medic){
+        String body = loadBodyFromFile("orderMail.html", "orderMail.txt");
+        if(body != null){
+            if(this.useHTML){
+                String bodyPlain = loadBodyFromFile("orderMail.txt");
+                sendSharedOrderMailHtml(order, medic, body, bodyPlain);
+            }
+            else {
+                sendSharedOrderMailPlainText(order, medic, body);
+            }
+        }
+    }
+
+    @Override
     public void sendResultMail(Result result){
         String body = loadBodyFromFile("resultMail.html", "resultMail.txt");
         if(body != null) {
@@ -196,6 +210,19 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 sendDenyRequestMailHtml(shareRequest, body, bodyPlain);
             } else {
                 sendDenyRequestMailPlainText(shareRequest, body);
+            }
+        }
+    }
+
+    @Override
+    public void sendChangeClinicMail(Order order) {
+        String body = loadBodyFromFile("orderMail.html", "orderMail.txt");
+        if(body != null) {
+            if (this.useHTML) {
+                String bodyPlain = loadBodyFromFile("orderMail.txt");
+                sendChangeClinicMailHtml(order, body,bodyPlain);
+            } else {
+                sendChangeClinicMailPlainText(order, body);
             }
         }
     }
@@ -332,7 +359,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         ms.sendMimeMessage(order.getClinic().getEmail(),
                 messageSource.getMessage("mail.subject.order.clinic",subjectParams,clinicLocale),
                 getOrderMailClinicBodyPlainText(order, bodyPlain, clinicLocale),
-                replaceAllMessages(mailContent, replaceClinic, medicLocale),
+                replaceAllMessages(mailContent, replaceClinic, clinicLocale),
                 mailInline
         );
         // ----------------------------------
@@ -419,6 +446,42 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         replaceOrderInfo(order, replaceClinic, locale);
 
         return replaceAllMessages(mailContent, replaceClinic, locale);
+    }
+
+    private void sendSharedOrderMailHtml(Order order, User medic, String bodyHtml, String bodyPlain){
+        Locale medicLocale = getLocale(order.getMedic().getEmail());
+
+        Object[] subjectParams = {order.getPatientName()};
+
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+        mailInline.add("envelope-regular.png");
+
+        String mailContent = getMailTemplate();
+        mailContent = mailContent.replace("<replace-content/>",bodyHtml);
+
+        Map<String, String> replaceMedic = new HashMap<>();
+        replaceMedic.put("url", address.toString());
+
+        replaceMedicMailContacts(order, replaceMedic, medicLocale);
+        replaceOrderInfo(order, replaceMedic, medicLocale);
+
+        ms.sendMimeMessage(medic.getEmail(),
+                messageSource.getMessage("mail.subject.shared-order.medic",subjectParams,medicLocale),
+                getOrderMailMedicBodyPlainText(order, bodyPlain, medicLocale),
+                replaceAllMessages(mailContent, replaceMedic, medicLocale),
+                mailInline
+        );
+
+    }
+
+    private void sendSharedOrderMailPlainText(Order order, User medic, String body){
+        Locale medicLocale = getLocale(order.getMedic().getEmail());
+        Object[] subjectParams = {order.getPatientName()};
+
+        ms.sendSimpleMessage(medic.getEmail(),
+                messageSource.getMessage("mail.subject.order.medic",subjectParams,medicLocale),
+                getOrderMailMedicBodyPlainText(order, body, medicLocale));
     }
 
     // send result mail with html
@@ -884,6 +947,47 @@ public class MailNotificationServiceImpl implements MailNotificationService {
                 mailSubject,
                 mailContentPlainText
         );
+    }
+
+    private void sendChangeClinicMailHtml(Order order, String bodyHtml, String bodyPlain){
+
+        Locale clinicLocale = getLocale(order.getClinic().getEmail());
+
+        Object[] subjectParams = {order.getOrderId()};
+
+        ArrayList<String> mailInline = new ArrayList<>();
+        mailInline.add("logo.png");
+        mailInline.add("envelope-regular.png");
+
+        String mailContent = getMailTemplate().replace("<replace-content/>",bodyHtml);
+
+        Map<String, String> replaceClinic = new HashMap<>();
+        replaceClinic.put("url", address.toString());
+
+        replaceClinic.put("order-url", address.toString()+"/view-study/"+urlEncoderService.encode(order.getOrderId()));
+
+        replaceOrderInfo(order, replaceClinic, clinicLocale);
+        replaceClinicMailContacts(order, replaceClinic, clinicLocale);
+
+        ms.sendMimeMessage(order.getClinic().getEmail(),
+                messageSource.getMessage("mail.subject.changeOrder.clinic",subjectParams,clinicLocale),
+                getOrderMailClinicBodyPlainText(order, bodyPlain, clinicLocale),
+                replaceAllMessages(mailContent, replaceClinic, clinicLocale),
+                mailInline
+        );
+
+    }
+
+    private void sendChangeClinicMailPlainText(Order order, String body){
+
+        Locale clinicLocale = getLocale(order.getClinic().getEmail());
+
+        Object[] subjectParams = {order.getOrderId()};
+
+        ms.sendSimpleMessage(order.getClinic().getEmail(),
+                messageSource.getMessage("mail.subject.changeOrder.clinic",subjectParams,clinicLocale),
+                getOrderMailClinicBodyPlainText(order, body, clinicLocale));
+
     }
 
     // get data

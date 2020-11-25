@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.*;
 public interface MailNotificationService {
     void sendOrderMail(Order order);
 
+    void sendSharedOrderMail(Order order, User medic);
+
     void sendResultMail(Result result);
 
     void sendMedicApplicationValidatingMail(Medic medic);
@@ -18,5 +20,7 @@ public interface MailNotificationService {
     void sendAcceptRequestMail(ShareRequest shareRequest);
 
     void sendDenyRequestMail(ShareRequest shareRequest);
+
+    void sendChangeClinicMail(Order order);
 
 }
