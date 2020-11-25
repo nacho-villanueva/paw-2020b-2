@@ -18,15 +18,23 @@ public class ShareRequestServiceImpl implements ShareRequestService{
     ShareRequestDao srd;
 
     @Autowired
+    UserService us;
+
+    @Autowired
     OrderService os;
 
     @Autowired
     MedicService ms;
 
+    @Autowired
+    MailNotificationService mns;
+
     @Transactional
     @Override
     public ShareRequest requestShare(Medic medic, String patientEmail, StudyType type) {
-        return srd.register(medic, patientEmail, type);
+        ShareRequest shareRequest = srd.register(medic, patientEmail, type);
+        mns.sendShareRequestMail(shareRequest);
+        return shareRequest;
     }
 
     @Transactional
