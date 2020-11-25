@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.exceptions.StudyTypeNotFoundException;
 import ar.edu.itba.paw.webapp.form.AdvancedSearchClinicForm;
 import ar.edu.itba.paw.webapp.form.OrderForm;
 import ar.edu.itba.paw.webapp.form.PatientInfoForm;
+import ar.edu.itba.paw.webapp.form.constraintGroups.AdvancedSearchGroup;
 import ar.edu.itba.paw.webapp.form.constraintGroups.ExistingPatientGroup;
 import ar.edu.itba.paw.webapp.form.constraintGroups.OrderGroup;
 import ar.edu.itba.paw.webapp.form.constraintGroups.OrderWithoutClinicGroup;
@@ -141,7 +142,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.GET,params = {"submit=search","submit!=reset"})
-    public ModelAndView getOrderCreationForm(@Valid @ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm, BindingResult bindingResult,
+    public ModelAndView getOrderCreationForm(@Validated(AdvancedSearchGroup.class) @ModelAttribute("advancedSearchClinicForm") AdvancedSearchClinicForm advancedSearchClinicForm, BindingResult bindingResult,
                                              @ModelAttribute("orderForm") OrderForm orderForm,
                                              HttpServletRequest httpServletRequest, Locale locale) {
 

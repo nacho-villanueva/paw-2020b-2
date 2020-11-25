@@ -1,7 +1,9 @@
-${replace-m-body-sendResultMailNoHtml-details}
+${replace-m-mail.body.sendResultMailNoHtml.details}
 
 ${replace-order-url}
 
-Contact Info
+${replace-new-info}
+
+${replace-m-mail.contact.title}
 ${replace-contact1-name}: ${replace-contact1-email}
 ${replace-contact2-name}: ${replace-contact2-email}
