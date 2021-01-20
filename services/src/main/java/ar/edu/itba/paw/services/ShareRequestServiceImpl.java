@@ -14,6 +14,10 @@ import java.util.Optional;
 @Service
 public class ShareRequestServiceImpl implements ShareRequestService{
 
+    // Pagination-related constants
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_MAX_PAGE_SIZE = 20;
+
     @Autowired
     ShareRequestDao srd;
 
@@ -63,6 +67,37 @@ public class ShareRequestServiceImpl implements ShareRequestService{
 
     @Override
     public Collection<ShareRequest> getAllPatientRequest(String patientEmail){
-        return srd.getAllPatientRequests(patientEmail);
+        return getAllPatientRequests(patientEmail,DEFAULT_PAGE);
     }
+
+    @Override
+    public Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page) {
+        return getAllPatientRequests(patientEmail,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page, int pageSize) {
+        return srd.getAllPatientRequests(patientEmail, page, pageSize);
+    }
+
+    @Override
+    public long getAllPatientRequestsCount(String patientEmail) {
+        return srd.getAllPatientRequestsCount(patientEmail);
+    }
+
+    @Override
+    public long getAllPatientRequestsLastPage(String patientEmail) {
+        return getAllPatientRequestsLastPage(patientEmail,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllPatientRequestsLastPage(String patientEmail, int pageSize) {
+        return getLastPage(getAllPatientRequestsCount(patientEmail),pageSize);
+    }
+
+    // auxiliar functions
+    private long getLastPage(final long count, final int pageSize){
+        return (long) (Math.ceil(count / pageSize)+1);
+    }
+
 }

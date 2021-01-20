@@ -18,7 +18,8 @@ insert into users(id,email,password,role,enabled) values ((next value for users_
                                                  ((next value for users_id_seq),'seventeen@seventeen.com','passSeventeen',3,true),
                                                  ((next value for users_id_seq),'eighteen@eighteen.com','passEighteen',3,true),
                                                  ((next value for users_id_seq),'nineteen@nineteen.com','passNineteen',3,true),
-                                                 ((next value for users_id_seq),'twenty@twenty.com','passTwenty',3,true);
+                                                 ((next value for users_id_seq),'twenty@twenty.com','passTwenty',3,true),
+                                                 ((next value for users_id_seq),'twentyone@twentyone.com','passTwentyone',2,true);
 
 
 insert into medical_studies(id,name) values ((next value for medical_studies_id_seq),'X-ray'),
@@ -117,19 +118,24 @@ insert into clinic_accepted_plans(clinic_id,medic_plan) values (3,'Osde'),(6,'Os
 
 insert into medics(user_id,name,identification_type,identification,licence_number,verified) values
                     (2,'Medic one','image/png','\000','1234567',true),
-                    (5,'medic four','image/png','\000','1234567',false);
+                    (5,'medic four','image/png','\000','1234567',false),
+                    (22,'medic twentyone','image/png','\000','1234567',true);
 
-insert into medic_medical_fields(medic_id,field_id) values (2,1),(2,2),(2,4),(5,3),(5,4),(5,5);
+insert into medic_medical_fields(medic_id,field_id) values (2,1),(2,2),(2,4),(5,3),(5,4),(5,5),(22,1),(22,3),(22,5);
 
 insert into clinic_available_studies(clinic_id,study_id) values (3,1),(3,2),(3,4),(6,4),(6,5),(6,6);
 
 insert into patients(user_id,name) values (1,'Patient Zero'),(4,'Patient Three');
 
 insert into medical_orders(id, date, description, identification, identification_type, patient_email, patient_name, medic_plan_number, medic_plan, clinic_id, medic_id, study_id)
-values ((next value for medical_orders_id_seq), '2020-10-05', 'Description 1', '\000', 'image/png', 'patient1@patient.com', 'Patient one', 'insurance123', 'insurance plan one', 3, 2, 1),
-        ((next value for medical_orders_id_seq), '2020-10-05', 'Description 2', '\000', 'image/png', 'patient2@patient.com', 'Patient two', 'insurance123', 'insurance plan two', 3, 2, 1);
+values  ((next value for medical_orders_id_seq), '2020-10-05', 'Description 1', '\000', 'image/png', 'patient1@patient.com', 'Patient one', 'insurance123', 'insurance plan one', 3, 2, 1),
+        ((next value for medical_orders_id_seq), '2020-10-05', 'Description 2', '\000', 'image/png', 'patient2@patient.com', 'Patient two', 'insurance123', 'insurance plan two', 3, 2, 1),
+        ((next value for medical_orders_id_seq), '2020-11-05', 'Description 3', '\000', 'image/png', 'patient2@patient.com', 'Patient three', 'insurance123', 'insurance plan three', 3, 22, 1);
 
 
 insert into results(id, order_id, result_data_type, result_data, identification_type, identification, date, responsible_name, responsible_licence_number)
 values  ((next value for results_id_seq), 1, 'image/png','\000', 'image/png', '\000', '2020-10-05', 'responsible_one', 'licence1234'),
         ((next value for results_id_seq), 1, 'image/png','\000', 'image/png', '\000', '2020-10-05', 'responsible_two', 'licence1234');
+
+insert into medical_orders_users(order_id,shared_with_id)
+values  (2,22),(3,2);

@@ -49,6 +49,10 @@ public class ResultDaoTest {
     private static final Result result = new Result(1L, order, LocalDate.parse("2020-10-05"), "responsible_one","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
     private static final Result testResultTwo = new Result(20L, order, LocalDate.parse("2020-10-05"), "responsible_test","licence1234", "image/png", new byte[0],"image/png", new byte[0]);
 
+    //Pagination related
+    private static final int PAGE_SIZE_WITH_ALL_CLINICS = 99;
+    private static final int DEFAULT_PAGE = 1;
+
 
     @Autowired
     private DataSource ds;
@@ -88,7 +92,7 @@ public class ResultDaoTest {
     @Rollback
     @Test
     public void testFindByOrderIdExists() {
-        final Collection<Result> results = dao.findByOrderId(result.getOrderId());
+        final Collection<Result> results = dao.findByOrderId(result.getOrderId(),DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertNotNull(results);
         Assert.assertTrue(results.stream().findFirst().isPresent());
@@ -101,7 +105,7 @@ public class ResultDaoTest {
     @Rollback
     @Test
     public void testFindByOrderIdNotExists() {
-        final Collection<Result> results = dao.findByOrderId(ZERO_ID_LONG);
+        final Collection<Result> results = dao.findByOrderId(ZERO_ID_LONG,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(0,results.size());

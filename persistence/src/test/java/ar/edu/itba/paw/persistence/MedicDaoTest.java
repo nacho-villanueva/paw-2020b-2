@@ -45,6 +45,10 @@ public class MedicDaoTest {
     //Known medics
     private static final Medic medicOne = new Medic(userOne,"Medic one","","image/png",new byte[1],"1234567",true);
 
+    //Pagination related
+    private static final int PAGE_SIZE_WITH_ALL_MEDICS = 99;
+    private static final int DEFAULT_PAGE = 1;
+
     @Autowired
     private DataSource ds;
 
@@ -73,7 +77,7 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testGetAll() {
-        Collection<Medic> medics = dao.getAll();
+        Collection<Medic> medics = dao.getAll(DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_MEDICS);
 
         Assert.assertNotNull(medics);
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"verified = true"),medics.size());
@@ -83,7 +87,7 @@ public class MedicDaoTest {
     @Transactional
     @Rollback
     public void testGetAllUnverified() {
-        Collection<Medic> medics = dao.getAllUnverified();
+        Collection<Medic> medics = dao.getAllUnverified(DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_MEDICS);
 
         Assert.assertNotNull(medics);
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"verified = false"),medics.size());

@@ -9,9 +9,13 @@ public interface MedicDao {
 
     Optional<Medic> findByUserId(int userId);
 
-    Collection<Medic> getAll();
+    Collection<Medic> getAll(int page, int pageSize);
 
-    Collection<Medic> getAllUnverified();
+    long getAllCount();
+
+    Collection<Medic> getAllUnverified(int page, int pageSize);
+
+    long getAllUnverifiedCount();
 
     Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
 

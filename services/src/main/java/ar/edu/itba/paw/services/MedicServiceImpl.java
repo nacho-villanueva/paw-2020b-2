@@ -15,6 +15,10 @@ import java.util.Optional;
 @Transactional
 public class MedicServiceImpl implements MedicService {
 
+    // Pagination-related constants
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_MAX_PAGE_SIZE = 20;
+
     @Autowired
     private MedicDao medicDao;
 
@@ -26,12 +30,62 @@ public class MedicServiceImpl implements MedicService {
 
     @Override
     public Collection<Medic> getAll() {
-        return medicDao.getAll();
+        return getAll(DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Medic> getAll(int page) {
+        return getAll(page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Medic> getAll(int page, int pageSize) {
+        return medicDao.getAll(page,pageSize);
+    }
+
+    @Override
+    public long getAllCount() {
+        return medicDao.getAllCount();
+    }
+
+    @Override
+    public long getAllLastPage() {
+        return getAllLastPage(DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllLastPage(int pageSize) {
+        return getLastPage(getAllCount(),pageSize);
     }
 
     @Override
     public Collection<Medic> getAllUnverified() {
-        return medicDao.getAllUnverified();
+        return getAllUnverified(DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Medic> getAllUnverified(int page) {
+        return getAllUnverified(page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Medic> getAllUnverified(int page, int pageSize) {
+        return medicDao.getAllUnverified(page,pageSize);
+    }
+
+    @Override
+    public long getAllUnverifiedCount() {
+        return medicDao.getAllUnverifiedCount();
+    }
+
+    @Override
+    public long getAllUnverifiedLastPage() {
+        return getAllUnverifiedLastPage(DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllUnverifiedLastPage(int pageSize) {
+        return getLastPage(getAllUnverifiedCount(),pageSize);
     }
 
     @Override
@@ -59,5 +113,10 @@ public class MedicServiceImpl implements MedicService {
     @Override
     public boolean knowsField(int medicId, int fieldId) {
         return medicDao.knowsField(medicId,fieldId);
+    }
+
+    // auxiliar functions
+    private long getLastPage(final long count, final int pageSize){
+        return (long) (Math.ceil(count / pageSize)+1);
     }
 }

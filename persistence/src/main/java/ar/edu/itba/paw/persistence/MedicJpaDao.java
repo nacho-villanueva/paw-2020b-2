@@ -26,20 +26,52 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Collection<Medic> getAll() {
-        return getAll(true);
+    public Collection<Medic> getAll(final int page, final int pageSize) {
+        return getAll(true,page,pageSize);
     }
 
     @Override
-    public Collection<Medic> getAllUnverified() {
-        return getAll(false);
+    public long getAllCount() {
+        return getAllCount(true);
     }
 
-    private Collection<Medic> getAll(final boolean verified) {
-        // with hibernate, the validation that a medic is associated with an user should be unnecesary
-        final TypedQuery<Medic> query = em.createQuery("SELECT m FROM Medic m WHERE m.verified = :isVerified",Medic.class);
+    @Override
+    public Collection<Medic> getAllUnverified(final int page, final int pageSize) {
+        return getAll(false,page,pageSize);
+    }
+
+    @Override
+    public long getAllUnverifiedCount() {
+        return getAllCount(false);
+    }
+
+    private Collection<Medic> getAll(final boolean verified, final int page, final int pageSize) {
+
+        if(pageSize <= 0 || page <= 0)
+            return null;
+
+        String queryString = "SELECT m FROM Medic m "+
+                "WHERE m.verified = :isVerified " +
+                "ORDER BY m.name ASC, m.user.id ASC";
+
+
+        final TypedQuery<Medic> query = em.createQuery(queryString,Medic.class);
         query.setParameter("isVerified",verified);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
+    }
+
+    private Long getAllCount(final boolean verified){
+
+        final String queryString = "SELECT COUNT(m) FROM Medic m " +
+                "WHERE m.verified = :isVerified";
+
+        final TypedQuery<Long> countQuery = em.createQuery(queryString,Long.class);
+        countQuery.setParameter("isVerified",verified);
+        return countQuery.getSingleResult();
     }
 
     @Override

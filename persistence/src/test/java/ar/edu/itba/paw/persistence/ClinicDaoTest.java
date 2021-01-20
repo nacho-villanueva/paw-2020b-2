@@ -67,6 +67,10 @@ public class ClinicDaoTest {
 
     private static final String NEW_NAME_TWO = "Refurbished Two's Clinic";
 
+    //Pagination related
+    private static final int PAGE_SIZE_WITH_ALL_CLINICS = 99;
+    private static final int DEFAULT_PAGE = 1;
+
 
     @Autowired
     private DataSource ds;
@@ -110,12 +114,45 @@ public class ClinicDaoTest {
     @Rollback
     public void testGetAll() {
 
-        final Collection<Clinic> clinics = dao.getAll();
+        final Collection<Clinic> clinics = dao.getAll(DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertNotNull(clinics);
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         Clinic clinic = clinics.stream().findFirst().get();
         Assert.assertTrue(clinicMails.contains(clinic.getUser().getEmail()));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetAllAccessToLastPage() {
+        final int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true");
+        final int pageSize = 5;
+        final int lastPage = (int) (Math.ceil(count / pageSize)+1);
+
+        final Collection<Clinic> clinics = dao.getAll(lastPage,pageSize);
+
+        Assert.assertNotNull(clinics);
+        Assert.assertTrue(clinics.size() <= pageSize);
+        Assert.assertEquals(count%pageSize, clinics.size());
+        Clinic clinic = clinics.stream().findFirst().get();
+        Assert.assertTrue(clinicMails.contains(clinic.getUser().getEmail()));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetAllAccessToPageBiggerThanLastPage() {
+        final int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true");
+        final int pageSize = 5;
+
+        final int unexistentPage = count+1;
+        final int expectedSize = 0;
+
+        final Collection<Clinic> clinics = dao.getAll(unexistentPage,pageSize);
+
+        Assert.assertNotNull(clinics);
+        Assert.assertEquals(expectedSize,clinics.size());
     }
     /*
     // Temporally disabled
@@ -129,6 +166,17 @@ public class ClinicDaoTest {
         Assert.assertEquals(0,clinics.size());
     }
     */
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetAllCount() {
+        final int expectedCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true");
+
+        final long actualCount = dao.getAllCount();
+
+        Assert.assertEquals(expectedCount,actualCount);
+    }
 
     @Test
     @Transactional
@@ -263,7 +311,7 @@ public class ClinicDaoTest {
         String acceptedPlan = null;
         String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertEquals(JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"verified = true"),clinics.size());
         clinics.forEach(clinic -> {
@@ -286,7 +334,7 @@ public class ClinicDaoTest {
         String acceptedPlan = "OSDE";
         String studyName = "allergy";
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertEquals(1,clinics.size());
         Assert.assertEquals(clinicTwo.getUser().getId().intValue(),clinics.stream().findFirst().get().getUser().getId().intValue());
@@ -302,7 +350,7 @@ public class ClinicDaoTest {
         String acceptedPlan = null;
         String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Assert.assertEquals(0,clinics.size());
     }
@@ -317,7 +365,7 @@ public class ClinicDaoTest {
         String acceptedPlan = "oSdE";
         String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName);
+        Collection<Clinic> clinics = dao.searchClinicsBy(clinicName,hours,acceptedPlan,studyName,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
 
@@ -341,7 +389,7 @@ public class ClinicDaoTest {
         String medicPlan = null;
         String studyName = null;
 
-        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medicPlan,studyName);
+        Collection<Clinic> clinics = dao.searchClinicsBy(name,availableHours,medicPlan,studyName,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_CLINICS);
 
         Collection<Integer> clinicIds = clinics.stream().map(clinic -> clinic.getUser().getId()).collect(Collectors.toSet());
         Assert.assertTrue(clinicIds.contains(11));

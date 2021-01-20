@@ -28,24 +28,55 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> getAll() {
-        return getAll(true);
+    public Collection<Clinic> getAll(final int page, final int pageSize) {
+        return getAll(true,page,pageSize);
     }
 
     @Override
-    public Collection<Clinic> getAllUnverified() {
-        return getAll(false);
+    public long getAllCount() {
+        return getAllCount(true);
     }
 
-    private Collection<Clinic> getAll(final boolean verified) {
-        // with hibernate, the validation that a medic is associated with an user should be unnecesary
-        final TypedQuery<Clinic> query = em.createQuery("SELECT c FROM Clinic c WHERE c.verified = :isVerified",Clinic.class);
+    @Override
+    public Collection<Clinic> getAllUnverified(final int page, final int pageSize) {
+        return getAll(false,page,pageSize);
+    }
+
+    @Override
+    public long getAllUnverifiedCount() {
+        return getAllCount(false);
+    }
+
+    private Long getAllCount(final boolean verified){
+
+        final String queryString = "SELECT COUNT(c) FROM Clinic c " +
+                "WHERE c.verified = :isVerified";
+
+        final TypedQuery<Long> countQuery = em.createQuery(queryString,Long.class);
+        countQuery.setParameter("isVerified",verified);
+        return countQuery.getSingleResult();
+    }
+
+    private Collection<Clinic> getAll(final boolean verified, final int page, final int pageSize) {
+
+        if(pageSize <= 0 || page <= 0)
+            return null;
+
+        String queryString = "SELECT c FROM Clinic c " +
+                "WHERE c.verified = :isVerified "+
+                "ORDER BY c.name ASC, c.user.id ASC";
+
+        final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
         query.setParameter("isVerified",verified);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
     }
 
     @Override
-    public Collection<Clinic> getByStudyTypeId(final int studyTypeId) {
+    public Collection<Clinic> getByStudyTypeId(final int studyTypeId, final int page, final int pageSize) {
 
         Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyTypeId));
 
@@ -55,12 +86,34 @@ public class ClinicJpaDao implements ClinicDao {
         String queryString = "SELECT c FROM Clinic c " +
                 "INNER JOIN FETCH c.medicalStudies " +
                 "WHERE c.verified = true " +
-                "AND :studyType MEMBER OF c.medicalStudies";
+                "AND :studyType MEMBER OF c.medicalStudies " +
+                "ORDER BY c.name ASC, c.user.id ASC";
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
         query.setParameter("studyType",studyTypeOptional.get());
 
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
+    }
+
+    @Override
+    public long getByStudyTypeIdCount(int studyTypeId) {
+        Optional<StudyType> studyTypeOptional = Optional.ofNullable(em.getReference(StudyType.class,studyTypeId));
+
+        if(!studyTypeOptional.isPresent())
+            return 0;
+
+        String queryString = "SELECT COUNT(c) FROM Clinic c " +
+                "INNER JOIN FETCH c.medicalStudies " +
+                "WHERE c.verified = true " +
+                "AND :studyType MEMBER OF c.medicalStudies";
+
+        final TypedQuery<Long> query = em.createQuery(queryString,Long.class);
+        query.setParameter("studyType",studyTypeOptional.get());
+
+        return query.getSingleResult();
     }
 
 
@@ -152,13 +205,32 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
-        String queryString = getSearchQueryString(clinicName,hours,acceptedPlan,studyName);
+    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int page, int pageSize) {
+        String queryString = getSearchQueryString("DISTINCT c",clinicName,hours,acceptedPlan,studyName);
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
-        //filling params
+        fillSearchClinicsParams(query,clinicName,hours,acceptedPlan,studyName);
 
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public long searchClinicsByCount(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
+        String queryString = getSearchQueryString("COUNT(DISTINCT c)",clinicName,hours,acceptedPlan,studyName);
+
+        final TypedQuery<Long> query = em.createQuery(queryString,Long.class);
+
+        fillSearchClinicsParams(query,clinicName,hours,acceptedPlan,studyName);
+
+        return query.getResultList().get(0);
+    }
+
+    private void fillSearchClinicsParams(TypedQuery query,String clinicName, ClinicHours hours, String acceptedPlan, String studyName){
+        //filling params
         if(clinicName!=null)
             query.setParameter("clinicName","%"+clinicName.toLowerCase()+"%");
         if(acceptedPlan!=null)
@@ -175,13 +247,11 @@ public class ClinicJpaDao implements ClinicDao {
                 }
             }
         }
-
-        return query.getResultList();
     }
 
-    private String getSearchQueryString(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
+    private String getSearchQueryString(String returnValue,String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
         //Base Query
-        StringBuilder query = new StringBuilder("SELECT DISTINCT c FROM Clinic c");
+        StringBuilder query = new StringBuilder("SELECT "+returnValue+" FROM Clinic c");
 
         //Joins
         if(hours != null) {
@@ -244,6 +314,8 @@ public class ClinicJpaDao implements ClinicDao {
             //Add study name condition
             query.append(" AND LOWER(ms.name) LIKE :clinicMedicalStudy");
         }
+
+        query.append(" ORDER BY c.name ASC, c.user.id ASC");
 
         return query.toString();
     }

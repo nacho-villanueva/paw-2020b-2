@@ -14,6 +14,10 @@ import java.util.Optional;
 @Service
 public class ResultServiceImpl implements ResultService {
 
+    // Pagination-related constants
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_MAX_PAGE_SIZE = 5;
+
     @Autowired
     private MailNotificationService mailNotificationService;
 
@@ -27,7 +31,32 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Collection<Result> findByOrderId(long id) {
-        return resultDao.findByOrderId(id);
+        return findByOrderId(id,DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Result> findByOrderId(long id, int page) {
+        return findByOrderId(id,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Result> findByOrderId(long id, int page, int pageSize) {
+        return resultDao.findByOrderId(id,page,pageSize);
+    }
+
+    @Override
+    public long findByOrderIdCount(long id) {
+        return resultDao.findByOrderIdCount(id);
+    }
+
+    @Override
+    public long findByOrderIdLastPage(long id) {
+        return findByOrderIdLastPage(id,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long findByOrderIdLastPage(long id, int pageSize) {
+        return getLastPage(findByOrderIdCount(id),pageSize);
     }
 
     @Override
@@ -35,6 +64,11 @@ public class ResultServiceImpl implements ResultService {
         Result result = resultDao.register(orderId,resultDataType,resultData,identificationType,identification,date,responsibleName,responsibleLicenceNumber);
         mailNotificationService.sendResultMail(result);
         return result;
+    }
+
+    // auxiliar functions
+    private long getLastPage(final long count, final int pageSize){
+        return (long) (Math.ceil(count / pageSize)+1);
     }
 }
 

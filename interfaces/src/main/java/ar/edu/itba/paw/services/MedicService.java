@@ -9,9 +9,31 @@ import java.util.Optional;
 
 public interface MedicService {
 
+    //TODO: deprecated, remove usages when possible
     Collection<Medic> getAll();
 
+    Collection<Medic> getAll(int page);
+
+    Collection<Medic> getAll(int page, int pageSize);
+
+    long getAllCount();
+
+    long getAllLastPage();
+
+    long getAllLastPage(int pageSize);
+
+    //TODO: deprecated, remove usages when possible
     Collection<Medic> getAllUnverified();
+
+    Collection<Medic> getAllUnverified(int page);
+
+    Collection<Medic> getAllUnverified(int page, int pageSize);
+
+    long getAllUnverifiedCount();
+
+    long getAllUnverifiedLastPage();
+
+    long getAllUnverifiedLastPage(int pageSize);
 
     Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields);
 

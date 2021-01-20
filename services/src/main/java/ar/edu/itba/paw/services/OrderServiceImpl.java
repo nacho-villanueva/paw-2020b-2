@@ -9,20 +9,32 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Map;
-
+import java.util.*;
 @Transactional
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    // Pagination-related constants
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_MAX_PAGE_SIZE = 10;
 
     @Autowired
     private MailNotificationService mailNotificationService;
 
     @Autowired
     private OrderDao orderDao;
+
+    @Autowired
+    private MedicService medicService;
+
+    @Autowired
+    private ClinicService clinicService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private StudyTypeService studyService;
 
 
     @Override
@@ -39,71 +51,234 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Collection<Order> getAllAsClinic(User user) {
-        return orderDao.getAllAsClinic(user);
+        return getAllAsClinic(user,DEFAULT_PAGE);
     }
 
-    private Collection<Order> getAllSharedWithMedic(User user) { return orderDao.getAllSharedAsMedic(user); }
+    @Override
+    public Collection<Order> getAllAsClinic(User user, int page) {
+        return getAllAsClinic(user, page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsClinic(User user, int page, int pageSize) {
+        return orderDao.getAllAsClinic(user, page, pageSize);
+    }
+
+    @Override
+    public long getAllAsClinicCount(User user) {
+        return orderDao.getAllAsClinicCount(user);
+    }
+
+    @Override
+    public long getAllAsClinicLastPage(User user) {
+        return getAllAsClinicLastPage(user,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsClinicLastPage(User user, int pageSize) {
+        return getLastPage(getAllAsClinicCount(user),pageSize);
+    }
 
     @Override
     public Collection<Order> getAllAsMedic(User user) {
-        return orderDao.getAllAsMedic(user);
+        return getAllAsMedic(user,DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsMedic(User user, int page) {
+        return getAllAsMedic(user,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsMedic(User user, int page, int pageSize) {
+        return getAllAsMedic(user,false,page,pageSize);
+    }
+
+    @Override
+    public Collection<Order> getAllAsMedic(User user, boolean includeShared, int page) {
+        return getAllAsMedic(user,includeShared,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsMedic(User user, boolean includeShared, int page, int pageSize) {
+        if(includeShared)
+            return orderDao.getAllParticipatingAsMedic(user,page,pageSize);
+        else
+            return orderDao.getAllAsMedic(user,page,pageSize);
+    }
+
+    @Override
+    public long getAllAsMedicCount(User user) {
+        return getAllAsMedicCount(user,false);
+    }
+
+    @Override
+    public long getAllAsMedicLastPage(User user) {
+        return getAllAsMedicLastPage(user,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsMedicLastPage(User user, int pageSize) {
+        return getAllAsMedicLastPage(user,false,pageSize);
+    }
+
+    @Override
+    public long getAllAsMedicCount(User user, boolean includeShared) {
+        if(includeShared)
+            return orderDao.getAllParticipatingAsMedicCount(user);
+        else
+            return orderDao.getAllAsMedicCount(user);
+    }
+
+    @Override
+    public long getAllAsMedicLastPage(User user, boolean includeShared) {
+        return getAllAsMedicLastPage(user,includeShared,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsMedicLastPage(User user, boolean includeShared, int pageSize) {
+        return getLastPage(getAllAsMedicCount(user,includeShared),pageSize);
     }
 
     @Override
     public Collection<Order> getAllAsPatient(User user) {
-        return orderDao.getAllAsPatient(user);
+        return getAllAsPatient(user,DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsPatient(User user, int page) {
+        return getAllAsPatient(user,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsPatient(User user, int page, int pageSize) {
+        return orderDao.getAllAsPatient(user,page,pageSize);
+    }
+
+    @Override
+    public long getAllAsPatientCount(User user) {
+        return orderDao.getAllAsPatientCount(user);
+    }
+
+    @Override
+    public long getAllAsPatientLastPage(User user) {
+        return getAllAsPatientLastPage(user,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsPatientLastPage(User user, int pageSize) {
+        return getLastPage(getAllAsPatientCount(user),pageSize);
     }
 
     @Override
     public Collection<Order> getAllAsPatientOfType(String email, StudyType type) {
-        return orderDao.getAllAsPatientOfType(email, type);
+        return getAllAsPatientOfType(email, type,DEFAULT_PAGE);
     }
 
-    @Autowired
-    private MedicService medicService;
+    @Override
+    public Collection<Order> getAllAsPatientOfType(String email, StudyType type, int page) {
+        return getAllAsPatientOfType(email, type,page,DEFAULT_MAX_PAGE_SIZE);
+    }
 
-    @Autowired
-    private ClinicService clinicService;
+    @Override
+    public Collection<Order> getAllAsPatientOfType(String email, StudyType type, int page, int pageSize) {
+        return orderDao.getAllAsPatientOfType(email, type,page,pageSize);
+    }
 
-    @Autowired
-    private UserService userService;
+    @Override
+    public long getAllAsPatientOfTypeCount(String email, StudyType type) {
+        return orderDao.getAllAsPatientOfTypeCount(email,type);
+    }
 
-    @Autowired
-    private StudyTypeService studyService;
+    @Override
+    public long getAllAsPatientOfTypeLastPage(String email, StudyType type) {
+        return getAllAsPatientOfTypeLastPage(email,type,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsPatientOfTypeLastPage(String email, StudyType type, int pageSize) {
+        return getLastPage(getAllAsPatientOfTypeCount(email,type),pageSize);
+    }
 
     @Override
     public Collection<Order> getAllAsUser(User user){
-        if(user.isMedic() && !user.isVerifying()){
-            Collection<Order> orders = getAllAsMedic(user);
-            orders.addAll(getAllSharedWithMedic(user));
-            return orders;
-        }else if(user.isClinic() && !user.isVerifying()){
-            return getAllAsClinic(user);
-        }else if(user.isPatient()){
-            return getAllAsPatient(user);
-        }else{
-            return new ArrayList<>();
-        }
+        return getAllAsUser(user,DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsUser(User user, int page) {
+        return getAllAsUser(user,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsUser(User user, int page, int pageSize) {
+        return getAllAsUser(user,false,page,pageSize);
+    }
+
+    @Override
+    public Collection<Order> getAllAsUser(User user, boolean includeShared, int page) {
+        return getAllAsUser(user,includeShared,page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> getAllAsUser(User user, boolean includeShared, int page, int pageSize) {
+        return orderDao.getAllAsUser(user,includeShared,page,pageSize);
+    }
+
+    @Override
+    public long getAllAsUserCount(User user) {
+        return getAllAsUserCount(user,false);
+    }
+
+    @Override
+    public long getAllAsUserLastPage(User user) {
+        return getAllAsUserLastPage(user,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsUserLastPage(User user, int pageSize) {
+        return getAllAsUserLastPage(user,false,pageSize);
+    }
+
+    @Override
+    public long getAllAsUserCount(User user, boolean includeShared) {
+        return orderDao.getAllAsUserCount(user,includeShared);
+    }
+
+    @Override
+    public long getAllAsUserLastPage(User user, boolean includeShared) {
+        return getAllAsUserLastPage(user,includeShared,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long getAllAsUserLastPage(User user, boolean includeShared, int pageSize) {
+        return getLastPage(getAllAsUserCount(user,includeShared),pageSize);
     }
 
     @Override
     public Collection<Order> filterOrders(User user, Map<Parameters, String> parameters){
-        Collection<Order> orders;
 
-        orders = getAllAsUser(user);
+        User clinicUser = null;
+        User medicUser = null;
+        String patientEmail = null;
+        LocalDate date = null;
+        StudyType type = null;
+        boolean includeSharedIfMedic = true;
 
         if(parameters.containsKey(Parameters.CLINIC)){
             int aux = Integer.parseInt(parameters.get(Parameters.CLINIC));
-            if(clinicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getClinic().getUserId() != aux);
+            Optional<Clinic> clinicOptional = clinicService.findByUserId(aux);
+            if(clinicOptional.isPresent())
+                clinicUser = clinicOptional.get().getUser();
         }
         if(parameters.containsKey(Parameters.MEDIC)){
             int aux = Integer.parseInt(parameters.get(Parameters.MEDIC));
-            if(medicService.findByUserId(aux).isPresent())
-                orders.removeIf(order -> order.getMedic().getUserId() != aux);
+            Optional<Medic> medicOptional = medicService.findByUserId(aux);
+            if(medicOptional.isPresent())
+                medicUser = medicOptional.get().getUser();
         }
         if(parameters.containsKey(Parameters.PATIENT)){
-            orders.removeIf(order -> !order.getPatientEmail().equals(parameters.get(Parameters.PATIENT)));
+            patientEmail = parameters.get(Parameters.PATIENT);
         }
         if(parameters.containsKey(Parameters.DATE)){
             boolean wrongFormatting = false;
@@ -115,16 +290,42 @@ public class OrderServiceImpl implements OrderService {
                 wrongFormatting = true;
             }
             if(!wrongFormatting) {
-                orders.removeIf(order -> !order.getDate().equals(LocalDate.parse(parameters.get(Parameters.DATE))));
+                date = LocalDate.parse(parameters.get(Parameters.DATE));
             }
         }
         if(parameters.containsKey(Parameters.STUDYTYPE)){
             int aux = Integer.parseInt(parameters.get(Parameters.STUDYTYPE));
-            if(studyService.findById(aux).isPresent())
-                orders.removeIf(order -> order.getStudy().getId() != Integer.parseInt(parameters.get(Parameters.STUDYTYPE)));
+            Optional<StudyType> studyTypeOptional = studyService.findById(aux);
+            if(studyTypeOptional.isPresent())
+                type = studyTypeOptional.get();
         }
 
-        return orders;
+        return filterOrders(user,clinicUser,medicUser,patientEmail,date,type,includeSharedIfMedic,DEFAULT_PAGE);
+    }
+
+    @Override
+    public Collection<Order> filterOrders(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic, int page) {
+        return filterOrders(user, clinicUser, medicUser, patientEmail, date, type, includeSharedIfMedic, page,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public Collection<Order> filterOrders(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic, int page, int pageSize) {
+        return orderDao.getFiltered(user, clinicUser, medicUser, patientEmail, date, type, includeSharedIfMedic, page, pageSize);
+    }
+
+    @Override
+    public long filterOrdersCount(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic) {
+        return orderDao.getFilteredCount(user, clinicUser, medicUser, patientEmail, date, type, includeSharedIfMedic);
+    }
+
+    @Override
+    public long filterOrdersLastPage(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic) {
+        return filterOrdersLastPage(user, clinicUser, medicUser, patientEmail, date, type, includeSharedIfMedic,DEFAULT_MAX_PAGE_SIZE);
+    }
+
+    @Override
+    public long filterOrdersLastPage(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(filterOrdersCount(user, clinicUser, medicUser, patientEmail, date, type, includeSharedIfMedic),pageSize);
     }
 
     @Override
@@ -141,5 +342,10 @@ public class OrderServiceImpl implements OrderService {
         Order newOrder = orderDao.changeOrderClinic(order, clinic);
         mailNotificationService.sendChangeClinicMail(order);
         return newOrder;
+    }
+
+    // auxiliar functions and comparator
+    private long getLastPage(final long count, final int pageSize){
+        return (long) (Math.ceil(count / pageSize)+1);
     }
 }
