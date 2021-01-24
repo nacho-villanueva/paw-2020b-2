@@ -71,7 +71,7 @@ body {
 
 .upload-btn{
     background: var(--primary);
-    color: white;
+    color: rgb(167, 149, 149);
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
