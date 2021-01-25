@@ -1,23 +1,27 @@
 import {Form} from "react-bootstrap";
-import {useState} from "react";
 import "./../css/homepage.css";
+import {useEffect, useState} from "react";
 
 function LandingPage() {
-    const title1 = "title1";
-    const title2 = "title2";
+    //strings
+    const title1 = "Welcome to";
+    const title2 = "MedTransfer";
     const login = "log in!";
     const emailLabel = "Email address";
     const passwordLabel = "Password";
     const rememberMeLabel = "Remember Me";
-    const submitLogin = "SUBMIT";
+    const submitLogin = "Log In";
     const invalidEmail = "Please input a correct email";
     const invalidPassword = "Please input a correct password";
     const repeatPasswordLabel = "Please repeat the Password";
-    const submitRegister = "SUBMITt";
+    const submitRegister = "Register";
 
     const register = "register!";
     const loginLink = "/login";
     const registerLink = "/register";
+
+    //////////////////////////////////////////////////////////
+    //form validation
 
     const [loginValidated, setLoginValidated] = useState(false);
     const handleLoginSubmit = (event) => {
@@ -41,6 +45,31 @@ function LandingPage() {
         setRegisterValidated(true);
     };
 
+    //////////////////////////////////////////////////////////
+    //code to change between the login and register tabs
+
+    const [loginTab, setLoginTab] = useState("tab-pane fade in show active");
+    const [registerTab, setRegisterTab] = useState("tab-pane fade in");
+    const [activeLoginTab, setActiveLoginTab] = useState("active");
+    const [activeRegisterTab, setActiveRegisterTab] = useState("");
+
+    const changeToLogin = (event) => {
+        setLoginTab("tab-pane fade in show active");
+        setRegisterTab("tab-pane fade in");
+        setActiveLoginTab("active");
+        setActiveRegisterTab("");
+    };
+    const changeToRegister = (event) => {
+        setRegisterTab("tab-pane fade in show active");
+        setLoginTab("tab-pane fade in");
+        setActiveRegisterTab("active");
+        setActiveLoginTab("");
+    };
+
+
+
+
+
     return(
         <div className="card main-card bg-light">
             <div className="card-body">
@@ -49,36 +78,36 @@ function LandingPage() {
                 <hr className="divider my-4"/>
                 <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
                     <li className="nav-item">
-                        <a className="nav-item nav-link"
-                           id="login-tab" data-toggle="tab" href={loginLink} role="tab"
-                           aria-controls="login" aria-selected="false">{login}</a>
+                        <a className={"nav-item nav-link " + activeLoginTab}
+                           id="login-tab" data-toggle="tab" role="tab" onClick={changeToLogin}
+                           aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{login}</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link"
-                           id="register-tab" data-toggle="tab" href={registerLink}
-                           role="tab" aria-controls="register" aria-selected="false">{register}</a>
+                        <a className={"nav-link " + activeRegisterTab}
+                           id="register-tab" data-toggle="tab" onClick={changeToRegister}
+                           role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>{register}</a>
                     </li>
                 </ul>
 
                 <hr className="divider my-4"/>
 
                 <div className="tab-content">
-                    <div id="login" className="tab-pane fade in">
+                    <div id="login" className={loginTab}>
                         <Form className="form-signin" noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
-                            <fieldset className="form-group">
-                                <label for="loginEmail" className="bmd-label-static">{emailLabel}</label>
-                                <input name="loginEmail" type="email" className="form-control" id="loginEmail" placeholder={emailLabel}  />
-                            </fieldset>
-                            <fieldset className="form-group">
-                                <label for="loginPassword" class="bmd-label-static">{passwordLabel}</label>
-                                <input name="loginPassword" type="password" class="form-control" id="loginPassword" placeholder={passwordLabel} />
-                            </fieldset>
+                            <Form.Group controlId="loginEmail">
+                                <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
+                                <Form.Control required type="email" placholder="Enter email" />
+                                <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="loginPassword">
+                                <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
+                                <Form.Control required type="password" placholder="Password" />
+                                <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Check label={rememberMeLabel}/>
+                            </Form.Group>
 
-                            <div className="checkbox">
-                                <label>
-                                    <input name="rememberme" type="checkbox"/>{rememberMeLabel}
-                                </label>
-                            </div>
 
                             <div className="row justify-content-center">
                                 <input type="submit" class="row btn btn-lg action-btn" value={submitLogin}/>
@@ -88,27 +117,24 @@ function LandingPage() {
 
 
 
-                    <div id="register" className="tab-pane fade show active">
+                    <div id="register" className={registerTab}>
                         <Form noValidate validated={registerValidated} className="form-signin" onSubmit={handleRegisterSubmit}>
-                            <fieldset className="form-group">
-                                <label for="registerEmail" className="bmd-label-static">{emailLabel}</label>
-                                    {emailLabel}
-                                <input type="email" path="email" cssClass="form-control" cssErrorClass="form-control is-invalid" id="registerEmail" required="required" placeholder={emailLabel} />
+                            <Form.Group controlId="registerEmail">
+                                <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
+                                <Form.Control required type="email" placholder="Enter email" />
                                 <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
-                            </fieldset>
+                            </Form.Group>
+                            <Form.Group controlId="registerPassword">
+                                <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
+                                <Form.Control required type="password" placholder="Password" />
+                                <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="registerPasswordConfirm">
+                                <Form.Label className="bmd-label-static">{repeatPasswordLabel}</Form.Label>
+                                <Form.Control required type="password" placholder="Repeat Password" />
+                                <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                            </Form.Group>
 
-                            <fieldset className="form-group">
-                                <label for="registerPassword" className="bmd-label-static">{passwordLabel}</label>
-                                    {passwordLabel}
-                                <input type="password" path="passwordField.password" cssClass="form-control" cssErrorClass="form-control is-invalid" id="registerPassword" required="required" placeholder={passwordLabel} />
-                                <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
-                            </fieldset>
-                            <fieldset className="form-group">
-                                <label for="registerPasswordConfirm" className="bmd-label-static">{repeatPasswordLabel}</label>
-                                    {repeatPasswordLabel}
-                                <input path="passwordField.confirmPassword" type="password" cssClass="form-control" cssErrorClass="form-control is-invalid" required="required" id="registerPasswordConfirm" placeholder={repeatPasswordLabel} />
-                                <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
-                            </fieldset>
                             <div className="row justify-content-center">
                                 <input type="submit" className="row btn btn-lg action-btn" value={submitRegister} />
                             </div>
