@@ -1,6 +1,7 @@
 import {Form} from "react-bootstrap";
 import "./../css/homepage.css";
 import {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
 
 function LandingPage() {
     //strings
@@ -20,29 +21,44 @@ function LandingPage() {
     const loginLink = "/login";
     const registerLink = "/register";
 
+    const history = useHistory();
+
     //////////////////////////////////////////////////////////
     //form validation
 
     const [loginValidated, setLoginValidated] = useState(false);
     const handleLoginSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if(form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
         }
 
         setLoginValidated(true);
+        history.push("/home");
+
     };
 
     const [registerValidated, setRegisterValidated] = useState(false);
     const handleRegisterSubmit = (event) => {
+        event.preventDefault();
+
         const form = event.currentTarget;
-        if(form.checkValidity() === false) {
-            event.preventDefault();
+        let formInputs = event.target;
+        //the first values in the object formInputs are the fields from the form, then its useless stuff
+        const inputs = {email: formInputs[0],
+                        password: formInputs[1],
+                        passwordConfirm: formInputs[2]}
+
+        for(var i in inputs){
+            console.log(i, inputs[i].value);
+        }
+        if(form.checkValidity() === false || inputs.password !== inputs.passwordConfirm) {
             event.stopPropagation();
         }
 
         setRegisterValidated(true);
+        window.open()
     };
 
     //////////////////////////////////////////////////////////
@@ -96,16 +112,16 @@ function LandingPage() {
                         <Form className="form-signin" noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
                             <Form.Group controlId="loginEmail">
                                 <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                <Form.Control required type="email" placholder="Enter email" />
+                                <Form.Control required type="email" placeholder="Enter email" name="email"/>
                                 <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="loginPassword">
                                 <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                <Form.Control required type="password" placholder="Password" />
+                                <Form.Control required type="password" placeholder="Password" name="password"/>
                                 <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Check label={rememberMeLabel}/>
+                                <Form.Check label={rememberMeLabel} name="rememberme"/>
                             </Form.Group>
 
 
@@ -121,17 +137,17 @@ function LandingPage() {
                         <Form noValidate validated={registerValidated} className="form-signin" onSubmit={handleRegisterSubmit}>
                             <Form.Group controlId="registerEmail">
                                 <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                <Form.Control required type="email" placholder="Enter email" />
+                                <Form.Control required type="email" placeholder="Enter email" name="email"/>
                                 <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="registerPassword">
                                 <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                <Form.Control required type="password" placholder="Password" />
+                                <Form.Control required type="password" placeholder="Password" name="password"/>
                                 <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="registerPasswordConfirm">
                                 <Form.Label className="bmd-label-static">{repeatPasswordLabel}</Form.Label>
-                                <Form.Control required type="password" placholder="Repeat Password" />
+                                <Form.Control required type="password" placeholder="Repeat Password" name="passwordConfirm"/>
                                 <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
                             </Form.Group>
 
