@@ -1,34 +1,7 @@
-:root {
-    --main-font: Roboto, sans-serif;
-}
-
-
-html, body {
-    margin: 0;
-    height: 100%;
-    overflow: auto;
-}
-
-body {
-    font-family: var(--main-font);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    text-align: left;
-    background-color: #212121;
-}
-
-.main-container {
-    position: relative;
-    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%), url("../img/background.jpg");
-    background-size: cover;
-
+.landingContainer {
+    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.3) 0%, rgba(119, 119, 119, 0.3) 100%), url("../../img/background.jpg");
     height: 100vh;
-    padding-top: 4.5rem;
 }
-
-
 
 @keyframes slideInFromDown {
     0% {

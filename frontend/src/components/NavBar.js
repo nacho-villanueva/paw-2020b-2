@@ -1,6 +1,6 @@
 import { Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "./../css/navbar.css";
+import "./Style/NavBar.css";
 import "./../css/bootstrap-related.css";
 
 function NavBar() {
