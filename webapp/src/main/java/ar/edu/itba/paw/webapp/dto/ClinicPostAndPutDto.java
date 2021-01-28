@@ -11,10 +11,10 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,9 +36,11 @@ public class ClinicPostAndPutDto {
     private Collection<StudyTypeDto> availableStudies;
 
     @Valid
+    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull", groups = {ClinicPost.class})
     private Collection<MedicPlanDto> acceptedPlans;
 
     @Valid
+    @NotNull(message="ClinicPostAndPutDto.hours.NotNull", groups = {ClinicPost.class})
     @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid", groups = {ClinicPost.class, ClinicPut.class})
     private Collection<ClinicDayHoursDto> hours;
 
@@ -91,6 +93,18 @@ public class ClinicPostAndPutDto {
 
 
     // Equals&HashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClinicPostAndPutDto that = (ClinicPostAndPutDto) o;
+        return Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, telephone, availableStudies, acceptedPlans, hours);
+    }
 
     // etc.
     public ClinicHours getClinicHours(){
