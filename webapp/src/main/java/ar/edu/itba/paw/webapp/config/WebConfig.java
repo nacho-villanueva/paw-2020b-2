@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -19,6 +20,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -33,6 +35,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.ws.rs.core.CacheControl;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -142,4 +147,24 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+
+    @Bean
+    public ValidatorFactory getValidatorFactory(final MessageSource messageSource) {
+        LocalValidatorFactoryBean validatorFactory = new LocalValidatorFactoryBean();
+        validatorFactory.setValidationMessageSource(messageSource);
+        return validatorFactory;
+    }
+
+    @Bean
+    public Validator validator(final ValidatorFactory getValidatorFactory){
+        return getValidatorFactory.getValidator();
+    }
+
+    @Bean
+    public CacheControl cacheControl(){
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setNoCache(true);
+        return cacheControl;
+    }
+
 }

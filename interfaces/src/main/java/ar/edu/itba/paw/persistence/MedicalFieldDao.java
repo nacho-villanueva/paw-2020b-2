@@ -7,11 +7,13 @@ import java.util.Optional;
 
 public interface MedicalFieldDao {
 
-    public Optional<MedicalField> findById(int id);
+    Optional<MedicalField> findById(int id);
 
-    public Optional<MedicalField> findByName(String name);
+    Optional<MedicalField> findByName(String name);
 
-    public Collection<MedicalField> getAll();
+    Collection<MedicalField> getAll();
 
-    public MedicalField findOrRegister(String name);
+    MedicalField register(String name);
+
+    MedicalField findOrRegister(String name);
 }

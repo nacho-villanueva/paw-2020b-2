@@ -298,13 +298,13 @@ public class OrderJpaDao implements OrderDao {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         if(clinicUser != null)
-            predicates = getAllAsClinicQueryPredicate(predicates,root,clinicUser);
+            getAllAsClinicQueryPredicate(predicates, root, clinicUser);
 
         if(medicUser != null)
-            predicates = getAllAsMedicQueryPredicate(predicates, root, medicUser, false);
+            getAllAsMedicQueryPredicate(predicates, root, medicUser, false);
 
         if(patientEmail != null && patientEmail.trim().length() >0)
-            predicates = getAllAsPatientQueryPredicate(predicates,root,patientEmail);
+            getAllAsPatientQueryPredicate(predicates, root, patientEmail);
 
         if(date != null)
             predicates.add(cb.equal(root.get("date"),date));

@@ -60,7 +60,7 @@ public class ClinicJpaDao implements ClinicDao {
     private Collection<Clinic> getAll(final boolean verified, final int page, final int pageSize) {
 
         if(pageSize <= 0 || page <= 0)
-            return null;
+            return new ArrayList<>();
 
         String queryString = "SELECT c FROM Clinic c " +
                 "WHERE c.verified = :isVerified "+
@@ -106,7 +106,7 @@ public class ClinicJpaDao implements ClinicDao {
             return 0;
 
         String queryString = "SELECT COUNT(c) FROM Clinic c " +
-                "INNER JOIN FETCH c.medicalStudies " +
+                "INNER JOIN c.medicalStudies " +
                 "WHERE c.verified = true " +
                 "AND :studyType MEMBER OF c.medicalStudies";
 
@@ -206,7 +206,8 @@ public class ClinicJpaDao implements ClinicDao {
 
     @Override
     public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int page, int pageSize) {
-        String queryString = getSearchQueryString("DISTINCT c",clinicName,hours,acceptedPlan,studyName);
+        String queryString = getSearchQueryString("DISTINCT c",clinicName,hours,acceptedPlan,studyName)
+                +" ORDER BY c.name ASC, c.user.id ASC";
 
         final TypedQuery<Clinic> query = em.createQuery(queryString,Clinic.class);
 
@@ -229,7 +230,7 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getResultList().get(0);
     }
 
-    private void fillSearchClinicsParams(TypedQuery query,String clinicName, ClinicHours hours, String acceptedPlan, String studyName){
+    private void fillSearchClinicsParams(TypedQuery<?> query,String clinicName, ClinicHours hours, String acceptedPlan, String studyName){
         //filling params
         if(clinicName!=null)
             query.setParameter("clinicName","%"+clinicName.toLowerCase()+"%");
@@ -314,8 +315,6 @@ public class ClinicJpaDao implements ClinicDao {
             //Add study name condition
             query.append(" AND LOWER(ms.name) LIKE :clinicMedicalStudy");
         }
-
-        query.append(" ORDER BY c.name ASC, c.user.id ASC");
 
         return query.toString();
     }

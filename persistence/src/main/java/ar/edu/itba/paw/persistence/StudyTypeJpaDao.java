@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Clinic;
 import ar.edu.itba.paw.models.StudyType;
 import org.springframework.stereotype.Repository;
 
@@ -44,7 +43,8 @@ public class StudyTypeJpaDao implements StudyTypeDao{
 
     }
 
-    private StudyType register(final String name) {
+    @Override
+    public StudyType register(final String name) {
         StudyType studyType = new StudyType(name);
 
         em.persist(studyType);
