@@ -4,6 +4,9 @@ import "./Style/LandingPage.css";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
+import {authenticate} from "../redux/actions";
+import {useDispatch} from "react-redux";
+
 function LandingPage() {
     //strings
     const title1 = "Welcome to";
@@ -24,6 +27,8 @@ function LandingPage() {
 
     const history = useHistory();
 
+    const dispatch = useDispatch();
+
     //////////////////////////////////////////////////////////
     //form validation
 
@@ -36,7 +41,7 @@ function LandingPage() {
         }
 
         setLoginValidated(true);
-        history.push("/home");
+        history.push("/dashboard");
 
     };
 
@@ -129,7 +134,7 @@ function LandingPage() {
 
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" class="row btn btn-lg action-btn" value={submitLogin}/>
+                                    <input type="submit" class="row btn btn-lg action-btn" onClick={() => dispatch(authenticate("T3STT0k3N", "Medic"))} value={submitLogin}/>
                                 </div>
                             </Form>
                         </div>

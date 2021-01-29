@@ -1,5 +1,5 @@
 import LandingPage from "./components/LandingPage.js";
-import HomePage from "./components/HomePage";
+import Dashboard from "./components/Dashboard";
 import "./App.css";
 
 import "./css/bootstrap-related.css";
@@ -12,7 +12,7 @@ function App() {
         <div className="wrapper">
           <Switch>
             <Route path="/" exact component={LandingPage}/>
-            <Route path="/home" exact component={HomePage}/>
+            <Route path="/dashboard" component={Dashboard}/>
           </Switch>
         </div>
       </div>

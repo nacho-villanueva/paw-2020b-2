@@ -1,0 +1,9 @@
+export const ActionType = {
+    AUTHENTICATE: "AUTHENTICATE",
+    DE_AUTHENTICATE: "UN_AUTHENTICATE"
+}
+
+export const StatusType = {
+    AUTHENTICATED: "AUTHENTICATED",
+    DE_AUTHENTICATED: "DE_AUTHENTICATED"
+}
