@@ -244,17 +244,17 @@ public class OrderJpaDao implements OrderDao {
     }
 
     @Override
-    public Collection<Order> getFiltered(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic, int page, int pageSize) {
+    public Collection<Order> getFiltered(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize) {
 
         if(user == null)
-            return null;
+            return new ArrayList<>();
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> cr = cb.createQuery(Order.class);
         Root<Order> root = cr.from(Order.class);
 
         Collection<Predicate> predicates = getAllAsUserQueryPredicate(new ArrayList<>(),root,user,includeSharedIfMedic);
-        predicates = getFilteredPredicate(predicates,root,clinicUser,medicUser,patientEmail,date,type);
+        predicates = getFilteredPredicate(predicates,root,clinicUsers,medicUsers,patientEmails,fromDate,toDate,types);
 
         cr.select(root);
 
@@ -271,7 +271,7 @@ public class OrderJpaDao implements OrderDao {
     }
 
     @Override
-    public long getFilteredCount(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic) {
+    public long getFilteredCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic) {
 
         if(user == null)
             return -1;
@@ -281,7 +281,7 @@ public class OrderJpaDao implements OrderDao {
         Root<Order> root = cr.from(Order.class);
 
         Collection<Predicate> predicates = getAllAsUserQueryPredicate(new ArrayList<>(),root,user,includeSharedIfMedic);
-        predicates = getFilteredPredicate(predicates,root,clinicUser,medicUser,patientEmail,date,type);
+        predicates = getFilteredPredicate(predicates,root,clinicUsers,medicUsers,patientEmails,fromDate,toDate,types);
 
         cr.select(cb.count(root));
 
@@ -294,23 +294,50 @@ public class OrderJpaDao implements OrderDao {
         return query.getResultList().get(0);
     }
 
-    private Collection<Predicate> getFilteredPredicate(Collection<Predicate> predicates, Root<Order> root, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type){
+    private Collection<Predicate> getFilteredPredicate(Collection<Predicate> predicates, Root<Order> root, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types){
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        if(clinicUser != null)
-            getAllAsClinicQueryPredicate(predicates, root, clinicUser);
+        if(clinicUsers != null && !clinicUsers.isEmpty()){
+            CriteriaBuilder.In<Integer> inClause = cb.in(root.get("clinic").get("user").get("id"));
+            for (User user:clinicUsers) {
+                if(user != null)
+                    inClause.value(user.getId());
+            }
+            predicates.add(inClause);
+        }
 
-        if(medicUser != null)
-            getAllAsMedicQueryPredicate(predicates, root, medicUser, false);
+        if(medicUsers != null && !medicUsers.isEmpty()){
+            CriteriaBuilder.In<Integer> inClause = cb.in(root.get("medic").get("user").get("id"));
+            for (User user:medicUsers) {
+                if(user != null)
+                    inClause.value(user.getId());
+            }
+            predicates.add(inClause);
+        }
 
-        if(patientEmail != null && patientEmail.trim().length() >0)
-            getAllAsPatientQueryPredicate(predicates, root, patientEmail);
+        if(patientEmails != null && !patientEmails.isEmpty()){
+            CriteriaBuilder.In<String> inClause = cb.in(root.get("patientEmail"));
+            for (String patientEmail:patientEmails) {
+                if(patientEmail != null && patientEmail.trim().length() >0)
+                    inClause.value(patientEmail);
+            }
+            predicates.add(inClause);
+        }
 
-        if(date != null)
-            predicates.add(cb.equal(root.get("date"),date));
+        if(fromDate != null)
+            predicates.add(cb.greaterThanOrEqualTo(root.get("date"),fromDate));
 
-        if(type != null)
-            predicates.add(cb.equal(root.get("study"),type));
+        if(toDate != null)
+            predicates.add(cb.lessThanOrEqualTo(root.get("date"),fromDate));
+
+        if(types != null && !types.isEmpty()){
+            CriteriaBuilder.In<StudyType> inClause = cb.in(root.get("study"));
+            for (StudyType type:types) {
+                if(type != null)
+                    inClause.value(type);
+            }
+            predicates.add(inClause);
+        }
 
         return predicates;
     }
@@ -384,9 +411,11 @@ public class OrderJpaDao implements OrderDao {
     private Predicate getAllAsMedicQueryPredicate(Root<Order> root, User user, boolean includeOwned, boolean includeShared){
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        Predicate ownedPredicate = (includeOwned)?(cb.equal(root.get("medic").get("user").get("id"),user.getId())):(cb.isFalse(cb.literal(true)));
-        Predicate sharedPredicate = (includeShared)?(cb.isMember(user,root.get("sharedWith"))):(cb.isFalse(cb.literal(true)));
+        Collection<Predicate> predicates = new ArrayList<>();
 
-        return cb.or(ownedPredicate,sharedPredicate);
+        if(includeOwned) predicates.add(cb.equal(root.get("medic").get("user").get("id"),user.getId()));
+        if(includeShared) predicates.add(cb.isMember(user,root.get("sharedWith")));
+
+        return cb.or(predicates.toArray(new Predicate[0]));
     }
 }

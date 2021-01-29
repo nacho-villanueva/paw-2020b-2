@@ -40,9 +40,9 @@ public interface OrderDao {
 
     long getAllAsPatientOfTypeCount(String email, StudyType type);
 
-    Collection<Order> getFiltered(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic, int page, int pageSize);
+    Collection<Order> getFiltered(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
 
-    long getFilteredCount(User user, User clinicUser, User medicUser, String patientEmail, LocalDate date, StudyType type, boolean includeSharedIfMedic);
+    long getFilteredCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
 
     Collection<Order> getAllAsUser(User user, boolean includeSharedIfMedic, int page, int pageSize);
 

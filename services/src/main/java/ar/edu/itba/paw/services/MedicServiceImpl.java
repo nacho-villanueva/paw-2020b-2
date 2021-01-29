@@ -119,7 +119,7 @@ public class MedicServiceImpl implements MedicService {
     private long getLastPage(final long count, final int pageSize){
         if(count <= 0)
             return 0;
-        else
-            return ((count / pageSize)+1);
+
+        return (count / pageSize)+1;
     }
 }
