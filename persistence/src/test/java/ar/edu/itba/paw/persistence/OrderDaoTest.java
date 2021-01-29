@@ -104,7 +104,7 @@ public class OrderDaoTest {
     @Rollback
     @Test
     public void testRegisterValid() {
-        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatientEmail(), newOrder.getPatientName(),newOrder.getStudy(),"",newOrder.getIdentificationType(),newOrder.getIdentification(),newOrder.getPatientInsurancePlan(),newOrder.getPatientInsuranceNumber());
+        final Order testOrder = dao.register(newOrder.getMedic(), newOrder.getDate(),clinic, newOrder.getPatientName(), newOrder.getPatientEmail(),newOrder.getStudy(),"",newOrder.getIdentificationType(),newOrder.getIdentification(),newOrder.getPatientInsurancePlan(),newOrder.getPatientInsuranceNumber());
 
         Assert.assertEquals(newOrder.getPatientName(), testOrder.getPatientName());
         Assert.assertArrayEquals(newOrder.getIdentification(), testOrder.getIdentification());

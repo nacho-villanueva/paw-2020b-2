@@ -35,7 +35,7 @@ public class OrderJpaDao implements OrderDao {
 
     @Override
     public Order register(final Medic medic, final LocalDate date, final Clinic clinic,
-                          final String patientEmail, final String patientName,
+                          final String patientName, final String patientEmail,
                           final StudyType studyType, final String description,
                           final String identificationType, final byte[] identification,
                           final String insurancePlan, final String insuranceNumber) {

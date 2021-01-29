@@ -4,8 +4,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.ClinicDayHours;
 import ar.edu.itba.paw.models.ClinicHours;
 import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPost;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPut;
+import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicGroup;
+import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
 import ar.edu.itba.paw.webapp.dto.validators.DaysAreValid;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -24,24 +24,24 @@ public class ClinicPostAndPutDto {
     public static final String CONTENT_TYPE = "application/vnd.clinic.v1";
 
     // Variables
-    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank", groups = {ClinicPost.class})
+    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank", groups = {ClinicGroup.class})
     private String name;
 
-    @NotBlank(message="ClinicPostAndPutDto.telephone.NotBlank", groups = {ClinicPost.class})
-    @Pattern(regexp = "\\+?[0-9]*", message="ClinicPostAndPutDto.telephone.Pattern", groups = {ClinicPost.class, ClinicPut.class})
+    @NotBlank(message="ClinicPostAndPutDto.telephone.NotBlank", groups = {ClinicPostGroup.class})
+    @Pattern(regexp = "\\+?[0-9]*", message="ClinicPostAndPutDto.telephone.Pattern", groups = {ClinicGroup.class})
     private String telephone;
 
     @Valid
-    @NotEmpty(message="ClinicPostAndPutDto.availableStudies.NotEmpty", groups = {ClinicPost.class})
+    @NotEmpty(message="ClinicPostAndPutDto.availableStudies.NotEmpty", groups = {ClinicPostGroup.class})
     private Collection<StudyTypeDto> availableStudies;
 
     @Valid
-    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull", groups = {ClinicPost.class})
+    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull", groups = {ClinicPostGroup.class})
     private Collection<MedicPlanDto> acceptedPlans;
 
     @Valid
-    @NotNull(message="ClinicPostAndPutDto.hours.NotNull", groups = {ClinicPost.class})
-    @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid", groups = {ClinicPost.class, ClinicPut.class})
+    @NotNull(message="ClinicPostAndPutDto.hours.NotNull", groups = {ClinicPostGroup.class})
+    @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid", groups = {ClinicGroup.class})
     private Collection<ClinicDayHoursDto> hours;
 
 

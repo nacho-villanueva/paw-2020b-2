@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPost;
+import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -151,7 +151,6 @@ public class ClinicController {
             return Response.status(Response.Status.BAD_REQUEST).build();
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
-
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -266,7 +265,7 @@ public class ClinicController {
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
-        Set<ConstraintViolation<ClinicPostAndPutDto>> violations = validator.validate(clinicPostAndPutDto, ClinicPost.class);
+        Set<ConstraintViolation<ClinicPostAndPutDto>> violations = validator.validate(clinicPostAndPutDto, ClinicPostGroup.class);
 
         if(!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).language(locale)

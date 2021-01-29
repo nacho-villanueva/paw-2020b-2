@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order register(Medic medic, LocalDate date, Clinic clinic, String patientName, String patientEmail, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) {
+    public Order register(Medic medic, LocalDate date, Clinic clinic, String patientEmail, String patientName, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) {
         Order order = orderDao.register(medic,date,clinic,patientName,patientEmail,studyType,description,identificationType,identification,medicPlan,medicPlanNumber);
         mailNotificationService.sendOrderMail(order);
         return order;
