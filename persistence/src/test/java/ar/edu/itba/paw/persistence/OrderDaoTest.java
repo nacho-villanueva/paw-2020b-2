@@ -193,7 +193,7 @@ public class OrderDaoTest {
 
         long expectedCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME,"medic_id = "+medic.getUser().getId());
 
-        final Collection<Order> orders = dao.getFiltered(userMedic,null, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+        final Collection<Order> orders = dao.getFiltered(userMedic,null, null, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
 
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
@@ -207,7 +207,9 @@ public class OrderDaoTest {
 
         long expectedCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME,"medic_id = "+medic.getUser().getId()+" AND clinic_id = "+clinic.getUser().getId());
 
-        final Collection<Order> orders = dao.getFiltered(userClinic,null, medic.getUser(), null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+        Collection<User> medics = new ArrayList<>();
+        medics.add(medic.getUser());
+        final Collection<Order> orders = dao.getFiltered(userClinic,null, medics, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
 
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
@@ -221,7 +223,7 @@ public class OrderDaoTest {
 
         long expectedCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME,"date = '"+DATE_A+"' AND clinic_id = "+clinic.getUser().getId());
 
-        final Collection<Order> orders = dao.getFiltered(userMedic,null, null, null, LocalDate.parse(DATE_A), null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+        final Collection<Order> orders = dao.getFiltered(userMedic,null, null, null, LocalDate.parse(DATE_A),LocalDate.parse(DATE_A), null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
 
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
@@ -235,7 +237,10 @@ public class OrderDaoTest {
 
         long expectedCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,ORDERS_TABLE_NAME,"study_id = "+studyType.getId().toString()+" AND medic_id = "+medic.getUser().getId());
 
-        final Collection<Order> orders = dao.getFiltered(userMedic,null, null, null, null, studyType,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        studyTypes.add(order.getStudy());
+
+        final Collection<Order> orders = dao.getFiltered(userMedic,null,null, null, null, null, studyTypes,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
 
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
@@ -249,7 +254,16 @@ public class OrderDaoTest {
 
         long expectedCount = 1;
 
-        final Collection<Order> orders = dao.getFiltered(userClinic,order.getClinic().getUser(), order.getMedic().getUser(), order.getPatientEmail(), order.getDate(), order.getStudy(),false,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_ORDERS);
+        Collection<User> clinics = new ArrayList<>();
+        clinics.add(order.getClinic().getUser());
+        Collection<User> medics = new ArrayList<>();
+        medics.add(order.getMedic().getUser());
+        Collection<String> patients = new ArrayList<>();
+        patients.add(order.getPatientEmail());
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        studyTypes.add(order.getStudy());
+
+        final Collection<Order> orders = dao.getFiltered(userClinic, clinics, medics, patients, order.getDate(), order.getDate(), studyTypes,false,DEFAULT_PAGE,PAGE_SIZE_WITH_ALL_ORDERS);
 
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
