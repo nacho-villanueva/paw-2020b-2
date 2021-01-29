@@ -52,7 +52,7 @@ public class ClinicController {
             @QueryParam("plan") String acceptedPlan,
             @QueryParam("study-type") String studyType,
             @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer per_page,
+            @QueryParam("per_page") Integer perPage,
             @Context HttpHeaders headers
     ) {
 
@@ -78,11 +78,11 @@ public class ClinicController {
         }
 
         int queryPage = (page==null)?(FIRST_PAGE):(page);
-        if(queryPage < FIRST_PAGE || (per_page!=null && per_page < 1))
+        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
             return Response.status(422).build();
 
         long lastPage;
-        if(per_page==null){
+        if(perPage==null){
             if(isGetAllQuery){
                 lastPage = clinicService.getAllLastPage();
             }else{
@@ -90,9 +90,9 @@ public class ClinicController {
             }
         }else{
             if(isGetAllQuery){
-                lastPage = clinicService.getAllLastPage(per_page);
+                lastPage = clinicService.getAllLastPage(perPage);
             }else{
-                lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType,per_page);
+                lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType,perPage);
             }
         }
 
@@ -102,17 +102,17 @@ public class ClinicController {
         if(queryPage > lastPage)
             return Response.status(422).build();
 
-        if(per_page==null){
+        if(perPage==null){
             if(isGetAllQuery){
-                clinics = clinicService.getAll();
+                clinics = clinicService.getAll(queryPage);
             }else{
-                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType);
+                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,queryPage);
             }
         }else{
             if(isGetAllQuery){
-                clinics = clinicService.getAll(per_page);
+                clinics = clinicService.getAll(queryPage,perPage);
             }else{
-                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,per_page);
+                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,queryPage,perPage);
             }
         }
 
