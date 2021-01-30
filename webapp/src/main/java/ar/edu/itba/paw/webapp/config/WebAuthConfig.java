@@ -61,7 +61,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()//TODO: set proper filters
                     .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
-                    .antMatchers(HttpMethod.POST, "/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/").permitAll()
                     .antMatchers("/**").authenticated()
                 .and().exceptionHandling()
                     .authenticationEntryPoint((request, response, ex) -> {
@@ -71,7 +71,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         );
                     })
                 .and().addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable();      //TODO: check what is cors and why we can enable it here
+                .csrf().disable();      //TODO: check what is cors and why we cant enable it here
     }
 
     @Override

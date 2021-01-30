@@ -24,8 +24,11 @@ public class JwtTokenUtil {
             int id = Integer.parseInt((String) body.get("id"));
             int role = Integer.parseInt((String) body.get("role"));
 
-            //TODO: return user without password
-            return new User(id,email,"secret",role);
+            User user = new User();
+            user.setId(id);
+            user.setEmail(email);
+            user.setRole(role);
+            return user;
         } catch (JwtException | ClassCastException e) {
             return null;
         }
