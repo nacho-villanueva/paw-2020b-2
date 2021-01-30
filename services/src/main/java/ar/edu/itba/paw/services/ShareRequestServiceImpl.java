@@ -97,7 +97,9 @@ public class ShareRequestServiceImpl implements ShareRequestService{
 
     // auxiliar functions
     private long getLastPage(final long count, final int pageSize){
-        return (long) (Math.ceil(count / pageSize)+1);
-    }
+        if(count <= 0)
+            return 0;
 
+        return (count / pageSize)+1;
+    }
 }

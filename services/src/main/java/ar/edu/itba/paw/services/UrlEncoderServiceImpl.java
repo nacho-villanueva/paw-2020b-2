@@ -24,33 +24,29 @@ public class UrlEncoderServiceImpl implements UrlEncoderService {
     }
 
     @Override
-    public long decode(String path){
-
-        long ret = -1;
+    public long decode(String path) throws NumberFormatException{
 
         if(path.length() > 20){
-            return ret;
+            throw new NumberFormatException();
         }
 
         BigInteger pathBigInteger;
 
-        try{
-            pathBigInteger = new BigInteger(path,num3);
-        }catch (NumberFormatException e){
-            return ret;
-        }
+        // may throw NumberFormatException
+        pathBigInteger = new BigInteger(path,num3);
 
         pathBigInteger = pathBigInteger.subtract(BigInteger.valueOf(num2));
         if(0 > pathBigInteger.compareTo(BigInteger.ZERO)){
-            return ret;
+            throw new NumberFormatException();
         }
         if(!pathBigInteger.remainder(BigInteger.valueOf(num1)).equals(BigInteger.ZERO)){
-            return ret;
+            throw new NumberFormatException();
         }
         pathBigInteger = pathBigInteger.divide(BigInteger.valueOf(num1));
         if(1 > pathBigInteger.compareTo(BigInteger.valueOf(Long.MAX_VALUE))){
-            ret = pathBigInteger.longValue();
+            return pathBigInteger.longValue();
         }
-        return ret;
+
+        throw new NumberFormatException();
     }
 }
