@@ -38,11 +38,16 @@ function LandingPage() {
         const form = event.currentTarget;
         if(form.checkValidity() === false) {
             event.stopPropagation();
+        }else{
+            //          ideal/future code
+            //let data = {email: event.target[0], password: event.target[1]};
+            //let return = Wrapper.Authenticate(data);
+            //dispatch(authenticate(return.token, return.role));
+            dispatch(authenticate("T3ST0k3N", "Medic"));
+            history.push("/dashboard");
         }
 
         setLoginValidated(true);
-        history.push("/dashboard");
-
     };
 
     const [registerValidated, setRegisterValidated] = useState(false);
@@ -56,15 +61,19 @@ function LandingPage() {
                         password: formInputs[1],
                         passwordConfirm: formInputs[2]}
 
+        /*
         for(var i in inputs){
             console.log(i, inputs[i].value);
         }
+        */
+
         if(form.checkValidity() === false || inputs.password !== inputs.passwordConfirm) {
             event.stopPropagation();
+        }else{
+            window.open()
         }
 
         setRegisterValidated(true);
-        window.open()
     };
 
     //////////////////////////////////////////////////////////
@@ -134,7 +143,7 @@ function LandingPage() {
 
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" class="row btn btn-lg action-btn" onClick={() => dispatch(authenticate("T3STT0k3N", "Medic"))} value={submitLogin}/>
+                                    <input type="submit" class="row btn btn-lg action-btn" value={submitLogin}/>
                                 </div>
                             </Form>
                         </div>
