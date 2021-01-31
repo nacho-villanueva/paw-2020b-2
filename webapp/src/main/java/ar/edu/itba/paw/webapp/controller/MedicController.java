@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityTransaction;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @Path("medics")
 @Component
 public class MedicController {
+
+    private static final int FIRST_PAGE = 1;
 
     // default cache
     @Autowired
@@ -46,9 +49,57 @@ public class MedicController {
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE})
-    public Response getMedics(){
-        // Not planned at the moment
-        return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+    public Response getMedics(
+            @QueryParam("page") Integer page,
+            @QueryParam("per_page") Integer perPage
+    ){
+
+        Collection<Medic> medics;
+        Response.ResponseBuilder response;
+
+        int queryPage = (page==null)?(FIRST_PAGE):(page);
+        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
+            return Response.status(422).build();
+
+        long lastPage;
+        if(perPage==null){
+            lastPage = medicService.getAllLastPage();
+        }else{
+            lastPage = medicService.getAllLastPage(perPage);
+        }
+
+        if(lastPage <= 0)
+            return Response.noContent().build();
+
+        if(queryPage > lastPage)
+            return Response.status(422).build();
+
+        if(perPage==null){
+            medics = medicService.getAll(queryPage);
+        }else{
+            medics = medicService.getAll(queryPage,perPage);
+        }
+
+        Collection<MedicGetDto> medicDtos = medics.stream().map(m -> (new MedicGetDto(m,uriInfo)))
+                .collect(Collectors.toList());
+        EntityTag entityTag = new EntityTag(Integer.toHexString(medicDtos.hashCode()));
+
+        response = Response.ok(new GenericEntity<Collection<MedicGetDto>>(medicDtos) {})
+                .type(MedicGetDto.CONTENT_TYPE)
+                .tag(entityTag).cacheControl(cacheControl);
+
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+        if(queryPage>FIRST_PAGE){
+            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
+            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
+        }
+
+        if(queryPage<lastPage){
+            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
+            response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
+        }
+
+        return response.build();
     }
 
     @POST
@@ -277,6 +328,33 @@ public class MedicController {
                 .type(MedicalFieldDto.CONTENT_TYPE+"+json")
                 .cacheControl(cacheControl).tag(entityTag)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}/medical-fields/{mfid}")
+    @Produces(value = { MedicalFieldDto.CONTENT_TYPE+"+json"})
+    public Response getMedicHasMedicalField(
+            @PathParam("id") final String id,
+            @PathParam("mfid") final String mfid
+    ){
+
+        int medicId;
+        int medicalFieldId;
+        try {
+            medicId = Integer.parseInt(id);
+            medicalFieldId = Integer.parseInt(mfid);
+        }catch (NumberFormatException e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        boolean hasField = medicService.knowsField(medicId,medicalFieldId);
+
+        if(!hasField)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        URI uri = uriInfo.getBaseUriBuilder()
+                .path("medical-fields").path(String.valueOf(medicalFieldId)).build();
+        return Response.noContent().location(uri).build();
     }
 
     // auxiliar functions

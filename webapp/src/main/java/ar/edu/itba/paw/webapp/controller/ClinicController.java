@@ -206,26 +206,24 @@ public class ClinicController {
             @PathParam("study") final String sId
     ){
 
-        Integer clinicId;
-        Integer studyTypeId;
+        int clinicId;
+        int studyTypeId;
 
         try {
-            clinicId = Integer.valueOf(id);
-            studyTypeId = Integer.valueOf(sId);
+            clinicId = Integer.parseInt(id);
+            studyTypeId = Integer.parseInt(sId);
         }catch (Exception e){
-            clinicId = null;
-            studyTypeId = null;
-        }
-
-        if (clinicId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         boolean hasStudy = clinicService.hasStudy(clinicId,studyTypeId);
 
-        if(hasStudy)
-            return Response.noContent().build();
-        else
+        if(!hasStudy)
             return Response.status(Response.Status.NOT_FOUND).build();
+
+        URI uri = uriInfo.getBaseUriBuilder()
+                .path("study-types").path(String.valueOf(studyTypeId)).build();
+        return Response.noContent().location(uri).build();
     }
 
     @GET
