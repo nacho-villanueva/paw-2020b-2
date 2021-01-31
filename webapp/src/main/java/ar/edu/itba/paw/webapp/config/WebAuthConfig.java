@@ -1,21 +1,27 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -31,6 +37,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key")
     private Resource key;
+
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -49,48 +58,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
-                    .invalidSessionUrl("/")
-                .and().authorizeRequests()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/profile/edit/patient", "/access-requests").hasRole("PATIENT")
-                    .antMatchers("/create-order", "/request-orders").access("hasRole('ROLE_MEDIC') and hasRole('ROLE_VERIFIED')")
-                    .antMatchers("/profile/edit/medic").hasRole("MEDIC")
-                    .antMatchers("/create-type").hasAnyRole("UNDEFINED","CLINIC")
-                    .antMatchers("/create-field").hasAnyRole("UNDEFINED","MEDIC")
-                    .antMatchers("/upload-result/**","/result-uploaded").access("hasRole('ROLE_CLINIC') and hasRole('ROLE_VERIFIED')")
-                    .antMatchers("/share-order/**").hasRole("PATIENT")
-                    .antMatchers("/profile/edit/clinic").hasRole("CLINIC")
-                    .antMatchers("/complete-register").hasRole("UNDEFINED")
-                    .antMatchers("/register-as-medic","/apply-as-medic").hasRole("UNDEFINED")
-                    .antMatchers("/register-as-clinic","/apply-as-clinic").hasRole("UNDEFINED")
-                    .antMatchers("/register-as-patient","/apply-as-patient","/register-patient").hasRole("UNDEFINED")
-                    .antMatchers("/home","/profile","/edit/user/**","/my-orders","/api/image/study/**","api/image/result/**","/api/data/**").authenticated()
-                    .antMatchers("/login","/register").anonymous()
-                    .antMatchers("/**").permitAll()
-                .and().formLogin()
-                    .usernameParameter("loginEmail")
-                    .passwordParameter("loginPassword")
-                    .defaultSuccessUrl("/home", false)
-                    .loginPage("/")
-                    .loginProcessingUrl("/login")
-                    .failureUrl("/?error=true")         //TODO: see way to get more detailed information
-                .and().rememberMe()
-                    .rememberMeParameter("rememberme")
-                    .userDetailsService(userDetailsService)
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                    .key(asString(key))
-                .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests()//TODO: set proper filters
+                    .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.POST, "/").permitAll()
+                    .antMatchers("/**").authenticated()
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")       //TODO: use .accessDeniedHandler(accessDeniedHandler)
-                .and().csrf().disable();
+                    .authenticationEntryPoint((request, response, ex) -> {
+                        response.sendError(
+                                HttpServletResponse.SC_UNAUTHORIZED,
+                                ex.getMessage()
+                        );
+                    })
+                .and().addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable();      //TODO: check what is cors and why we cant enable it here
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/favicon.ico", "/403");
+    }
+
+    @Override @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     private static String asString(Resource resource) {
