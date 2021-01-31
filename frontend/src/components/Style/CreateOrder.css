@@ -2,7 +2,13 @@
     width: 50%;
     margin-top: 2em;
     margin-bottom: 7rem;
+    transition: width 0.2s;
 }
+
+.form-card.active{
+    width: 60%;
+}
+
 .stepper-wrapper-horizontal{
     display: flex;
     justify-content: space-between;
@@ -18,7 +24,6 @@
     width: 23%;
     position: relative;
 }
-
 .stepper-wrapper-horizontal > .step-wrapper > .step-number {
     border-radius: 80%;
     border: 1px solid grey;
@@ -30,14 +35,14 @@
     position: absolute;
     top: 20%;
 
-}
+    transition: border 0.5s, color 0.5s;
 
+}
 .stepper-wrapper-horizontal > .step-wrapper > .step-description {
     position: absolute;
     top: 3rem;
 
 }
-
 .stepper-wrapper-horizontal > .step-wrapper > .divider-line {
     height: 1px;
     background-color: #bdbdbd;
@@ -61,7 +66,6 @@
     position: absolute;
     top: 20%;
 }
-
 .step-wrapper > .step-description.active {
     position: absolute;
     top: 3rem;
@@ -93,4 +97,29 @@
     visibility: hidden;
     height: 0.1rem;
     padding: 0;
+}
+
+.search-block{
+    background-color:#f8f8f8;
+    border-radius: 5px;
+    border-color: #bdbdbd;
+    border-width:thin;
+    border-style: solid;
+}
+
+.clinic-btn{
+    width: 40%;
+    align-self:center;
+}
+
+.search-btn{
+    font-size: larger;
+    border-color: var(--primary) !important;
+    border-width: thin;
+    border-style: solid;
+    height: min-content;
+}
+
+.avail-btn{
+    height: 3rem;
 }

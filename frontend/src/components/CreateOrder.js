@@ -1,13 +1,15 @@
-import {Card, Form, Button} from "react-bootstrap";
+import {Card, Form, Button, Modal} from "react-bootstrap";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
 import "./Style/CreateOrder.css";
+import FormImpl from "react-bootstrap/esm/Form";
 
 function CreateOrder(){
     const infoForm="tab-pane fade in show active";
     const medicName="dr. peppe";
     const infoSubmit="bubba";
+    const clinicSubmit="newgrounds forever";
 
     const history = useHistory();
 
@@ -42,7 +44,28 @@ function CreateOrder(){
         setActiveVerifyStep("")
     }
 
-    //form validation
+    const changeToVerifyStep = (event) => {
+        setVerifyStep("show active");
+        setActiveVerifyStep("active");
+
+        setOrderStep("");
+        setActiveOrderStep("");
+
+        setClinicStep("");
+        setActiveClinicStep("")
+    }
+
+    //schedule availability modal
+    const [show, setShow] = useState(false);
+    const handleClose = () => {setShow(false);};
+    const handleShow = () => {setShow(true);};
+
+
+    //search clinics call
+    const searchClinics = () => {console.log('O_o');};
+
+
+    //step 1 (order info) form validation
     const [infoValidated, setInfoValidated] = useState(false);
     const handleInfoSubmit = (event) => {
         event.preventDefault();
@@ -60,11 +83,29 @@ function CreateOrder(){
         setInfoValidated(true);
     };
 
+    //step 2 (clinic select) form validation
+    const [clinicValidated, setClinicValidated] = useState(false);
+    const handleClinicSubmit = (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+
+        console.log(event);
+
+        if(form.checkValidity() === false){
+            event.stopPropagation();
+        }else{
+            console.log('b');
+            changeToVerifyStep();
+        }
+
+        setInfoValidated(true);
+    };
+
 
 
     return(
         <div className="row justify-content-center">
-            <div className="card form-card">
+            <div className={"card form-card " + activeClinicStep}>
 
                 <div className="stepper-wrapper-horizontal">
                     <div className="step-wrapper">
@@ -184,6 +225,69 @@ function CreateOrder(){
                                     value={infoSubmit}
                                 >Next</Button>
                             </Form>
+                    </div>
+                    <div id="clinic-form" className={"custom-form tab-pane fade in " + clinicStep}>
+                        <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
+                            <div className="search-block">
+                                <div className="row mx-1 pt-2">
+                                    <Form.Group className="form-group col" controlId="clinicName">
+                                        <Form.Label className="bmd-label-static">Search by clinic name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="clinicName"
+                                        />
+                                    </Form.Group>
+                                    <Button
+                                        className="btn-outline clinic-btn avail-btn mr-2"
+                                        variant="secondary"
+                                        onClick={handleShow}
+                                    >
+                                        Schedule availability
+                                    </Button>
+                                </div>
+                                <div className="row mx-1">
+                                    <Form.Group className="form-group col" controlId="insurancePlan">
+                                        <Form.Label className="bmd-label-static">Search by insurance plan</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            name="insurancePlan"
+                                        >
+                                            <option>None (insert SS number)</option>
+                                            <option>IbaiLife 390</option>
+                                            <option>Galeno Azul</option>
+                                            <option>OSDE 4100</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Button
+                                        className="clinic-btn search-btn mr-2"
+                                        onClick={searchClinics}
+                                    >
+                                        Search
+                                    </Button>
+                                </div>
+                            </div>
+                            <Modal show={show} onHide={handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Schedule availability</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>THIS IS THE MODAL BABYYYYYY</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                                    <Button variant="primary" onClick={handleClose}>Save changes</Button>
+                                </Modal.Footer>
+                            </Modal>
+
+                            <div>
+
+                            </div>
+
+
+                            <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
+                            <Button className="create-btn mt-4 mb-2 float-right"
+                                    type="submit" name="clinicSubmit"
+                                    value={clinicSubmit}
+                            >Next</Button>
+                        </Form>
                     </div>
                 </div>
 
