@@ -4,12 +4,12 @@ import ar.edu.itba.paw.models.ClinicHours;
 import ar.edu.itba.paw.webapp.dto.validators.ArrayAsStringIsValid;
 import ar.edu.itba.paw.webapp.dto.validators.BooleanArrayAsStringIsValid;
 import ar.edu.itba.paw.webapp.dto.validators.TimeArrayAsStringIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.AvailabilityHoursAreValid;
+import ar.edu.itba.paw.webapp.dto.validators.TimeIntervalsAreValid;
 
 import javax.ws.rs.QueryParam;
 import java.time.LocalTime;
 
-@AvailabilityHoursAreValid(message = "ClinicHoursAvailabilityDto.ValidAvailabilityHours")
+@TimeIntervalsAreValid(message = "ClinicHoursAvailabilityDto.TimeIntervalsAreValid")
 public class ClinicHoursAvailabilityDto {
 
     // Constants

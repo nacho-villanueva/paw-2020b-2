@@ -63,8 +63,9 @@ public class StudyTypeController {
 
         Collection<StudyTypeDto> studyTypeDtos = (studyTypes.stream().map(st -> (new StudyTypeDto(st,uriInfo))).collect(Collectors.toList()));
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>( studyTypeDtos ) {}).type(StudyTypeDto.CONTENT_TYPE+"+json");
-        response = response.tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>( studyTypeDtos ) {})
+                .type(StudyTypeDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -93,8 +94,8 @@ public class StudyTypeController {
 
         StudyTypeDto studyTypeDto = new StudyTypeDto(studyTypeOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDto.hashCode()));
-        response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json");
-        response = response.tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -112,7 +113,9 @@ public class StudyTypeController {
 
         if(!violations.isEmpty()){
             response = Response.status(Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(cv -> (new ConstraintViolationDto(cv,messageSource.getMessage(cv.getMessageTemplate(),null,locale)))).collect(Collectors.toList())) ) {})
+                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
+                            .map(cv -> (new ConstraintViolationDto(cv,messageSource.getMessage(cv.getMessageTemplate(),null,locale))))
+                            .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json");
             return response.build();
         }
@@ -145,7 +148,7 @@ public class StudyTypeController {
 
     @GET
     @Path("/{id}/clinics")
-    @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE})
+    @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response getClinicsByStudyType(
             @PathParam("id") final String id,
             @QueryParam("page") final Integer page,
@@ -183,7 +186,9 @@ public class StudyTypeController {
 
         Collection<ClinicGetDto> clinicDtos = (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {}).tag(etag).cacheControl(cacheControl);
+        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
+                .type(ClinicGetDto.CONTENT_TYPE+"+json")
+                .tag(etag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(queryPage>FIRST_PAGE){

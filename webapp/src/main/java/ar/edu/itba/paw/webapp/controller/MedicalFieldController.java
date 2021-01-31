@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.MedicalField;
 import ar.edu.itba.paw.services.MedicalFieldService;
+import ar.edu.itba.paw.webapp.dto.ClinicGetDto;
 import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
 import ar.edu.itba.paw.webapp.dto.MedicalFieldDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,9 @@ public class MedicalFieldController {
         else{
             Collection<MedicalFieldDto> medicalFieldDtos = (medicalFields.stream().map(mf -> (new MedicalFieldDto(mf,uriInfo))).collect(Collectors.toList()));
             EntityTag etag = new EntityTag(Integer.toHexString(medicalFieldDtos.hashCode()));
-            response = Response.ok(new GenericEntity<Collection<MedicalFieldDto>>( medicalFieldDtos ) {}).tag(etag).cacheControl(cacheControl);
+            response = Response.ok(new GenericEntity<Collection<MedicalFieldDto>>( medicalFieldDtos ) {})
+                    .type(MedicalFieldDto.CONTENT_TYPE+"+json")
+                    .tag(etag).cacheControl(cacheControl);
         }
 
         return response.build();
@@ -85,7 +88,8 @@ public class MedicalFieldController {
 
         MedicalFieldDto medicalFieldDto = new MedicalFieldDto(medicalFieldOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicalFieldDto.hashCode()));
-        response = Response.ok(medicalFieldDto).tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(medicalFieldDto).type(MedicalFieldDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -103,7 +107,9 @@ public class MedicalFieldController {
 
         if(!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
+                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
+                            .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
+                            .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         // no errors
@@ -126,7 +132,6 @@ public class MedicalFieldController {
             uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(medicalField.getId())).build();
 
             response = Response.created(uri);
-
         }
 
         return response.build();

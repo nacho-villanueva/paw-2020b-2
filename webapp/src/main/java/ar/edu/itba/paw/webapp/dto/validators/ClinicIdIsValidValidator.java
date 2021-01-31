@@ -23,8 +23,7 @@ public class ClinicIdIsValidValidator implements ConstraintValidator<ClinicIdIsV
         if(integer==null)
             return true;
 
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(integer);
-
-        return clinicOptional.isPresent() && clinicOptional.get().isVerified();
+        final Optional<Clinic> clinicOptional = clinicService.findByUserId(integer);
+        return clinicOptional.map(Clinic::isVerified).orElse(false);
     }
 }

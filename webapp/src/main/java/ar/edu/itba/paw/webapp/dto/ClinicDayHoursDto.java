@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.ClinicDayHours;
-import ar.edu.itba.paw.webapp.dto.validators.AvailabilityHoursAreValid;
+import ar.edu.itba.paw.webapp.dto.validators.TimeIntervalsAreValid;
 import ar.edu.itba.paw.webapp.dto.validators.DayIsValid;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.Objects;
 
-@AvailabilityHoursAreValid(message="ClinicDayHoursDto.AvailabilityHoursAreValid")
+@TimeIntervalsAreValid(message="ClinicDayHoursDto.TimeIntervalsAreValid")
 public class ClinicDayHoursDto {
 
     // Variables

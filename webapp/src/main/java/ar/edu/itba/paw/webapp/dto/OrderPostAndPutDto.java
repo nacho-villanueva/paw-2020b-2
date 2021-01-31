@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class OrderPostAndPutDto {
 
@@ -17,11 +18,11 @@ public class OrderPostAndPutDto {
 
     // Variables
     @NotNull(message = "OrderPostAndPutDto.clinicId.NotNull", groups = {OrderPostGroup.class})
-    @ClinicIdIsValid(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid", groups = {OrderPostGroup.class})
+    @ClinicIdIsValid(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid", groups = {OrderGroup.class})
     private Integer clinicId;
 
     @NotBlank(message = "OrderPostAndPutDto.patientEmail.NotBlank", groups = {OrderPostGroup.class})
-    @Email(message = "OrderPostAndPutDto.patientEmail.Email", groups = {OrderGroup.class})
+    @Email(message = "OrderPostAndPutDto.patientEmail.Email", groups = {OrderPostGroup.class})
     private String patientEmail;
 
     @NotBlank(message = "OrderPostAndPutDto.patientName.NotBlank", groups = {OrderPostGroup.class})
@@ -87,5 +88,16 @@ public class OrderPostAndPutDto {
 
 
     // Equals&Hashcode
-    // TODO implement
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderPostAndPutDto that = (OrderPostAndPutDto) o;
+        return Objects.equals(clinicId, that.clinicId) && Objects.equals(patientEmail, that.patientEmail) && Objects.equals(patientName, that.patientName) && Objects.equals(studyTypeId, that.studyTypeId) && Objects.equals(description, that.description) && Objects.equals(medicPlan, that.medicPlan);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clinicId, patientEmail, patientName, studyTypeId, description, medicPlan);
+    }
 }

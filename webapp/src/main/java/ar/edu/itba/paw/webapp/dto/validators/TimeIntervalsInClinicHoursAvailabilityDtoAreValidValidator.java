@@ -7,10 +7,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalTime;
 
-public class AvailabilityHoursInClinicHoursAvailabilityDtoAreValidValidator implements ConstraintValidator<AvailabilityHoursAreValid, ClinicHoursAvailabilityDto> {
+public class TimeIntervalsInClinicHoursAvailabilityDtoAreValidValidator implements ConstraintValidator<TimeIntervalsAreValid, ClinicHoursAvailabilityDto> {
 
     @Override
-    public void initialize(AvailabilityHoursAreValid validAvailabilityHours) {
+    public void initialize(TimeIntervalsAreValid validAvailabilityHours) {
 
     }
 

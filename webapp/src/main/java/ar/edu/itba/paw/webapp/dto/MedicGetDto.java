@@ -27,6 +27,8 @@ public class MedicGetDto {
 
     private String medicalFields;
 
+    private boolean verified;
+
     private String url;
 
     // Constructors
@@ -39,6 +41,7 @@ public class MedicGetDto {
         this.name = medic.getName();
         this.telephone = medic.getTelephone();
         this.licenceNumber = medic.getLicenceNumber();
+        this.verified = medic.isVerified();
 
         this.identification = getUriBuilder(medic,uriInfo).path(IDENTIFICATION_PATH).build().toString();
         this.medicalFields = getUriBuilder(medic, uriInfo).path(MEDICAL_FIELDS__PATH).build().toString();
@@ -98,6 +101,14 @@ public class MedicGetDto {
         this.medicalFields = medicalFields;
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -112,11 +123,11 @@ public class MedicGetDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MedicGetDto that = (MedicGetDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(identification, that.identification) && Objects.equals(licenceNumber, that.licenceNumber) && Objects.equals(medicalFields, that.medicalFields) && Objects.equals(url, that.url);
+        return verified == that.verified && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(identification, that.identification) && Objects.equals(licenceNumber, that.licenceNumber) && Objects.equals(medicalFields, that.medicalFields) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, telephone, identification, licenceNumber, medicalFields, url);
+        return Objects.hash(id, name, telephone, identification, licenceNumber, medicalFields, verified, url);
     }
 }

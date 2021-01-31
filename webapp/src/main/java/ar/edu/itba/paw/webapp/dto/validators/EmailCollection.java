@@ -7,12 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {StudyTypeIdIsValidValidator.class, StudyTypeIdCollectionIsValidValidator.class})
+@Constraint(validatedBy = {EmailCollectionValidator.class})
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StudyTypeIdIsValid {
+public @interface EmailCollection {
 
-    String message() default "Must be a valid study type id";
+    String message() default "All components must be valid emails";
 
     public Class<?>[] groups() default {};
 

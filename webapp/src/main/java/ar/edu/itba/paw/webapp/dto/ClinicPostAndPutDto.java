@@ -24,7 +24,7 @@ public class ClinicPostAndPutDto {
     public static final String CONTENT_TYPE = "application/vnd.clinic.v1";
 
     // Variables
-    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank", groups = {ClinicGroup.class})
+    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank", groups = {ClinicPostGroup.class})
     private String name;
 
     @NotBlank(message="ClinicPostAndPutDto.telephone.NotBlank", groups = {ClinicPostGroup.class})

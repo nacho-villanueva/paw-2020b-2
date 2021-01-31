@@ -7,15 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {StudyTypeIdIsValidValidator.class, StudyTypeIdCollectionIsValidValidator.class})
+@Constraint(validatedBy = ByteArrayIsValidValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StudyTypeIdIsValid {
+public @interface ByteArrayIsValid {
 
-    String message() default "Must be a valid study type id";
+    String message() default "Input array is not a valid byte array with size less than {max}.";
 
     public Class<?>[] groups() default {};
 
     public Class<? extends Payload>[] payload() default {};
+
+    int max() default Integer.MAX_VALUE;
 
 }

@@ -7,13 +7,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {AvailabilityHoursInClinicHoursAvailabilityDtoAreValidValidator.class, AvailabilityHoursInClinicDayHoursDtoAreValidValidator.class})
-@Target({ ElementType.TYPE })
+@Constraint(validatedBy = {MedicIdIsValidValidator.class, MedicIdCollectionIsValidValidator.class})
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AvailabilityHoursAreValid {
-    String message() default "Hours are not valid";
+public @interface MedicIdIsValid {
+
+    String message() default "Must be a valid medic's email";
 
     public Class<?>[] groups() default {};
 
     public Class<? extends Payload>[] payload() default {};
+
 }

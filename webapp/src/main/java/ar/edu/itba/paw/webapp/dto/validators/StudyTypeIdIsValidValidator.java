@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 public class StudyTypeIdIsValidValidator implements ConstraintValidator<StudyTypeIdIsValid, Integer> {
 
     @Autowired
-    private StudyTypeService sts;
+    private StudyTypeService studyTypeService;
 
     @Override
     public void initialize(StudyTypeIdIsValid userNotExist) {
@@ -20,6 +20,6 @@ public class StudyTypeIdIsValidValidator implements ConstraintValidator<StudyTyp
     public boolean isValid(Integer id, ConstraintValidatorContext constraintValidatorContext) {
         if(id == null)
             return true;
-        return sts.findById(id).isPresent();
+        return studyTypeService.findById(id).isPresent();
     }
 }

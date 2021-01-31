@@ -69,7 +69,9 @@ public class ClinicController {
 
             if(!violations.isEmpty()){
                 response = Response.status(Response.Status.BAD_REQUEST).language(locale)
-                        .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
+                        .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
+                                .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
+                                .collect(Collectors.toList())) ) {})
                         .type(ConstraintViolationDto.CONTENT_TYPE+"+json");
                 return response.build();
             }
@@ -118,7 +120,9 @@ public class ClinicController {
 
         Collection<ClinicGetDto> clinicDtos = (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {}).tag(etag).cacheControl(cacheControl);
+        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
+                .type(ClinicGetDto.CONTENT_TYPE+"+json")
+                .tag(etag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(queryPage>FIRST_PAGE){
@@ -140,15 +144,13 @@ public class ClinicController {
     public Response getClinicById(@PathParam("id") final String id){
 
         Response.ResponseBuilder response;
-        Integer clinicId;
+        int clinicId;
 
         try {
-            clinicId = Integer.valueOf(id);
+            clinicId = Integer.parseInt(id);
         }catch (Exception e){
-            clinicId = null;
-        }
-        if (clinicId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
         if(!clinicOptional.isPresent())
@@ -156,7 +158,8 @@ public class ClinicController {
 
         ClinicGetDto clinicGetDto = new ClinicGetDto(clinicOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(clinicGetDto.hashCode()));
-        response = Response.ok(clinicGetDto).tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(clinicGetDto).type(ClinicGetDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -188,7 +191,9 @@ public class ClinicController {
 
         Collection<StudyTypeDto> studyTypeDtos = studyTypes.stream().map(st -> (new StudyTypeDto(st,uriInfo))).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {}).tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {})
+                .type(StudyTypeDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -249,7 +254,9 @@ public class ClinicController {
 
         Collection<MedicPlanDto> medicPlanDtos = acceptedPlans.stream().map(MedicPlanDto::new).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {}).tag(entityTag).cacheControl(cacheControl);
+        response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
+                .type(MedicPlanDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
@@ -269,7 +276,9 @@ public class ClinicController {
 
         if(!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
+                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
+                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
+                            .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         // no errors
@@ -342,7 +351,9 @@ public class ClinicController {
 
         if(!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
+                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
+                            .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
+                            .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         // no errors
@@ -386,13 +397,13 @@ public class ClinicController {
         );
 
         uri = uriInfo.getAbsolutePathBuilder().build();
-        response = Response.status(Response.Status.NO_CONTENT).location(uri);
+        response = Response.noContent().location(uri);
 
         return response.build();
     }
 
     // auxiliar functions
     private boolean isEmpty(String s){
-        return s==null || s.trim().length()==0;
+        return s==null || s.trim().isEmpty();
     }
 }

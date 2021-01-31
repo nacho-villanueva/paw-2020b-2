@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.ClinicDoesNotHaveStudyTypeException;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+
 @Transactional
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -43,7 +46,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order register(Medic medic, LocalDate date, Clinic clinic, String patientEmail, String patientName, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) {
+    public Order register(Medic medic, LocalDate date, Clinic clinic, String patientEmail, String patientName, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber) throws ClinicDoesNotHaveStudyTypeException {
+
+        if(!clinic.getMedicalStudies().stream().map(StudyType::getId).collect(Collectors.toList()).contains(studyType.getId()))
+            throw new ClinicDoesNotHaveStudyTypeException();
+
         Order order = orderDao.register(medic,date,clinic,patientName,patientEmail,studyType,description,identificationType,identification,medicPlan,medicPlanNumber);
         mailNotificationService.sendOrderMail(order);
         return order;
@@ -325,7 +332,6 @@ public class OrderServiceImpl implements OrderService {
         return getLastPage(filterOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic),pageSize);
     }
 
-
     @Override
     public Order shareWithMedic(Order order, User user){
         Order o = orderDao.shareWithMedic(order, user);
@@ -336,7 +342,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order changeOrderClinic(Order order, Clinic clinic) {
+    public Order changeOrderClinic(Order order, Clinic clinic) throws ClinicDoesNotHaveStudyTypeException{
+
+        if(!clinic.getMedicalStudies().stream().map(StudyType::getId).collect(Collectors.toList()).contains(order.getStudy().getId()))
+            throw new ClinicDoesNotHaveStudyTypeException();
+
         Order newOrder = orderDao.changeOrderClinic(order, clinic);
         mailNotificationService.sendChangeClinicMail(order);
         return newOrder;

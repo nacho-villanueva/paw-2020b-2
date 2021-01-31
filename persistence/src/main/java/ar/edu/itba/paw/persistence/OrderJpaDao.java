@@ -287,8 +287,6 @@ public class OrderJpaDao implements OrderDao {
 
         cr.where(predicates.toArray(new Predicate[0]));
 
-        cr.orderBy(cb.desc(root.get("orderId")));
-
         final TypedQuery<Long> query = em.createQuery(cr);
 
         return query.getResultList().get(0);

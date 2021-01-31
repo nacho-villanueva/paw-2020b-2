@@ -30,6 +30,8 @@ public class ClinicGetDto {
 
     private Collection<ClinicDayHoursDto> hours;
 
+    private boolean verified;
+
     private String url;
 
     // Constructors
@@ -41,6 +43,7 @@ public class ClinicGetDto {
         this.id = clinic.getUser().getId();
         this.name = clinic.getName();
         this.telephone = clinic.getTelephone();
+        this.verified = clinic.isVerified();
 
         this.availableStudies = getUriBuilder(clinic,uriInfo).path(AVAILABLE_STUDIES_PATH).build().toString();
         this.acceptedPlans = getUriBuilder(clinic,uriInfo).path(ACCEPTED_PLANS_PATH).build().toString();
@@ -96,14 +99,6 @@ public class ClinicGetDto {
         this.acceptedPlans = acceptedPlans;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Collection<ClinicDayHoursDto> getHours() {
         return hours;
     }
@@ -112,17 +107,33 @@ public class ClinicGetDto {
         this.hours = hours;
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     // Equals&HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClinicGetDto that = (ClinicGetDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours) && Objects.equals(url, that.url);
+        return verified == that.verified && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, telephone, availableStudies, acceptedPlans, hours, url);
+        return Objects.hash(id, name, telephone, availableStudies, acceptedPlans, hours, verified, url);
     }
 }

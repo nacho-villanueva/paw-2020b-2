@@ -31,7 +31,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.*;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -84,7 +84,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
-        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
+        messageSource.setDefaultEncoding(Charset.defaultCharset().displayName());
         messageSource.setCacheSeconds(5);
 
         return messageSource;
