@@ -7,6 +7,7 @@ import "./Style/CreateOrder.css";
 function CreateOrder(){
     const infoForm="tab-pane fade in show active";
     const medicName="dr. peppe";
+    const infoSubmit="bubba";
 
     const history = useHistory();
 
@@ -47,11 +48,12 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log(event.target);
+        console.log(event);
 
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
+            console.log('a');
             changeToClinicStep();
         }
 
@@ -87,14 +89,20 @@ function CreateOrder(){
 
                 <div className="tab-content mt-9">
                     <div id="info-form" className={"custom-form tab-pane fade in " + orderStep}>
-                            <Form className="form" noValidate validated={infoValidated} onSubmit={handleInfoSubmit}>
+                            <Form noValidate validated={infoValidated} onSubmit={handleInfoSubmit}>
                                 <Form.Group>
                                     <Form.Label className="text-muted">Medic</Form.Label>
-                                    <p className="lead">{medicName}</p>
+                                    <p className="lead mb-0">{medicName}</p>
+                                    <Form.Control
+                                            required type="text"
+                                            name="medicName"
+                                            value={medicName}
+                                            className="custom-hidden"
+                                    />
                                 </Form.Group>
-                                <hr className="divider"/>
+                                <hr className="divider mt-0"/>
                                 <div className="row mx-1">
-                                    <Form.Group className="form-group col">
+                                    <Form.Group className="form-group col" controlId="patientEmail">
                                         <Form.Label className="bmd-label-floating">Patient's email</Form.Label>
                                         <Form.Control
                                             required type="email"
@@ -105,7 +113,7 @@ function CreateOrder(){
                                 </div>
 
                                 <div className="row mx-1">
-                                    <Form.Group className="form-group col">
+                                    <Form.Group className="form-group col" controlId="patientName">
                                         <Form.Label className="bmd-label-floating">Patient's name</Form.Label>
                                         <Form.Control
                                             required type="text"
@@ -115,7 +123,7 @@ function CreateOrder(){
                                     </Form.Group>
                                 </div>
                                 <div className="row mx-1">
-                                    <Form.Group className="form-group col">
+                                    <Form.Group className="form-group col" controlId="patientInsurancePlan">
                                         <Form.Label className="bmd-label-floating">Patient's insurance plan</Form.Label>
                                         <Form.Control
                                             required as="select"
@@ -128,7 +136,7 @@ function CreateOrder(){
                                         </Form.Control>
                                         <Form.Control.Feedback type="invalid">Please select an insurance plan</Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group className="form-group col">
+                                    <Form.Group className="form-group col" controlId="patientInsuranceNumber">
                                         <Form.Label className="bmd-label-floating">Patient's insurance number</Form.Label>
                                         <Form.Control
                                             required type="text"
@@ -141,7 +149,7 @@ function CreateOrder(){
                                 <hr className="mt-3 mb-2"/>
                                 <div className="row mx-1">
                                     <div className="col">
-                                        <Form.Group className="form-group">
+                                        <Form.Group className="form-group" controlId="studyType">
                                             <Form.Label className="bmd-label-static">Study type</Form.Label>
                                             <Form.Control
                                                 required as="select"
@@ -157,7 +165,7 @@ function CreateOrder(){
                                     </div>
                                 </div>
                                 <div className="col">
-                                    <Form.Group>
+                                    <Form.Group controlId="orderDescription">
                                         <Form.Label className="bmd-label-static">Order description</Form.Label>
                                         <textarea
                                             type="text"
@@ -173,7 +181,7 @@ function CreateOrder(){
 
                                 <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="infoSubmit"
-                                    onClick={handleInfoSubmit}
+                                    value={infoSubmit}
                                 >Next</Button>
                             </Form>
                     </div>

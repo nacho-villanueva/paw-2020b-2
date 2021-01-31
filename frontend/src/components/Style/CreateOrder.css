@@ -88,3 +88,9 @@
     background: var(--primary) !important;
     color: white !important;
 }
+
+.custom-hidden{
+    visibility: hidden;
+    height: 0.1rem;
+    padding: 0;
+}
