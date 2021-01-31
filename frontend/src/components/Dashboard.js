@@ -1,5 +1,6 @@
 import NavBar from "./NavBar";
 import Sidebar from "./Sidebar";
+import CreateOrder from "./CreateOrder";
 
 import "./Style/Dashboard.css";
 import {Route} from "react-router-dom";
@@ -18,6 +19,7 @@ const Dashboard = () => {
                 <div className={"dashboardMainContainer"}>
                     <Route path="/home/test" component={Test}/>
                     <Route path="/dashboard/search-clinic" component={Dashboard}/>
+                    <Route path="/dashboard/create-order" component={CreateOrder}/>
                 </div>
             </div>
         </div>

@@ -24,7 +24,7 @@ const Sidebar = () => {
             <Item key={item.path} item={item} />
         ))}
 
-        {roleType === "Medic" && <Item key={"Medic"} item={{name: "Create Order", path:"/create-order", icon:""}} />}
+        {roleType === "Medic" && <Item key={"Medic"} item={{name: "Create Order", path:"/dashboard/create-order", icon:""}} />}
     </div>
     )
 }

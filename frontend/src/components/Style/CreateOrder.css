@@ -1,0 +1,90 @@
+.form-card{
+    width: 50%;
+    margin-top: 2em;
+    margin-bottom: 7rem;
+}
+.stepper-wrapper-horizontal{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    align-self: center;
+    width: 90%;
+}
+.stepper-wrapper-horizontal > .step-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 23%;
+    position: relative;
+}
+
+.stepper-wrapper-horizontal > .step-wrapper > .step-number {
+    border-radius: 80%;
+    border: 1px solid grey;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: absolute;
+    top: 20%;
+
+}
+
+.stepper-wrapper-horizontal > .step-wrapper > .step-description {
+    position: absolute;
+    top: 3rem;
+
+}
+
+.stepper-wrapper-horizontal > .step-wrapper > .divider-line {
+    height: 1px;
+    background-color: #bdbdbd;
+    position: absolute;
+    width: 90%;
+    top: 1rem;
+    left: 90%;
+}
+
+
+.step-wrapper > .step-number.active{
+    border-radius: 80%;
+    border: 2px solid var(--primary);
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    font-weight: bolder;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: absolute;
+    top: 20%;
+}
+
+.step-wrapper > .step-description.active {
+    position: absolute;
+    top: 3rem;
+    font-weight: bolder;
+    color: var(--primary);
+
+}
+
+.spacer{
+    width: 90%;
+    margin: 7rem auto 2rem auto;
+}
+
+.custom-form{
+    margin: 0 2rem 0 2rem;
+}
+
+.area-custom{
+    width: 100%;
+    resize: none;
+}
+
+.create-btn{
+    background: var(--primary) !important;
+    color: white !important;
+}
