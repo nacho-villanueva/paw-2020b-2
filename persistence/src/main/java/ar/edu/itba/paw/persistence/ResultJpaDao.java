@@ -41,7 +41,7 @@ public class ResultJpaDao implements ResultDao {
     @Override
     public long findByOrderIdCount(long id) {
 
-        String queryString = "SELECT r FROM Result r " +
+        String queryString = "SELECT COUNT(r) FROM Result r " +
                 "WHERE r.order.orderId = :id";
 
         final TypedQuery<Long> query = em.createQuery(queryString, Long.class);

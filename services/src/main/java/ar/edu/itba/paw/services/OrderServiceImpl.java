@@ -354,9 +354,6 @@ public class OrderServiceImpl implements OrderService {
 
     // auxiliar functions
     private long getLastPage(final long count, final int pageSize){
-        if(count <= 0)
-            return 0;
-
-        return (count / pageSize)+1;
+        return (long) Math.ceil((double)count / pageSize);
     }
 }

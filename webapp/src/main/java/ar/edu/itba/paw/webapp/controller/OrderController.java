@@ -386,7 +386,6 @@ public class OrderController {
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         // no errors
-
         // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
         User user = userService.findById(2).get();
 

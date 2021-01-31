@@ -233,15 +233,13 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, MedicPlanDto.CONTENT_TYPE+"+json"})
     public Response getClinicAcceptedPlans(@PathParam("id") final String id){
         Response.ResponseBuilder response;
-        Integer clinicId;
+        int clinicId;
 
         try {
-            clinicId = Integer.valueOf(id);
+            clinicId = Integer.parseInt(id);
         }catch (Exception e){
-            clinicId = null;
-        }
-        if (clinicId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
 
@@ -281,9 +279,6 @@ public class ClinicController {
                             .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
-        // no errors
-        final URI uri;
-
         // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
         User user = userService.findById(7).get();
 
@@ -305,7 +300,7 @@ public class ClinicController {
                 clinicHours
                 );
 
-        uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(clinic.getUser().getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(clinic.getUser().getId())).build();
         response = Response.created(uri);
 
         return response.build();
