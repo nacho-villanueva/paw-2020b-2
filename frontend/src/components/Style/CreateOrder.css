@@ -1,5 +1,5 @@
 .form-card{
-    width: 50%;
+    width: 40%;
     margin-top: 2em;
     margin-bottom: 7rem;
     transition: width 0.2s;
@@ -109,7 +109,8 @@
 
 .clinic-btn{
     width: 40%;
-    align-self:center;
+    height: min-content;
+    margin-bottom: 1rem;
 }
 
 .search-btn{
@@ -118,8 +119,24 @@
     border-width: thin;
     border-style: solid;
     height: min-content;
+    float: right;
 }
 
-.avail-btn{
-    height: 3rem;
+.custom-table{
+    align-self: center;
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    transition: height 0.2s, width 0.2s;
+}
+
+.collapse-custom{
+    visibility: hidden;
+    height: 0.1rem;
+    transition: visibility 0.1s, height 0.2s;
+}
+.collapse-custom.active{
+    visibility: visible;
+    height:auto;
 }

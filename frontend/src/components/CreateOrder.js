@@ -1,4 +1,4 @@
-import {Card, Form, Button, Modal} from "react-bootstrap";
+import {Card, Form, Button, Modal, Table, Collapse} from "react-bootstrap";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
@@ -10,6 +10,7 @@ function CreateOrder(){
     const medicName="dr. peppe";
     const infoSubmit="bubba";
     const clinicSubmit="newgrounds forever";
+    const verifySubmit="this man... this is a wonderful man";
 
     const history = useHistory();
 
@@ -60,9 +61,122 @@ function CreateOrder(){
     const handleClose = () => {setShow(false);};
     const handleShow = () => {setShow(true);};
 
+    //show selected clinic
+    const [clinicItem, setClinicItem] = useState(-1);
+    const selectClinic = (listItem) => { setClinicItem(listItem); console.log("ey que pasa aca", listItem);};
+
 
     //search clinics call
-    const searchClinics = () => {console.log('O_o');};
+    const searchClinics = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log(event);
+    };
+    const clinicsList = [
+        {
+            userId: 1,
+            name:"Anisa Sanusi's Sanatory",
+            email:"ass@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 17,
+            name:"Tennesse Institute of Traumatology & Introvertion",
+            email:"teinti@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        }
+    ];
+
+    const Item = (props) => {
+        return(
+            <li class="nav-item" key={props.clinic.name}>
+                <a
+                    id={props.clinic.userId} onClick={() =>{selectClinic(props.clinic.userId)}}
+                    className="list-group-item list-group-item-action"
+                    data-toggle="tab" role="tab"
+                    aria-controls={"clinic_" + props.clinic.userId} aria-selected="false"
+                >
+                    <div className="justify-content-between">
+                        <h5 className="mb-1">{props.clinic.name}</h5>
+                    </div>
+                </a>
+            </li>
+        );
+    }
+
+    const ClinicInfo = (props) => {
+        console.log(props.clinic);
+        return(
+            <div
+                key={"clinicInfo_" + props.clinic.userId}
+            >
+                pipo
+                {props.clinic.userId}
+                <h3>{props.clinic.name}</h3>
+            </div>
+        );
+    }
+
+
+
+
+
+    const daysOfTheWeek = [
+        {name:"Sunday", id: 0},
+        {name:"Monday", id: 1},
+        {name:"Tuesday", id: 2},
+        {name:"Wednesday", id: 3},
+        {name:"Thursday", id: 4},
+        {name:"Friday", id: 5},
+        {name:"Saturday", id: 6}
+    ];
+
+    const Day = (props) => {
+        return (
+            <tr>
+                <th>{props.item.name}</th>
+                <th>
+                    <Form.Group controlId={"isAvailable" + props.item.id}>
+                        <Form.Control
+                            type="checkbox" name={"isAvailable" + props.item.id}
+                        />
+                    </Form.Group>
+                </th>
+                <th>
+                    <Form.Group controlId={"day-" + props.item.id + "-ot"}>
+                        <Form.Control
+                            type="text" className="form-control time-input"
+                            placeholder="00:00" maxLength="5"
+                            name={"day-" + props.item.id + "-ot"}
+                        />
+                    </Form.Group>
+                </th>
+                <th>
+                    <Form.Group controlId={"day-" + props.item.id + "-ct"}>
+                        <Form.Control
+                            type="text" className="form-control time-input"
+                            placeholder="00:00" maxLength="5"
+                            name={"day-" + props.item.id + "-ct"}
+                        />
+                    </Form.Group>
+                </th>
+            </tr>
+        );
+    }
 
 
     //step 1 (order info) form validation
@@ -71,7 +185,7 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log(event);
+        console.log("order info", event);
 
         if(form.checkValidity() === false){
             event.stopPropagation();
@@ -89,7 +203,12 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log(event);
+        console.log("clinic", event);
+        for(let idx in event.target){
+            if(idx <= 25){
+                console.log(event.target[idx].name, event.target[idx].value);
+            }
+        }
 
         if(form.checkValidity() === false){
             event.stopPropagation();
@@ -230,22 +349,13 @@ function CreateOrder(){
                         <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
                             <div className="search-block">
                                 <div className="row mx-1 pt-2">
-                                    <Form.Group className="form-group col" controlId="clinicName">
+                                    <Form.Group className="form-group col mt-1" controlId="clinicName">
                                         <Form.Label className="bmd-label-static">Search by clinic name</Form.Label>
                                         <Form.Control
-                                            type="text"
+                                            type="text" style={{paddingTop: "14px"}}
                                             name="clinicName"
                                         />
                                     </Form.Group>
-                                    <Button
-                                        className="btn-outline clinic-btn avail-btn mr-2"
-                                        variant="secondary"
-                                        onClick={handleShow}
-                                    >
-                                        Schedule availability
-                                    </Button>
-                                </div>
-                                <div className="row mx-1">
                                     <Form.Group className="form-group col" controlId="insurancePlan">
                                         <Form.Label className="bmd-label-static">Search by insurance plan</Form.Label>
                                         <Form.Control
@@ -258,34 +368,91 @@ function CreateOrder(){
                                             <option>OSDE 4100</option>
                                         </Form.Control>
                                     </Form.Group>
+
+                                </div>
+                                <div className="row mx-1">
                                     <Button
-                                        className="clinic-btn search-btn mr-2"
+                                        className="clinic-btn mx-auto"
+                                        variant="primary"
+                                        onClick={() => {setShow(!show);}}
+                                    >
+                                        {"Schedule availability "}
+                                        {show===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                    </Button>
+                                    <Button
+                                        className="clinic-btn search-btn mx-auto"
                                         onClick={searchClinics}
                                     >
                                         Search
                                     </Button>
                                 </div>
+                                <div className="row mx-1 justify-content-center">
+                                    <Collapse in={show}>
+                                        <div style={{width: "100%"}}>
+                                            <Table
+                                                striped bordered hover
+                                                className="custom-table"
+                                            >
+                                                <thead>
+                                                    <tr>
+                                                        <th>Day</th>
+                                                        <th>Available</th>
+                                                        <th>From</th>
+                                                        <th>To</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {daysOfTheWeek.map((item) => (
+                                                        <Day key={item.id} item={item} />
+                                                    ))}
+                                                </tbody>
+                                            </Table>
+                                        </div>
+                                    </Collapse>
+                                </div>
                             </div>
-                            <Modal show={show} onHide={handleClose}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Schedule availability</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>THIS IS THE MODAL BABYYYYYY</Modal.Body>
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={handleClose}>Close</Button>
-                                    <Button variant="primary" onClick={handleClose}>Save changes</Button>
-                                </Modal.Footer>
-                            </Modal>
 
-                            <div>
+                            <div className="card mt-5">
+                                <div className="card-body">
+                                    <p className="card-title h4">Results</p>
+                                    <hr/>
+                                    <div className="d-flex flex-row">
+                                        <div id="results" className="list-group">
+                                            {clinicsList.length === 0 ? <h3 className="text-center py-5 lead">No clinics found based on search filters</h3> : <></>}
+                                            <ul className="nav flex-column" id="myTab" role="tablist">
+                                            {clinicsList.map((item) => (
+                                                <Item key={item.userId} clinic={item}/>
+                                            ))}
+                                            </ul>
+                                        </div>
+                                        <div id="data" className="data-section">
+                                            <h5 class="text-muted">Selected Clinic</h5>
+                                            <div className="tab-content">
+                                                {clinicItem === -1 ? <h4>No clinic selected</h4> : <ClinicInfo key={"selected_" + clinicItem} clinic={clinicsList.filter(clinic => clinic.userId === clinicItem)}/>}
+                                            </div>
 
+
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
 
 
                             <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
                             <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="clinicSubmit"
                                     value={clinicSubmit}
+                            >Next</Button>
+                        </Form>
+                    </div>
+                    <div id="verify-form" className={"custom-form fade in " + verifyStep}>
+                        <Form>
+                            <a onClick={changeToClinicStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
+                            <Button className="create-btn mt-4 mb-2 float-right"
+                                    type="submit" name="verifySubmit"
+                                    value={verifySubmit}
                             >Next</Button>
                         </Form>
                     </div>
