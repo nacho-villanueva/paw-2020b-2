@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.dto.constraintGroups.OrderPostGroup;
 import ar.edu.itba.paw.webapp.dto.constraintGroups.OrderPutGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
@@ -57,14 +59,16 @@ public class OrderController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private HttpHeaders headers;
+
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE})
     public Response getOrders(
             @Valid @BeanParam OrderFilterDto orderFilterDto,
             @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage,
-            @Context HttpHeaders headers
+            @QueryParam("per_page") Integer perPage
     ){
         Response.ResponseBuilder response;
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
@@ -85,8 +89,13 @@ public class OrderController {
         }
 
         // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(1).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         int queryPage = (page==null)?(FIRST_PAGE):(page);
         if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
@@ -292,10 +301,12 @@ public class OrderController {
         Order order = orderOptional.get();
 
         // only affected patient should be able to see whom they shared with
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(1).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        String userEmail = authentication.getName();
 
-        if(!order.getPatientEmail().equals(user.getEmail()))
+        if(!order.getPatientEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         if(order.getSharedWith()==null || order.getSharedWith().isEmpty())
@@ -319,8 +330,7 @@ public class OrderController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addMedicsSharedWith(
             @Valid UserIdOnlyDto userIdOnlyDto,
-            @PathParam("id") final String encodedId,
-            @Context HttpHeaders headers
+            @PathParam("id") final String encodedId
     ){
 
         long orderId;
@@ -336,10 +346,12 @@ public class OrderController {
         Order order = orderOptional.get();
 
         // only affected patient should be able to do this action
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(1).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        String userEmail = authentication.getName();
 
-        if(!order.getPatientEmail().equals(user.getEmail()))
+        if(!order.getPatientEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
@@ -371,8 +383,7 @@ public class OrderController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createOrder(
-            @Valid OrderPostAndPutDto orderPostAndPutDto,
-            @Context HttpHeaders headers
+            @Valid OrderPostAndPutDto orderPostAndPutDto
     ){
         Response.ResponseBuilder response;
 
@@ -385,9 +396,13 @@ public class OrderController {
                     .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
-        // no errors
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(2).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         Optional<Medic> medicOptional = medicService.findByUserId(user.getId());
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
@@ -445,8 +460,7 @@ public class OrderController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateOrder(
             @PathParam("id") final String encodedId,
-            @Valid OrderPostAndPutDto orderPostAndPutDto,
-            @Context HttpHeaders headers
+            @Valid OrderPostAndPutDto orderPostAndPutDto
     ){
 
         Response.ResponseBuilder response;
@@ -461,15 +475,19 @@ public class OrderController {
         }
 
         // only affected members should be able to change
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(1).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        String userEmail = authentication.getName();
 
         final Optional<Order> orderOptional = orderService.findById(orderId);
         if(!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
         Order order = orderOptional.get();
 
-        if(!order.getPatientEmail().equals(user.getEmail()))
+        if(!order.getPatientEmail().equals(userEmail) ||
+                !order.getClinic().getUser().getEmail().equals(userEmail)||
+                !order.getMedic().getUser().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         Set<ConstraintViolation<OrderPostAndPutDto>> violations = validator.validate(orderPostAndPutDto, OrderPutGroup.class);
@@ -513,10 +531,6 @@ public class OrderController {
     }
 
     // auxiliar functions
-    private boolean isEmpty(String s){
-        return s==null || s.trim().length()==0;
-    }
-
     private boolean isEmpty(Collection<?> collection){
         return collection==null || collection.isEmpty();
     }

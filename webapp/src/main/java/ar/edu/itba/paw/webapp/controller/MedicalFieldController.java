@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.MedicalField;
 import ar.edu.itba.paw.services.MedicalFieldService;
-import ar.edu.itba.paw.webapp.dto.ClinicGetDto;
 import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
 import ar.edu.itba.paw.webapp.dto.MedicalFieldDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,9 @@ public class MedicalFieldController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private HttpHeaders headers;
+
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
@@ -70,16 +72,13 @@ public class MedicalFieldController {
     public Response getMedicalFieldById(@PathParam("id") final String id){
 
         Response.ResponseBuilder response;
-        Integer medicalFieldId;
+        int medicalFieldId;
 
         try {
-            medicalFieldId = Integer.valueOf(id);
+            medicalFieldId = Integer.parseInt(id);
         }catch (Error e){
-            medicalFieldId = null;
-        }
-
-        if (medicalFieldId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         Optional<MedicalField> medicalFieldOptional = medicalFieldService.findById(medicalFieldId);
 
@@ -97,7 +96,7 @@ public class MedicalFieldController {
     @POST
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
-    public Response registerMedicalField(@Valid MedicalFieldDto medicalFieldDto, @Context HttpHeaders headers){
+    public Response registerMedicalField(@Valid MedicalFieldDto medicalFieldDto){
 
         Response.ResponseBuilder response;
 

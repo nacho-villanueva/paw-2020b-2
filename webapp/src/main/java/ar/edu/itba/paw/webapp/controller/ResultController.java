@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Order;
 import ar.edu.itba.paw.models.Result;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.OrderService;
 import ar.edu.itba.paw.services.ResultService;
 import ar.edu.itba.paw.services.UrlEncoderService;
@@ -11,6 +10,8 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraintGroups.ResultGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
@@ -54,6 +55,9 @@ public class ResultController {
 
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private HttpHeaders headers;
 
     @GET
     @Path("/")
@@ -238,8 +242,7 @@ public class ResultController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createResult(
             @PathParam("orderId") final String oid,
-            @Valid ResultPostDto resultPostDto,
-            @Context HttpHeaders headers
+            @Valid ResultPostDto resultPostDto
             ){
         Response.ResponseBuilder response;
 
@@ -257,10 +260,12 @@ public class ResultController {
         Order order = orderOptional.get();
 
         // clinic should be the one doing this task
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(3).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        String userEmail = authentication.getName();
 
-        if(!user.getEmail().equals(order.getClinic().getEmail()))
+        if(!order.getClinic().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);

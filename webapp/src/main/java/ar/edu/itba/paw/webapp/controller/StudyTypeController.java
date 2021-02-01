@@ -48,6 +48,9 @@ public class StudyTypeController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private HttpHeaders headers;
+
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
@@ -103,7 +106,7 @@ public class StudyTypeController {
     @POST
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
-    public Response registerStudyType(@Valid StudyTypeDto studyTypeDto, @Context HttpHeaders headers){
+    public Response registerStudyType(@Valid StudyTypeDto studyTypeDto){
 
         Response.ResponseBuilder response;
 

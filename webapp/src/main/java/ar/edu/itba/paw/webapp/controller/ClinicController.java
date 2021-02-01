@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
@@ -43,6 +45,9 @@ public class ClinicController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private HttpHeaders headers;
+
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
@@ -52,8 +57,7 @@ public class ClinicController {
             @QueryParam("plan") String acceptedPlan,
             @QueryParam("study-type") String studyType,
             @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage,
-            @Context HttpHeaders headers
+            @QueryParam("per_page") Integer perPage
     ) {
 
         Collection<Clinic> clinics;
@@ -143,9 +147,7 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response getClinicById(@PathParam("id") final String id){
 
-        Response.ResponseBuilder response;
         int clinicId;
-
         try {
             clinicId = Integer.parseInt(id);
         }catch (Exception e){
@@ -158,7 +160,7 @@ public class ClinicController {
 
         ClinicGetDto clinicGetDto = new ClinicGetDto(clinicOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(clinicGetDto.hashCode()));
-        response = Response.ok(clinicGetDto).type(ClinicGetDto.CONTENT_TYPE+"+json")
+        Response.ResponseBuilder response = Response.ok(clinicGetDto).type(ClinicGetDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
@@ -170,15 +172,14 @@ public class ClinicController {
     public Response getClinicStudyTypes(@PathParam("id") final String id){
 
         Response.ResponseBuilder response;
-        Integer clinicId;
+        int clinicId;
 
         try {
-            clinicId = Integer.valueOf(id);
+            clinicId = Integer.parseInt(id);
         }catch (Exception e){
-            clinicId = null;
-        }
-        if (clinicId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
 
@@ -261,8 +262,7 @@ public class ClinicController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerClinic(
-            @Valid ClinicPostAndPutDto clinicPostAndPutDto,
-            @Context HttpHeaders headers
+            @Valid ClinicPostAndPutDto clinicPostAndPutDto
     ){
         Response.ResponseBuilder response;
 
@@ -277,11 +277,13 @@ public class ClinicController {
                             .collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(7).get();
-
-        if(!user.isUndefined())
-            return Response.status(Response.Status.FORBIDDEN).build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         String name = clinicPostAndPutDto.getName();
         String telephone = clinicPostAndPutDto.getTelephone();
@@ -308,21 +310,19 @@ public class ClinicController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateClinic(
-            @PathParam("id") Integer id,
-            @Valid ClinicPostAndPutDto clinicPostAndPutDto,
-            @Context HttpHeaders headers
+            @PathParam("id") String id,
+            @Valid ClinicPostAndPutDto clinicPostAndPutDto
     ){
         Response.ResponseBuilder response;
 
-        Integer clinicId;
+        int clinicId;
 
         try {
-            clinicId = Integer.valueOf(id);
+            clinicId = Integer.parseInt(id);
         }catch (Exception e){
-            clinicId = null;
-        }
-        if (clinicId == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
 
@@ -331,11 +331,16 @@ public class ClinicController {
 
         Clinic clinic = clinicOptional.get();
 
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(7).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         // check permissions to edit profile
-        if(!(user.getId().equals(clinic.getUser().getId())))
+        if(!user.getId().equals(clinic.getUser().getId()))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);

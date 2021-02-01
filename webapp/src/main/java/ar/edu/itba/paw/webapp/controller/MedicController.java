@@ -8,9 +8,10 @@ import ar.edu.itba.paw.webapp.dto.constraintGroups.MedicPostGroup;
 import ar.edu.itba.paw.webapp.dto.constraintGroups.MedicPutGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityTransaction;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -45,6 +46,9 @@ public class MedicController {
 
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private HttpHeaders headers;
 
     @GET
     @Path("/")
@@ -106,17 +110,18 @@ public class MedicController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerMedic(
-            @Valid MedicPostAndPutDto medicPostAndPutDto,
-            @Context HttpHeaders headers
+            @Valid MedicPostAndPutDto medicPostAndPutDto
             ){
 
         Response.ResponseBuilder response;
 
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(4).get();
-
-        if(!user.isUndefined())
-            return Response.status(Response.Status.FORBIDDEN).build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
@@ -189,8 +194,7 @@ public class MedicController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateMedic(
             @PathParam("id") final String id,
-            @Valid MedicPostAndPutDto medicPostAndPutDto,
-            @Context HttpHeaders headers
+            @Valid MedicPostAndPutDto medicPostAndPutDto
     ){
         int medicId;
         try {
@@ -207,8 +211,13 @@ public class MedicController {
 
         Response.ResponseBuilder response;
 
-        // TODO: GET THE LOGGEDIN USER, OR ELSE RESPOND WITH ERROR
-        User user = userService.findById(4).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName()==null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        Optional<User> userOptional = userService.findByEmail(authentication.getName());
+        if(!userOptional.isPresent())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        User user = userOptional.get();
 
         if(!user.getId().equals(medic.getUser().getId()))
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -284,7 +293,7 @@ public class MedicController {
         try {
             medicId = Integer.parseInt(id);
         }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
@@ -311,7 +320,7 @@ public class MedicController {
         try {
             medicId = Integer.parseInt(id);
         }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
@@ -344,7 +353,7 @@ public class MedicController {
             medicId = Integer.parseInt(id);
             medicalFieldId = Integer.parseInt(mfid);
         }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         boolean hasField = medicService.knowsField(medicId,medicalFieldId);

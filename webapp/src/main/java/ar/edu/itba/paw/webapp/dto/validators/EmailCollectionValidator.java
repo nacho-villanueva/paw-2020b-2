@@ -26,6 +26,6 @@ public class EmailCollectionValidator implements ConstraintValidator<EmailCollec
             if(!emailValidator.isValid(email,constraintValidatorContext)) return false;
         }
 
-        return false;
+        return true;
     }
 }
