@@ -1,9 +1,8 @@
-import {Card, Form, Button, Modal, Table, Collapse} from "react-bootstrap";
+import {Form, Button, Table, Collapse} from "react-bootstrap";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
 import "./Style/CreateOrder.css";
-import FormImpl from "react-bootstrap/esm/Form";
 
 function CreateOrder(){
     const infoForm="tab-pane fade in show active";
@@ -164,12 +163,17 @@ function CreateOrder(){
         patientEmail: '',
         clinicId: '',
         patientInsurancePlan: '',
-        patientInsurancenNumber: '',
+        patientInsuranceNumber: '',
         studyType: '',
         orderDescription:'',
         medicLicenceNumber: '',
         medicEmail: ''
     });
+
+    const getCurrentDate = () => {
+        let today = new Date();
+        return today.toDateString();
+    };
 
 
     //states used to know which step to show
@@ -351,7 +355,7 @@ function CreateOrder(){
             aux.patientEmail = event.target[1].value;
             aux.patientName = event.target[2].value;
             aux.patientInsurancePlan = event.target[3].value;
-            aux.patientInsurancenNumber = event.target[4].value;
+            aux.patientInsuranceNumber = event.target[4].value;
             aux.studyType = event.target[5].value;
             aux.orderDescription = event.target[6].value;
             setOrderInfo(aux);
@@ -639,39 +643,39 @@ function CreateOrder(){
                                     </div>
                                     <div className="row">
                                         <div className="col">
-                                            <p className="card-subtitle ml-3 text-muted lead">Date: getCurrentDate()</p>
+                                            <p className="card-subtitle ml-3 text-muted lead">Date: {getCurrentDate()}</p>
                                         </div>
                                     </div>
                                     <hr className="mt-3 mb-4"/>
                                     <div className="row justify-content-start">
                                         <div className="col type">
                                             <p className="type-title">Patient</p>
-                                            patientName
+                                            {orderInfo.patientName}
                                         </div>
                                         <div className="col type">
                                             <p className="type-title">Medical Clinic</p>
-                                            clinicName
+                                            {selectedClinic !== null ? selectedClinic.name : ""}
                                         </div>
                                         <div class="w-100"></div>
                                         <div className="col type">
                                             <p className="type-title">Patient insurance plan</p>
-                                            patientInsurancePlan
+                                            {orderInfo.patientInsurancePlan}
                                         </div>
                                         <div className="col type">
                                             <p className="type-title">Patient insurance number</p>
-                                            patientInsuranceNumber
+                                            {orderInfo.patientInsuranceNumber}
                                         </div>
                                     </div>
                                     <hr className="mt-3 mb-5"/>
                                     <p className="card-text text-center h5">
-                                        Study type: studyType
+                                        Study type: {orderInfo.studyType}
                                     </p>
-                                    <p className="card-text text-center">orderDescription</p>
+                                    <p className="card-text text-center">{orderInfo.orderDescription}</p>
                                     <hr className="mt-5 mb-4"/>
                                     <div className="media">
                                         <div className="media-body">
                                             <h5 className="mt-0 mb-1 text-center">{medicName}</h5>
-                                            <p className="text-center">M.N.: medicLicenceNumber</p>
+                                            <p className="text-center">M.N.: {orderInfo.medicLicenceNumber}</p>
                                         </div>
                                         <img
                                             className="align-self-end ml-3 signature"
