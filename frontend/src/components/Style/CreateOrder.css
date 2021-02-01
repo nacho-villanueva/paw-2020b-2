@@ -5,7 +5,7 @@
     transition: width 0.2s;
 }
 
-.form-card.active{
+.form-card.clinic{
     width: 60%;
 }
 
@@ -139,4 +139,36 @@
 .collapse-custom.active{
     visibility: visible;
     height:auto;
+}
+
+/*
+from the old css
+*/
+
+.result-section {
+    width: 20%;
+    max-height: 32em;
+}
+
+.results-card {
+    margin-top: 2em;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 2em;
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
+.data-section {
+    width: 60%;
+    margin-left:3rem;
+    float:right;
+}
+
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
+}
+.type {
+    margin-bottom: 0.75rem;
 }

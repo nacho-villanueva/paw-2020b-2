@@ -14,6 +14,19 @@ function CreateOrder(){
 
     const history = useHistory();
 
+    const [orderInfo, setOrderInfo] = useState({
+        medicName: medicName,
+        patientName: '',
+        patientEmail: '',
+        clinicId: '',
+        patientInsurancePlan: '',
+        patientInsurancenNumber: '',
+        studyType: '',
+        orderDescription:'',
+        medicLicenceNumber: '',
+        medicEmail: ''
+    });
+
     //states to know which step to show
     const [activeOrderStep, setActiveOrderStep] = useState("active");
     const [activeClinicStep, setActiveClinicStep] = useState("");
@@ -62,8 +75,8 @@ function CreateOrder(){
     const handleShow = () => {setShow(true);};
 
     //show selected clinic
-    const [clinicItem, setClinicItem] = useState(-1);
-    const selectClinic = (listItem) => { setClinicItem(listItem); console.log("ey que pasa aca", listItem);};
+    const [selectedClinic, setSelectedClinic] = useState(null);
+    const selectClinic = (listItem) => { setSelectedClinic(listItem); console.log("ey que pasa aca", listItem);};
 
 
     //search clinics call
@@ -102,10 +115,11 @@ function CreateOrder(){
     ];
 
     const Item = (props) => {
+        const [isActive, setIsActive] = useState("")
         return(
             <li class="nav-item" key={props.clinic.name}>
                 <a
-                    id={props.clinic.userId} onClick={() =>{selectClinic(props.clinic.userId)}}
+                    id={props.clinic.userId} onClick={() =>{selectClinic(props.clinic)}}
                     className="list-group-item list-group-item-action"
                     data-toggle="tab" role="tab"
                     aria-controls={"clinic_" + props.clinic.userId} aria-selected="false"
@@ -119,14 +133,55 @@ function CreateOrder(){
     }
 
     const ClinicInfo = (props) => {
-        console.log(props.clinic);
+        console.log(props.item);
         return(
             <div
-                key={"clinicInfo_" + props.clinic.userId}
+                className="tab-pane tab-result"
+                key={"clinicInfo_" + props.item.userId}
             >
-                pipo
-                {props.clinic.userId}
-                <h3>{props.clinic.name}</h3>
+                <h3>{props.item.name}</h3>
+                <Table className="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>Email</td>
+                            <td className="output">{props.item.email}</td>
+                        </tr>
+                        <tr>
+                            <td>Telephone</td>
+                            <td className="output">{props.item.email}</td>
+                        </tr>
+                        <tr>
+                            <td>Open hours</td>
+                            <td>
+                                {daysOfTheWeek.map((item) => (
+                                    <div key={"oh_"+props.item.userId+"_"+item.id}>
+                                        <span>{item.name}</span>&nbsp;&nbsp;&nbsp;
+                                        <span>{props.item.hours.openHours[item.id] + " - " + props.item.hours.closeHours[item.id]}</span>
+                                    </div>
+                                ))}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Accepted insurance</td>
+                            <td className="output">
+                                {props.item.acceptedPlans.map((plan) => (
+                                    <span
+                                        key={"plan_"+props.item.userId+"_"+plan}
+                                        className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
+                                    >{plan}</span>
+                                ))}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Available studies</td>
+                            <td className="output">
+                                {props.item.medicalStudies.map((study) => (
+                                    <p key={"study_"+props.item.userId+"_"+study}>{study}</p>
+                                ))}
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
             </div>
         );
     }
@@ -191,6 +246,9 @@ function CreateOrder(){
             event.stopPropagation();
         }else{
             console.log('a');
+            let aux = orderInfo;
+            aux.medicName = {medicName};
+            aux.patientEmail =
             changeToClinicStep();
         }
 
@@ -217,14 +275,37 @@ function CreateOrder(){
             changeToVerifyStep();
         }
 
-        setInfoValidated(true);
+        setClinicValidated(true);
+    };
+
+    //step 3 (verify and submit) form validation
+    const [verifyValidated, setVerifyValidated] = useState(false);
+    const handleVerifySubmit = (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+
+        console.log("verify", event);
+        for(let idx in event.target){
+            if(idx <= 25){
+                console.log(event.target[idx].name, event.target[idx].value);
+            }
+        }
+
+        if(form.checkValidity() === false){
+            event.stopPropagation();
+        }else{
+            console.log('c');
+            changeToVerifyStep();
+        }
+
+        setVerifyValidated(true);
     };
 
 
 
     return(
         <div className="row justify-content-center">
-            <div className={"card form-card " + activeClinicStep}>
+            <div className={"card form-card " + (activeClinicStep === "active" ? "clinic" : "")}>
 
                 <div className="stepper-wrapper-horizontal">
                     <div className="step-wrapper">
@@ -345,6 +426,7 @@ function CreateOrder(){
                                 >Next</Button>
                             </Form>
                     </div>
+
                     <div id="clinic-form" className={"custom-form tab-pane fade in " + clinicStep}>
                         <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
                             <div className="search-block">
@@ -352,7 +434,7 @@ function CreateOrder(){
                                     <Form.Group className="form-group col mt-1" controlId="clinicName">
                                         <Form.Label className="bmd-label-static">Search by clinic name</Form.Label>
                                         <Form.Control
-                                            type="text" style={{paddingTop: "14px"}}
+                                            type="text" style={{paddingTop: "10px"}}
                                             name="clinicName"
                                         />
                                     </Form.Group>
@@ -412,33 +494,31 @@ function CreateOrder(){
                                 </div>
                             </div>
 
-                            <div className="card mt-5">
+                            <div className="card results-card mt-5">
                                 <div className="card-body">
                                     <p className="card-title h4">Results</p>
                                     <hr/>
                                     <div className="d-flex flex-row">
-                                        <div id="results" className="list-group">
-                                            {clinicsList.length === 0 ? <h3 className="text-center py-5 lead">No clinics found based on search filters</h3> : <></>}
+                                        <div id="results" className="list-group result-section">
+                                            {clinicsList.length === 0 ? <h3 className="text-center py-5 lead">No clinics found based on search filters</h3>
+                                            :
                                             <ul className="nav flex-column" id="myTab" role="tablist">
                                             {clinicsList.map((item) => (
                                                 <Item key={item.userId} clinic={item}/>
                                             ))}
                                             </ul>
+                                            }
+
                                         </div>
                                         <div id="data" className="data-section">
                                             <h5 class="text-muted">Selected Clinic</h5>
-                                            <div className="tab-content">
-                                                {clinicItem === -1 ? <h4>No clinic selected</h4> : <ClinicInfo key={"selected_" + clinicItem} clinic={clinicsList.filter(clinic => clinic.userId === clinicItem)}/>}
+                                            <div className="">
+                                                {selectedClinic === null ? <h4>No clinic selected</h4> : <ClinicInfo key={"selected_" + selectedClinic.userId} item={selectedClinic}/>}
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-
 
                             <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
                             <Button className="create-btn mt-4 mb-2 float-right"
@@ -447,8 +527,62 @@ function CreateOrder(){
                             >Next</Button>
                         </Form>
                     </div>
+
                     <div id="verify-form" className={"custom-form fade in " + verifyStep}>
-                        <Form>
+                        <Form noValidate validation={verifyValidated} onSubmit={handleVerifySubmit}>
+                            <div className="card results-card mt-5">
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col">
+                                            <p className="card-title ml-3 h4">Medical order</p>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col">
+                                            <p className="card-subtitle ml-3 text-muted lead">Date: getCurrentDate()</p>
+                                        </div>
+                                    </div>
+                                    <hr className="mt-3 mb-4"/>
+                                    <div className="row justify-content-start">
+                                        <div className="col type">
+                                            <p className="type-title">Patient</p>
+                                            patientName
+                                        </div>
+                                        <div className="col type">
+                                            <p className="type-title">Medical Clinic</p>
+                                            clinicName
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div className="col type">
+                                            <p className="type-title">Patient insurance plan</p>
+                                            patientInsurancePlan
+                                        </div>
+                                        <div className="col type">
+                                            <p className="type-title">Patient insurance number</p>
+                                            patientInsuranceNumber
+                                        </div>
+                                    </div>
+                                    <hr className="mt-3 mb-5"/>
+                                    <p className="card-text text-center h5">
+                                        Study type: studyType
+                                    </p>
+                                    <p className="card-text text-center">orderDescription</p>
+                                    <hr className="mt-5 mb-4"/>
+                                    <div className="media">
+                                        <div className="media-body">
+                                            <h5 className="mt-0 mb-1 text-center">{medicName}</h5>
+                                            <p className="text-center">M.N.: medicLicenceNumber</p>
+                                        </div>
+                                        <img
+                                            className="align-self-end ml-3"
+                                            alt="medic's signature"
+                                            style={{width: "5rem;", maxHeight: "5em;"}}
+                                            src="https://picsum.photos/200"
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
                             <a onClick={changeToClinicStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
                             <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="verifySubmit"
