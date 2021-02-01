@@ -11,6 +11,150 @@ function CreateOrder(){
     const infoSubmit="bubba";
     const clinicSubmit="newgrounds forever";
     const verifySubmit="this man... this is a wonderful man";
+    //DUMMY DATA
+    const clinicsList = [
+        {
+            userId: 1,
+            name:"Anisa Sanusi's Sanatory",
+            email:"ass@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 17,
+            name:"Tennesse Institute of Traumatology & Introvertion",
+            email:"teinti@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 4,
+            name:"Badobeep",
+            email:"fnf@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 18,
+            name:"Prosigo a la meta",
+            email:"adl@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 26,
+            name:"yo mismo no pretendo",
+            email:"ocl@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 29,
+            name:"Anisa Sanusi's Sanatory",
+            email:"ass@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 31,
+            name:"Tennesse Institute of Traumatology & Introvertion",
+            email:"teinti@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 34,
+            name:"Badobeep",
+            email:"fnf@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 48,
+            name:"Prosigo a la meta",
+            email:"adl@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+        {
+            userId: 46,
+            name:"yo mismo no pretendo",
+            email:"ocl@medtransfer.com",
+            telephone:"911212155",
+            hours: {
+                //sun, mon, tue, wed, thr, fri, sat
+                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
+                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
+            },
+            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
+            medicalStudies: ["Allergy test", "ECG", "Consulta"]
+        },
+    ];
+    const daysOfTheWeek = [
+        {name:"Sunday", id: 0},
+        {name:"Monday", id: 1},
+        {name:"Tuesday", id: 2},
+        {name:"Wednesday", id: 3},
+        {name:"Thursday", id: 4},
+        {name:"Friday", id: 5},
+        {name:"Saturday", id: 6}
+    ];
+
+
 
     const history = useHistory();
 
@@ -27,7 +171,8 @@ function CreateOrder(){
         medicEmail: ''
     });
 
-    //states to know which step to show
+
+    //states used to know which step to show
     const [activeOrderStep, setActiveOrderStep] = useState("active");
     const [activeClinicStep, setActiveClinicStep] = useState("");
     const [activeVerifyStep, setActiveVerifyStep] = useState("");
@@ -71,8 +216,6 @@ function CreateOrder(){
 
     //schedule availability modal
     const [show, setShow] = useState(false);
-    const handleClose = () => {setShow(false);};
-    const handleShow = () => {setShow(true);};
 
     //show selected clinic
     const [selectedClinic, setSelectedClinic] = useState(null);
@@ -83,39 +226,12 @@ function CreateOrder(){
     const searchClinics = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log(event);
+        //CODE HERE THAT CALLS THE API AND FILLS UP clinicsList with the results
     };
-    const clinicsList = [
-        {
-            userId: 1,
-            name:"Anisa Sanusi's Sanatory",
-            email:"ass@medtransfer.com",
-            telephone:"911212155",
-            hours: {
-                //sun, mon, tue, wed, thr, fri, sat
-                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
-                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
-            },
-            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
-            medicalStudies: ["Allergy test", "ECG", "Consulta"]
-        },
-        {
-            userId: 17,
-            name:"Tennesse Institute of Traumatology & Introvertion",
-            email:"teinti@medtransfer.com",
-            telephone:"911212155",
-            hours: {
-                //sun, mon, tue, wed, thr, fri, sat
-                openHours: ["9:00","9:00","9:00","9:00","9:00","9:00","10:00"],
-                closeHours:["23:00","23:00","23:00","23:00","23:00","22:00","22:00"]
-            },
-            acceptedPlans: ["Galeno 300", "OSDE 4100", "Particular"],
-            medicalStudies: ["Allergy test", "ECG", "Consulta"]
-        }
-    ];
 
+
+    //components built based on API data
     const Item = (props) => {
-        const [isActive, setIsActive] = useState("")
         return(
             <li class="nav-item" key={props.clinic.name}>
                 <a
@@ -133,7 +249,6 @@ function CreateOrder(){
     }
 
     const ClinicInfo = (props) => {
-        console.log(props.item);
         return(
             <div
                 className="tab-pane tab-result"
@@ -186,20 +301,6 @@ function CreateOrder(){
         );
     }
 
-
-
-
-
-    const daysOfTheWeek = [
-        {name:"Sunday", id: 0},
-        {name:"Monday", id: 1},
-        {name:"Tuesday", id: 2},
-        {name:"Wednesday", id: 3},
-        {name:"Thursday", id: 4},
-        {name:"Friday", id: 5},
-        {name:"Saturday", id: 6}
-    ];
-
     const Day = (props) => {
         return (
             <tr>
@@ -240,15 +341,21 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log("order info", event);
-
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
             console.log('a');
+
             let aux = orderInfo;
             aux.medicName = {medicName};
-            aux.patientEmail =
+            aux.patientEmail = event.target[1].value;
+            aux.patientName = event.target[2].value;
+            aux.patientInsurancePlan = event.target[3].value;
+            aux.patientInsurancenNumber = event.target[4].value;
+            aux.studyType = event.target[5].value;
+            aux.orderDescription = event.target[6].value;
+            setOrderInfo(aux);
+
             changeToClinicStep();
         }
 
@@ -261,17 +368,15 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log("clinic", event);
-        for(let idx in event.target){
-            if(idx <= 25){
-                console.log(event.target[idx].name, event.target[idx].value);
-            }
-        }
-
-        if(form.checkValidity() === false){
+        if(form.checkValidity() === false || selectedClinic === null){
             event.stopPropagation();
         }else{
             console.log('b');
+
+            let aux = orderInfo;
+            aux.clinicId = selectedClinic.userId;
+            setOrderInfo(aux);
+
             changeToVerifyStep();
         }
 
@@ -284,18 +389,13 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log("verify", event);
-        for(let idx in event.target){
-            if(idx <= 25){
-                console.log(event.target[idx].name, event.target[idx].value);
-            }
-        }
-
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
-            console.log('c');
-            changeToVerifyStep();
+            //checking if it worked...
+            console.log("orderInfo", orderInfo);
+            //changeToVerifyStep();
+            //now it should send the order to the API and redirect the user to /view-study
         }
 
         setVerifyValidated(true);
@@ -528,9 +628,9 @@ function CreateOrder(){
                         </Form>
                     </div>
 
-                    <div id="verify-form" className={"custom-form fade in " + verifyStep}>
+                    <div id="verify-form" className={"custom-form tab-pane fade in " + verifyStep}>
                         <Form noValidate validation={verifyValidated} onSubmit={handleVerifySubmit}>
-                            <div className="card results-card mt-5">
+                            <div className="card">
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col">
@@ -574,7 +674,7 @@ function CreateOrder(){
                                             <p className="text-center">M.N.: medicLicenceNumber</p>
                                         </div>
                                         <img
-                                            className="align-self-end ml-3"
+                                            className="align-self-end ml-3 signature"
                                             alt="medic's signature"
                                             style={{width: "5rem;", maxHeight: "5em;"}}
                                             src="https://picsum.photos/200"
@@ -587,7 +687,7 @@ function CreateOrder(){
                             <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="verifySubmit"
                                     value={verifySubmit}
-                            >Next</Button>
+                            >Submit order</Button>
                         </Form>
                     </div>
                 </div>
