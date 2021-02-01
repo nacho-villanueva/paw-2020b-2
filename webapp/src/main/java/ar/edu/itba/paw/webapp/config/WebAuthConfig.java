@@ -60,7 +60,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()//TODO: set proper filters
-                    .antMatchers("/**").authenticated()
+                    .antMatchers("/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
                     .antMatchers(HttpMethod.POST, "/").permitAll()
                     .antMatchers(HttpMethod.GET, "/clinics/**").permitAll()
