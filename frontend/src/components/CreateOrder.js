@@ -219,7 +219,7 @@ function CreateOrder(){
 
     //show selected clinic
     const [selectedClinic, setSelectedClinic] = useState(null);
-    const selectClinic = (listItem) => { setSelectedClinic(listItem); console.log("ey que pasa aca", listItem);};
+    const selectClinic = (listItem) => { setSelectedClinic(listItem);};
 
 
     //search clinics call
