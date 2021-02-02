@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -25,4 +26,12 @@ public interface UserDao {
     Optional<VerificationToken> getVerificationToken(String token);
 
     void freeVerificationToken(User user);
+
+    User updateUser(User user, String email, String password, String locale);
+
+    List<User> getAll(int page, int pageSize);
+
+    int userCount();
+
+    User updateLocale(User user, String locale);
 }

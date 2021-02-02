@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -108,6 +109,28 @@ public class UserServiceImpl implements UserService {
             this.setUserFlags(verificationToken.getUser());
         });
         return maybeToken;
+    }
+
+    @Override
+    public User updateUser(User user, String email, String password, String locale) {
+        return userDao.updateUser(user,email,password,locale);
+    }
+
+    @Override
+    public List<User> getAll(final int page, final int pageSize) {
+        return userDao.getAll(page, pageSize);
+    }
+
+    @Override
+    public int getPageCount(int perPage) {
+        int userCount = userDao.userCount();
+
+        return (int) Math.ceil((double)userCount / perPage);
+    }
+
+    @Override
+    public User updateLocale(User user, String locale) {
+        return userDao.updateLocale(user,locale);
     }
 
     private void setUserFlags(final User user) {
