@@ -15,13 +15,15 @@ public class UserGetDto {
     private String email;
     private String url;
 
-    public static UserGetDto fromUser(User user, final UriInfo uriInfo) {
-        final UserGetDto dto = new UserGetDto();
-        dto.id = user.getId();
-        dto.email = user.getEmail();
+    public UserGetDto() {
+
+    }
+
+    public UserGetDto(User user, final UriInfo uriInfo) {
+        this.id = user.getId();
+        this.email = user.getEmail();
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path("users").path(user.getId().toString());
-        dto.url = uriBuilder.build().toString();
-        return dto;
+        this.url = uriBuilder.build().toString();
     }
 
     public String getEmail() {

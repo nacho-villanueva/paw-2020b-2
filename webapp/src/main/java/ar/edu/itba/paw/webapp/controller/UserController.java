@@ -57,7 +57,7 @@ public class UserController {
 
         final int pages = us.getPageCount(perPage);
 
-        List<UserGetDto> userGetDtoList = users.stream().map(u -> UserGetDto.fromUser(u, uriInfo)).collect(Collectors.toList());
+        List<UserGetDto> userGetDtoList = users.stream().map(u -> new UserGetDto(u, uriInfo)).collect(Collectors.toList());
 
         EntityTag etag = new EntityTag(Integer.toHexString(userGetDtoList.hashCode()));
 
@@ -95,7 +95,7 @@ public class UserController {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        UserGetDto userGetDto = UserGetDto.fromUser(maybeUser.get(),uriInfo);
+        UserGetDto userGetDto = new UserGetDto(maybeUser.get(),uriInfo);
         EntityTag etag = new EntityTag(Integer.toHexString(userGetDto.hashCode()));
 
         return Response.ok(userGetDto).type(UserGetDto.CONTENT_TYPE+"+json")

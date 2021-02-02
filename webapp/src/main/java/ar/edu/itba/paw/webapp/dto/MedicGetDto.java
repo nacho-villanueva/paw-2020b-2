@@ -38,7 +38,7 @@ public class MedicGetDto {
     }
 
     public MedicGetDto(Medic medic, UriInfo uriInfo){
-        this.user = UserGetDto.fromUser(medic.getUser(),uriInfo);
+        this.user = new UserGetDto(medic.getUser(),uriInfo);
         this.name = medic.getName();
         this.telephone = medic.getTelephone();
         this.licenceNumber = medic.getLicenceNumber();

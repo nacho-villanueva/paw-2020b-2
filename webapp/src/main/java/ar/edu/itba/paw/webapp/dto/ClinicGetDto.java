@@ -41,7 +41,7 @@ public class ClinicGetDto {
     }
 
     public ClinicGetDto(Clinic clinic, UriInfo uriInfo){
-        this.user = UserGetDto.fromUser(clinic.getUser(),uriInfo);
+        this.user = new UserGetDto(clinic.getUser(),uriInfo);
         this.name = clinic.getName();
         this.telephone = clinic.getTelephone();
         this.verified = clinic.isVerified();

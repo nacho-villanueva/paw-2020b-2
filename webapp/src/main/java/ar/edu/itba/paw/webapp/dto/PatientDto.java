@@ -33,7 +33,7 @@ public class PatientDto {
     }
 
     public PatientDto(Patient patient, UriInfo uriInfo){
-        this.user = UserGetDto.fromUser(patient.getUser(),uriInfo);
+        this.user = new UserGetDto(patient.getUser(),uriInfo);
         this.name = patient.getName();
         this.medicPlan = new MedicPlanDto(patient.getMedicPlan(),patient.getMedicPlanNumber());
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
