@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.models.User;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -15,7 +16,7 @@ public class MedicGetDto {
     private static final String MEDICAL_FIELDS__PATH = "medical-fields";
 
     // Variables
-    private Integer id;
+    private UserDto user;
 
     private String name;
 
@@ -37,7 +38,7 @@ public class MedicGetDto {
     }
 
     public MedicGetDto(Medic medic, UriInfo uriInfo){
-        this.id = medic.getUser().getId();
+        this.user = new UserDto(medic.getUser(),uriInfo);
         this.name = medic.getName();
         this.telephone = medic.getTelephone();
         this.licenceNumber = medic.getLicenceNumber();
@@ -53,12 +54,12 @@ public class MedicGetDto {
     }
 
     // Getters&Setters
-    public Integer getId() {
-        return id;
+    public UserDto getUser() {
+        return user;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 
     public String getName() {
@@ -123,11 +124,11 @@ public class MedicGetDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MedicGetDto that = (MedicGetDto) o;
-        return verified == that.verified && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(identification, that.identification) && Objects.equals(licenceNumber, that.licenceNumber) && Objects.equals(medicalFields, that.medicalFields) && Objects.equals(url, that.url);
+        return verified == that.verified && Objects.equals(user, that.user) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(identification, that.identification) && Objects.equals(licenceNumber, that.licenceNumber) && Objects.equals(medicalFields, that.medicalFields) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, telephone, identification, licenceNumber, medicalFields, verified, url);
+        return Objects.hash(user, name, telephone, identification, licenceNumber, medicalFields, verified, url);
     }
 }

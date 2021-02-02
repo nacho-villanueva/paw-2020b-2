@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Clinic;
 import ar.edu.itba.paw.models.ClinicDayHours;
+import ar.edu.itba.paw.models.User;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -18,7 +19,7 @@ public class ClinicGetDto {
     private static final String ACCEPTED_PLANS_PATH = "accepted-plans";
 
     // Variables
-    private Integer id;
+    private UserDto user;
 
     private String name;
 
@@ -40,7 +41,7 @@ public class ClinicGetDto {
     }
 
     public ClinicGetDto(Clinic clinic, UriInfo uriInfo){
-        this.id = clinic.getUser().getId();
+        this.user = new UserDto(clinic.getUser(),uriInfo);
         this.name = clinic.getName();
         this.telephone = clinic.getTelephone();
         this.verified = clinic.isVerified();
@@ -59,12 +60,12 @@ public class ClinicGetDto {
     }
 
     // Getters&Setters
-    public Integer getId() {
-        return id;
+    public UserDto getUser() {
+        return user;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 
     public String getName() {
@@ -129,11 +130,11 @@ public class ClinicGetDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClinicGetDto that = (ClinicGetDto) o;
-        return verified == that.verified && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours) && Objects.equals(url, that.url);
+        return verified == that.verified && Objects.equals(user, that.user) && Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, telephone, availableStudies, acceptedPlans, hours, verified, url);
+        return Objects.hash(user, name, telephone, availableStudies, acceptedPlans, hours, verified, url);
     }
 }

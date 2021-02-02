@@ -64,7 +64,7 @@ public class OrderController {
 
     @GET
     @Path("/")
-    @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE})
+    @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
     public Response getOrders(
             @Valid @BeanParam OrderFilterDto orderFilterDto,
             @QueryParam("page") Integer page,
@@ -329,7 +329,7 @@ public class OrderController {
     @Path("{id}/shared-with")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addMedicsSharedWith(
-            @Valid UserIdOnlyDto userIdOnlyDto,
+            @Valid UserDto userDto,
             @PathParam("id") final String encodedId
     ){
 
@@ -356,14 +356,14 @@ public class OrderController {
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
-        Set<ConstraintViolation<UserIdOnlyDto>> violations = validator.validate(userIdOnlyDto);
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
 
         if(!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).language(locale)
                     .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
                     .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
-        Optional<Medic> medicOptional = medicService.findByUserId(userIdOnlyDto.getId());
+        Optional<Medic> medicOptional = medicService.findByUserId(userDto.getId());
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
             return Response.status(Response.Status.FORBIDDEN).build();
         User userMedic = medicOptional.get().getUser();
