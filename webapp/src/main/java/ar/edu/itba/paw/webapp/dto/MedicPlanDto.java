@@ -10,7 +10,6 @@ public class MedicPlanDto {
     public static final String CONTENT_TYPE = "application/vnd.medic-plan.v1";
 
     // Variables
-    @NotBlank(message = "MedicPlanDto.plan.NotBlank")
     public String plan;
 
     public String number;

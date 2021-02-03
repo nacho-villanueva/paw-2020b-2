@@ -89,8 +89,6 @@ public class MedicalFieldController {
 
         Response.ResponseBuilder response;
 
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
         // no errors
         final URI uri;
         String name = medicalFieldDto.getName();

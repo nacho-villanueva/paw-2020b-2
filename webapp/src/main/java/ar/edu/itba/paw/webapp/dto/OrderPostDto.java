@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.webapp.dto.annotations.MedicPlan;
 import ar.edu.itba.paw.webapp.dto.validators.ClinicIdIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.MedicPlanDtoIsCompleteAndValid;
 import ar.edu.itba.paw.webapp.dto.validators.StudyTypeIdIsValid;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -32,7 +32,7 @@ public class OrderPostDto {
 
     private String description;
 
-    @MedicPlanDtoIsCompleteAndValid(message = "OrderPostAndPutDto.medicPlan.MedicPlanDtoIsCompleteAndValid")
+    @MedicPlan(message = "OrderPostAndPutDto.medicPlan.MedicPlanDtoIsCompleteAndValid")
     private MedicPlanDto medicPlan;
 
     // Getters&Setters

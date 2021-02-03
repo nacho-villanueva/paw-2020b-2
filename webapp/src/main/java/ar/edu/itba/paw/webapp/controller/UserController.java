@@ -109,8 +109,7 @@ public class UserController {
     @Consumes(value = { MediaType.APPLICATION_JSON, UserPostDto.CONTENT_TYPE+"+json" })
     public Response registerUser(@Valid @RequestBody UserPostDto userDto) {
         if(isEmpty(userDto.getLocale())) {
-            Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-            userDto.setLocale(locale.toString());
+            userDto.setLocale(Locale.getDefault().toString());
         }
         User user = us.register(userDto.getEmail(),userDto.getPassword(),userDto.getLocale());
 

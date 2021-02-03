@@ -1,51 +1,51 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Patient;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.PatientPostGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.PatientPutGroup;
-import ar.edu.itba.paw.webapp.dto.validators.MedicPlanDtoIsCompleteAndValid;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Objects;
 
-public class PatientDto {
+public class PatientGetDto {
 
     // Constants
     public static final String CONTENT_TYPE = "application/vnd.study-type.v1";
-    private static final String REQUEST_PATH = "patients";
+    public static final String REQUEST_PATH = "patients";
 
     // Variables
-    private UserGetDto user;
+    private String user;
 
-    @NotBlank(message = "PatientDto.name.NotBlank", groups = {PatientPostGroup.class})
     private String name;
 
-    @MedicPlanDtoIsCompleteAndValid(message = "PatientDto.medicPlan.MedicPlanDtoIsCompleteAndValid", groups = {PatientPostGroup.class, PatientPutGroup.class})
-    private MedicPlanDto medicPlan;
+    private String medicPlan;
+
+    private String medicPlanNumber;
 
     private String url;
 
     // Constructors
-    public PatientDto() {
+    public PatientGetDto() {
         // Use factory methods
     }
 
-    public PatientDto(Patient patient, UriInfo uriInfo){
-        this.user = new UserGetDto(patient.getUser(),uriInfo);
+    public PatientGetDto(Patient patient, UriInfo uriInfo){
+        UriBuilder userUrl = uriInfo.getBaseUriBuilder().path(UserGetDto.REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
+        this.user = userUrl.build().toString();
         this.name = patient.getName();
-        this.medicPlan = new MedicPlanDto(patient.getMedicPlan(),patient.getMedicPlanNumber());
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
-        this.url = uriBuilder.build().toString();
+        this.medicPlan = patient.getMedicPlan();
+        this.medicPlanNumber = patient.getMedicPlanNumber();
+        UriBuilder patientUrl = uriInfo.getBaseUriBuilder().path(REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
+        this.url = patientUrl.build().toString();
     }
 
     // Getters&Setters
-    public UserGetDto getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(UserGetDto user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -57,11 +57,11 @@ public class PatientDto {
         this.name = name;
     }
 
-    public MedicPlanDto getMedicPlan() {
+    public String getMedicPlan() {
         return medicPlan;
     }
 
-    public void setMedicPlan(MedicPlanDto medicPlan) {
+    public void setMedicPlan(String medicPlan) {
         this.medicPlan = medicPlan;
     }
 
@@ -78,12 +78,20 @@ public class PatientDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PatientDto that = (PatientDto) o;
+        PatientGetDto that = (PatientGetDto) o;
         return Objects.equals(user, that.user) && Objects.equals(name, that.name) && Objects.equals(medicPlan, that.medicPlan) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(user, name, medicPlan, url);
+    }
+
+    public String getMedicPlanNumber() {
+        return medicPlanNumber;
+    }
+
+    public void setMedicPlanNumber(String medicPlanNumber) {
+        this.medicPlanNumber = medicPlanNumber;
     }
 }

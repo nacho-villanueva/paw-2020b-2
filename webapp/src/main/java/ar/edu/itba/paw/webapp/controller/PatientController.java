@@ -4,28 +4,21 @@ import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.PatientService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
-import ar.edu.itba.paw.webapp.dto.PatientDto;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.PatientPostGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.PatientPutGroup;
+import ar.edu.itba.paw.webapp.dto.PatientGetDto;
+import ar.edu.itba.paw.webapp.dto.PatientPostDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Path("patients")
 @Component
@@ -36,16 +29,10 @@ public class PatientController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private PatientService patientService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;
@@ -54,72 +41,53 @@ public class PatientController {
     private HttpHeaders headers;
 
     @GET
-    @Path("/")
-    @Produces(value = { MediaType.APPLICATION_JSON, PatientDto.CONTENT_TYPE+"+json"})
+    @Produces(value = { MediaType.APPLICATION_JSON, PatientGetDto.CONTENT_TYPE+"+json"})
     public Response listPatients(){
         return Response.noContent().build();
     }
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, PatientDto.CONTENT_TYPE+"+json"})
-    public Response getPatient(@PathParam("id") final Integer patientId){
-
-        if(patientId==null)
-            return Response.status(Response.Status.BAD_REQUEST).build();
-
+    @Produces(value = { MediaType.APPLICATION_JSON, PatientGetDto.CONTENT_TYPE+"+json"})
+    public Response getPatient(@PathParam("id") final int patientId){
         Optional<Patient> patientOptional = patientService.findByUserId(patientId);
         if(!patientOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        PatientDto patientDto = new PatientDto(patientOptional.get(),uriInfo);
-        EntityTag entityTag = new EntityTag(String.valueOf(patientDto.hashCode()));
+        PatientGetDto patientDto = new PatientGetDto(patientOptional.get(),uriInfo);
+        EntityTag entityTag = new EntityTag(Integer.toHexString(patientDto.hashCode()));
 
-        ResponseBuilder response = Response.ok(patientDto).type(PatientDto.CONTENT_TYPE+"+json")
+        ResponseBuilder response = Response.ok(patientDto).type(PatientGetDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerPatient(
-            @Valid PatientDto patientDto
+            @Valid PatientPostDto patientDto
     ){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        //We extract user info from authentication
+        User loggedUser = getLoggedUser();
+
+        if(loggedUser == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<PatientDto>> violations = validator.validate(patientDto, PatientPostGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
+        }
 
         Patient patient;
         String name = patientDto.getName();
-        if(patientDto.getMedicPlan()!=null){
-            String medicPlan = patientDto.getMedicPlan().getPlan();
-            String medicPlanNumber = patientDto.getMedicPlan().getNumber();
-
+        //If medic plan is empty, then given the dto is valid as requested, plan number is also empty
+        if(isEmpty(patientDto.getMedicPlan())) {
+            patient = patientService.register(loggedUser, name);
+        } else {
+            //They can specify medic plan but no number so we don't care what's on the medic plan number in this case
             patient = patientService.register(
-                    user,
+                    loggedUser,
                     name,
-                    medicPlan,
-                    medicPlanNumber
+                    patientDto.getMedicPlan(),
+                    patientDto.getMedicPlanNumber()
             );
-        }else{
-            patient = patientService.register(user, name);
         }
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(patient.getUser().getId())).build();
@@ -131,63 +99,49 @@ public class PatientController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updatePatient(
-            @PathParam("id") final Integer patientId,
-            @Valid PatientDto patientDto
+            @PathParam("id") final int patientId,
+            PatientPostDto patientDto
     ){
-        if(patientId==null)
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        //We extract user info from authentication
+        User loggedUser = getLoggedUser();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        if(loggedUser == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
-
-        Optional<Patient> patientOptional = patientService.findByUserId(patientId);
-        if(!patientOptional.isPresent())
-            return Response.status(Response.Status.NOT_FOUND).build();
-        Patient patient = patientOptional.get();
-
-        if(!user.getId().equals(patient.getUser().getId()))
-            return Response.status(Response.Status.FORBIDDEN).build();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<PatientDto>> violations = validator.validate(patientDto, PatientPutGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
-
-
-        String name = (isEmpty(patientDto.getName()))?(patient.getName()):(patientDto.getName());
-        String medicPlan = patient.getMedicPlan();
-        String medicPlanNumber = patient.getMedicPlanNumber();
-        if(patientDto.getMedicPlan()!=null){
-            medicPlan = patientDto.getMedicPlan().getPlan();
-            medicPlanNumber = patientDto.getMedicPlan().getNumber();
         }
 
-        Patient newPatient = patientService.updatePatientInfo(
-                user,
+        //We search for patient based on input
+        Optional<Patient> maybePatient = patientService.findByUserId(patientId);
+        if(!maybePatient.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
+        Patient patient = maybePatient.get();
+
+        if(!loggedUser.getId().equals(patient.getUser().getId()))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+
+        //We extract the data we need from the given DTO and use previous values for the ones missing
+        String name = (isEmpty(patientDto.getName())) ? (patient.getName()) : (patientDto.getName());
+        String medicPlan = (isEmpty(patientDto.getMedicPlan())) ? patient.getMedicPlan() : patientDto.getMedicPlan();
+        String medicPlanNumber = (isEmpty(patientDto.getMedicPlanNumber())) ? patient.getMedicPlanNumber() : patientDto.getMedicPlanNumber();
+
+        //We persist the changes
+        patientService.updatePatientInfo(
+                loggedUser,
                 name,
                 medicPlan,
                 medicPlanNumber
         );
 
-        URI uri = uriInfo.getBaseUriBuilder().path("patients")
-                .path(String.valueOf(newPatient.getUser().getId())).build();
-
-        return Response.noContent().location(uri).build();
+        //Location is same as request url
+        return Response.noContent().location(uriInfo.getRequestUriBuilder().build()).build();
     }
 
-    // auxiliar functions
-    private boolean isEmpty(String s){
-        return s==null || s.trim().length()==0;
+    private User getLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getName() == null)
+            return null;
+
+        Optional<User> maybeUser = userService.findByEmail(auth.getName());
+        return maybeUser.orElse(null);
     }
 }

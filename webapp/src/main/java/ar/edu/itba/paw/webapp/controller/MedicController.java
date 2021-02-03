@@ -123,17 +123,6 @@ public class MedicController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         User user = userOptional.get();
 
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<MedicPostAndPutDto>> violations = validator.validate(medicPostAndPutDto, MedicPostGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
-
         ImageDto identification = medicPostAndPutDto.getIdentification();
 
         String name = medicPostAndPutDto.getName();
@@ -220,18 +209,7 @@ public class MedicController {
         User user = userOptional.get();
 
         if(!user.getId().equals(medic.getUser().getId()))
-            return Response.status(Response.Status.FORBIDDEN).build();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<MedicPostAndPutDto>> violations = validator.validate(medicPostAndPutDto, MedicPutGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         ImageDto identification = medicPostAndPutDto.getIdentification();
 

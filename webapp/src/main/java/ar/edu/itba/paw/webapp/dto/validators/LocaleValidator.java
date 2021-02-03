@@ -20,6 +20,11 @@ public class LocaleValidator implements ConstraintValidator<Locale, String> {
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return ISO_LANGUAGES.contains(s) || ISO_COUNTRIES.contains(s);
+        if(s == null) {
+            return true;
+        }
+        String language = s.split("-")[0];
+        String country = s.split("-")[1];
+        return ISO_LANGUAGES.contains(s.toLowerCase()) || (ISO_LANGUAGES.contains(language.toLowerCase()) && ISO_COUNTRIES.contains(country.toUpperCase()));
     }
 }
