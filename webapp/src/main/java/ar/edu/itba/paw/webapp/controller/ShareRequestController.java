@@ -8,24 +8,21 @@ import ar.edu.itba.paw.services.MedicService;
 import ar.edu.itba.paw.services.ShareRequestService;
 import ar.edu.itba.paw.services.StudyTypeService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.ShareRequestGetDto;
+import ar.edu.itba.paw.webapp.dto.ShareRequestPostDto;
+import ar.edu.itba.paw.webapp.dto.StudyTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("share-requests")
@@ -38,9 +35,6 @@ public class ShareRequestController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private ShareRequestService shareRequestService;
 
     @Autowired
@@ -51,9 +45,6 @@ public class ShareRequestController {
 
     @Autowired
     private StudyTypeService studyTypeService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;
@@ -160,15 +151,6 @@ public class ShareRequestController {
             @Valid ShareRequestPostDto shareRequestPostDto
     ){
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<ShareRequestPostDto>> violations = validator.validate(shareRequestPostDto);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getName()==null)

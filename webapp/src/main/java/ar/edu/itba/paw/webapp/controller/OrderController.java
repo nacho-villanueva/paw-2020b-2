@@ -3,17 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.OrderPostGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.OrderPutGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -33,13 +28,7 @@ public class OrderController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private UrlEncoderService urlEncoderService;
@@ -76,17 +65,6 @@ public class OrderController {
         boolean isGetAllQuery = (isEmpty(orderFilterDto.getClinics()) && isEmpty(orderFilterDto.getMedics()) &&
                 isEmpty(orderFilterDto.getPatientEmails()) && orderFilterDto.getFromDate()==null && orderFilterDto.getToDate()==null
                 && isEmpty(orderFilterDto.getStudyTypes()));
-
-        if(!isGetAllQuery){
-            Set<ConstraintViolation<OrderFilterDto>> violations = validator.validate(orderFilterDto);
-
-            if(!violations.isEmpty()){
-                response = Response.status(Response.Status.BAD_REQUEST).language(locale)
-                        .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
-                        .type(ConstraintViolationDto.CONTENT_TYPE+"+json");
-                return response.build();
-            }
-        }
 
         // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -356,19 +334,12 @@ public class OrderController {
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
-        Set<ConstraintViolation<UserGetDto>> violations = validator.validate(userDto);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
-
         Optional<Medic> medicOptional = medicService.findByUserId(userDto.getId());
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
             return Response.status(Response.Status.FORBIDDEN).build();
         User userMedic = medicOptional.get().getUser();
 
-        if(order.getSharedWith().contains(userMedic))
+        if(order.getSharedWith().contains(userMedic) || order.getMedic().getUser().equals(userMedic))
             return Response.status(422).build();
 
         Order newOrder = orderService.shareWithMedic(order,userMedic);
@@ -383,18 +354,11 @@ public class OrderController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createOrder(
-            @Valid OrderPostAndPutDto orderPostAndPutDto
+            @Valid OrderPostDto orderPostDto
     ){
         Response.ResponseBuilder response;
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<OrderPostAndPutDto>> violations = validator.validate(orderPostAndPutDto, OrderPostGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale)))).collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getName()==null)
@@ -408,25 +372,25 @@ public class OrderController {
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPostAndPutDto.getClinicId());
+        Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPostDto.getClinicId());
         if(!clinicOptional.isPresent() || !clinicOptional.get().isVerified())
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Optional<StudyType> studyTypeOptional = studyTypeService.findById(orderPostAndPutDto.getStudyTypeId());
+        Optional<StudyType> studyTypeOptional = studyTypeService.findById(orderPostDto.getStudyTypeId());
         if(!studyTypeOptional.isPresent())
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
         Medic medic = medicOptional.get();
         LocalDate localDate = LocalDate.now();
         Clinic clinic = clinicOptional.get();
-        String patientEmail = orderPostAndPutDto.getPatientEmail();
-        String patientName = orderPostAndPutDto.getPatientName();
+        String patientEmail = orderPostDto.getPatientEmail();
+        String patientName = orderPostDto.getPatientName();
         StudyType studyType = studyTypeOptional.get();
-        String description = orderPostAndPutDto.getDescription();
+        String description = orderPostDto.getDescription();
         String identificationType = medic.getIdentificationType();
         byte[] identification = medic.getIdentification();
-        String medicPlan = (orderPostAndPutDto.getMedicPlan()==null)? null : orderPostAndPutDto.getMedicPlan().getPlan();
-        String medicPlanNumber = (orderPostAndPutDto.getMedicPlan()==null)? null : orderPostAndPutDto.getMedicPlan().getNumber();
+        String medicPlan = (orderPostDto.getMedicPlan()==null)? null : orderPostDto.getMedicPlan().getPlan();
+        String medicPlanNumber = (orderPostDto.getMedicPlan()==null)? null : orderPostDto.getMedicPlan().getNumber();
 
         Order order;
         try{
@@ -460,7 +424,7 @@ public class OrderController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateOrder(
             @PathParam("id") final String encodedId,
-            @Valid OrderPostAndPutDto orderPostAndPutDto
+            @Valid OrderPutDto orderPutDto
     ){
 
         Response.ResponseBuilder response;
@@ -490,15 +454,7 @@ public class OrderController {
                 !order.getMedic().getUser().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        Set<ConstraintViolation<OrderPostAndPutDto>> violations = validator.validate(orderPostAndPutDto, OrderPutGroup.class);
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
-                            .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
-
-        Integer clinicId = orderPostAndPutDto.getClinicId();
+        Integer clinicId = orderPutDto.getClinicId();
 
         final String encodedPath;
         final URI uri;
@@ -510,7 +466,7 @@ public class OrderController {
             return response.build();
         }
 
-        final Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPostAndPutDto.getClinicId());
+        final Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPutDto.getClinicId());
         if(!clinicOptional.isPresent() || !clinicOptional.get().isVerified())
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 

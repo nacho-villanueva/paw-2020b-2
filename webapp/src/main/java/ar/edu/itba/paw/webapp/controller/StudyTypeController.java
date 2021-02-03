@@ -5,22 +5,18 @@ import ar.edu.itba.paw.models.StudyType;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.StudyTypeService;
 import ar.edu.itba.paw.webapp.dto.ClinicGetDto;
-import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
 import ar.edu.itba.paw.webapp.dto.StudyTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import javax.validation.*;
+import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("study-types")
@@ -34,16 +30,10 @@ public class StudyTypeController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private StudyTypeService studyTypeService;
 
     @Autowired
     private ClinicService clinicService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;
@@ -111,17 +101,6 @@ public class StudyTypeController {
         Response.ResponseBuilder response;
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<StudyTypeDto>> violations = validator.validate(studyTypeDto);
-
-        if(!violations.isEmpty()){
-            response = Response.status(Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
-                            .map(cv -> (new ConstraintViolationDto(cv,messageSource.getMessage(cv.getMessageTemplate(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json");
-            return response.build();
-        }
 
         // no errors
         final URI uri;

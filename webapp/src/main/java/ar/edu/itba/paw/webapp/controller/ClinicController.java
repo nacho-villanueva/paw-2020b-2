@@ -1,23 +1,25 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.models.StudyType;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("clinics")
@@ -31,16 +33,10 @@ public class ClinicController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private ClinicService clinicService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;
@@ -69,17 +65,6 @@ public class ClinicController {
 
         ClinicHours clinicHours=null;
         if(hours!=null && hours.getDays()!=null){
-            Set<ConstraintViolation<ClinicHoursAvailabilityDto>> violations = validator.validate(hours);
-
-            if(!violations.isEmpty()){
-                response = Response.status(Response.Status.BAD_REQUEST).language(locale)
-                        .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
-                                .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                                .collect(Collectors.toList())) ) {})
-                        .type(ConstraintViolationDto.CONTENT_TYPE+"+json");
-                return response.build();
-            }
-
             clinicHours = hours.getClinicHours();
         }
 
@@ -262,20 +247,11 @@ public class ClinicController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerClinic(
-            @Valid ClinicPostAndPutDto clinicPostAndPutDto
+            @Valid ClinicPostDto clinicPostDto
     ){
         Response.ResponseBuilder response;
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<ClinicPostAndPutDto>> violations = validator.validate(clinicPostAndPutDto, ClinicPostGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getName()==null)
@@ -285,11 +261,11 @@ public class ClinicController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         User user = userOptional.get();
 
-        String name = clinicPostAndPutDto.getName();
-        String telephone = clinicPostAndPutDto.getTelephone();
-        Collection<StudyType> availableStudies = clinicPostAndPutDto.getStudiesCollection();
-        Set<String> medicPlans = clinicPostAndPutDto.getMedicPlansCollection();
-        ClinicHours clinicHours = clinicPostAndPutDto.getClinicHours();
+        String name = clinicPostDto.getName();
+        String telephone = clinicPostDto.getTelephone();
+        Collection<StudyType> availableStudies = clinicPostDto.getStudiesCollection();
+        Set<String> medicPlans = clinicPostDto.getMedicPlansCollection();
+        ClinicHours clinicHours = clinicPostDto.getClinicHours();
 
         Clinic clinic = clinicService.register(
                 user,
@@ -311,7 +287,7 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateClinic(
             @PathParam("id") String id,
-            @Valid ClinicPostAndPutDto clinicPostAndPutDto
+            @Valid ClinicPutDto clinicPutDto
     ){
         Response.ResponseBuilder response;
 
@@ -345,43 +321,34 @@ public class ClinicController {
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
-        Set<ConstraintViolation<ClinicPostAndPutDto>> violations = validator.validate(clinicPostAndPutDto);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream()
-                            .map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
-
         // no errors
         final URI uri;
 
         String name;
-        if (isEmpty(clinicPostAndPutDto.getName()))
+        if (isEmpty(clinicPutDto.getName()))
             name = clinic.getName();
         else
-            name = clinicPostAndPutDto.getName();
+            name = clinicPutDto.getName();
         String telephone;
-        if (isEmpty(clinicPostAndPutDto.getTelephone()))
+        if (isEmpty(clinicPutDto.getTelephone()))
             telephone = clinic.getTelephone();
         else
-            telephone = clinicPostAndPutDto.getTelephone();
+            telephone = clinicPutDto.getTelephone();
         Collection<StudyType> availableStudies;
-        if (clinicPostAndPutDto.getStudiesCollection() == null || clinicPostAndPutDto.getStudiesCollection().isEmpty())
+        if (clinicPutDto.getStudiesCollection() == null || clinicPutDto.getStudiesCollection().isEmpty())
             availableStudies = clinic.getMedicalStudies();
         else
-            availableStudies = clinicPostAndPutDto.getStudiesCollection();
+            availableStudies = clinicPutDto.getStudiesCollection();
         Set<String> medicPlans;
-        if (clinicPostAndPutDto.getMedicPlansCollection() == null)
+        if (clinicPutDto.getMedicPlansCollection() == null)
             medicPlans = clinic.getAcceptedPlans();
         else
-            medicPlans = clinicPostAndPutDto.getMedicPlansCollection();
+            medicPlans = clinicPutDto.getMedicPlansCollection();
         ClinicHours clinicHours;
-        if (clinicPostAndPutDto.getClinicHours() == null)
+        if (clinicPutDto.getClinicHours() == null)
             clinicHours = clinic.getHours();
         else
-            clinicHours = clinicPostAndPutDto.getClinicHours();
+            clinicHours = clinicPutDto.getClinicHours();
         boolean isVerified = clinic.isVerified();
 
         Clinic newClinic = clinicService.updateClinicInfo(
