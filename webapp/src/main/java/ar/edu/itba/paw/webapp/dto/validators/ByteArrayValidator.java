@@ -1,16 +1,17 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
+import ar.edu.itba.paw.webapp.dto.annotations.ByteArray;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.nio.charset.Charset;
 import java.util.Base64;
 
-public class ByteArrayIsValidValidator implements ConstraintValidator<ByteArrayIsValid, String> {
+public class ByteArrayValidator implements ConstraintValidator<ByteArray, String> {
 
     private Integer max;
 
     @Override
-    public void initialize(ByteArrayIsValid byteArrayIsValid) {
+    public void initialize(ByteArray byteArrayIsValid) {
         this.max = byteArrayIsValid.max();
     }
 

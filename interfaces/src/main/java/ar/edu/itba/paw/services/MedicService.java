@@ -44,4 +44,6 @@ public interface MedicService {
     Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
 
     boolean knowsField(int medicId, int fieldId);
+
+    int getPageCount(int perPage);
 }

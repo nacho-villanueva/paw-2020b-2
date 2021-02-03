@@ -13,10 +13,10 @@ public class MedicGetDto {
     public static final String CONTENT_TYPE = "application/vnd.medic.v1";
     private static final String REQUEST_PATH = "medics";
     private static final String IDENTIFICATION_PATH = "identification";
-    private static final String MEDICAL_FIELDS__PATH = "medical-fields";
+    private static final String MEDICAL_FIELDS_PATH = "medical-fields";
 
     // Variables
-    private UserGetDto user;
+    private String user;
 
     private String name;
 
@@ -38,14 +38,15 @@ public class MedicGetDto {
     }
 
     public MedicGetDto(Medic medic, UriInfo uriInfo){
-        this.user = new UserGetDto(medic.getUser(),uriInfo);
+        UriBuilder userUrl = uriInfo.getBaseUriBuilder().path(UserGetDto.REQUEST_PATH).path(String.valueOf(medic.getUser().getId()));
+        this.user = userUrl.build().toString();
         this.name = medic.getName();
         this.telephone = medic.getTelephone();
         this.licenceNumber = medic.getLicenceNumber();
         this.verified = medic.isVerified();
 
         this.identification = getUriBuilder(medic,uriInfo).path(IDENTIFICATION_PATH).build().toString();
-        this.medicalFields = getUriBuilder(medic, uriInfo).path(MEDICAL_FIELDS__PATH).build().toString();
+        this.medicalFields = getUriBuilder(medic, uriInfo).path(MEDICAL_FIELDS_PATH).build().toString();
         this.url = getUriBuilder(medic, uriInfo).build().toString();
     }
 
@@ -54,11 +55,11 @@ public class MedicGetDto {
     }
 
     // Getters&Setters
-    public UserGetDto getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(UserGetDto user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

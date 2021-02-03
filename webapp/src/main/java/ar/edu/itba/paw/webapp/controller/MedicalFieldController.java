@@ -29,11 +29,7 @@ public class MedicalFieldController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
     public Response listMedicalFields() {
 
@@ -58,18 +54,11 @@ public class MedicalFieldController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
-    public Response getMedicalFieldById(@PathParam("id") final String id){
+    public Response getMedicalFieldById(@PathParam("id") final int id){
 
         Response.ResponseBuilder response;
-        int medicalFieldId;
 
-        try {
-            medicalFieldId = Integer.parseInt(id);
-        }catch (Error e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<MedicalField> medicalFieldOptional = medicalFieldService.findById(medicalFieldId);
+        Optional<MedicalField> medicalFieldOptional = medicalFieldService.findById(id);
 
         if (!medicalFieldOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -86,31 +75,7 @@ public class MedicalFieldController {
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
     public Response registerMedicalField(@Valid MedicalFieldDto medicalFieldDto){
-
-        Response.ResponseBuilder response;
-
-        // no errors
-        final URI uri;
-        String name = medicalFieldDto.getName();
-
-        Optional<MedicalField> medicalFieldOptional = medicalFieldService.findByName(name);
-        if(medicalFieldOptional.isPresent()){
-            // 422 Unprocessable Entity
-            MedicalField medicalField = medicalFieldOptional.get();
-
-            uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(medicalField.getId())).build();
-            EntityTag entityTag = new EntityTag(Integer.toHexString(uri.toString().hashCode()));
-
-            response = Response.status(422).location(uri).tag(entityTag).cacheControl(cacheControl);
-        }else{
-            // register
-            final MedicalField medicalField = medicalFieldService.register(name);
-
-            uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(medicalField.getId())).build();
-
-            response = Response.created(uri);
-        }
-
-        return response.build();
+        final MedicalField medicalField = medicalFieldService.register(medicalFieldDto.getName());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(medicalField.getId())).build()).build();
     }
 }

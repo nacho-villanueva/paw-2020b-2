@@ -8,7 +8,7 @@ import javax.validation.Valid;
 public class PatientPostDto {
 
     // Constants
-    public static final String CONTENT_TYPE = "application/vnd.study-type.v1";
+    public static final String CONTENT_TYPE = "application/vnd.patient.v1";
 
     // Fields
     @NotBlank(message = "Please provide a name.")

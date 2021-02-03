@@ -37,9 +37,6 @@ public class PatientController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, PatientGetDto.CONTENT_TYPE+"+json"})
     public Response listPatients(){

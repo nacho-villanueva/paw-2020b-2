@@ -33,6 +33,6 @@ public class MedicalFieldServiceImpl implements MedicalFieldService {
 
     @Override
     public MedicalField register(String name) {
-        return dao.register(name);
+        return dao.findOrRegister(name);
     }
 }

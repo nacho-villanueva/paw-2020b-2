@@ -1,16 +1,18 @@
-package ar.edu.itba.paw.webapp.dto.validators;
+package ar.edu.itba.paw.webapp.dto.annotations;
+
+import ar.edu.itba.paw.webapp.dto.validators.ByteArrayValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
-@Constraint(validatedBy = ByteArrayIsValidValidator.class)
-@Target({ ElementType.FIELD })
+import static java.lang.annotation.ElementType.FIELD;
+
+@Constraint(validatedBy = ByteArrayValidator.class)
+@Target({ FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ByteArrayIsValid {
+@Documented
+public @interface ByteArray {
 
     String message() default "Input array is not a valid byte array with size less than {max}.";
 

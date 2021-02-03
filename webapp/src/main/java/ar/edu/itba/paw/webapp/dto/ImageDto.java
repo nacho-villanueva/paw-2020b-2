@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.constraintGroups.DefaultGroup;
-import ar.edu.itba.paw.webapp.dto.validators.ByteArrayIsValid;
+import ar.edu.itba.paw.webapp.dto.annotations.ByteArray;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,12 +14,12 @@ public class ImageDto {
     public static final String CONTENT_TYPE = "image/*";
 
     // Variables
-    @NotBlank(message="ImageDto.contentType.NotBlank",groups = {DefaultGroup.class})
-    @Pattern(regexp="^image\\/[a-zA-Z+]*", message="ImageDto.contentType.Pattern",groups = {DefaultGroup.class})
+    @NotBlank(message="Please provide a content type for the image.")
+    @Pattern(regexp="^image\\/[a-zA-Z+]*", message="Content type must match " + CONTENT_TYPE + ".")
     String contentType;
 
-    @NotEmpty(message="ImageDto.image.NotEmpty",groups = {DefaultGroup.class})
-    @ByteArrayIsValid(max=32000000, message="ImageDto.image.ByteArrayIsValid",groups = {DefaultGroup.class}) // 30mb aprox, based on limit set on Model
+    @NotEmpty(message="Please provide an image.")
+    @ByteArray(max=32000000, message="Please provide a valid byte array for the image.") // 30mb aprox, based on limit set on Model/Database
     String image;
 
     // Constructors

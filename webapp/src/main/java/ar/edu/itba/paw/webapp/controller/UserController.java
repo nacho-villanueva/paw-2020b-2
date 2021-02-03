@@ -5,6 +5,7 @@ import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.UserGetDto;
 import ar.edu.itba.paw.webapp.dto.UserPostDto;
 import ar.edu.itba.paw.webapp.dto.UserPutDto;
+import ar.edu.itba.paw.webapp.dto.annotations.Number;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,13 +32,10 @@ public class UserController {
     private static final String DEFAULT_PAGE_SIZE = "20";
 
     @Autowired
-    private UserService us;
+    private UserService userService;
 
     @Context
     private UriInfo uriInfo;
-
-    @Context
-    private HttpHeaders headers;
 
     @Autowired
     private CacheControl cacheControl;
@@ -46,18 +44,19 @@ public class UserController {
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json"})
     public Response listUsers(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
-            @Min(value = MINIMUM_PAGE,
-                    message = "Page number must be at least " + MINIMUM_PAGE) int page,
+            @Min(value = MINIMUM_PAGE, message = "Page number must be at least " + MINIMUM_PAGE)
+                    int page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @Min(value = MINIMUM_PAGE_SIZE,
-                    message = "Number of entries per page must be at least " + MINIMUM_PAGE_SIZE) int perPage) {
-        final List<User> users = us.getAll(page, perPage);
+            @Min(value = MINIMUM_PAGE_SIZE, message = "Number of entries per page must be at least " + MINIMUM_PAGE_SIZE)
+                    int perPage
+    ) {
+        final Collection<User> users = userService.getAll(page, perPage);
 
         if(users.isEmpty()) {
             return Response.noContent().build();
         }
 
-        final int pages = us.getPageCount(perPage);
+        final int pages = userService.getPageCount(perPage);
 
         List<UserGetDto> userGetDtoList = users.stream().map(u -> new UserGetDto(u, uriInfo)).collect(Collectors.toList());
 
@@ -87,8 +86,8 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json" })
-    public Response getUser(@PathParam("id") final int id) {
-        Optional<User> maybeUser = us.findById(id);
+    public Response getUser(@PathParam("id") @Number final String id) {
+        Optional<User> maybeUser = userService.findById(Integer.parseInt(id));
 
         if(!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -106,21 +105,21 @@ public class UserController {
     }
 
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON, UserPostDto.CONTENT_TYPE+"+json" })
+    @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response registerUser(@Valid @RequestBody UserPostDto userDto) {
         if(isEmpty(userDto.getLocale())) {
             userDto.setLocale(Locale.getDefault().toString());
         }
-        User user = us.register(userDto.getEmail(),userDto.getPassword(),userDto.getLocale());
+        User user = userService.register(userDto.getEmail(),userDto.getPassword(),userDto.getLocale());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build()).build();
     }
 
     @PUT
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, UserPutDto.CONTENT_TYPE+"+json" })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response modifyUser(@PathParam("id") final int id, @Valid UserPutDto userDto) {
-        Optional<User> maybeUser = us.findById(id);
+        Optional<User> maybeUser = userService.findById(id);
 
         if(!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -130,10 +129,11 @@ public class UserController {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
+        //TODO: try and make this part smaller
         //We make the changes based on the input dto
         User user = maybeUser.get();
         if(!isEmpty(userDto.getEmail())) {
-            user = us.updateEmail(user, userDto.getEmail());
+            user = userService.updateEmail(user, userDto.getEmail());
         }
 
         if(user == null) {
@@ -141,7 +141,7 @@ public class UserController {
         }
 
         if(!isEmpty(userDto.getPassword())) {
-            user = us.updatePassword(user, userDto.getPassword());
+            user = userService.updatePassword(user, userDto.getPassword());
         }
 
         if(user == null) {
@@ -149,7 +149,7 @@ public class UserController {
         }
 
         if(!isEmpty(userDto.getLocale())) {
-            user = us.updateLocale(user, userDto.getLocale());
+            user = userService.updateLocale(user, userDto.getLocale());
         }
 
         if(user == null) {

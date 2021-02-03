@@ -9,13 +9,13 @@ import javax.validation.constraints.NotNull;
 public class UserPutDto {
 
     public static final String CONTENT_TYPE = "application/vnd.user.v1";
-    @Email
+    @Email(message = "Please provide a valid email account.")
     private String email;
 
-    @Password
+    @Password(message = "Password must be between 8 and 100 characters long.")
     private String password;
 
-    @Locale
+    @Locale(message = "Please provide a Locale in the xx-XX format. For example, en-US")
     private String locale;
 
     public UserPutDto() {

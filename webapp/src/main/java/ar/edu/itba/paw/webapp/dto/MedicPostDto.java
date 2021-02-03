@@ -15,33 +15,33 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MedicPostAndPutDto {
+public class MedicPostDto {
 
     // Constants
     public static final String CONTENT_TYPE = "application/vnd.medic.v1";
 
     // Variables
-    @NotBlank(message = "MedicPostAndPutDto.name.NotBlank", groups = {MedicPostGroup.class})
+    @NotBlank(message = "Please provide a name.")
     private String name;
 
-    @NotBlank(message = "MedicPostAndPutDto.telephone.NotBlank", groups = {MedicPostGroup.class})
-    @Pattern(regexp = "\\+?[0-9]*",message = "MedicPostAndPutDto.telephone.Pattern", groups = {MedicPostGroup.class,MedicPutGroup.class})
+    @NotBlank(message = "Please provide a phone number.")
+    @Pattern(regexp = "\\+?[0-9]*",message = "Please provide a valid phone number")
     private String telephone;
 
     @Valid
-    @NotNull(message = "MedicPostAndPutDto.identification.NotNull", groups = {MedicPostGroup.class})
+    @NotNull(message = "Please provide an identification image.")
     private ImageDto identification;
 
-    @NotBlank(message = "MedicPostAndPutDto.licenceNumber.NotBlank", groups = {MedicPostGroup.class})
-    @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern",groups = {MedicGroup.class})
+    @NotBlank(message = "Please provide a license number.")
+    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern",groups = {MedicGroup.class})
     private String licenceNumber;
 
     @Valid
-    @NotEmpty(message="MedicPostAndPutDto.medicalFields.NotEmpty", groups = {MedicPostGroup.class})
+    @NotEmpty(message="Please provide at least one medical field.")
     private Collection<MedicalFieldDto> medicalFields;
 
     // Constructors
-    public MedicPostAndPutDto() {
+    public MedicPostDto() {
         // Use factory method
     }
 
@@ -92,7 +92,7 @@ public class MedicPostAndPutDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MedicPostAndPutDto that = (MedicPostAndPutDto) o;
+        MedicPostDto that = (MedicPostDto) o;
         return Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(identification, that.identification) && Objects.equals(licenceNumber, that.licenceNumber) && Objects.equals(medicalFields, that.medicalFields);
     }
 

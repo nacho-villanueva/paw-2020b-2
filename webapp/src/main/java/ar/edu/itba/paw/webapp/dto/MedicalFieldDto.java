@@ -16,7 +16,7 @@ public class MedicalFieldDto {
     // Variables
     private Integer id;
 
-    @NotBlank(message = "MedicalFieldDto.name.NotBlank")
+    @NotBlank(message = "Please provide a name for the medical field.")
     private String name;
 
     private String url;

@@ -115,6 +115,13 @@ public class MedicServiceImpl implements MedicService {
         return medicDao.knowsField(medicId,fieldId);
     }
 
+    @Override
+    public int getPageCount(int perPage) {
+        long medicCount = medicDao.getAllCount();
+
+        return (int) Math.ceil((double)medicCount / perPage);
+    }
+
     // auxiliar functions
     private long getLastPage(final long count, final int pageSize){
         return (long) Math.ceil((double)count / pageSize);

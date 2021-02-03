@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    public List<User> getAll(final int page, final int pageSize) {
+    public Collection<User> getAll(final int page, final int pageSize) {
         if(pageSize <= 0 || page <= 0)
             return new ArrayList<>();
 

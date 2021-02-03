@@ -3,19 +3,22 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.webapp.dto.annotations.Locale;
 import ar.edu.itba.paw.webapp.dto.annotations.Password;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
 public class UserPostDto {
 
     public static final String CONTENT_TYPE = "application/vnd.user.v1";
-    @NotNull @Email
+    @NotBlank(message = "Please provide an email account.")
+    @Email(message = "Please provide a valid email account.")
     private String email;
 
-    @NotNull @Password
+    @NotBlank(message = "Please provide a password.")
+    @Password(message = "Password must be between 8 and 100 characters long.")
     private String password;
 
-    @Locale
+    @Locale(message = "Please provide a Locale in the xx-XX format. For example, en-US")
     private String locale;
 
     public UserPostDto() {
