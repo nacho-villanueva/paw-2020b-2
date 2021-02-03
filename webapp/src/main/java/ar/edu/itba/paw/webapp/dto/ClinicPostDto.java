@@ -4,8 +4,6 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.ClinicDayHours;
 import ar.edu.itba.paw.models.ClinicHours;
 import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
 import ar.edu.itba.paw.webapp.dto.validators.DaysAreValid;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,35 +16,35 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClinicPostAndPutDto {
+public class ClinicPostDto {
 
     // Constants
     public static final String CONTENT_TYPE = "application/vnd.clinic.v1";
 
     // Variables
-    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank", groups = {ClinicPostGroup.class})
+    @NotBlank(message="ClinicPostAndPutDto.name.NotBlank")
     private String name;
 
-    @NotBlank(message="ClinicPostAndPutDto.telephone.NotBlank", groups = {ClinicPostGroup.class})
-    @Pattern(regexp = "\\+?[0-9]*", message="ClinicPostAndPutDto.telephone.Pattern", groups = {ClinicGroup.class})
+    @NotBlank(message="ClinicPostAndPutDto.telephone.NotBlank")
+    @Pattern(regexp = "\\+?[0-9]*", message="ClinicPostAndPutDto.telephone.Pattern")
     private String telephone;
 
     @Valid
-    @NotEmpty(message="ClinicPostAndPutDto.availableStudies.NotEmpty", groups = {ClinicPostGroup.class})
+    @NotEmpty(message="ClinicPostAndPutDto.availableStudies.NotEmpty")
     private Collection<StudyTypeDto> availableStudies;
 
     @Valid
-    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull", groups = {ClinicPostGroup.class})
+    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull")
     private Collection<MedicPlanDto> acceptedPlans;
 
     @Valid
-    @NotNull(message="ClinicPostAndPutDto.hours.NotNull", groups = {ClinicPostGroup.class})
-    @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid", groups = {ClinicGroup.class})
+    @NotNull(message="ClinicPostAndPutDto.hours.NotNull")
+    @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid")
     private Collection<ClinicDayHoursDto> hours;
 
 
     // Constructors
-    public ClinicPostAndPutDto() {
+    public ClinicPostDto() {
         // Use factory method
     }
 
@@ -97,7 +95,7 @@ public class ClinicPostAndPutDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ClinicPostAndPutDto that = (ClinicPostAndPutDto) o;
+        ClinicPostDto that = (ClinicPostDto) o;
         return Objects.equals(name, that.name) && Objects.equals(telephone, that.telephone) && Objects.equals(availableStudies, that.availableStudies) && Objects.equals(acceptedPlans, that.acceptedPlans) && Objects.equals(hours, that.hours);
     }
 

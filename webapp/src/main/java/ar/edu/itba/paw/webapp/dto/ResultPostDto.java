@@ -16,18 +16,18 @@ public class ResultPostDto {
 
     // Variables
     @Valid
-    @NotNull(message = "ResultPostDto.file.NotNull", groups = {ResultGroup.class})
+    @NotNull(message = "ResultPostDto.file.NotNull")
     private ImageDto file;
 
     @Valid
-    @NotNull(message = "ResultPostDto.identification.NotNull", groups = {ResultGroup.class})
+    @NotNull(message = "ResultPostDto.identification.NotNull")
     private ImageDto identification;
 
-    @NotBlank(message = "ResultPostDto.responsibleName.NotBlank", groups = {ResultGroup.class})
+    @NotBlank(message = "ResultPostDto.responsibleName.NotBlank")
     private String responsibleName;
 
-    @NotBlank(message = "ResultPostDto.responsibleLicence.NotBlank", groups = {ResultGroup.class})
-    @Pattern(regexp = "[0-9a-zA-Z]*", message = "ResultPostDto.responsibleLicence.Pattern", groups = {ResultGroup.class})
+    @NotBlank(message = "ResultPostDto.responsibleLicence.NotBlank")
+    @Pattern(regexp = "[0-9a-zA-Z]*", message = "ResultPostDto.responsibleLicence.Pattern")
     private String responsibleLicence;
 
     // Constructors

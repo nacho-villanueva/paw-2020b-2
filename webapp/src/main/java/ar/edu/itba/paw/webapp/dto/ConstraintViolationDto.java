@@ -16,11 +16,19 @@ public class ConstraintViolationDto {
     }
     
     public ConstraintViolationDto(ConstraintViolation<?> violation, String message){
-        String auxProperty = violation.getPropertyPath().toString();
-        if(auxProperty == null || auxProperty.trim().length()==0)
-            auxProperty = null;
+        String propertyPath = violation.getPropertyPath().toString();
 
-        this.property = auxProperty;
+        String property;
+        if(propertyPath == null || propertyPath.trim().length()==0 || !propertyPath.contains(".")){
+            property = null;
+        }
+        else{
+            property = propertyPath
+                    .replaceFirst("[a-zA-Z]*\\.","")
+                    .replaceFirst("[a-zA-Z0-9]*\\.","");
+        }
+
+        this.property = property;
         this.message = message;
     }
 

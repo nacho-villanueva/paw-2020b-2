@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPostGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ClinicPutGroup;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Objects;
@@ -12,7 +10,7 @@ public class MedicPlanDto {
     public static final String CONTENT_TYPE = "application/vnd.medic-plan.v1";
 
     // Variables
-    @NotBlank(message = "MedicPlanDto.plan.NotBlank", groups = {ClinicPostGroup.class, ClinicPutGroup.class} )
+    @NotBlank(message = "MedicPlanDto.plan.NotBlank")
     public String plan;
 
     public String number;

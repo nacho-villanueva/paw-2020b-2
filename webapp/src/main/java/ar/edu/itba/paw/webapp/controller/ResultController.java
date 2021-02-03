@@ -7,16 +7,12 @@ import ar.edu.itba.paw.services.ResultService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ResultGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -36,16 +32,10 @@ public class ResultController {
     private CacheControl cacheControl;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private ResultService resultService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private UrlEncoderService urlEncoderService;
@@ -269,15 +259,6 @@ public class ResultController {
             return Response.status(Response.Status.FORBIDDEN).build();
 
         Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Set<ConstraintViolation<ResultPostDto>> violations = validator.validate(resultPostDto, ResultGroup.class);
-
-        if(!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                    .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations
-                            .stream().map(vc -> (new ConstraintViolationDto(vc,messageSource.getMessage(vc.getMessage(),null,locale))))
-                            .collect(Collectors.toList())) ) {})
-                    .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
 
         String resultDataType = resultPostDto.getFile().getContentType();
         byte[] resultData = resultPostDto.getFile().getImageAsByteArray();
