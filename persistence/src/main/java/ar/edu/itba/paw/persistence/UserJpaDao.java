@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Clinic;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -75,10 +73,10 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    public int userCount() {
+    public long userCount() {
         final String queryString = "SELECT COUNT(u) FROM User u";
 
-        final TypedQuery<Integer> countQuery = em.createQuery(queryString,Integer.class);
+        final TypedQuery<Long> countQuery = em.createQuery(queryString,Long.class);
 
         return countQuery.getSingleResult();
     }

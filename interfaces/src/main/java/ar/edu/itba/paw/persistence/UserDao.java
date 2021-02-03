@@ -31,7 +31,7 @@ public interface UserDao {
 
     List<User> getAll(int page, int pageSize);
 
-    int userCount();
+    long userCount();
 
     User updateLocale(User user, String locale);
 }

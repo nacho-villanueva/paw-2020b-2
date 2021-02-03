@@ -26,6 +26,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class UserController {
 
     private static final String DEFAULT_PAGE = "1";
+    private static final int MINIMUM_PAGE = 1;
     private static final int MINIMUM_PAGE_SIZE = 1;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
@@ -43,12 +44,13 @@ public class UserController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json"})
-    public Response listUsers(@QueryParam("page") @DefaultValue(DEFAULT_PAGE) int page,  @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE) int perPage) {
-        //TODO: see if we can validate this with annotations
-        if (page < Integer.parseInt(DEFAULT_PAGE) || perPage < MINIMUM_PAGE_SIZE) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
+    public Response listUsers(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @Min(value = MINIMUM_PAGE,
+                    message = "Page number must be at least " + MINIMUM_PAGE) int page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @Min(value = MINIMUM_PAGE_SIZE,
+                    message = "Number of entries per page must be at least " + MINIMUM_PAGE_SIZE) int perPage) {
         final List<User> users = us.getAll(page, perPage);
 
         if(users.isEmpty()) {
@@ -66,16 +68,17 @@ public class UserController {
                 .tag(etag).cacheControl(cacheControl);
 
         //We check what links apply
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(page > Integer.parseInt(DEFAULT_PAGE)) {
-            response = response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev");
+            response = response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
         }
         if(page < pages) {
-            response = response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next");
+            response = response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
         }
 
         //Links that always apply
-        response = response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", DEFAULT_PAGE).build(), "first");
-        response = response.link(uriInfo.getAbsolutePathBuilder().queryParam("page", pages).build(), "last");
+        response = response.link(uriBuilder.replaceQueryParam("page", DEFAULT_PAGE).build(), "first");
+        response = response.link(uriBuilder.replaceQueryParam("page", pages).build(), "last");
 
         return response.build();
 
@@ -84,7 +87,7 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json" })
-    public Response getUser(@PathParam("id") @Min(1) final int id) {
+    public Response getUser(@PathParam("id") final int id) {
         Optional<User> maybeUser = us.findById(id);
 
         if(!maybeUser.isPresent()) {

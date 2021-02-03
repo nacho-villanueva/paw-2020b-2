@@ -53,7 +53,6 @@ public class LoginController {
             Optional<User> maybeUser = us.findByEmail(username);
 
             if(!maybeUser.isPresent()) {
-                //TODO: Figure it out
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 

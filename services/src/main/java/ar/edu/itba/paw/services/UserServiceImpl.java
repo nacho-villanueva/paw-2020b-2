@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getPageCount(int perPage) {
-        int userCount = userDao.userCount();
+        long userCount = userDao.userCount();
 
         return (int) Math.ceil((double)userCount / perPage);
     }
