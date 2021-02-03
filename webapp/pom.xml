@@ -24,6 +24,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-bean-validation</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt</artifactId>
     </dependency>
@@ -134,10 +138,10 @@
       <version>${project.parent.version}</version>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
