@@ -1,17 +1,16 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
-import ar.edu.itba.paw.webapp.dto.ClinicDayHoursDto;
 import ar.edu.itba.paw.webapp.dto.OrderFilterDto;
+import ar.edu.itba.paw.webapp.dto.annotations.TimeIntervals;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public class TimeIntervalsInOrderFilterDtoAreValidValidator implements ConstraintValidator<TimeIntervalsAreValid, OrderFilterDto> {
+public class TimeIntervalsInOrderFilterDtoValidator implements ConstraintValidator<TimeIntervals, OrderFilterDto> {
 
     @Override
-    public void initialize(TimeIntervalsAreValid validAvailabilityHours) {
+    public void initialize(TimeIntervals TimeIntervals) {
 
     }
 

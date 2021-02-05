@@ -1,4 +1,6 @@
-package ar.edu.itba.paw.webapp.dto.validators;
+package ar.edu.itba.paw.webapp.dto.annotations;
+
+import ar.edu.itba.paw.webapp.dto.validators.TimeArrayAsStringValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,12 +9,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = BooleanArrayAsStringIsValidValidator.class)
+@Constraint(validatedBy = TimeArrayAsStringValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BooleanArrayAsStringIsValid {
+public @interface TimeArrayAsString {
 
-    String message() default "Non-boolean values found.";
+    String message() default "Non-time values found.";
 
     public Class<?>[] groups() default {};
 

@@ -9,13 +9,14 @@ public class ConstraintViolationDto {
     public static final String CONTENT_TYPE = "application/vnd.ValidationError.v1";
 
     private String property;
+    private String code;
     private String message;
 
     public ConstraintViolationDto() {
         // Use factory method
     }
-    
-    public ConstraintViolationDto(ConstraintViolation<?> violation, String message){
+
+    public ConstraintViolationDto(ConstraintViolation<?> violation, String message, String code) {
         String propertyPath = violation.getPropertyPath().toString();
 
         String property;
@@ -30,6 +31,7 @@ public class ConstraintViolationDto {
 
         this.property = property;
         this.message = message;
+        this.code = code;
     }
 
     public String getProperty() {
@@ -48,16 +50,24 @@ public class ConstraintViolationDto {
         this.message = message;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConstraintViolationDto that = (ConstraintViolationDto) o;
-        return Objects.equals(property, that.property) && Objects.equals(message, that.message);
+        return Objects.equals(property, that.property) && Objects.equals(code, that.code) && Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(property, message);
+        return Objects.hash(property, code, message);
     }
 }

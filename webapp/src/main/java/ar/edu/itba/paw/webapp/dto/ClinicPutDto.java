@@ -4,7 +4,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.ClinicDayHours;
 import ar.edu.itba.paw.models.ClinicHours;
 import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.webapp.dto.validators.DaysAreValid;
+import ar.edu.itba.paw.webapp.dto.annotations.Days;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -31,7 +31,7 @@ public class ClinicPutDto {
     private Collection<MedicPlanDto> acceptedPlans;
 
     @Valid
-    @DaysAreValid(message="ClinicPostAndPutDto.hours.DaysAreValid")
+    @Days(message="ClinicPostAndPutDto.hours.DaysAreValid")
     private Collection<ClinicDayHoursDto> hours;
 
 

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.validators.ClinicIdIsValid;
+import ar.edu.itba.paw.webapp.dto.annotations.ClinicId;
 
 import javax.validation.constraints.Null;
 import java.util.Objects;
@@ -11,7 +11,7 @@ public class OrderPutDto {
     public static final String CONTENT_TYPE = "application/vnd.order.v1";
 
     // Variables
-    @ClinicIdIsValid(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid")
+    @ClinicId(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid")
     private Integer clinicId;
 
     @Null(message = "OrderPostAndPutDto.patientEmail.Null")

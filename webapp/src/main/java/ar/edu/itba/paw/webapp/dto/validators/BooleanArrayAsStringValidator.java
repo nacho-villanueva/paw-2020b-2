@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
+import ar.edu.itba.paw.webapp.dto.annotations.BooleanArrayAsString;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class BooleanArrayAsStringIsValidValidator implements ConstraintValidator<BooleanArrayAsStringIsValid, String> {
+public class BooleanArrayAsStringValidator implements ConstraintValidator<BooleanArrayAsString, String> {
 
     @Override
-    public void initialize(BooleanArrayAsStringIsValid arrayAsStringIsValid) {
+    public void initialize(BooleanArrayAsString arrayAsStringIsValid) {
     }
 
     @Override

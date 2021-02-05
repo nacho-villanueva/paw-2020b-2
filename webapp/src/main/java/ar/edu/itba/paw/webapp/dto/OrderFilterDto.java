@@ -1,26 +1,24 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.validators.*;
-import org.hibernate.validator.constraints.Email;
+import ar.edu.itba.paw.webapp.dto.annotations.*;
 
 import javax.validation.Valid;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Set;
 
-@TimeIntervalsAreValid(message = "OrderFilterDto.TimeIntervalsAreValid")
+@TimeIntervals(message = "OrderFilterDto.TimeIntervalsAreValid")
 public class OrderFilterDto {
 
     // Variables
     @Valid
-    @ClinicIdIsValid(message="OrderFilterDto.UserIdOnlyDto.ClinicIdIsValid")
+    @ClinicId(message="OrderFilterDto.UserIdOnlyDto.ClinicIdIsValid")
     @QueryParam("clinic")
     private Set<Integer> clinics;
 
     @Valid
-    @MedicIdIsValid(message="OrderFilterDto.UserIdOnlyDto.MedicIdIsValid")
+    @MedicId(message="OrderFilterDto.UserIdOnlyDto.MedicIdIsValid")
     @QueryParam("medic")
     private Set<Integer> medics;
 
@@ -36,7 +34,7 @@ public class OrderFilterDto {
     private LocalDate toDate;
 
     @Valid
-    @StudyTypeIdIsValid(message="OrderFilterDto.studyTypes.StudyTypeIdIsValid")
+    @StudyTypeId(message="OrderFilterDto.studyTypes.StudyTypeIdIsValid")
     @QueryParam("study-type")
     private Set<Integer> studyTypes;
 

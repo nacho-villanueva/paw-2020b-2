@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
+import ar.edu.itba.paw.webapp.dto.annotations.EmailCollection;
 import org.hibernate.validator.internal.constraintvalidators.EmailValidator;
 
 import javax.validation.ConstraintValidator;

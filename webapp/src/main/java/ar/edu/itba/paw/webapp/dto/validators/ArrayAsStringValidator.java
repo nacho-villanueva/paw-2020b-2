@@ -1,15 +1,17 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
+import ar.edu.itba.paw.webapp.dto.annotations.ArrayAsString;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ArrayAsStringIsValidValidator implements ConstraintValidator<ArrayAsStringIsValid, String> {
+public class ArrayAsStringValidator implements ConstraintValidator<ArrayAsString, String> {
 
     private Integer max;
 
     @Override
-    public void initialize(ArrayAsStringIsValid arrayAsStringIsValid) {
-        this.max = arrayAsStringIsValid.max();
+    public void initialize(ArrayAsString arrayAsString) {
+        this.max = arrayAsString.max();
     }
 
     @Override

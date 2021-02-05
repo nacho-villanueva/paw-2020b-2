@@ -1,19 +1,19 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.ClinicDayHours;
-import ar.edu.itba.paw.webapp.dto.validators.TimeIntervalsAreValid;
-import ar.edu.itba.paw.webapp.dto.validators.DayIsValid;
+import ar.edu.itba.paw.webapp.dto.annotations.TimeIntervals;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.Objects;
 
-@TimeIntervalsAreValid(message="ClinicDayHoursDto.TimeIntervalsAreValid")
+@TimeIntervals(message="ClinicDayHoursDto.TimeIntervalsAreValid")
 public class ClinicDayHoursDto {
 
     // Variables
     @NotNull(message="ClinicDayHoursDto.day.NotNull")
-    @DayIsValid(message="ClinicDayHoursDto.day.DayIsValid")
+    @IntegerSize(message="ClinicDayHoursDto.day.DayIsValid",min=0,max=6)
     private Integer day;
 
     @NotNull(message="ClinicDayHoursDto.openTime.NotNull")

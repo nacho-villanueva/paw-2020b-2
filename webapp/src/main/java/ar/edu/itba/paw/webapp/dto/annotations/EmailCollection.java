@@ -1,4 +1,6 @@
-package ar.edu.itba.paw.webapp.dto.validators;
+package ar.edu.itba.paw.webapp.dto.annotations;
+
+import ar.edu.itba.paw.webapp.dto.validators.EmailCollectionValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,12 +9,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {MedicIdIsValidValidator.class, MedicIdCollectionIsValidValidator.class})
+@Constraint(validatedBy = {EmailCollectionValidator.class})
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MedicIdIsValid {
+public @interface EmailCollection {
 
-    String message() default "Must be a valid medic's email";
+    String message() default "All components must be valid emails";
 
     public Class<?>[] groups() default {};
 

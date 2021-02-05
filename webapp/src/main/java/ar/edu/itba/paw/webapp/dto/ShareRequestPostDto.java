@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.validators.StudyTypeIdIsValid;
+import ar.edu.itba.paw.webapp.dto.annotations.StudyTypeId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,7 +19,7 @@ public class ShareRequestPostDto {
     private String patientEmail;
 
     @NotNull(message="ShareRequestPostDto.studyTypeId.NotNull")
-    @StudyTypeIdIsValid(message="ShareRequestPostDto.studyTypeId.StudyTypeIdIsValid")
+    @StudyTypeId(message="ShareRequestPostDto.studyTypeId.StudyTypeIdIsValid")
     private Integer studyTypeId;
 
     // Constructors

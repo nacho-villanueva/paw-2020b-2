@@ -2,10 +2,12 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Context;
@@ -14,8 +16,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Provider
@@ -24,6 +28,9 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
 
     @Autowired
     private MessageSource messageSource;
+
+    @Resource(name="annotationCodes")
+    private Map<String,String> annotationCodes;
 
     @Context
     private HttpHeaders headers;
@@ -36,19 +43,24 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
         Collection<ConstraintViolation<?>> violations = e.getConstraintViolations();
 
         return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,solveMessage(vc,locale)))).collect(Collectors.toList())) ) {})
+                .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,solveMessage(vc,locale),getCode(vc)))).collect(Collectors.toList())) ) {})
                 .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
     }
 
-    private String solveMessage(ConstraintViolation<?> template, Locale locale){
+    private String solveMessage(ConstraintViolation<?> violation, Locale locale){
 
         String message;
         try{
-            message = messageSource.getMessage(template.getMessage(),null,locale);
+            message = messageSource.getMessage(violation.getMessage(),null,locale);
         }catch (NoSuchMessageException e){
-            message = template.getMessage();
+            message = violation.getMessage();
         }
 
         return message;
+    }
+
+    private String getCode(ConstraintViolation<?> violation){
+        String code = violation.getConstraintDescriptor().getAnnotation().annotationType().getName();
+        return annotationCodes.getOrDefault(code,"other");
     }
 }

@@ -1,15 +1,17 @@
 package ar.edu.itba.paw.webapp.config;
 
-
+import ar.edu.itba.paw.webapp.dto.annotations.*;
+import ar.edu.itba.paw.webapp.dto.annotations.Number;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -32,11 +34,17 @@ import org.springframework.web.servlet.view.JstlView;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.CacheControl;
 
 @EnableTransactionManagement
@@ -165,6 +173,49 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         CacheControl cacheControl = new CacheControl();
         cacheControl.setNoCache(true);
         return cacheControl;
+    }
+
+    @Bean(name="annotationCodes")
+    public Map<String,String> configMap(){
+
+        // possible error codes
+        final String ALREADY_EXISTS = "already_exists";
+        final String INVALID = "invalid";
+        final String MISSING = "missing";
+        final String MISSING_FIELD = "missing_field";
+        final String UNPROCESSABLE = "unprocessable";
+
+        Map<String,String> map = new HashMap<>();
+
+        // from javax validation
+        map.put(NotNull.class.getName(), MISSING_FIELD);
+        map.put(Null.class.getName(), INVALID);
+        map.put(Pattern.class.getName(), INVALID);
+        map.put(Size.class.getName(), INVALID);
+
+        // from hibernate validation
+        map.put(NotBlank.class.getName(), MISSING_FIELD);
+        map.put(NotEmpty.class.getName(), MISSING_FIELD);
+        map.put(Email.class.getName(), INVALID);
+
+        // created
+        map.put(ArrayAsString.class.getName(), INVALID);
+        map.put(BooleanArrayAsString.class.getName(), INVALID);
+        map.put(ByteArray.class.getName(), INVALID);
+        map.put(ClinicId.class.getName(), MISSING);
+        map.put(Days.class.getName(), INVALID);
+        map.put(EmailCollection.class.getName(), INVALID);
+        map.put(IntegerSize.class.getName(), INVALID);
+        map.put(Locale.class.getName(), INVALID);
+        map.put(MedicId.class.getName(), MISSING);
+        map.put(MedicPlan.class.getName(), INVALID);
+        map.put(Number.class.getName(), INVALID);
+        map.put(Password.class.getName(), INVALID);
+        map.put(StudyTypeId.class.getName(), MISSING);
+        map.put(TimeArrayAsString.class.getName(), INVALID);
+        map.put(TimeIntervals.class.getName(), INVALID);
+
+        return map;
     }
 
 }

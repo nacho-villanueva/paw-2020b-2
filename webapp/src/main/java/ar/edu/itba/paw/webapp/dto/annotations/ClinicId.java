@@ -1,4 +1,7 @@
-package ar.edu.itba.paw.webapp.dto.validators;
+package ar.edu.itba.paw.webapp.dto.annotations;
+
+import ar.edu.itba.paw.webapp.dto.validators.ClinicIdCollectionValidator;
+import ar.edu.itba.paw.webapp.dto.validators.ClinicIdValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,10 +10,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {ClinicIdIsValidValidator.class, ClinicIdCollectionIsValidValidator.class})
+@Constraint(validatedBy = {ClinicIdValidator.class, ClinicIdCollectionValidator.class})
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ClinicIdIsValid {
+public @interface ClinicId {
 
     String message() default "Selected Clinic doesn't exist";
 

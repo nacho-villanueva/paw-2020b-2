@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.services.ClinicService;
+import ar.edu.itba.paw.models.Medic;
+import ar.edu.itba.paw.services.MedicService;
+import ar.edu.itba.paw.webapp.dto.annotations.MedicId;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -9,27 +10,26 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Collection;
 import java.util.Optional;
 
-public class ClinicIdCollectionIsValidValidator implements ConstraintValidator<ClinicIdIsValid, Collection<Integer>> {
+public class MedicIdCollectionValidator implements ConstraintValidator<MedicId, Collection<Integer>> {
 
     @Autowired
-    private ClinicService clinicService;
+    private MedicService medicService;
 
     @Override
-    public void initialize(ClinicIdIsValid clinicIdIsValid) {
+    public void initialize(MedicId medicId) {
 
     }
 
     @Override
     public boolean isValid(Collection<Integer> ids, ConstraintValidatorContext constraintValidatorContext) {
+
         if(ids==null || ids.isEmpty())
             return true;
 
-        ClinicIdIsValidValidator clinicIdIsValidValidator = new ClinicIdIsValidValidator();
-
         for (Integer id:ids) {
             if(id==null) return false;
-            Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
-            if(!clinicOptional.isPresent() || !clinicOptional.get().isVerified()) return false;
+            Optional<Medic> medicOptional = medicService.findByUserId(id);
+            if(!medicOptional.isPresent() || !medicOptional.get().isVerified()) return false;
         }
 
         return true;

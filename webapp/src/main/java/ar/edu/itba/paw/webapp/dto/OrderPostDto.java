@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.dto.annotations.MedicPlan;
-import ar.edu.itba.paw.webapp.dto.validators.ClinicIdIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.StudyTypeIdIsValid;
+import ar.edu.itba.paw.webapp.dto.annotations.ClinicId;
+import ar.edu.itba.paw.webapp.dto.annotations.StudyTypeId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,7 +16,7 @@ public class OrderPostDto {
 
     // Variables
     @NotNull(message = "OrderPostAndPutDto.clinicId.NotNull")
-    @ClinicIdIsValid(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid")
+    @ClinicId(message = "OrderPostAndPutDto.clinicId.ClinicIdIsValid")
     private Integer clinicId;
 
     @NotBlank(message = "OrderPostAndPutDto.patientEmail.NotBlank")
@@ -27,7 +27,7 @@ public class OrderPostDto {
     private String patientName;
 
     @NotNull(message = "OrderPostAndPutDto.studyTypeId.NotNull")
-    @StudyTypeIdIsValid(message = "OrderPostAndPutDto.studyTypeId.StudyTypeIdIsValid")
+    @StudyTypeId(message = "OrderPostAndPutDto.studyTypeId.StudyTypeIdIsValid")
     private Integer studyTypeId;
 
     private String description;

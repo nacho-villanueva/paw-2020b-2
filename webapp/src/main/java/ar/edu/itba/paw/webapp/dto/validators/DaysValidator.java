@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
 import ar.edu.itba.paw.webapp.dto.ClinicDayHoursDto;
+import ar.edu.itba.paw.webapp.dto.annotations.Days;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -8,10 +9,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DaysAreValidValidator implements ConstraintValidator<DaysAreValid, Collection<ClinicDayHoursDto>> {
+public class DaysValidator implements ConstraintValidator<Days, Collection<ClinicDayHoursDto>> {
 
     @Override
-    public void initialize(DaysAreValid dayAreValid) {
+    public void initialize(Days days) {
 
     }
 

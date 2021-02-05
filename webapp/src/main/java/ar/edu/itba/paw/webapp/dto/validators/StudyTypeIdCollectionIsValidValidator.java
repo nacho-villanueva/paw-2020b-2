@@ -1,19 +1,20 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
 import ar.edu.itba.paw.services.StudyTypeService;
+import ar.edu.itba.paw.webapp.dto.annotations.StudyTypeId;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Collection;
 
-public class StudyTypeIdCollectionIsValidValidator implements ConstraintValidator<StudyTypeIdIsValid, Collection<Integer>> {
+public class StudyTypeIdCollectionIsValidValidator implements ConstraintValidator<StudyTypeId, Collection<Integer>> {
 
     @Autowired
     private StudyTypeService studyTypeService;
 
     @Override
-    public void initialize(StudyTypeIdIsValid userNotExist) {
+    public void initialize(StudyTypeId StudyTypeId) {
 
     }
 

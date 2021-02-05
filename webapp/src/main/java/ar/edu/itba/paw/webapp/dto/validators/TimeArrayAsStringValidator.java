@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.dto.validators;
 
+import ar.edu.itba.paw.webapp.dto.annotations.TimeArrayAsString;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class TimeArrayAsStringIsValidValidator implements ConstraintValidator<TimeArrayAsStringIsValid, String> {
+public class TimeArrayAsStringValidator implements ConstraintValidator<TimeArrayAsString, String> {
 
     @Override
-    public void initialize(TimeArrayAsStringIsValid arrayAsStringIsValid) {
+    public void initialize(TimeArrayAsString TimeArrayAsString) {
     }
 
     @Override

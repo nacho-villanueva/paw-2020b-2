@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.ClinicHours;
-import ar.edu.itba.paw.webapp.dto.validators.ArrayAsStringIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.BooleanArrayAsStringIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.TimeArrayAsStringIsValid;
-import ar.edu.itba.paw.webapp.dto.validators.TimeIntervalsAreValid;
+import ar.edu.itba.paw.webapp.dto.annotations.ArrayAsString;
+import ar.edu.itba.paw.webapp.dto.annotations.BooleanArrayAsString;
+import ar.edu.itba.paw.webapp.dto.annotations.TimeArrayAsString;
+import ar.edu.itba.paw.webapp.dto.annotations.TimeIntervals;
 
 import javax.ws.rs.QueryParam;
 import java.time.LocalTime;
 
-@TimeIntervalsAreValid(message = "ClinicHoursAvailabilityDto.TimeIntervalsAreValid")
+@TimeIntervals(message = "ClinicHoursAvailabilityDto.TimeIntervalsAreValid")
 public class ClinicHoursAvailabilityDto {
 
     // Constants
@@ -17,18 +17,18 @@ public class ClinicHoursAvailabilityDto {
 
     // Variables
     @QueryParam("days")
-    @ArrayAsStringIsValid(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.openDays.ArrayAsStringIsValid")
-    @BooleanArrayAsStringIsValid(message = "ClinicHoursAvailabilityDto.openDays.BooleanArrayAsStringIsValid")
+    @ArrayAsString(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.openDays.ArrayAsStringIsValid")
+    @BooleanArrayAsString(message = "ClinicHoursAvailabilityDto.openDays.BooleanArrayAsStringIsValid")
     String days;
 
     @QueryParam("from-time")
-    @ArrayAsStringIsValid(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.fromTime.ArrayAsStringIsValid")
-    @TimeArrayAsStringIsValid(message = "ClinicHoursAvailabilityDto.fromTime.TimeArrayAsStringIsValid")
+    @ArrayAsString(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.fromTime.ArrayAsStringIsValid")
+    @TimeArrayAsString(message = "ClinicHoursAvailabilityDto.fromTime.TimeArrayAsStringIsValid")
     String fromTime;
 
     @QueryParam("to-time")
-    @ArrayAsStringIsValid(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.toTime.ArrayAsStringIsValid")
-    @TimeArrayAsStringIsValid(message = "ClinicHoursAvailabilityDto.toTime.TimeArrayAsStringIsValid")
+    @ArrayAsString(max=MAX_SIZE,message = "ClinicHoursAvailabilityDto.toTime.ArrayAsStringIsValid")
+    @TimeArrayAsString(message = "ClinicHoursAvailabilityDto.toTime.TimeArrayAsStringIsValid")
     String toTime;
 
     // Constructors
