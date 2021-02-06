@@ -14,10 +14,6 @@ import java.util.Optional;
 @Service
 public class ResultServiceImpl implements ResultService {
 
-    // Pagination-related constants
-    private static final int DEFAULT_PAGE = 1;
-    private static final int DEFAULT_MAX_PAGE_SIZE = 5;
-
     @Autowired
     private MailNotificationService mailNotificationService;
 
@@ -30,16 +26,6 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Collection<Result> findByOrderId(long id) {
-        return findByOrderId(id,DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Result> findByOrderId(long id, int page) {
-        return findByOrderId(id,page,DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public Collection<Result> findByOrderId(long id, int page, int pageSize) {
         return resultDao.findByOrderId(id,page,pageSize);
     }
@@ -47,11 +33,6 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public long findByOrderIdCount(long id) {
         return resultDao.findByOrderIdCount(id);
-    }
-
-    @Override
-    public long findByOrderIdLastPage(long id) {
-        return findByOrderIdLastPage(id,DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override

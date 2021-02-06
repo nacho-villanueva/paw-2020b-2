@@ -41,10 +41,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import javax.ws.rs.core.CacheControl;
 
 @EnableTransactionManagement
@@ -184,10 +181,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final String MISSING = "missing";
         final String MISSING_FIELD = "missing_field";
         final String UNPROCESSABLE = "unprocessable";
+        final String OTHER = "other";
 
         Map<String,String> map = new HashMap<>();
 
         // from javax validation
+        map.put(Max.class.getName(),INVALID);
+        map.put(Min.class.getName(),INVALID);
         map.put(NotNull.class.getName(), MISSING_FIELD);
         map.put(Null.class.getName(), INVALID);
         map.put(Pattern.class.getName(), INVALID);

@@ -17,25 +17,11 @@ import java.util.Set;
 @Transactional
 public class ClinicServiceImpl implements ClinicService {
 
-    // Pagination-related constants
-    private static final int DEFAULT_PAGE = 1;
-    private static final int DEFAULT_MAX_PAGE_SIZE = 20;
-
     @Autowired
     private ClinicDao clinicDao;
 
     @Autowired
     private UserService userService;
-
-    @Override
-    public Collection<Clinic> getAll() {
-        return getAll(DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Clinic> getAll(int page) {
-        return getAll(page,DEFAULT_MAX_PAGE_SIZE);
-    }
 
     @Override
     public Collection<Clinic> getAll(int page, int pageSize) {
@@ -48,28 +34,13 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public long getAllLastPage() {
-        return getAllLastPage(DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long getAllLastPage(int pageSize) {
+    public int getAllLastPage(int pageSize) {
         return getLastPage(getAllCount(),pageSize);
     }
 
     @Override
     public Optional<Clinic> findByUserId(int userId) {
         return clinicDao.findByUserId(userId);
-    }
-
-    @Override
-    public Collection<Clinic> getAllUnverified() {
-        return getAllUnverified(DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Clinic> getAllUnverified(int page) {
-        return getAllUnverified(page,DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -83,12 +54,7 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public long getAllUnverifiedLastPage() {
-        return getAllUnverifiedLastPage(DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long getAllUnverifiedLastPage(int pageSize) {
+    public int getAllUnverifiedLastPage(int pageSize) {
         return getLastPage(getAllUnverifiedCount(),pageSize);
     }
 
@@ -113,15 +79,6 @@ public class ClinicServiceImpl implements ClinicService {
     public StudyType registerStudyToClinic(int clinicId, StudyType studyType) {
         return clinicDao.registerStudyToClinic(clinicId, studyType);
     }
-    @Override
-    public Collection<Clinic> getByStudyTypeId(int studyTypeId) {
-        return getByStudyTypeId(studyTypeId,DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Clinic> getByStudyTypeId(int studyTypeId, int page) {
-        return getByStudyTypeId(studyTypeId,page,DEFAULT_MAX_PAGE_SIZE);
-    }
 
     @Override
     public Collection<Clinic> getByStudyTypeId(int studyTypeId, int page, int pageSize) {
@@ -134,23 +91,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public long getByStudyTypeIdLastPage(int studyTypeId) {
-        return getByStudyTypeIdLastPage(studyTypeId,DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long getByStudyTypeIdLastPage(int studyTypeId, int pageSize) {
+    public int getByStudyTypeIdLastPage(int studyTypeId, int pageSize) {
         return getLastPage(getByStudyTypeIdCount(studyTypeId),pageSize);
-    }
-
-    @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
-        return searchClinicsBy(clinicName,hours,acceptedPlan,studyName,DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int page) {
-        return searchClinicsBy(clinicName,hours,acceptedPlan,studyName,page,DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -164,17 +106,12 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public long searchClinicsByLastPage(String clinicName, ClinicHours hours, String acceptedPlan, String studyName) {
-        return searchClinicsByLastPage(clinicName,hours,acceptedPlan,studyName,DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long searchClinicsByLastPage(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int pageSize) {
+    public int searchClinicsByLastPage(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int pageSize) {
         return getLastPage(searchClinicsByCount(clinicName,hours,acceptedPlan,studyName),pageSize);
     }
 
     // auxiliar functions
-    private long getLastPage(final long count, final int pageSize){
-        return (long) Math.ceil((double)count / pageSize);
+    private int getLastPage(final long count, final int pageSize){
+        return (int) Math.ceil((double)count / pageSize);
     }
 }

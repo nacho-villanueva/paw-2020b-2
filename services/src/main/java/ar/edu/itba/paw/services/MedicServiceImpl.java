@@ -15,28 +15,11 @@ import java.util.Optional;
 @Transactional
 public class MedicServiceImpl implements MedicService {
 
-    // Pagination-related constants
-    private static final int DEFAULT_PAGE = 1;
-    private static final int DEFAULT_MAX_PAGE_SIZE = 20;
-
     @Autowired
     private MedicDao medicDao;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private MedicalFieldService medicalFieldService;
-
-    @Override
-    public Collection<Medic> getAll() {
-        return getAll(DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Medic> getAll(int page) {
-        return getAll(page,DEFAULT_MAX_PAGE_SIZE);
-    }
 
     @Override
     public Collection<Medic> getAll(int page, int pageSize) {
@@ -49,23 +32,8 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public long getAllLastPage() {
-        return getAllLastPage(DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long getAllLastPage(int pageSize) {
+    public int getAllLastPage(int pageSize) {
         return getLastPage(getAllCount(),pageSize);
-    }
-
-    @Override
-    public Collection<Medic> getAllUnverified() {
-        return getAllUnverified(DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Medic> getAllUnverified(int page) {
-        return getAllUnverified(page,DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -79,12 +47,7 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public long getAllUnverifiedLastPage() {
-        return getAllUnverifiedLastPage(DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long getAllUnverifiedLastPage(int pageSize) {
+    public int getAllUnverifiedLastPage(int pageSize) {
         return getLastPage(getAllUnverifiedCount(),pageSize);
     }
 
@@ -115,15 +78,8 @@ public class MedicServiceImpl implements MedicService {
         return medicDao.knowsField(medicId,fieldId);
     }
 
-    @Override
-    public int getPageCount(int perPage) {
-        long medicCount = medicDao.getAllCount();
-
-        return (int) Math.ceil((double)medicCount / perPage);
-    }
-
     // auxiliar functions
-    private long getLastPage(final long count, final int pageSize){
-        return (long) Math.ceil((double)count / pageSize);
+    private int getLastPage(final long count, final int pageSize){
+        return (int) Math.ceil((double)count / pageSize);
     }
 }

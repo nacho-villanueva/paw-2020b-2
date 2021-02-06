@@ -2,11 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Order;
 import ar.edu.itba.paw.models.Result;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.OrderService;
 import ar.edu.itba.paw.services.ResultService;
 import ar.edu.itba.paw.services.UrlEncoderService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +27,11 @@ import java.util.stream.Collectors;
 @Component
 public class ResultController {
 
-    private static final int FIRST_PAGE = 1;
+    private static final String DEFAULT_PAGE = "1";
+    private static final int MIN_PAGE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
     @Autowired
@@ -46,67 +52,47 @@ public class ResultController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
     public Response getResults(
-            @PathParam("orderId") final String oid,
-            @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @PathParam("orderId") final int orderId
     ){
-        Response.ResponseBuilder response;
-        long orderId;
 
-        try {
-            orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        int queryPage = (page==null)?(FIRST_PAGE):(page);
-        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
-            return Response.status(422).build();
-
-        long lastPage;
-        if(perPage==null)
-            lastPage = resultService.findByOrderIdLastPage(orderId);
-        else
-            lastPage = resultService.findByOrderIdLastPage(orderId,perPage);
+        long lastPage = resultService.findByOrderIdLastPage(orderId,perPage);
 
         if(lastPage <= 0)
             return Response.noContent().build();
 
-        if(queryPage > lastPage)
+        if(page > lastPage)
             return Response.status(422).build();
 
-        Collection<Result> results;
-        if(perPage==null)
-            results = resultService.findByOrderId(orderId,queryPage);
-        else
-            results = resultService.findByOrderId(orderId,queryPage,perPage);
+        Collection<Result> results = resultService.findByOrderId(orderId,page,perPage);
 
         Collection<ResultGetDto> resultGetDtos = results.stream()
                 .map(r -> (new ResultGetDto(r,urlEncoderService.encode(r.getOrderId()),uriInfo)))
                 .collect(Collectors.toList());
 
         EntityTag entityTag = new EntityTag(Integer.toHexString(resultGetDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<ResultGetDto>>(resultGetDtos) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ResultGetDto>>(resultGetDtos) {})
                 .type(ResultGetDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(queryPage>FIRST_PAGE){
-            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
-            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
-        }
+        if(page> MIN_PAGE)
+            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
 
-        if(queryPage<lastPage){
-            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
-            response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
-        }
+        if(page<lastPage)
+            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
+
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
+        response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
 
         return response.build();
     }
@@ -116,7 +102,7 @@ public class ResultController {
     @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
     public Response getResultById(
             @PathParam("orderId") final String oid,
-            @PathParam("id") final String id
+            @PathParam("id") final int id
     ){
         long orderId;
         try {
@@ -125,14 +111,7 @@ public class ResultController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        int resultId;
-        try {
-            resultId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<Result> resultOptional = resultService.findById(resultId);
+        Optional<Result> resultOptional = resultService.findById(id);
         if(!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -156,7 +135,7 @@ public class ResultController {
     @Produces(value = { ImageDto.CONTENT_TYPE })
     public Response getResultIdentification(
             @PathParam("orderId") final String oid,
-            @PathParam("id") final String id
+            @PathParam("id") final int id
     ){
         long orderId;
         try {
@@ -165,14 +144,7 @@ public class ResultController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        int resultId;
-        try {
-            resultId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<Result> resultOptional = resultService.findById(resultId);
+        Optional<Result> resultOptional = resultService.findById(id);
         if(!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -194,7 +166,7 @@ public class ResultController {
     @Produces(value = { ImageDto.CONTENT_TYPE })
     public Response getResultFile(
             @PathParam("orderId") final String oid,
-            @PathParam("id") final String id
+            @PathParam("id") final int id
     ){
         long orderId;
         try {
@@ -203,14 +175,7 @@ public class ResultController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        int resultId;
-        try {
-            resultId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<Result> resultOptional = resultService.findById(resultId);
+        Optional<Result> resultOptional = resultService.findById(id);
         if(!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -250,15 +215,12 @@ public class ResultController {
         Order order = orderOptional.get();
 
         // clinic should be the one doing this task
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String userEmail = getLoggedUserEmail();
+        if(userEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String userEmail = authentication.getName();
 
         if(!order.getClinic().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
         String resultDataType = resultPostDto.getFile().getContentType();
         byte[] resultData = resultPostDto.getFile().getImageAsByteArray();
@@ -283,5 +245,23 @@ public class ResultController {
         response = Response.created(uri);
 
         return response.build();
+    }
+
+    // auxiliar functions
+    private User getLoggedUser() {
+        String userEmail = getLoggedUserEmail();
+        if(userEmail==null)
+            return null;
+
+        Optional<User> maybeUser = userService.findByEmail(userEmail);
+        return maybeUser.orElse(null);
+    }
+
+    private String getLoggedUserEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getName() == null)
+            return null;
+
+        return auth.getName();
     }
 }

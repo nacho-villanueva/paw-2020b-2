@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +22,11 @@ import java.util.stream.Collectors;
 @Component
 public class OrderController {
 
-    private static final int FIRST_PAGE = 1;
+    private static final String DEFAULT_PAGE = "1";
+    private static final int MIN_PAGE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
     @Autowired
@@ -48,36 +53,28 @@ public class OrderController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
     public Response getOrders(
-            @Valid @BeanParam OrderFilterDto orderFilterDto,
-            @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @Valid @BeanParam OrderFilterDto orderFilterDto
     ){
         Response.ResponseBuilder response;
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
         boolean isGetAllQuery = (isEmpty(orderFilterDto.getClinics()) && isEmpty(orderFilterDto.getMedics()) &&
                 isEmpty(orderFilterDto.getPatientEmails()) && orderFilterDto.getFromDate()==null && orderFilterDto.getToDate()==null
                 && isEmpty(orderFilterDto.getStudyTypes()));
 
         // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        User user = getLoggedUser();
+        if(user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
-
-        int queryPage = (page==null)?(FIRST_PAGE):(page);
-        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
-            return Response.status(422).build();
 
         Collection<User> clinicUsers = new ArrayList<>();
         Collection<User> medicUsers = new ArrayList<>();
@@ -107,79 +104,44 @@ public class OrderController {
         }
 
         long lastPage;
-        if(perPage==null){
-            if(isGetAllQuery){
-                lastPage = orderService.getAllAsUserLastPage(user, includeShared);
-            }else{
-                lastPage = orderService.filterOrdersLastPage(
-                        user,
-                        clinicUsers,
-                        medicUsers,
-                        patientEmails,
-                        fromDate,
-                        toDate,
-                        studyTypes,
-                        includeShared
-                );
-            }
+        if(isGetAllQuery){
+            lastPage = orderService.getAllAsUserLastPage(user, includeShared, perPage);
         }else{
-            if(isGetAllQuery){
-                lastPage = orderService.getAllAsUserLastPage(user, includeShared, perPage);
-            }else{
-                lastPage = orderService.filterOrdersLastPage(
-                        user,
-                        clinicUsers,
-                        medicUsers,
-                        patientEmails,
-                        fromDate,
-                        toDate,
-                        studyTypes,
-                        includeShared,
-                        perPage
-                );
-            }
+            lastPage = orderService.filterOrdersLastPage(
+                    user,
+                    clinicUsers,
+                    medicUsers,
+                    patientEmails,
+                    fromDate,
+                    toDate,
+                    studyTypes,
+                    includeShared,
+                    perPage
+            );
         }
 
         if(lastPage <= 0)
             return Response.noContent().build();
 
-        if(queryPage > lastPage)
+        if(page > lastPage)
             return Response.status(422).build();
 
         Collection<Order> orders;
-        if(perPage==null){
-            if(isGetAllQuery){
-                orders = orderService.getAllAsUser(user, includeShared,queryPage);
-            }else{
-                orders = orderService.filterOrders(
-                        user,
-                        clinicUsers,
-                        medicUsers,
-                        patientEmails,
-                        fromDate,
-                        toDate,
-                        studyTypes,
-                        includeShared,
-                        queryPage
-                );
-            }
+        if(isGetAllQuery){
+            orders = orderService.getAllAsUser(user, includeShared, page, perPage);
         }else{
-            if(isGetAllQuery){
-                orders = orderService.getAllAsUser(user, includeShared, queryPage, perPage);
-            }else{
-                orders = orderService.filterOrders(
-                        user,
-                        clinicUsers,
-                        medicUsers,
-                        patientEmails,
-                        fromDate,
-                        toDate,
-                        studyTypes,
-                        includeShared,
-                        queryPage,
-                        perPage
-                );
-            }
+            orders = orderService.filterOrders(
+                    user,
+                    clinicUsers,
+                    medicUsers,
+                    patientEmails,
+                    fromDate,
+                    toDate,
+                    studyTypes,
+                    includeShared,
+                    page,
+                    perPage
+            );
         }
 
         Collection<OrderGetDto> orderDtos = (
@@ -192,13 +154,13 @@ public class OrderController {
                 .tag(etag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(queryPage>FIRST_PAGE){
-            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
-            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
+        if(page> MIN_PAGE){
+            response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
+            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
         }
 
-        if(queryPage<lastPage){
-            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
+        if(page<lastPage){
+            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
             response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
         }
 
@@ -208,18 +170,9 @@ public class OrderController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
-    public Response getOrderById(@PathParam("id") final String id){
+    public Response getOrderById(@PathParam("id") final int id){
 
-        Response.ResponseBuilder response;
-        long orderId;
-
-        try {
-            orderId = urlEncoderService.decode(id);
-        }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<Order> orderOptional = orderService.findById(orderId);
+        Optional<Order> orderOptional = orderService.findById(id);
         if(!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -227,7 +180,7 @@ public class OrderController {
         String encodedPath = urlEncoderService.encode(order.getOrderId());
         OrderGetDto orderGetDto = new OrderGetDto(order,encodedPath,uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(orderGetDto.hashCode()));
-        response = Response.ok(orderGetDto).type(OrderGetDto.CONTENT_TYPE+"+json")
+        Response.ResponseBuilder response = Response.ok(orderGetDto).type(OrderGetDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
@@ -236,17 +189,9 @@ public class OrderController {
     @GET
     @Path("/{id}/identification")
     @Produces(value = { ImageDto.CONTENT_TYPE })
-    public Response getOrderIdentification(@PathParam("id") final String id){
+    public Response getOrderIdentification(@PathParam("id") final int id){
 
-        long orderId;
-
-        try {
-            orderId = urlEncoderService.decode(id);
-        }catch (NumberFormatException e){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<Order> orderOptional = orderService.findById(orderId);
+        Optional<Order> orderOptional = orderService.findById(id);
         if(!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -279,10 +224,9 @@ public class OrderController {
         Order order = orderOptional.get();
 
         // only affected patient should be able to see whom they shared with
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String userEmail = getLoggedUserEmail();
+        if(userEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String userEmail = authentication.getName();
 
         if(!order.getPatientEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -324,15 +268,12 @@ public class OrderController {
         Order order = orderOptional.get();
 
         // only affected patient should be able to do this action
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String userEmail = getLoggedUserEmail();
+        if(userEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String userEmail = authentication.getName();
 
         if(!order.getPatientEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
         Optional<Medic> medicOptional = medicService.findByUserId(userDto.getId());
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
@@ -356,17 +297,10 @@ public class OrderController {
     public Response createOrder(
             @Valid OrderPostDto orderPostDto
     ){
-        Response.ResponseBuilder response;
 
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        User user = getLoggedUser();
+        if(user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
 
         Optional<Medic> medicOptional = medicService.findByUserId(user.getId());
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
@@ -414,7 +348,7 @@ public class OrderController {
 
         String encodedPath = urlEncoderService.encode(order.getOrderId());
         final URI uri = uriInfo.getAbsolutePathBuilder().path(encodedPath).build();
-        response = Response.created(uri);
+        Response.ResponseBuilder response = Response.created(uri);
 
         return response.build();
     }
@@ -429,8 +363,6 @@ public class OrderController {
 
         Response.ResponseBuilder response;
 
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
         long orderId;
         try {
             orderId = urlEncoderService.decode(encodedId);
@@ -439,10 +371,9 @@ public class OrderController {
         }
 
         // only affected members should be able to change
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String userEmail = getLoggedUserEmail();
+        if(userEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String userEmail = authentication.getName();
 
         final Optional<Order> orderOptional = orderService.findById(orderId);
         if(!orderOptional.isPresent())
@@ -489,5 +420,22 @@ public class OrderController {
     // auxiliar functions
     private boolean isEmpty(Collection<?> collection){
         return collection==null || collection.isEmpty();
+    }
+
+    private User getLoggedUser() {
+        String userEmail = getLoggedUserEmail();
+        if(userEmail==null)
+            return null;
+
+        Optional<User> maybeUser = userService.findByEmail(userEmail);
+        return maybeUser.orElse(null);
+    }
+
+    private String getLoggedUserEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getName() == null)
+            return null;
+
+        return auth.getName();
     }
 }

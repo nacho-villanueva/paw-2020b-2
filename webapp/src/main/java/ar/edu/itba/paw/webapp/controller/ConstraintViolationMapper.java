@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.webapp.dto.ConstraintViolationDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -16,7 +12,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -25,9 +20,6 @@ import java.util.stream.Collectors;
 @Provider
 @Component
 public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViolationException> {
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Resource(name="annotationCodes")
     private Map<String,String> annotationCodes;
@@ -43,20 +35,21 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
         Collection<ConstraintViolation<?>> violations = e.getConstraintViolations();
 
         return Response.status(Response.Status.BAD_REQUEST).language(locale)
-                .entity(new GenericEntity<Collection<ConstraintViolationDto>>( (violations.stream().map(vc -> (new ConstraintViolationDto(vc,solveMessage(vc,locale),getCode(vc)))).collect(Collectors.toList())) ) {})
+                .entity(new GenericEntity<Collection<ConstraintViolationDto>>
+                        ( (violations.stream().map(this::createDto).collect(Collectors.toList())) ) {})
                 .type(ConstraintViolationDto.CONTENT_TYPE+"+json").build();
     }
 
-    private String solveMessage(ConstraintViolation<?> violation, Locale locale){
+    private ConstraintViolationDto createDto(ConstraintViolation<?> violation){
 
-        String message;
-        try{
-            message = messageSource.getMessage(violation.getMessage(),null,locale);
-        }catch (NoSuchMessageException e){
-            message = violation.getMessage();
-        }
+        String code = getCode(violation);
+        String message = solveMessage(violation);
 
-        return message;
+        return new ConstraintViolationDto(violation,message,code);
+    }
+
+    private String solveMessage(ConstraintViolation<?> violation){
+        return violation.getMessage();
     }
 
     private String getCode(ConstraintViolation<?> violation){

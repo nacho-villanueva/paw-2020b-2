@@ -11,6 +11,7 @@ import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.ShareRequestGetDto;
 import ar.edu.itba.paw.webapp.dto.ShareRequestPostDto;
 import ar.edu.itba.paw.webapp.dto.StudyTypeDto;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,14 +22,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("share-requests")
 @Component
 public class ShareRequestController {
-    private static final int FIRST_PAGE = 1;
+
+    private static final String DEFAULT_PAGE = "1";
+    private static final int MIN_PAGE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
     @Autowired
@@ -49,58 +54,49 @@ public class ShareRequestController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ShareRequestPostDto.CONTENT_TYPE+"+json"})
     public Response listShareRequests(
-            @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+                    Integer perPage
     ){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String patientEmail = getLoggedUserEmail();
+        if(patientEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String patientEmail = authentication.getName();
 
-        int queryPage = (page==null)?(FIRST_PAGE):(page);
-        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
-            return Response.status(422).build();
-
-        long lastPage = shareRequestService.getAllPatientRequestsLastPage(patientEmail);
+        long lastPage = shareRequestService.getAllPatientRequestsLastPage(patientEmail,perPage);
 
         if(lastPage <= 0)
             return Response.noContent().build();
 
-        if(queryPage > lastPage)
+        if(page > lastPage)
             return Response.status(422).build();
 
-        Collection<ShareRequest> shareRequests;
-        if(perPage==null){
-            shareRequests = shareRequestService.getAllPatientRequests(patientEmail,queryPage);
-        }else{
-            shareRequests = shareRequestService.getAllPatientRequests(patientEmail,queryPage,perPage);
-        }
+        Collection<ShareRequest> shareRequests = shareRequestService.getAllPatientRequests(patientEmail,page,perPage);
 
         Collection<ShareRequestGetDto> shareRequestGetDtos = shareRequests.stream()
                 .map(sr -> (new ShareRequestGetDto(sr,uriInfo))).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(shareRequestGetDtos.hashCode()));
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ShareRequestGetDto>>( shareRequestGetDtos ) {})
+        ResponseBuilder response =
+                Response.ok(new GenericEntity<Collection<ShareRequestGetDto>>( shareRequestGetDtos ) {})
                 .type(ShareRequestGetDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(queryPage>FIRST_PAGE){
-            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
-            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
-        }
+        if(page> MIN_PAGE)
+            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
 
-        if(queryPage<lastPage){
-            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
-            response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
-        }
+        if(page<lastPage)
+            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
+
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
+        response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
 
         return response.build();
     }
@@ -109,12 +105,9 @@ public class ShareRequestController {
     @Path("/{medicId}/{studyTypeId}")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response getShareRequest(
-            @PathParam("medicId") Integer medicId,
-            @PathParam("studyTypeId") Integer studyTypeId
+            @PathParam("medicId") final int medicId,
+            @PathParam("studyTypeId") final int studyTypeId
     ){
-
-        if(medicId==null || studyTypeId==null)
-            return Response.status(Response.Status.BAD_REQUEST).build();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getName()==null)
@@ -150,15 +143,11 @@ public class ShareRequestController {
     public Response requestShare(
             @Valid ShareRequestPostDto shareRequestPostDto
     ){
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        User user = getLoggedUser();
+        if(user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<Medic> medicOptional = medicService.findByUserId(userOptional.get().getId());
+        Optional<Medic> medicOptional = medicService.findByUserId(user.getId());
         if(!medicOptional.isPresent())
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
@@ -190,8 +179,8 @@ public class ShareRequestController {
     @Path("/{medicId}/{studyTypeId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response AcceptShareRequest(
-            @PathParam("medicId") Integer medicId,
-            @PathParam("studyTypeId") Integer studyTypeId
+            @PathParam("medicId") final int medicId,
+            @PathParam("studyTypeId") final int studyTypeId
     ){
         return RespondToShareRequest(medicId,studyTypeId,true);
     }
@@ -200,22 +189,18 @@ public class ShareRequestController {
     @Path("/{medicId}/{studyTypeId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response RejectShareRequest(
-            @PathParam("medicId") Integer medicId,
-            @PathParam("studyTypeId") Integer studyTypeId
+            @PathParam("medicId") final int medicId,
+            @PathParam("studyTypeId") final int studyTypeId
     ){
         return RespondToShareRequest(medicId,studyTypeId,false);
     }
 
     // Accepts or Declines the Share Request
-    private Response RespondToShareRequest(Integer medicId, Integer studyTypeId, boolean acceptRequest){
+    private Response RespondToShareRequest(final int medicId, final int studyTypeId, boolean acceptRequest){
 
-        if(medicId==null || studyTypeId==null)
-            return Response.status(Response.Status.BAD_REQUEST).build();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        String patientEmail = getLoggedUserEmail();
+        if(patientEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String patientEmail = authentication.getName();
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
@@ -235,5 +220,23 @@ public class ShareRequestController {
         shareRequestService.acceptOrDenyShare(shareRequest,acceptRequest);
 
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    // Auxiliar functions
+    private User getLoggedUser() {
+        String userEmail = getLoggedUserEmail();
+        if(userEmail==null)
+            return null;
+
+        Optional<User> maybeUser = userService.findByEmail(userEmail);
+        return maybeUser.orElse(null);
+    }
+
+    private String getLoggedUserEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getName() == null)
+            return null;
+
+        return auth.getName();
     }
 }

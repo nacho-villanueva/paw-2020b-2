@@ -10,11 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = IntegerSizeValidator.class)
-@Target({ ElementType.FIELD })
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IntegerSize {
 
-    String message() default "Input value is not within the acceptable range";
+    String message() default "Input value is not within the acceptable range. (Min {min}, Max {max})";
 
     public Class<?>[] groups() default {};
 

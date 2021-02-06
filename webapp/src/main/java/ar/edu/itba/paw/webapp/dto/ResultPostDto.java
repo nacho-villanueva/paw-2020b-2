@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.constraintGroups.ResultGroup;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;

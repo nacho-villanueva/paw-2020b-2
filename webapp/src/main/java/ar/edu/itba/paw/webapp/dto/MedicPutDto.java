@@ -26,7 +26,7 @@ public class MedicPutDto {
     @Valid  //TODO: this valid might make it mandatory, see a solution
     private ImageDto identification;
 
-    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern",groups = {MedicGroup.class})
+    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern")
     private String licenceNumber;
 
     @Valid  //TODO: this valid might make it mandatory, see a solution

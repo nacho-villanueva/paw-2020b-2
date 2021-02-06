@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.MedicalField;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.MedicGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.MedicPostGroup;
-import ar.edu.itba.paw.webapp.dto.constraintGroups.MedicPutGroup;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -33,7 +30,7 @@ public class MedicPostDto {
     private ImageDto identification;
 
     @NotBlank(message = "Please provide a license number.")
-    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern",groups = {MedicGroup.class})
+    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern")
     private String licenceNumber;
 
     @Valid

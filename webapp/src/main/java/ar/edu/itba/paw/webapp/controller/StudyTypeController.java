@@ -6,6 +6,7 @@ import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.StudyTypeService;
 import ar.edu.itba.paw.webapp.dto.ClinicGetDto;
 import ar.edu.itba.paw.webapp.dto.StudyTypeDto;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,6 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,11 @@ import java.util.stream.Collectors;
 @Component
 public class StudyTypeController {
 
-    private static final int FIRST_PAGE = 1;
+    private static final String DEFAULT_PAGE = "1";
+    private static final int MIN_PAGE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
     @Autowired
@@ -38,25 +42,20 @@ public class StudyTypeController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response listStudyTypes() {
 
-        Collection<StudyType> studyTypes;
-        Response.ResponseBuilder response;
-
-        studyTypes = studyTypeService.getAll();
+        Collection<StudyType> studyTypes = studyTypeService.getAll();
 
         if(studyTypes.isEmpty())
             return Response.noContent().build();
 
-        Collection<StudyTypeDto> studyTypeDtos = (studyTypes.stream().map(st -> (new StudyTypeDto(st,uriInfo))).collect(Collectors.toList()));
+        Collection<StudyTypeDto> studyTypeDtos =
+                (studyTypes.stream().map(st -> (new StudyTypeDto(st,uriInfo))).collect(Collectors.toList()));
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>( studyTypeDtos ) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>( studyTypeDtos ) {})
                 .type(StudyTypeDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
@@ -66,28 +65,16 @@ public class StudyTypeController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
-    public Response getStudyTypeById(@PathParam("id") final String id){
+    public Response getStudyTypeById(@PathParam("id") final int id){
 
-        Response.ResponseBuilder response;
-        Integer studyTypeId;
-
-        try {
-            studyTypeId = Integer.valueOf(id);
-        }catch (Error e){
-            studyTypeId = null;
-        }
-
-        if (studyTypeId == null)
-            return Response.status(Status.BAD_REQUEST).build();
-
-        Optional<StudyType> studyTypeOptional = studyTypeService.findById(studyTypeId);
+        Optional<StudyType> studyTypeOptional = studyTypeService.findById(id);
 
         if (!studyTypeOptional.isPresent())
             return Response.status(Status.NOT_FOUND).build();
 
         StudyTypeDto studyTypeDto = new StudyTypeDto(studyTypeOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDto.hashCode()));
-        response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
+        Response.ResponseBuilder response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
@@ -99,10 +86,6 @@ public class StudyTypeController {
     public Response registerStudyType(@Valid StudyTypeDto studyTypeDto){
 
         Response.ResponseBuilder response;
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        // no errors
         final URI uri;
         String name = studyTypeDto.getName();
 
@@ -114,8 +97,8 @@ public class StudyTypeController {
             uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(studyType.getId())).build();
             EntityTag entityTag = new EntityTag(Integer.toHexString(uri.toString().hashCode()));
 
-            response = Response.status(422).location(uri);
-            response = response.tag(entityTag).cacheControl(cacheControl);
+            response = Response.status(422).location(uri)
+                    .tag(entityTag).cacheControl(cacheControl);
         }else{
             // register
             final StudyType studyType = studyTypeService.register(name);
@@ -132,56 +115,43 @@ public class StudyTypeController {
     @Path("/{id}/clinics")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response getClinicsByStudyType(
-            @PathParam("id") final String id,
-            @QueryParam("page") final Integer page,
-            @QueryParam("per_page") final Integer per_page
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @PathParam("id") final int id
     ){
 
-        int queryPage = (page==null)?(FIRST_PAGE):(page);
-
-        if(queryPage < FIRST_PAGE || (per_page!=null && per_page < 1))
-            return Response.status(422).build();
-
-        Response.ResponseBuilder response;
-        Integer studyTypeId;
-        try {
-            studyTypeId = Integer.valueOf(id);
-        }catch (Error e){
-            studyTypeId = null;
-        }
-        if (studyTypeId == null)
-            return Response.status(Status.BAD_REQUEST).build();
-
-        long lastPage;
-        if(per_page==null)
-            lastPage = clinicService.getByStudyTypeIdLastPage(studyTypeId);
-        else
-            lastPage = clinicService.getByStudyTypeIdLastPage(studyTypeId,per_page);
+        long lastPage = clinicService.getByStudyTypeIdLastPage(id,perPage);
 
         if(lastPage <= 0)
             return Response.noContent().build();
 
-        if(queryPage > lastPage)
+        if(page > lastPage)
             return Response.status(422).build();
 
-        Collection<Clinic> clinics = clinicService.getByStudyTypeId(studyTypeId);
+        Collection<Clinic> clinics = clinicService.getByStudyTypeId(id,page,perPage);
 
-        Collection<ClinicGetDto> clinicDtos = (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
+        Collection<ClinicGetDto> clinicDtos =
+                (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
                 .type(ClinicGetDto.CONTENT_TYPE+"+json")
                 .tag(etag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(queryPage>FIRST_PAGE){
-            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
-            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
+        if(page> MIN_PAGE){
+            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
         }
 
-        if(queryPage<lastPage){
-            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
-            response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
+        if(page<lastPage){
+            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
         }
+
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
+        response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
 
         return response.build();
     }

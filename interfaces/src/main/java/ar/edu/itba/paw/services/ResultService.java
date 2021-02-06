@@ -9,16 +9,9 @@ import java.util.Optional;
 public interface ResultService {
     Optional<Result> findById(long id);
 
-    //TODO: deprecated, remove usages when possible
-    Collection<Result> findByOrderId(long id);
-
-    Collection<Result> findByOrderId(long id, int page);
-
     Collection<Result> findByOrderId(long id, int page, int pageSize);
 
     long findByOrderIdCount(long id);
-
-    long findByOrderIdLastPage(long id);
 
     long findByOrderIdLastPage(long id, int pageSize);
 

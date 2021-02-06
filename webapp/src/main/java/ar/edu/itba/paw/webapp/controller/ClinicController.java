@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.annotations.IntegerSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +26,11 @@ import java.util.stream.Collectors;
 @Component
 public class ClinicController {
 
-    private static final int FIRST_PAGE = 1;
+    private static final String DEFAULT_PAGE = "1";
+    private static final int MIN_PAGE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
     @Autowired
@@ -41,25 +45,24 @@ public class ClinicController {
     @Context
     private UriInfo uriInfo;
 
-    @Context
-    private HttpHeaders headers;
-
     @GET
     @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response listClinics(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
             @QueryParam("clinic") String clinicName,
             @Valid @BeanParam ClinicHoursAvailabilityDto hours,
             @QueryParam("plan") String acceptedPlan,
-            @QueryParam("study-type") String studyType,
-            @QueryParam("page") Integer page,
-            @QueryParam("per_page") Integer perPage
+            @QueryParam("study-type") String studyType
     ) {
 
         Collection<Clinic> clinics;
         Response.ResponseBuilder response;
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
         boolean isGetAllQuery = (clinicName==null && (hours==null || hours.getDays()==null) && acceptedPlan==null && studyType==null);
 
@@ -68,43 +71,23 @@ public class ClinicController {
             clinicHours = hours.getClinicHours();
         }
 
-        int queryPage = (page==null)?(FIRST_PAGE):(page);
-        if(queryPage < FIRST_PAGE || (perPage!=null && perPage < 1))
-            return Response.status(422).build();
-
-        long lastPage;
-        if(perPage==null){
-            if(isGetAllQuery){
-                lastPage = clinicService.getAllLastPage();
-            }else{
-                lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType);
-            }
+        int lastPage;
+        if(isGetAllQuery){
+            lastPage = clinicService.getAllLastPage(perPage);
         }else{
-            if(isGetAllQuery){
-                lastPage = clinicService.getAllLastPage(perPage);
-            }else{
-                lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType,perPage);
-            }
+            lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType,perPage);
         }
 
         if(lastPage <= 0)
             return Response.noContent().build();
 
-        if(queryPage > lastPage)
+        if(page > lastPage)
             return Response.status(422).build();
 
-        if(perPage==null){
-            if(isGetAllQuery){
-                clinics = clinicService.getAll(queryPage);
-            }else{
-                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,queryPage);
-            }
+        if(isGetAllQuery){
+            clinics = clinicService.getAll(page,perPage);
         }else{
-            if(isGetAllQuery){
-                clinics = clinicService.getAll(queryPage,perPage);
-            }else{
-                clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,queryPage,perPage);
-            }
+            clinics = clinicService.searchClinicsBy(clinicName,clinicHours,acceptedPlan,studyType,page,perPage);
         }
 
         Collection<ClinicGetDto> clinicDtos = (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
@@ -114,15 +97,14 @@ public class ClinicController {
                 .tag(etag).cacheControl(cacheControl);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(queryPage>FIRST_PAGE){
-            response.link(uriBuilder.replaceQueryParam("page",FIRST_PAGE).build(),"first");
-            response.link(uriBuilder.replaceQueryParam("page",queryPage-1).build(),"prev");
-        }
+        if(page> MIN_PAGE)
+            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
 
-        if(queryPage<lastPage){
-            response.link(uriBuilder.replaceQueryParam("page",queryPage+1).build(),"next");
-            response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
-        }
+        if(page<lastPage)
+            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
+
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
+        response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
 
         return response.build();
     }
@@ -130,16 +112,9 @@ public class ClinicController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
-    public Response getClinicById(@PathParam("id") final String id){
+    public Response getClinicById(@PathParam("id") final int id){
 
-        int clinicId;
-        try {
-            clinicId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
+        Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -154,19 +129,9 @@ public class ClinicController {
     @GET
     @Path("/{id}/available-studies")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
-    public Response getClinicStudyTypes(@PathParam("id") final String id){
+    public Response getClinicStudyTypes(@PathParam("id") final int id){
 
-        Response.ResponseBuilder response;
-        int clinicId;
-
-        try {
-            clinicId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
+        Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
 
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -177,7 +142,7 @@ public class ClinicController {
 
         Collection<StudyTypeDto> studyTypeDtos = studyTypes.stream().map(st -> (new StudyTypeDto(st,uriInfo))).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {})
                 .type(StudyTypeDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
@@ -188,19 +153,9 @@ public class ClinicController {
     @Path("/{id}/available-studies/{study}")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response getClinicHasStudyType(
-            @PathParam("id") final String id,
-            @PathParam("study") final String sId
+            @PathParam("id") final int clinicId,
+            @PathParam("study") final int studyTypeId
     ){
-
-        int clinicId;
-        int studyTypeId;
-
-        try {
-            clinicId = Integer.parseInt(id);
-            studyTypeId = Integer.parseInt(sId);
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
 
         boolean hasStudy = clinicService.hasStudy(clinicId,studyTypeId);
 
@@ -215,17 +170,9 @@ public class ClinicController {
     @GET
     @Path("/{id}/accepted-plans")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicPlanDto.CONTENT_TYPE+"+json"})
-    public Response getClinicAcceptedPlans(@PathParam("id") final String id){
-        Response.ResponseBuilder response;
-        int clinicId;
+    public Response getClinicAcceptedPlans(@PathParam("id") final int id){
 
-        try {
-            clinicId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
+        Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
 
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -236,7 +183,7 @@ public class ClinicController {
 
         Collection<MedicPlanDto> medicPlanDtos = acceptedPlans.stream().map(MedicPlanDto::new).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
                 .type(MedicPlanDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
@@ -249,17 +196,9 @@ public class ClinicController {
     public Response registerClinic(
             @Valid ClinicPostDto clinicPostDto
     ){
-        Response.ResponseBuilder response;
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        User user = getLoggedUser();
+        if(user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
 
         String name = clinicPostDto.getName();
         String telephone = clinicPostDto.getTelephone();
@@ -277,7 +216,7 @@ public class ClinicController {
                 );
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(clinic.getUser().getId())).build();
-        response = Response.created(uri);
+        Response.ResponseBuilder response = Response.created(uri);
 
         return response.build();
     }
@@ -286,40 +225,24 @@ public class ClinicController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateClinic(
-            @PathParam("id") String id,
+            @PathParam("id") final int id,
             @Valid ClinicPutDto clinicPutDto
     ){
-        Response.ResponseBuilder response;
 
-        int clinicId;
-
-        try {
-            clinicId = Integer.parseInt(id);
-        }catch (Exception e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-
-        Optional<Clinic> clinicOptional = clinicService.findByUserId(clinicId);
+        Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
 
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Clinic clinic = clinicOptional.get();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
+        User user = getLoggedUser();
+        if(user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        Optional<User> userOptional = userService.findByEmail(authentication.getName());
-        if(!userOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        User user = userOptional.get();
 
         // check permissions to edit profile
         if(!user.getId().equals(clinic.getUser().getId()))
             return Response.status(Response.Status.FORBIDDEN).build();
-
-        Locale locale = (headers.getAcceptableLanguages().isEmpty())?(Locale.getDefault()):headers.getAcceptableLanguages().get(0);
 
         // no errors
         final URI uri;
@@ -362,7 +285,7 @@ public class ClinicController {
         );
 
         uri = uriInfo.getAbsolutePathBuilder().build();
-        response = Response.noContent().location(uri);
+        Response.ResponseBuilder response = Response.noContent().location(uri);
 
         return response.build();
     }
@@ -370,5 +293,14 @@ public class ClinicController {
     // auxiliar functions
     private boolean isEmpty(String s){
         return s==null || s.trim().isEmpty();
+    }
+
+    private User getLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getName() == null)
+            return null;
+
+        Optional<User> maybeUser = userService.findByEmail(auth.getName());
+        return maybeUser.orElse(null);
     }
 }

@@ -27,11 +27,28 @@ public class ConstraintViolationDto {
             property = propertyPath
                     .replaceFirst("[a-zA-Z]*\\.","")
                     .replaceFirst("[a-zA-Z0-9]*\\.","");
+
+            if(property.matches("^arg[0-9]+"))
+                property = null;
         }
 
         this.property = property;
-        this.message = message;
         this.code = code;
+
+        final String SEPARATOR = "!!";
+        if(property == null){
+            if(message.contains(SEPARATOR)){
+                String[] substrings = message.split(SEPARATOR,2);
+                this.property = (substrings[0].equals(""))?null:substrings[0];
+                this.message = (substrings[1].equals(""))?null:substrings[1];
+            } else {
+                this.message = message;
+            }
+        }else if(code.equals("other")){
+            this.message = message;
+        } else{
+            this.message = null;
+        }
     }
 
     public String getProperty() {

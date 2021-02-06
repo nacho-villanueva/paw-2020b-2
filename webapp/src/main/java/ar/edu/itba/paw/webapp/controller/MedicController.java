@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -27,6 +28,7 @@ public class MedicController {
     private static final String DEFAULT_PAGE = "1";
     private static final int MINIMUM_PAGE = 1;
     private static final int MINIMUM_PAGE_SIZE = 1;
+    private static final int MAXIMUM_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
     // default cache
@@ -46,10 +48,11 @@ public class MedicController {
     @Produces(value = { MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE+"+json"})
     public Response getMedics(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
-            @Min(value = MINIMUM_PAGE, message = "Page number must be at least " + MINIMUM_PAGE)
+            @Min(value = MINIMUM_PAGE, message = "page!!Page number must be at least {value}")
                     int page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @Min(value = MINIMUM_PAGE_SIZE, message = "Number of entries per page must be at least " + MINIMUM_PAGE_SIZE)
+            @Min(value = MINIMUM_PAGE_SIZE, message = "perPage!!Number of entries per page must be at least {value}")
+            @Max(value = MAXIMUM_PAGE_SIZE, message = "perPage!!Page number must be at most {value}")
                     int perPage
     ){
         final Collection<Medic> medics = medicService.getAll(page,perPage);
@@ -58,7 +61,7 @@ public class MedicController {
             return Response.noContent().build();
         }
 
-        final int pages = medicService.getPageCount(perPage);
+        final int pages = medicService.getAllLastPage(perPage);
 
         List<MedicGetDto> medicGetDtoList = medics.stream().map(m -> new MedicGetDto(m,uriInfo)).collect(Collectors.toList());
         EntityTag etag = new EntityTag(Integer.toHexString(medicGetDtoList.hashCode()));

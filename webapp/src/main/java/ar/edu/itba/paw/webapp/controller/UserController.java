@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -29,6 +30,7 @@ public class UserController {
     private static final String DEFAULT_PAGE = "1";
     private static final int MINIMUM_PAGE = 1;
     private static final int MINIMUM_PAGE_SIZE = 1;
+    private static final int MAXIMUM_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
     @Autowired
@@ -44,10 +46,11 @@ public class UserController {
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json"})
     public Response listUsers(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
-            @Min(value = MINIMUM_PAGE, message = "Page number must be at least " + MINIMUM_PAGE)
+            @Min(value = MINIMUM_PAGE, message = "page!!Page number must be at least {value}")
                     int page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @Min(value = MINIMUM_PAGE_SIZE, message = "Number of entries per page must be at least " + MINIMUM_PAGE_SIZE)
+            @Min(value = MINIMUM_PAGE_SIZE, message = "perPage!!Number of entries per page must be at least {value}")
+            @Max(value = MAXIMUM_PAGE_SIZE, message = "perPage!!Page number must be at most {value}")
                     int perPage
     ) {
         final Collection<User> users = userService.getAll(page, perPage);
