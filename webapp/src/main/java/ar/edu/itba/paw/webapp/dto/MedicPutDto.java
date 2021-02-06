@@ -23,13 +23,13 @@ public class MedicPutDto {
     @Pattern(regexp = "\\+?[0-9]*",message = "Please provide a valid phone number")
     private String telephone;
 
-    @Valid  //TODO: this valid might make it mandatory, see a solution
+    @Valid
     private ImageDto identification;
 
     //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern")
     private String licenceNumber;
 
-    @Valid  //TODO: this valid might make it mandatory, see a solution
+    @Valid
     private Collection<MedicalFieldDto> medicalFields;
 
     // Constructors
