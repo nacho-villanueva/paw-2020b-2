@@ -55,7 +55,6 @@ public class ShareRequestController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ShareRequestPostDto.CONTENT_TYPE+"+json"})
     public Response listShareRequests(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
@@ -138,7 +137,6 @@ public class ShareRequestController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response requestShare(
             @Valid ShareRequestPostDto shareRequestPostDto

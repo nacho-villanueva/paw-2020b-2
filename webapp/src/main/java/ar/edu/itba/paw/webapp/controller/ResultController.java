@@ -53,7 +53,6 @@ public class ResultController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
     public Response getResults(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
@@ -62,8 +61,14 @@ public class ResultController {
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
             @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
                     Integer perPage,
-            @PathParam("orderId") final int orderId
+            @PathParam("orderId") final String oid
     ){
+        long orderId;
+        try {
+            orderId = urlEncoderService.decode(oid);
+        }catch (NumberFormatException e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         long lastPage = resultService.findByOrderIdLastPage(orderId,perPage);
 
@@ -193,7 +198,6 @@ public class ResultController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createResult(
             @PathParam("orderId") final String oid,

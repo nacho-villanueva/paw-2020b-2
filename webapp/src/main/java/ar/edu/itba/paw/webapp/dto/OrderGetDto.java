@@ -15,19 +15,22 @@ public class OrderGetDto {
     private static final String IDENTIFICATION_PATH = "identification";
     private static final String SHARED_WITH_PATH = "shared-with";
     private static final String RESULTS_PATH = "results";
+    private static final String MEDIC_PATH = "medics";
+    private static final String CLINIC_PATH = "clinics";
+    private static final String STUDY_TYPE_PATH = "study-types";
 
     // Variables
-    private MedicGetDto medic;
+    private String medic;
 
     private LocalDate date;
 
-    private ClinicGetDto clinic;
+    private String clinic;
 
     private String patientName;
 
     private String patientEmail;
 
-    private StudyTypeDto studyType;
+    private String studyType;
 
     private String description;
 
@@ -47,14 +50,15 @@ public class OrderGetDto {
     }
 
     public OrderGetDto(Order order, String encodedUrlPath, UriInfo uriInfo) {
-        this.medic = new MedicGetDto(order.getMedic(), uriInfo);
         this.date = order.getDate();
-        this.clinic = new ClinicGetDto(order.getClinic(), uriInfo);
         this.patientName = order.getPatientName();
         this.patientEmail = order.getPatientEmail();
-        this.studyType = new StudyTypeDto(order.getStudy(), uriInfo);
         this.description = order.getDescription();
         this.medicPlan = new MedicPlanDto(order.getPatientInsurancePlan(),order.getPatientInsuranceNumber());
+
+        this.medic = uriInfo.getBaseUriBuilder().path(MEDIC_PATH).path(String.valueOf(order.getMedic().getUser().getId())).build().toString();
+        this.clinic = uriInfo.getBaseUriBuilder().path(CLINIC_PATH).path(String.valueOf(order.getClinic().getUser().getId())).build().toString();
+        this.studyType = uriInfo.getBaseUriBuilder().path(STUDY_TYPE_PATH).path(String.valueOf(order.getStudy().getId())).build().toString();
 
         this.identification = getUriBuilder(encodedUrlPath,uriInfo).path(IDENTIFICATION_PATH).build().toString();
         this.sharedWith = getUriBuilder(encodedUrlPath,uriInfo).path(SHARED_WITH_PATH).build().toString();
@@ -67,11 +71,11 @@ public class OrderGetDto {
     }
 
     // Getters&Setters
-    public MedicGetDto getMedic() {
+    public String getMedic() {
         return medic;
     }
 
-    public void setMedic(MedicGetDto medic) {
+    public void setMedic(String medic) {
         this.medic = medic;
     }
 
@@ -83,11 +87,11 @@ public class OrderGetDto {
         this.date = date;
     }
 
-    public ClinicGetDto getClinic() {
+    public String getClinic() {
         return clinic;
     }
 
-    public void setClinic(ClinicGetDto clinic) {
+    public void setClinic(String clinic) {
         this.clinic = clinic;
     }
 
@@ -107,11 +111,11 @@ public class OrderGetDto {
         this.patientEmail = patientEmail;
     }
 
-    public StudyTypeDto getStudyType() {
+    public String getStudyType() {
         return studyType;
     }
 
-    public void setStudyType(StudyTypeDto studyType) {
+    public void setStudyType(String studyType) {
         this.studyType = studyType;
     }
 
@@ -147,6 +151,14 @@ public class OrderGetDto {
         this.sharedWith = sharedWith;
     }
 
+    public String getResults() {
+        return results;
+    }
+
+    public void setResults(String results) {
+        this.results = results;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -155,13 +167,6 @@ public class OrderGetDto {
         this.url = url;
     }
 
-    public String getResults() {
-        return results;
-    }
-
-    public void setResults(String results) {
-        this.results = results;
-    }
 
     // Equals&HashCode
     @Override

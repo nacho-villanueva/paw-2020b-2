@@ -43,7 +43,6 @@ public class StudyTypeController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response listStudyTypes() {
 
@@ -81,7 +80,6 @@ public class StudyTypeController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response registerStudyType(@Valid StudyTypeDto studyTypeDto){
 

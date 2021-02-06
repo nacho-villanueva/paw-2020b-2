@@ -54,7 +54,6 @@ public class OrderController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
     public Response getOrders(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
@@ -170,9 +169,16 @@ public class OrderController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
-    public Response getOrderById(@PathParam("id") final int id){
+    public Response getOrderById(@PathParam("id") final String encodedId){
 
-        Optional<Order> orderOptional = orderService.findById(id);
+        long orderId;
+        try {
+            orderId = urlEncoderService.decode(encodedId);
+        }catch (NumberFormatException e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<Order> orderOptional = orderService.findById(orderId);
         if(!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -189,9 +195,16 @@ public class OrderController {
     @GET
     @Path("/{id}/identification")
     @Produces(value = { ImageDto.CONTENT_TYPE })
-    public Response getOrderIdentification(@PathParam("id") final int id){
+    public Response getOrderIdentification(@PathParam("id") final String encodedId){
 
-        Optional<Order> orderOptional = orderService.findById(id);
+        long orderId;
+        try {
+            orderId = urlEncoderService.decode(encodedId);
+        }catch (NumberFormatException e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<Order> orderOptional = orderService.findById(orderId);
         if(!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -292,7 +305,6 @@ public class OrderController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createOrder(
             @Valid OrderPostDto orderPostDto

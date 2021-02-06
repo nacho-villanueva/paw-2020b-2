@@ -46,7 +46,6 @@ public class ClinicController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response listClinics(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
@@ -191,7 +190,6 @@ public class ClinicController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerClinic(
             @Valid ClinicPostDto clinicPostDto
