@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -72,7 +70,6 @@ public class MedicalFieldController {
     }
 
     @POST
-    @Path("/")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
     public Response registerMedicalField(@Valid MedicalFieldDto medicalFieldDto){
         final MedicalField medicalField = medicalFieldService.register(medicalFieldDto.getName());
