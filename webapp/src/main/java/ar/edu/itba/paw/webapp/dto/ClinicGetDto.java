@@ -19,7 +19,7 @@ public class ClinicGetDto {
     private static final String ACCEPTED_PLANS_PATH = "accepted-plans";
 
     // Variables
-    private UserGetDto user;
+    private String user;
 
     private String name;
 
@@ -41,7 +41,7 @@ public class ClinicGetDto {
     }
 
     public ClinicGetDto(Clinic clinic, UriInfo uriInfo){
-        this.user = new UserGetDto(clinic.getUser(),uriInfo);
+        this.user = uriInfo.getBaseUriBuilder().path(UserGetDto.REQUEST_PATH).path(String.valueOf(clinic.getUser().getId())).build().toString();
         this.name = clinic.getName();
         this.telephone = clinic.getTelephone();
         this.verified = clinic.isVerified();
@@ -60,11 +60,11 @@ public class ClinicGetDto {
     }
 
     // Getters&Setters
-    public UserGetDto getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(UserGetDto user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
