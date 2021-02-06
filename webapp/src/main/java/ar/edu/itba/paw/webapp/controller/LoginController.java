@@ -54,7 +54,8 @@ public class LoginController {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
-            return Response.ok().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(maybeUser.get())).build();
+            return Response.ok().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(maybeUser.get()))
+                    .header(org.springframework.http.HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,HttpHeaders.AUTHORIZATION).build();
         } catch (BadCredentialsException ex) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
