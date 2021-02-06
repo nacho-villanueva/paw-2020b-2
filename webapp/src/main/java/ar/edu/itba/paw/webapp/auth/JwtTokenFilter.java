@@ -44,6 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         final String token = header.split(" ")[1].trim();
         User tokenUser = jwtTokenUtil.parseToken(token);
         if(tokenUser == null) {
+            //Very likely an expired token
             chain.doFilter(request,response);
             return;
         }
