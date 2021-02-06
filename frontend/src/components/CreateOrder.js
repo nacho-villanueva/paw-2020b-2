@@ -1,4 +1,4 @@
-import {Form, Button, Table, Collapse} from "react-bootstrap";
+import {Form, Button, Table, Collapse, Pagination} from "react-bootstrap";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
@@ -10,7 +10,7 @@ function CreateOrder(){
     const infoSubmit="bubba";
     const clinicSubmit="newgrounds forever";
     const verifySubmit="this man... this is a wonderful man";
-    //DUMMY DATA
+    //DUMMY DATA (in the real version these should be made with useState to update and render the site)
     const clinicsList = [
         {
             userId: 1,
@@ -152,6 +152,12 @@ function CreateOrder(){
         {name:"Friday", id: 5},
         {name:"Saturday", id: 6}
     ];
+    const insurancePlans = [
+        {name:'None (insert SS number)'},
+        {name:'Galeno 300'},
+        {name:'OSDE 4200'},
+        {name:'Brook 9100'}
+    ];
 
 
 
@@ -225,16 +231,54 @@ function CreateOrder(){
     const [selectedClinic, setSelectedClinic] = useState(null);
     const selectClinic = (listItem) => { setSelectedClinic(listItem);};
 
+    //controls/values for pagination of clinics search
+    const [totalClinicPages, setTotalClinicPages] = useState(7);
+    const [currentPage, setCurrentPage] = useState(1);
 
+    const [clinicSearchValidated, setClinicSearchValidated] = useState(false);
     //search clinics call
     const searchClinics = (event) => {
         event.preventDefault();
         event.stopPropagation();
+        console.log(event);
+        setClinicSearchValidated(true);
+        /////
+        //event.target[0] -> clinicName
+        ///event.target[1] -> insurancePlan
+        //---
+        //for 0:N:6
+        //event.target[4+N] -> isAvailableN
+        //event.target[4+1+N] -> day-N-ot
+        //event.target[4+2+N] -> day-N-ct
+        ///////
         //CODE HERE THAT CALLS THE API AND FILLS UP clinicsList with the results
+        //will always search/fetch for page 1
+    };
+
+    //MISSING: pagitanation for clinics list
+    const changePageAndFetch = (pageNumber) => {
+        //will fetch clinics based on the already picked filters
+        //only will change the currentPage value (and might update totalClinicPages if the fetch comes up with a different value for that)
+        setCurrentPage(pageNumber);
     };
 
 
+
     //components built based on API data
+    const PaginationCustom = (props) => {
+        let active = props.current;
+
+        return(
+            <div className="row justify-content-center">
+                <Pagination>
+                    {active -1 > 0 ? <Pagination.Prev onClick={() => changePageAndFetch(active - 1)}/> : <Pagination.Prev disabled/>}
+                    <Pagination.Item active>{active}</Pagination.Item>
+                    {active + 1 <= props.total ?  <Pagination.Next onClick={() => changePageAndFetch(active + 1)}/> : <Pagination.Next disabled/>}
+                </Pagination>
+            </div>
+        );
+    }
+
     const Item = (props) => {
         return(
             <li class="nav-item" key={props.clinic.name}>
@@ -474,10 +518,9 @@ function CreateOrder(){
                                             required as="select"
                                             name="patientInsurancePlan"
                                         >
-                                            <option>None (insert SS number)</option>
-                                            <option>IbaiLife 390</option>
-                                            <option>Galeno Azul</option>
-                                            <option>OSDE 4100</option>
+                                            {insurancePlans.map((item) => (
+                                                <option>{item.name}</option>
+                                            ))}
                                         </Form.Control>
                                         <Form.Control.Feedback type="invalid">Please select an insurance plan</Form.Control.Feedback>
                                     </Form.Group>
@@ -532,7 +575,7 @@ function CreateOrder(){
                     </div>
 
                     <div id="clinic-form" className={"custom-form tab-pane fade in " + clinicStep}>
-                        <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
+                        <Form noValidate validated={clinicSearchValidated} onSubmit={searchClinics}>
                             <div className="search-block">
                                 <div className="row mx-1 pt-2">
                                     <Form.Group className="form-group col mt-1" controlId="clinicName">
@@ -548,10 +591,9 @@ function CreateOrder(){
                                             as="select"
                                             name="insurancePlan"
                                         >
-                                            <option>None (insert SS number)</option>
-                                            <option>IbaiLife 390</option>
-                                            <option>Galeno Azul</option>
-                                            <option>OSDE 4100</option>
+                                            {insurancePlans.map((item) => (
+                                                <option selected={item.name === orderInfo.patientInsurancePlan}>{item.name}</option>
+                                            ))}
                                         </Form.Control>
                                     </Form.Group>
 
@@ -567,7 +609,8 @@ function CreateOrder(){
                                     </Button>
                                     <Button
                                         className="clinic-btn search-btn mx-auto"
-                                        onClick={searchClinics}
+                                        type="submit" name="clinicSearchSubmit"
+                                        value="search this"
                                     >
                                         Search
                                     </Button>
@@ -597,7 +640,9 @@ function CreateOrder(){
                                     </Collapse>
                                 </div>
                             </div>
+                        </Form>
 
+                        <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
                             <div className="card results-card mt-5">
                                 <div className="card-body">
                                     <p className="card-title h4">Results</p>
@@ -612,6 +657,7 @@ function CreateOrder(){
                                             ))}
                                             </ul>
                                             }
+                                            {totalClinicPages > 1 ? <PaginationCustom current={currentPage} total={totalClinicPages} /> : <></>}
 
                                         </div>
                                         <div id="data" className="data-section">

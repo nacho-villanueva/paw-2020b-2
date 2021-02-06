@@ -53,6 +53,8 @@
 }
 
 
+
+
 .step-wrapper > .step-number.active{
     border-radius: 80%;
     border: 2px solid var(--primary);
@@ -73,6 +75,7 @@
     color: var(--primary);
 
 }
+
 
 .spacer{
     width: 90%;
