@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.dto.annotations.Locale;
+import ar.edu.itba.paw.webapp.dto.annotations.NotRegistered;
 import ar.edu.itba.paw.webapp.dto.annotations.Password;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -12,6 +13,7 @@ public class UserPostDto {
     public static final String CONTENT_TYPE = "application/vnd.user.v1";
     @NotBlank(message = "Please provide an email account.")
     @Email(message = "Please provide a valid email account.")
+    @NotRegistered(message = "Email already registered.")
     private String email;
 
     @NotBlank(message = "Please provide a password.")
