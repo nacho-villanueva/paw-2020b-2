@@ -1,20 +1,19 @@
-import {ActionType, StatusType} from "../actions/actions"
-import {useAccordionToggle} from "react-bootstrap";
+import {ActionType, InitState, StatusType} from "../actions/actions"
+import {Roles} from "../../constants/Roles";
 
-const initState = {
-    auth: {
-        status: StatusType.DE_AUTHENTICATED,
-        token: null,
-        role: null,
-    }
-}
-
-const reducer = (state = initState, action) => {
+const reducer = (state = InitState, action) => {
     switch (action.type) {
         case ActionType.AUTHENTICATE:
-            return {status: StatusType.AUTHENTICATED, token: action.token, role: action.role}
         case ActionType.DE_AUTHENTICATE:
-            return {status: StatusType.DE_AUTHENTICATED, token: null, role: null}
+            return {
+                ...state,
+                auth: {
+                    status: action.auth.status,
+                    token: action.auth.token,
+                    role: action.auth.role,
+                    userId: action.auth.userId,
+                    email: action.auth.email,
+                }};
         default:
             return state;
     }
