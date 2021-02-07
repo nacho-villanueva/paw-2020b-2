@@ -6,12 +6,13 @@ import {useHistory} from "react-router-dom";
 
 import {authenticate} from "../redux/actions";
 import {useDispatch} from "react-redux";
+import {registerUser, login} from "../api/Auth";
 
 function LandingPage() {
     //strings
     const title1 = "Welcome to";
     const title2 = "MedTransfer";
-    const login = "log in!";
+    const loginButton = "log in!";
     const emailLabel = "Email address";
     const passwordLabel = "Password";
     const rememberMeLabel = "Remember Me";
@@ -36,6 +37,12 @@ function LandingPage() {
     const handleLoginSubmit = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
+
+        const inputs = {
+            email: form[0],
+            password: form[1]
+        }
+
         if(form.checkValidity() === false) {
             event.stopPropagation();
         }else{
@@ -43,8 +50,8 @@ function LandingPage() {
             //let data = {email: event.target[0], password: event.target[1]};
             //let return = Wrapper.Authenticate(data);
             //dispatch(authenticate(return.token, return.role));
-            dispatch(authenticate("T3ST0k3N", "Medic"));
-            history.push("/dashboard");
+            // dispatch(authenticate("T3ST0k3N", "Medic"));
+            login(inputs.email.value, inputs.password.value);
         }
 
         setLoginValidated(true);
@@ -67,10 +74,10 @@ function LandingPage() {
         }
         */
 
-        if(form.checkValidity() === false || inputs.password !== inputs.passwordConfirm) {
+        if(form.checkValidity() === false || inputs.password.value !== inputs.passwordConfirm.value) {
             event.stopPropagation();
         }else{
-            window.open()
+            registerUser(inputs.email.value, inputs.password.value, inputs.passwordConfirm.value);
         }
 
         setRegisterValidated(true);
@@ -97,10 +104,6 @@ function LandingPage() {
         setActiveLoginTab("");
     };
 
-
-
-
-
     return(
         <div className={"landingContainer"}>
             <NavBar />
@@ -111,12 +114,12 @@ function LandingPage() {
                     <hr className="divider my-4"/>
                     <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
                         <li className="nav-item">
-                            <a className={"nav-item nav-link " + activeLoginTab}
+                            <a className={"nav-item nav-link " + activeLoginTab} href={"/#"}
                                id="login-tab" data-toggle="tab" role="tab" onClick={changeToLogin}
-                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{login}</a>
+                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{loginButton}</a>
                         </li>
                         <li className="nav-item">
-                            <a className={"nav-link " + activeRegisterTab}
+                            <a className={"nav-link " + activeRegisterTab} href={"/#"}
                                id="register-tab" data-toggle="tab" onClick={changeToRegister}
                                role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>{register}</a>
                         </li>
@@ -143,7 +146,7 @@ function LandingPage() {
 
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" class="row btn btn-lg action-btn" value={submitLogin}/>
+                                    <input type="submit" className="row btn btn-lg action-btn" value={submitLogin}/>
                                 </div>
                             </Form>
                         </div>

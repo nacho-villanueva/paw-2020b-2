@@ -12,11 +12,9 @@ function NavBar() {
       id="mainNav"
     >
       <div className="container">
-        <Link to={homepage}>
-          <a className="navbar-title text-primary" href={homepage}>
-            <i className="fas fa-laptop-medical fa-lg icons"></i>
+        <Link className="navbar-title text-primary" to={homepage}>
+            <i className="fas fa-laptop-medical fa-lg icons"/>
             &nbsp;&nbsp;/&nbsp;&nbsp; MedTransfer
-          </a>
         </Link>
 
         <Button
@@ -28,16 +26,14 @@ function NavBar() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"/>
         </Button>
         <div className="container" id="navbarResponsive">
           <ul className="navbar-nav ml-auto my-2 my-lg-0">
-            <Link to={profile}>
+            <Link className="navbar-options" to={profile}>
               <li className="nav-item">
-                <a className="navbar-options" href={profile}>
-                  <i className="fas fa-lg fa-user-circle icons"></i>
+                  <i className="fas fa-lg fa-user-circle icons"/>
                   Profile
-                </a>
               </li>
             </Link>
           </ul>
