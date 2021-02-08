@@ -1,12 +1,18 @@
 import {Form, Button, Table, Collapse, Pagination} from "react-bootstrap";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
+import {GetCurrentMedic, GetLoggedMedic, GetStudyTypes} from "../api/Auth";
 
 import "./Style/CreateOrder.css";
+import { store } from "../redux";
 
 function CreateOrder(){
-    const infoForm="tab-pane fade in show active";
-    const medicName="dr. peppe";
+
+    const history = useHistory();
+
+    /*******************************
+    **DATA
+    *******************************/
     const infoSubmit="bubba";
     const clinicSubmit="newgrounds forever";
     const verifySubmit="this man... this is a wonderful man";
@@ -161,10 +167,10 @@ function CreateOrder(){
 
 
 
-    const history = useHistory();
+
 
     const [orderInfo, setOrderInfo] = useState({
-        medicName: medicName,
+        medicName: '',
         patientName: '',
         patientEmail: '',
         clinicId: '',
@@ -176,11 +182,17 @@ function CreateOrder(){
         medicEmail: ''
     });
 
+    const [studyTypes, setStudyTypes] = useState([{name:'empty'}]);
+
     const getCurrentDate = () => {
         let today = new Date();
         return today.toDateString();
     };
 
+
+    /*******************************
+    **STEPPER STATES
+    *******************************/
 
     //states used to know which step to show
     const [activeOrderStep, setActiveOrderStep] = useState("active");
@@ -224,6 +236,33 @@ function CreateOrder(){
         setActiveClinicStep("")
     }
 
+
+    /*******************************
+    **QUERIES
+    *******************************/
+
+    //used for calling the medic's info
+    const [query, setQuery] = useState("redux");
+    const [data, setData] = useState(null); //test if i'm not making a mistake
+    const [count, setCount] = useState(1);
+
+    useEffect(async () => {
+        const fetchData = async () => {
+            await GetLoggedMedic(orderInfo, setOrderInfo, count, setCount);
+            await GetStudyTypes(setStudyTypes, count, setCount);
+            console.log("ja");
+        };
+
+        fetchData();
+    }, [, query]);
+
+    const lookUpPatientByEmail = (event) => {
+        let patientEmail = event.target.value;
+
+    }
+
+
+
     //schedule availability modal
     const [show, setShow] = useState(false);
 
@@ -255,7 +294,6 @@ function CreateOrder(){
         //will always search/fetch for page 1
     };
 
-    //MISSING: pagitanation for clinics list
     const changePageAndFetch = (pageNumber) => {
         //will fetch clinics based on the already picked filters
         //only will change the currentPage value (and might update totalClinicPages if the fetch comes up with a different value for that)
@@ -263,7 +301,9 @@ function CreateOrder(){
     };
 
 
-
+    /*******************************
+    **CUSTOM COMPONENTS
+    *******************************/
     //components built based on API data
     const PaginationCustom = (props) => {
         let active = props.current;
@@ -383,6 +423,10 @@ function CreateOrder(){
     }
 
 
+
+    /*******************************
+    **CLIENT-SIDE FORM VALIDATION
+    *******************************/
     //step 1 (order info) form validation
     const [infoValidated, setInfoValidated] = useState(false);
     const handleInfoSubmit = (event) => {
@@ -395,7 +439,6 @@ function CreateOrder(){
             console.log('a');
 
             let aux = orderInfo;
-            aux.medicName = {medicName};
             aux.patientEmail = event.target[1].value;
             aux.patientName = event.target[2].value;
             aux.patientInsurancePlan = event.target[3].value;
@@ -451,8 +494,9 @@ function CreateOrder(){
 
 
 
+
     return(
-        <div className="row justify-content-center">
+        <div className="row justify-content-center" key={"create-order_"+ count}>
             <div className={"card form-card " + (activeClinicStep === "active" ? "clinic" : "")}>
 
                 <div className="stepper-wrapper-horizontal">
@@ -481,11 +525,11 @@ function CreateOrder(){
                             <Form noValidate validated={infoValidated} onSubmit={handleInfoSubmit}>
                                 <Form.Group>
                                     <Form.Label className="text-muted">Medic</Form.Label>
-                                    <p className="lead mb-0">{medicName}</p>
+                                    <p className="lead mb-0">{orderInfo.medicName}</p>
                                     <Form.Control
                                             required type="text"
                                             name="medicName"
-                                            value={medicName}
+                                            value={orderInfo.medicName}
                                             className="custom-hidden"
                                     />
                                 </Form.Group>
@@ -496,6 +540,7 @@ function CreateOrder(){
                                         <Form.Control
                                             required type="email"
                                             name="patientEmail"
+                                            onChange={lookUpPatientByEmail}
                                         />
                                         <Form.Control.Feedback type="invalid">Please input a valid email address</Form.Control.Feedback>
                                     </Form.Group>
@@ -544,9 +589,9 @@ function CreateOrder(){
                                                 name="studyType"
                                                 placeholder="Pick a study type"
                                             >
-                                                <option>MRI</option>
-                                                <option>Blood test</option>
-                                                <option>Allergy test</option>
+                                                {studyTypes.map((item) => (
+                                                    <option>{item.name}</option>
+                                                ))}
                                             </Form.Control>
                                             <Form.Control.Feedback type="invalid">Please pick a study type</Form.Control.Feedback>
                                         </Form.Group>
@@ -720,7 +765,7 @@ function CreateOrder(){
                                     <hr className="mt-5 mb-4"/>
                                     <div className="media">
                                         <div className="media-body">
-                                            <h5 className="mt-0 mb-1 text-center">{medicName}</h5>
+                                            <h5 className="mt-0 mb-1 text-center">{orderInfo.medicName}</h5>
                                             <p className="text-center">M.N.: {orderInfo.medicLicenceNumber}</p>
                                         </div>
                                         <img
