@@ -1,7 +1,7 @@
 import {Form, Button, Table, Collapse, Pagination} from "react-bootstrap";
 import {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import {GetCurrentMedic, GetLoggedMedic, GetStudyTypes} from "../api/Auth";
+import {GetCurrentMedic, GetLoggedMedic, GetStudyTypes, QueryClinics} from "../api/Auth";
 
 import "./Style/CreateOrder.css";
 import { store } from "../redux";
@@ -17,6 +17,7 @@ function CreateOrder(){
     const clinicSubmit="newgrounds forever";
     const verifySubmit="this man... this is a wonderful man";
     //DUMMY DATA (in the real version these should be made with useState to update and render the site)
+    /*
     const clinicsList = [
         {
             userId: 1,
@@ -149,6 +150,7 @@ function CreateOrder(){
             medicalStudies: ["Allergy test", "ECG", "Consulta"]
         },
     ];
+    */
     const daysOfTheWeek = [
         {name:"Sunday", id: 0},
         {name:"Monday", id: 1},
@@ -183,6 +185,16 @@ function CreateOrder(){
     });
 
     const [studyTypes, setStudyTypes] = useState([{name:'empty'}]);
+
+    const [searchFilters, setSearchFilters] = useState({
+        clinicName: '',
+        insurancePlan: '',
+        availability: [
+            {day: 0, 'from-time': '', 'to-time': ''},
+        ]
+    });
+
+    const [clinicsList, setClinicsList] = useState([{userId: 0, name: ''}])
 
     const getCurrentDate = () => {
         let today = new Date();
@@ -258,7 +270,7 @@ function CreateOrder(){
 
     const lookUpPatientByEmail = (event) => {
         let patientEmail = event.target.value;
-
+        //uhhhh
     }
 
 
@@ -278,8 +290,34 @@ function CreateOrder(){
     //search clinics call
     const searchClinics = (event) => {
         event.preventDefault();
-        event.stopPropagation();
+        const form = event.target;
+
+        //MISSING: checking that closing time > opening time
+        if(form.checkValidity() === false){
+            event.stopPropagation();
+        }else{
+            let inputs = {
+                clinicName: event.target[0],
+                insurancePlan: event.target[1],
+                hours: new Set()
+            };
+            for(let idx=1; idx <= 7; idx++){
+                //suceciones... what a concept
+                if(event.target[1+(3*idx)].checked === true){
+                    inputs.hours.add({
+                        'day': (idx-1),
+                        "from-time":event.target[2+(3*idx)].value,
+                        "to-time":event.target[3+(3*idx)].value
+                    });
+                }
+            }
+            setSearchFilters(inputs);
+            QueryClinics(searchFilters, setClinicsList, count, setCount, 1);
+        }
+
+
         console.log(event);
+
         setClinicSearchValidated(true);
         /////
         //event.target[0] -> clinicName
@@ -355,6 +393,10 @@ function CreateOrder(){
                         </tr>
                         <tr>
                             <td>Open hours</td>
+                            {/*
+                            *** REWORK THIS PART, THE HOURS ARRAY FROM API IS BETTER
+                            *** DON'T FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            */}
                             <td>
                                 {daysOfTheWeek.map((item) => (
                                     <div key={"oh_"+props.item.userId+"_"+item.id}>

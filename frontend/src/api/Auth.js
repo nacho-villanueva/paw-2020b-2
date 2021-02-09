@@ -61,6 +61,33 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .catch((error) => {console.log("bruh", error)});
 }
 
-export function QueryClinics(filters, setClinicsList, count, setCount){
+export function QueryClinics(filters, setClinicsList, count, setCount, page){
+    apiInstance.get("/clinics", {
+        "page": page,
+        "clinic": filters.clinicName,
+        "plan": filters.insurancePlan,
+        "hours": filters.hours
+    })
+    .then((r) => {
+        let clinics = r.data;
+        let clinicsList = [];
+        for(var idx in clinics){
+            let clinic;
+            clinic["name"]  = clinics[idx].name;
+            clinic["userId"] = clinics[idx].user.split('/').pop();
+            clinic["email"] = 'nothere@medtransfer.com';
+            clinic["hours"] = clinics[idx].hours;
+            clinic["telephone"] = clinics[idx].telephone;
+            //I NEED TO CALL UP THE API FOR SOME MORE INFO....
+            clinic["acceptedPlans"] = GetAcceptedPlans(clinics[idx].acceptedPlans);
+            clinic["medicalStudies"] = GetAvailableStudies(clinics[idx].availableStudies);
 
+            clinicsList[idx] = clinic;
+        }
+
+        setClinicsList(clinicsList);
+
+        setCount(count+2);
+    })
+    .catch();
 }
