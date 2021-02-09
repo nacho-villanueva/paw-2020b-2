@@ -6,6 +6,7 @@ import ar.edu.itba.paw.services.PatientService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.PatientGetDto;
 import ar.edu.itba.paw.webapp.dto.PatientPostDto;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,8 +40,24 @@ public class PatientController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, PatientGetDto.CONTENT_TYPE+"+json"})
-    public Response listPatients(){
-        return Response.noContent().build();
+    public Response listPatients(
+            @QueryParam("email") @Email(message = "email!!") final String patientEmail
+    ){
+        if(patientEmail == null)
+            return Response.noContent().build();
+
+        Optional<Patient> patientOptional = patientService.findByEmail(patientEmail);
+        if(!patientOptional.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        URI uri = uriInfo.getBaseUriBuilder().path(PatientGetDto.REQUEST_PATH)
+                .path(String.valueOf(patientOptional.get().getUser().getId())).build();
+        EntityTag entityTag = new EntityTag(Integer.toHexString(uri.hashCode()));
+
+        ResponseBuilder response = Response.noContent().location(uri)
+                .tag(entityTag).cacheControl(cacheControl);
+
+        return response.build();
     }
 
     @GET
