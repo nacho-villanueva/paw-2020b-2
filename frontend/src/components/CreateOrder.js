@@ -1,7 +1,7 @@
 import {Form, Button, Table, Collapse, Pagination} from "react-bootstrap";
 import {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import {GetCurrentMedic, GetLoggedMedic, GetStudyTypes, QueryClinics} from "../api/Auth";
+import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder} from "../api/Auth";
 
 import "./Style/CreateOrder.css";
 import { store } from "../redux";
@@ -184,7 +184,7 @@ function CreateOrder(){
         medicEmail: ''
     });
 
-    const [studyTypes, setStudyTypes] = useState([{name:'empty'}]);
+    const [studyTypes, setStudyTypes] = useState([{name:'empty', id: -1}]);
 
     const [searchFilters, setSearchFilters] = useState({
         clinicName: '',
@@ -312,11 +312,8 @@ function CreateOrder(){
                 }
             }
             setSearchFilters(inputs);
-            QueryClinics(searchFilters, setClinicsList, count, setCount, 1);
+            QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages);
         }
-
-
-        console.log(event);
 
         setClinicSearchValidated(true);
         /////
@@ -335,6 +332,7 @@ function CreateOrder(){
     const changePageAndFetch = (pageNumber) => {
         //will fetch clinics based on the already picked filters
         //only will change the currentPage value (and might update totalClinicPages if the fetch comes up with a different value for that)
+        QueryClinics(searchFilters, setClinicsList, count, setCount, pageNumber, setTotalClinicPages);
         setCurrentPage(pageNumber);
     };
 
@@ -393,15 +391,11 @@ function CreateOrder(){
                         </tr>
                         <tr>
                             <td>Open hours</td>
-                            {/*
-                            *** REWORK THIS PART, THE HOURS ARRAY FROM API IS BETTER
-                            *** DON'T FORGET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                            */}
                             <td>
-                                {daysOfTheWeek.map((item) => (
-                                    <div key={"oh_"+props.item.userId+"_"+item.id}>
-                                        <span>{item.name}</span>&nbsp;&nbsp;&nbsp;
-                                        <span>{props.item.hours.openHours[item.id] + " - " + props.item.hours.closeHours[item.id]}</span>
+                                {props.item.hours.map((piano) => (
+                                    <div key={"oh_"+props.item.userId+"_"+piano.day}>
+                                        <span>{daysOfTheWeek[piano.day].name}</span>&nbsp;&nbsp;&nbsp;
+                                        <span>{piano.openTime + " - " + piano.closeTime}</span>
                                     </div>
                                 ))}
                             </td>
@@ -409,11 +403,11 @@ function CreateOrder(){
                         <tr>
                             <td>Accepted insurance</td>
                             <td className="output">
-                                {props.item.acceptedPlans.map((plan) => (
+                                {props.item.acceptedPlans.map((pico) => (
                                     <span
-                                        key={"plan_"+props.item.userId+"_"+plan}
+                                        key={"plan_"+props.item.userId+"_"+pico.plan}
                                         className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
-                                    >{plan}</span>
+                                    >{pico.plan}</span>
                                 ))}
                             </td>
                         </tr>
@@ -421,7 +415,7 @@ function CreateOrder(){
                             <td>Available studies</td>
                             <td className="output">
                                 {props.item.medicalStudies.map((study) => (
-                                    <p key={"study_"+props.item.userId+"_"+study}>{study}</p>
+                                    <p key={"study_"+props.item.userId+"_"+study.name}>{study.name}</p>
                                 ))}
                             </td>
                         </tr>
@@ -475,11 +469,11 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
+        console.log(event);
+
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
-            console.log('a');
-
             let aux = orderInfo;
             aux.patientEmail = event.target[1].value;
             aux.patientName = event.target[2].value;
@@ -489,6 +483,7 @@ function CreateOrder(){
             aux.orderDescription = event.target[6].value;
             setOrderInfo(aux);
 
+            QueryClinics({"plan": orderInfo.patientInsurancePlan}, setClinicsList, count, setCount, 1, setTotalClinicPages);
             changeToClinicStep();
         }
 
@@ -504,8 +499,6 @@ function CreateOrder(){
         if(form.checkValidity() === false || selectedClinic === null){
             event.stopPropagation();
         }else{
-            console.log('b');
-
             let aux = orderInfo;
             aux.clinicId = selectedClinic.userId;
             setOrderInfo(aux);
@@ -525,6 +518,7 @@ function CreateOrder(){
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
+            CreateMedicalOrder(orderInfo);
             //checking if it worked...
             console.log("orderInfo", orderInfo);
             //changeToVerifyStep();
@@ -570,7 +564,7 @@ function CreateOrder(){
                                     <p className="lead mb-0">{orderInfo.medicName}</p>
                                     <Form.Control
                                             required type="text"
-                                            name="medicName"
+                                            name="medicName" readOnly="true"
                                             value={orderInfo.medicName}
                                             className="custom-hidden"
                                     />
@@ -632,7 +626,7 @@ function CreateOrder(){
                                                 placeholder="Pick a study type"
                                             >
                                                 {studyTypes.map((item) => (
-                                                    <option>{item.name}</option>
+                                                    <option value={item.id}>{item.name}</option>
                                                 ))}
                                             </Form.Control>
                                             <Form.Control.Feedback type="invalid">Please pick a study type</Form.Control.Feedback>

@@ -53,7 +53,7 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
-            stl[idx] = {name: r.data[idx].name};
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id};
         }
         setStudyTypesList(stl);
         setCount(count+1);
@@ -61,7 +61,16 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .catch((error) => {console.log("bruh", error)});
 }
 
-export function QueryClinics(filters, setClinicsList, count, setCount, page){
+async function InternalQuery(request){
+    return apiInstance.get(request)
+    .then((r) => {
+        console.log(r.data);
+        return r.data;
+    })
+    .catch((error) => {console.log("internalqueryError", error)});
+}
+
+export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
     apiInstance.get("/clinics", {
         "page": page,
         "clinic": filters.clinicName,
@@ -69,25 +78,53 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page){
         "hours": filters.hours
     })
     .then((r) => {
+        //this is just horrible
+        let headerInfo = r.headers.link;
+        headerInfo = headerInfo.split(',');
+        headerInfo = headerInfo.pop().split('?').pop().split('>').reverse().pop().split('=').pop();
+        setTotalClinicPages(headerInfo);
+
         let clinics = r.data;
         let clinicsList = [];
         for(var idx in clinics){
-            let clinic;
+            let clinic = {};
             clinic["name"]  = clinics[idx].name;
             clinic["userId"] = clinics[idx].user.split('/').pop();
             clinic["email"] = 'nothere@medtransfer.com';
             clinic["hours"] = clinics[idx].hours;
             clinic["telephone"] = clinics[idx].telephone;
             //I NEED TO CALL UP THE API FOR SOME MORE INFO....
-            clinic["acceptedPlans"] = GetAcceptedPlans(clinics[idx].acceptedPlans);
-            clinic["medicalStudies"] = GetAvailableStudies(clinics[idx].availableStudies);
+            InternalQuery(clinics[idx].acceptedPlans).then(
+                (response) => {
+                    clinic["acceptedPlans"] = response;
+                }
+            );
+            InternalQuery(clinics[idx].availableStudies).then(
+                (response) => {
+                    clinic["medicalStudies"] = response;
+                }
+            );
 
             clinicsList[idx] = clinic;
         }
-
         setClinicsList(clinicsList);
 
-        setCount(count+2);
+        setCount(count+3);
     })
     .catch();
+}
+
+export function CreateMedicalOrder(order){
+    apiInstance.post("/orders",{
+        clinicId: order.clinicId,
+        patientEmail: order.patientEmail,
+        patientName: order.patientName,
+        studyTypeId: order.studyType,
+        description: order.orderDescription,
+        medicPlan : {
+            plan: order.patientInsurancePlan,
+            number: order.patientInsuranceNumber
+        }
+    }).then((r) => {console.log("nice order", r);})
+    .catch((error) => { console.log("OH NO", error);});
 }
