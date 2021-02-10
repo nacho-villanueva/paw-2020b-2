@@ -164,7 +164,8 @@ function CreateOrder(){
         {name:'None (insert SS number)'},
         {name:'Galeno 300'},
         {name:'OSDE 4200'},
-        {name:'Brook 9100'}
+        {name:'Brook 9100'},
+        {name:'OSDE'}
     ];
 
 
@@ -291,14 +292,15 @@ function CreateOrder(){
     const searchClinics = (event) => {
         event.preventDefault();
         const form = event.target;
-
+        console.log("searchCLinics event", event);
         //MISSING: checking that closing time > opening time
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
             let inputs = {
-                clinicName: event.target[0],
-                insurancePlan: event.target[1],
+                studyType: orderInfo.studyType,
+                clinicName: event.target[0].value,
+                plan: event.target[1].value,
                 hours: new Set()
             };
             for(let idx=1; idx <= 7; idx++){
@@ -483,7 +485,7 @@ function CreateOrder(){
             aux.orderDescription = event.target[6].value;
             setOrderInfo(aux);
 
-            QueryClinics({"plan": orderInfo.patientInsurancePlan}, setClinicsList, count, setCount, 1, setTotalClinicPages);
+            QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType}, setClinicsList, count, setCount, 1, setTotalClinicPages);
             changeToClinicStep();
         }
 

@@ -71,45 +71,51 @@ async function InternalQuery(request){
 }
 
 export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
-    apiInstance.get("/clinics", {
-        "page": page,
-        "clinic": filters.clinicName,
-        "plan": filters.insurancePlan,
-        "hours": filters.hours
-    })
+    const params = {
+        'page': page,
+        'clinic': filters.clinicName,
+        'hours': filters.hours,
+        'plan': filters.plan,
+        'study-type': filters.studyType,
+    };
+    console.log("params", params);
+    apiInstance.get("/clinics", { params })
     .then((r) => {
         //this is just horrible
-        let headerInfo = r.headers.link;
-        headerInfo = headerInfo.split(',');
-        headerInfo = headerInfo.pop().split('?').pop().split('>').reverse().pop().split('=').pop();
-        setTotalClinicPages(headerInfo);
+        if(r.status === 200){
+            let headerInfo = r.headers.link;
+            headerInfo = headerInfo.split(',');
+            headerInfo = headerInfo.pop().split('?').pop().split('>').reverse().pop().split('=').pop();
+            setTotalClinicPages(headerInfo);
 
-        let clinics = r.data;
-        let clinicsList = [];
-        for(var idx in clinics){
-            let clinic = {};
-            clinic["name"]  = clinics[idx].name;
-            clinic["userId"] = clinics[idx].user.split('/').pop();
-            clinic["email"] = 'nothere@medtransfer.com';
-            clinic["hours"] = clinics[idx].hours;
-            clinic["telephone"] = clinics[idx].telephone;
-            //I NEED TO CALL UP THE API FOR SOME MORE INFO....
-            InternalQuery(clinics[idx].acceptedPlans).then(
-                (response) => {
-                    clinic["acceptedPlans"] = response;
-                }
-            );
-            InternalQuery(clinics[idx].availableStudies).then(
-                (response) => {
-                    clinic["medicalStudies"] = response;
-                }
-            );
+            let clinics = r.data;
+            let clinicsList = [];
+            for(var idx in clinics){
+                let clinic = {};
+                clinic["name"]  = clinics[idx].name;
+                clinic["userId"] = clinics[idx].user.split('/').pop();
+                clinic["email"] = 'nothere@medtransfer.com';
+                clinic["hours"] = clinics[idx].hours;
+                clinic["telephone"] = clinics[idx].telephone;
+                //I NEED TO CALL UP THE API FOR SOME MORE INFO....
+                InternalQuery(clinics[idx].acceptedPlans).then(
+                    (response) => {
+                        clinic["acceptedPlans"] = response;
+                    }
+                );
+                InternalQuery(clinics[idx].availableStudies).then(
+                    (response) => {
+                        clinic["medicalStudies"] = response;
+                    }
+                );
 
-            clinicsList[idx] = clinic;
+                clinicsList[idx] = clinic;
+            }
+            setClinicsList(clinicsList);
+
+            setCount(count+3);
         }
-        setClinicsList(clinicsList);
 
-        setCount(count+3);
     })
     .catch();
 }
