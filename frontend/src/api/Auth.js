@@ -70,6 +70,16 @@ async function InternalQuery(request){
     .catch((error) => {console.log("internalqueryError", error)});
 }
 
+function checkUndefinedArray(array){
+    var count = 0;
+    for(var idx in array){
+        if(array[idx] !== undefined){
+            count++;
+        }
+    }
+    return (count > 0);
+}
+
 export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
     let params = {
         'page': page,
@@ -83,22 +93,38 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
     if(filters.clinicName !== ""){
         params['clinic'] =  filters.clinicName;
     }
-    console.log("params queryclinics", params);
-    apiInstance.get("/clinics",
-        { params },
-        function paramsSerializer(params){
-            const searchParams = new URLSearchParams();
-            for (const key of Object.keys(params)) {
-                const param = params[key];
-                if (Array.isArray(param) && param) {
-                    searchParams.append(key, param.join(','));
-                }else{
-                    searchParams.append(key, param);
+
+    //manually serializing because jersey can't understand otherwise
+    let serializedParams = "";
+    if(Object.keys(params).length !== 0){
+        serializedParams += "?";
+        for(var key of Object.keys(params)){
+            let param = params[key];
+            if(Array.isArray(param) && param && checkUndefinedArray(param)){
+                console.log("check undefined", checkUndefinedArray(param), param);
+                serializedParams += key + "=";
+                for(var idx in param){
+                    //let element = (param[idx] !== undefined ? encodeURIComponent(param[idx]) : "") + (idx < param.length ? "," : "")
+                    let element = encodeURIComponent(param[idx])  + (idx < param.length ? "," : "")
+                    serializedParams += element;
+                    console.log("pasando por aqui");
                 }
+                var empties = param.length - param.filter(String).length -1;
+                while(empties--){
+                    serializedParams +=",";
+                }
+                serializedParams += "&";
+
+            }else if(param !== undefined){
+                serializedParams += key + "=" + encodeURIComponent(param);
+                serializedParams += "&";
             }
-            return searchParams.toString();
+
         }
-    ).then((r) => {
+        serializedParams = serializedParams.slice(0, -1);
+    }
+
+    apiInstance.get("/clinics" + serializedParams ).then((r) => {
         //this is just horrible
         if(r.status === 200){
             let headerInfo = r.headers.link;
@@ -119,7 +145,7 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
                 InternalQuery(clinics[idx].user).then(
                     (response) => {
                         console.log("internal email", response);
-                        //clinic["email"] = response.email;
+                        clinic["email"] = response.email;
                     }
                 );
                 InternalQuery(clinics[idx].acceptedPlans).then(
