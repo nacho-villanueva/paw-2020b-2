@@ -71,16 +71,34 @@ async function InternalQuery(request){
 }
 
 export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
-    const params = {
+    let params = {
         'page': page,
-        'clinic': filters.clinicName,
-        'hours': filters.hours,
+        'days': filters.days,
+        'fromTime': filters.fromTime,
+        'toTime': filters.toTime,
         'plan': filters.plan,
         'study-type': filters.studyType,
     };
-    console.log("params", params);
-    apiInstance.get("/clinics", { params })
-    .then((r) => {
+
+    if(filters.clinicName !== ""){
+        params['clinic'] =  filters.clinicName;
+    }
+    console.log("params queryclinics", params);
+    apiInstance.get("/clinics",
+        { params },
+        function paramsSerializer(params){
+            const searchParams = new URLSearchParams();
+            for (const key of Object.keys(params)) {
+                const param = params[key];
+                if (Array.isArray(param) && param) {
+                    searchParams.append(key, param.join(','));
+                }else{
+                    searchParams.append(key, param);
+                }
+            }
+            return searchParams.toString();
+        }
+    ).then((r) => {
         //this is just horrible
         if(r.status === 200){
             let headerInfo = r.headers.link;
@@ -93,11 +111,17 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
             for(var idx in clinics){
                 let clinic = {};
                 clinic["name"]  = clinics[idx].name;
-                clinic["userId"] = clinics[idx].user.split('/').pop();
-                clinic["email"] = 'nothere@medtransfer.com';
+                //clinic["email"] = 'nothere@medtransfer.com';
                 clinic["hours"] = clinics[idx].hours;
                 clinic["telephone"] = clinics[idx].telephone;
+                console.log("user", clinics[idx].user);
                 //I NEED TO CALL UP THE API FOR SOME MORE INFO....
+                InternalQuery(clinics[idx].user).then(
+                    (response) => {
+                        console.log("internal email", response);
+                        //clinic["email"] = response.email;
+                    }
+                );
                 InternalQuery(clinics[idx].acceptedPlans).then(
                     (response) => {
                         clinic["acceptedPlans"] = response;
@@ -108,6 +132,8 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
                         clinic["medicalStudies"] = response;
                     }
                 );
+
+                clinic["userId"] = clinics[idx].user.split('/').pop();
 
                 clinicsList[idx] = clinic;
             }

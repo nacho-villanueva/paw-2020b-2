@@ -290,6 +290,15 @@ function CreateOrder(){
     const [clinicSearchValidated, setClinicSearchValidated] = useState(false);
     //search clinics call
     const searchClinics = (event) => {
+        let inputs = {
+            studyType: orderInfo.studyType,
+            clinicName: event.target[0].value,
+            plan: event.target[1].value,
+            days: new Array(7),
+            fromTime:  new Array(7),
+            toTime: new Array(7)
+        };
+
         event.preventDefault();
         const form = event.target;
         console.log("searchCLinics event", event);
@@ -297,20 +306,12 @@ function CreateOrder(){
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
-            let inputs = {
-                studyType: orderInfo.studyType,
-                clinicName: event.target[0].value,
-                plan: event.target[1].value,
-                hours: new Set()
-            };
             for(let idx=1; idx <= 7; idx++){
                 //suceciones... what a concept
                 if(event.target[1+(3*idx)].checked === true){
-                    inputs.hours.add({
-                        'day': (idx-1),
-                        "from-time":event.target[2+(3*idx)].value,
-                        "to-time":event.target[3+(3*idx)].value
-                    });
+                    inputs.days[idx-1] = 1;
+                    inputs.fromTime[idx-1] = event.target[2+(3*idx)].value;
+                    inputs.toTime[idx-1] = event.target[3+(3*idx)].value;
                 }
             }
             setSearchFilters(inputs);
@@ -389,7 +390,7 @@ function CreateOrder(){
                         </tr>
                         <tr>
                             <td>Telephone</td>
-                            <td className="output">{props.item.email}</td>
+                            <td className="output">{props.item.telephone}</td>
                         </tr>
                         <tr>
                             <td>Open hours</td>
@@ -485,7 +486,7 @@ function CreateOrder(){
             aux.orderDescription = event.target[6].value;
             setOrderInfo(aux);
 
-            QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType}, setClinicsList, count, setCount, 1, setTotalClinicPages);
+            QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType, clinicName: ""}, setClinicsList, count, setCount, 1, setTotalClinicPages);
             changeToClinicStep();
         }
 
@@ -628,7 +629,7 @@ function CreateOrder(){
                                                 placeholder="Pick a study type"
                                             >
                                                 {studyTypes.map((item) => (
-                                                    <option value={item.id}>{item.name}</option>
+                                                    <option>{item.name}</option>
                                                 ))}
                                             </Form.Control>
                                             <Form.Control.Feedback type="invalid">Please pick a study type</Form.Control.Feedback>
