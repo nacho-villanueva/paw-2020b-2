@@ -68,7 +68,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                     //Rules for /users
                     .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.GET, "/users/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/users").anonymous()
                     .antMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
                     //Rules for /clinics

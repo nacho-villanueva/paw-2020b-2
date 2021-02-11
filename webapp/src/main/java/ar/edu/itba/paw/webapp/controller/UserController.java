@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.Clinic;
+import ar.edu.itba.paw.models.Medic;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.ClinicService;
+import ar.edu.itba.paw.services.MedicService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.UserGetDto;
 import ar.edu.itba.paw.webapp.dto.UserPostDto;
@@ -35,6 +39,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MedicService medicService;
+
+    @Autowired
+    private ClinicService clinicService;
 
     @Context
     private UriInfo uriInfo;
@@ -162,33 +172,73 @@ public class UserController {
         return Response.noContent().location(uriInfo.getAbsolutePathBuilder().build()).build();
     }
 
-    private String getLoggedUsername() {
+    private User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "";
-    }
+        if( authentication == null) {
+            return null;
+        }
+        Optional<User> maybeUser = userService.findByEmail(authentication.getName());
 
-    private Collection<? extends GrantedAuthority> getLoggedRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getAuthorities() : new HashSet<>();
+        return maybeUser.orElse(null);
     }
 
     //If admin role is implemented properly, consider it here
     private boolean validateEditPermissions(final User targetUser) {
-        String loggedUser = getLoggedUsername();
+        User loggedUser = getLoggedUser();
 
-        return targetUser.getEmail().equals(loggedUser);
+        if(loggedUser == null) {
+            return false;
+        }
+
+        return targetUser.getEmail().equals(loggedUser.getEmail());
     }
 
     private boolean validateViewPermissions(final User targetUser) {
-        String username = getLoggedUsername();
 
-        if(targetUser.getEmail().equals(username)) {
+        //Clinic's are public domain
+        if (targetUser.getRole() == User.CLINIC_ROLE_ID) {
             return true;
         }
 
-        Collection<? extends GrantedAuthority> authorities = getLoggedRole();
+        //Admin's are private regardless
+        if (targetUser.getRole() == User.ADMIN_ROLE_ID) {
+            return false;
+        }
 
-        return authorities.stream().anyMatch(a -> a.getAuthority().equals("MEDIC") || a.getAuthority().equals("CLINIC") || a.getAuthority().equals("ADMIN"));
+        //Here on is no longer public domain
+        User user = getLoggedUser();
+
+        if (user == null) {
+            return false;
+        }
+
+        //Medic's are public for logged users
+        if(targetUser.getRole() == User.MEDIC_ROLE_ID) {
+            return true;
+        }
+
+        //Patient's are available for verified medic's and clinic's and for the same patients, unavailable for the rest
+        //If it's the owner or an admin
+        if(user.getEmail().equals(targetUser.getEmail()) || user.getRole() == User.ADMIN_ROLE_ID) {
+            return true;
+        }
+
+        //If it's a medic
+        if(user.getRole() == User.MEDIC_ROLE_ID) {
+            Optional<Medic> maybeMedic = medicService.findByUserId(user.getId());
+
+            return maybeMedic.isPresent() && maybeMedic.get().isVerified();
+        }
+
+        //If it's a clinic
+        if(user.getRole() == User.CLINIC_ROLE_ID) {
+            Optional<Clinic> maybeClinic = clinicService.findByUserId(user.getId());
+
+            return maybeClinic.isPresent() && maybeClinic.get().isVerified();
+        }
+
+        //For the rest, unavailable
+        return false;
     }
 
 }
