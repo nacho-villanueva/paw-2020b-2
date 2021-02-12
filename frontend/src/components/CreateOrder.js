@@ -182,7 +182,8 @@ function CreateOrder(){
         studyType: '',
         orderDescription:'',
         medicLicenceNumber: '',
-        medicEmail: ''
+        medicEmail: '',
+        identificationSrc: '',
     });
 
     const [studyTypes, setStudyTypes] = useState([{name:'empty', id: -1}]);
@@ -819,8 +820,7 @@ function CreateOrder(){
                                         <img
                                             className="align-self-end ml-3 signature"
                                             alt="medic's signature"
-                                            style={{width: "5rem;", maxHeight: "5em;"}}
-                                            src="https://picsum.photos/200"
+                                            src={orderInfo.identificationSrc}
                                         />
                                     </div>
                                 </div>

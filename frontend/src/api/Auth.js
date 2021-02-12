@@ -37,6 +37,7 @@ export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
         orderInfo.medicName = r.data.name;
         orderInfo.medicEmail = store.getState().auth.email;
         orderInfo.medicLicenceNumber = r.data.licenceNumber;
+        orderInfo.identificationSrc = r.data.identification;
         setOrderInfo(orderInfo);
         setCount(count+2);
     })
