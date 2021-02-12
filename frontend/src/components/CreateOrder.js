@@ -299,13 +299,22 @@ function CreateOrder(){
             toTime: new Array(7)
         };
 
+        inputs.days.fill(0);
+        inputs.fromTime.fill(0);
+        inputs.toTime.fill(0);
+
         event.preventDefault();
         const form = event.target;
-        console.log("searchCLinics event", event);
+
         //MISSING: checking that closing time > opening time
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
+            if(inputs.plan !== orderInfo.patientInsurancePlan){
+                let aux = orderInfo;
+                aux.patientInsurancePlan = inputs.plan;
+                setOrderInfo(orderInfo);
+            }
             for(let idx=1; idx <= 7; idx++){
                 //suceciones... what a concept
                 if(event.target[1+(3*idx)].checked === true){

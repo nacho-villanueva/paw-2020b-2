@@ -94,7 +94,7 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
         params['clinic'] =  filters.clinicName;
     }
 
-    //manually serializing because jersey can't understand otherwise
+    //manually serializing because jersey can't understand arrays otherwise
     let serializedParams = "";
     if(Object.keys(params).length !== 0){
         serializedParams += "?";
@@ -104,14 +104,8 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
                 console.log("check undefined", checkUndefinedArray(param), param);
                 serializedParams += key + "=";
                 for(var idx in param){
-                    //let element = (param[idx] !== undefined ? encodeURIComponent(param[idx]) : "") + (idx < param.length ? "," : "")
-                    let element = encodeURIComponent(param[idx])  + (idx < param.length ? "," : "")
+                    let element = (param[idx] !== 0 ? encodeURIComponent(param[idx]) : "") + (idx < (param.length - 1) ? "," : "");
                     serializedParams += element;
-                    console.log("pasando por aqui");
-                }
-                var empties = param.length - param.filter(String).length -1;
-                while(empties--){
-                    serializedParams +=",";
                 }
                 serializedParams += "&";
 
