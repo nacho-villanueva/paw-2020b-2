@@ -44,9 +44,40 @@ export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
     .catch();
 }
 
-export function FindPatient(email, orderInfo, setOrderInfo, count, setCount){
+export function FindPatient(patientEmail, count, setCount, patientInfo, setPatientInfo){
     //i need a way to lookUp patients by email, currently there is no way to do that...
     //unless i use listUsers and look through that whole thing
+    let output = {
+        error: false,
+        patientName: '',
+        patientInsurance: {
+            plan: '',
+            number: ''
+        }
+    }
+
+    apiInstance.get( "/patients" + "?email=" + encodeURIComponent(patientEmail))
+    .then((r) => {
+        let out = patientInfo;
+        patientInfo.email = patientEmail;
+        patientInfo.name = r.data.name;
+        patientInfo.insurance.number = r.data.insuranceNumber;
+        patientInfo.insurance.plan= r.data.insurancePlan;
+        patientInfo.error = (r.status !== 204 ? false: true);
+        patientInfo.loading = false;
+
+        setPatientInfo(patientInfo);
+        setCount(count+4);
+    })
+    .catch((e) => {
+        let out = patientInfo;
+        patientInfo.email = patientEmail;
+        patientInfo.error = true;
+        patientInfo.loading = false;
+
+        setPatientInfo(patientInfo);
+        setCount(count+4);
+    });
 }
 
 export function GetStudyTypes(setStudyTypesList, count, setCount){
@@ -65,7 +96,6 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
 async function InternalQuery(request){
     return apiInstance.get(request)
     .then((r) => {
-        console.log(r.data);
         return r.data;
     })
     .catch((error) => {console.log("internalqueryError", error)});
@@ -102,7 +132,6 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
         for(var key of Object.keys(params)){
             let param = params[key];
             if(Array.isArray(param) && param && checkUndefinedArray(param)){
-                console.log("check undefined", checkUndefinedArray(param), param);
                 serializedParams += key + "=";
                 for(var idx in param){
                     let element = (param[idx] !== 0 ? encodeURIComponent(param[idx]) : "") + (idx < (param.length - 1) ? "," : "");
@@ -135,11 +164,9 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
                 //clinic["email"] = 'nothere@medtransfer.com';
                 clinic["hours"] = clinics[idx].hours;
                 clinic["telephone"] = clinics[idx].telephone;
-                console.log("user", clinics[idx].user);
                 //I NEED TO CALL UP THE API FOR SOME MORE INFO....
                 InternalQuery(clinics[idx].user).then(
                     (response) => {
-                        console.log("internal email", response);
                         clinic["email"] = response.email;
                     }
                 );

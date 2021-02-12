@@ -1,7 +1,7 @@
-import {Form, Button, Table, Collapse, Pagination} from "react-bootstrap";
+import {Form, Button, Table, Collapse, Pagination, Spinner, Alert} from "react-bootstrap";
 import {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder} from "../api/Auth";
+import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder, FindPatient} from "../api/Auth";
 
 import "./Style/CreateOrder.css";
 import { store } from "../redux";
@@ -270,9 +270,31 @@ function CreateOrder(){
         fetchData();
     }, [, query]);
 
+
+    const [patientInfo, setPatientInfo] = useState({
+        name: '',
+        email: '',
+        insurance: {
+            number: '',
+            plan: ''
+        },
+        error: false,
+        loading: false
+    })
     const lookUpPatientByEmail = (event) => {
         let patientEmail = event.target.value;
+        let aux = patientInfo;
+        aux.loading = true;
+        setPatientInfo(aux)
+        setCount(count+1);
+        FindPatient(patientEmail, count, setCount, aux, setPatientInfo);
         //uhhhh
+    }
+    const closePatientInfoAlert = () => {
+        let pat = patientInfo;
+        pat.error = false;
+        setPatientInfo(pat);
+        setCount(count +1);
     }
 
 
@@ -583,14 +605,39 @@ function CreateOrder(){
                                     />
                                 </Form.Group>
                                 <hr className="divider mt-0"/>
+                                <div className="justify-content-center">
+                                    <Alert show={patientInfo.error} variant="warning">
+                                        <div className="d-flex justify-content-between">
+                                        <span className="my-2">
+                                            Sorry, we couldn't find this email in our patients' database.
+
+                                        </span>
+                                        <Button
+                                            variant="outline-warning"
+                                            onClick={() => {closePatientInfoAlert()}}
+                                        >
+                                            Close
+                                        </Button>
+                                        </div>
+
+                                    </Alert>
+                                </div>
                                 <div className="row mx-1">
                                     <Form.Group className="form-group col" controlId="patientEmail">
                                         <Form.Label className="bmd-label-floating">Patient's email</Form.Label>
                                         <Form.Control
                                             required type="email"
                                             name="patientEmail"
-                                            onChange={lookUpPatientByEmail}
+                                            defaultValue={patientInfo.email}
+                                            onBlur={(e) => {lookUpPatientByEmail(e);}}
                                         />
+                                        {patientInfo.loading ?
+                                        <Spinner
+                                            as="span" variant="primary"
+                                            animation="border"
+                                            size="sm" role="status"
+                                        /> : <></>}
+
                                         <Form.Control.Feedback type="invalid">Please input a valid email address</Form.Control.Feedback>
                                     </Form.Group>
                                 </div>
@@ -601,6 +648,7 @@ function CreateOrder(){
                                         <Form.Control
                                             required type="text"
                                             name="patientName"
+                                            defaultValue={patientInfo.name}
                                         />
                                         <Form.Control.Feedback type="invalid">Please write the patient's name</Form.Control.Feedback>
                                     </Form.Group>
@@ -613,7 +661,7 @@ function CreateOrder(){
                                             name="patientInsurancePlan"
                                         >
                                             {insurancePlans.map((item) => (
-                                                <option>{item.name}</option>
+                                                <option selected={item.name === patientInfo.insurance.plan}>{item.name}</option>
                                             ))}
                                         </Form.Control>
                                         <Form.Control.Feedback type="invalid">Please select an insurance plan</Form.Control.Feedback>
@@ -624,6 +672,7 @@ function CreateOrder(){
                                             required type="text"
                                             name="patientInsuranceNumber"
                                             className="mt-2"
+                                            defaultValue={patientInfo.insurance.number}
                                         />
                                         <Form.Control.Feedback type="invalid">Please enter the patient's insurance number</Form.Control.Feedback>
                                     </Form.Group>
