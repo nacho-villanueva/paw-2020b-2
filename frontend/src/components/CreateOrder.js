@@ -162,7 +162,7 @@ function CreateOrder(){
     ];
     const insurancePlans = [
         {name:'None (insert SS number)'},
-        {name:'Galeno 300'},
+        {name:'Galeno Azul'},
         {name:'OSDE 4200'},
         {name:'Brook 9100'},
         {name:'OSDE'}
