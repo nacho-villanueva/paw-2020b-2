@@ -310,14 +310,16 @@ function CreateOrder(){
         FindPatient(patientEmail, count, setCount, aux, setPatientInfo);
         //uhhhh
     }
+
+
+
+
     const closePatientInfoAlert = () => {
         let pat = patientInfo;
         pat.error = false;
         setPatientInfo(pat);
         setCount(count +1);
     }
-
-
 
     //schedule availability modal
     const [show, setShow] = useState(false);
@@ -600,7 +602,6 @@ function CreateOrder(){
             let aux = orderInfo;
             let idx = studyTypes.findIndex(s => s.name === aux.studyType);
             if(idx !== -1){
-                console.log(idx, aux.studyType);
                 aux.studyType = studyTypes[idx].id;
                 setOrderInfo(aux);
             }

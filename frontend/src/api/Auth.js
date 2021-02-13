@@ -58,7 +58,20 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
 
     apiInstance.get( "/patients" + "?email=" + encodeURIComponent(patientEmail))
     .then((r) => {
+        let out = patientInfo;
+        out.email = patientEmail;
+        out.name = r.data.name;
+        out.insurance.number = r.data.medicPlanNumber;
+        out.insurance.plan= r.data.medicPlan;
+        out.error = false;
+        out.loading = false;
+        console.log(out);
+        setPatientInfo(out);
+        setCount(count+4);
+
+        /*
         InternalQuery(r.headers.location).then((res) => {
+            console.log(res);
             let out = patientInfo;
             patientInfo.email = patientEmail;
             patientInfo.name = res.name;
@@ -71,6 +84,7 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
             setCount(count+4);
 
         })
+        */
     })
     .catch((e) => {
         let out = patientInfo;
