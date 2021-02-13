@@ -69,22 +69,6 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
         setPatientInfo(out);
         setCount(count+4);
 
-        /*
-        InternalQuery(r.headers.location).then((res) => {
-            console.log(res);
-            let out = patientInfo;
-            patientInfo.email = patientEmail;
-            patientInfo.name = res.name;
-            patientInfo.insurance.number = res.medicPlanNumber;
-            patientInfo.insurance.plan= res.medicPlan;
-            patientInfo.error = false;
-            patientInfo.loading = false;
-
-            setPatientInfo(patientInfo);
-            setCount(count+4);
-
-        })
-        */
     })
     .catch((e) => {
         let out = patientInfo;

@@ -515,20 +515,22 @@ function CreateOrder(){
                 <th>
                     <Form.Group controlId={"day-" + props.item.id + "-ot"}>
                         <Form.Control
-                            type="text" className="form-control time-input"
+                            type="time" className="form-control time-input"
                             placeholder="00:00" maxLength="5"
                             name={"day-" + props.item.id + "-ot"}
                             defaultValue={searchInputs.schedule[props.item.id].fromTime}
+                            pattern="[0-9]{2}:[0-9]{2}"
                         />
                     </Form.Group>
                 </th>
                 <th>
                     <Form.Group controlId={"day-" + props.item.id + "-ct"}>
                         <Form.Control
-                            type="text" className="form-control time-input"
+                            type="time" className="form-control time-input"
                             placeholder="00:00" maxLength="5"
                             name={"day-" + props.item.id + "-ct"}
                             defaultValue={searchInputs.schedule[props.item.id].toTime}
+                            pattern="[0-9]{2}:[0-9]{2}"
                         />
                     </Form.Group>
                 </th>
