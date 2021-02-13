@@ -190,7 +190,7 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
             }
             setClinicsList(clinicsList);
 
-            setCount(count+3);
+            //setCount(count+3);
         }
 
     })

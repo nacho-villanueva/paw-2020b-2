@@ -188,13 +188,34 @@ function CreateOrder(){
 
     const [studyTypes, setStudyTypes] = useState([{name:'empty', id: -1}]);
 
+    //used for parsing and sending queries to API
     const [searchFilters, setSearchFilters] = useState({
         clinicName: '',
-        insurancePlan: '',
-        availability: [
+        plan: '',
+        studyType: '',
+        days: new Array(7),
+        fromTime: new Array(7),
+        toTime: new Array(7)
+        /*availability: [
             {day: 0, 'from-time': '', 'to-time': ''},
-        ]
+        ]*/
     });
+
+    //used for saving the filters' states for the frontend
+    const [searchInputs, setSearchInputs] = useState({
+        clinicName: '',
+        insurancePlan: '',
+        studyType: '',
+        schedule: [
+            {day:0, checked: false, fromTime: '', toTime: ''},
+            {day:1, checked: false, fromTime: '', toTime: ''},
+            {day:2, checked: false, fromTime: '', toTime: ''},
+            {day:3, checked: false, fromTime: '', toTime: ''},
+            {day:4, checked: false, fromTime: '', toTime: ''},
+            {day:5, checked: false, fromTime: '', toTime: ''},
+            {day:6, checked: false, fromTime: '', toTime: ''}
+        ]
+    })
 
     const [clinicsList, setClinicsList] = useState([{userId: 0, name: ''}])
 
@@ -313,18 +334,16 @@ function CreateOrder(){
     const [clinicSearchValidated, setClinicSearchValidated] = useState(false);
     //search clinics call
     const searchClinics = (event) => {
-        let inputs = {
-            studyType: orderInfo.studyType,
-            clinicName: event.target[0].value,
-            plan: event.target[1].value,
-            days: new Array(7),
-            fromTime:  new Array(7),
-            toTime: new Array(7)
-        };
+        let inputs =searchFilters;
 
+        inputs.studyType = orderInfo.studyType;
+        inputs.clinicName = '';
+        inputs.plan = orderInfo.patientInsurancePlan
         inputs.days.fill(0);
         inputs.fromTime.fill(0);
         inputs.toTime.fill(0);
+
+        setSearchFilters(inputs);
 
         event.preventDefault();
         const form = event.target;
@@ -333,24 +352,48 @@ function CreateOrder(){
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
-            if(inputs.plan !== orderInfo.patientInsurancePlan){
+            let searchInputsAux = searchInputs;
+            searchInputsAux.clinicName = event.target[0].value;
+            inputs.clinicName = searchInputsAux.clinicName;
+
+            searchInputsAux.studyType = orderInfo.studyType;
+            inputs.studyType = searchInputsAux.studyType;
+
+            if(event.target[1].value !== orderInfo.patientInsurancePlan){
+                searchInputsAux.insurancePlan = event.target[1].value;
+                inputs.plan = searchInputsAux.insurancePlan;
+
                 let aux = orderInfo;
                 aux.patientInsurancePlan = inputs.plan;
                 setOrderInfo(orderInfo);
             }
+
             for(let idx=1; idx <= 7; idx++){
                 //suceciones... what a concept
-                if(event.target[1+(3*idx)].checked === true){
+                searchInputsAux.schedule[idx-1].checked = event.target[1+(3*idx)].checked;
+                searchInputsAux.schedule[idx-1].fromTime = event.target[2+(3*idx)].value;
+                searchInputsAux.schedule[idx-1].toTime = event.target[3+(3*idx)].value;
+
+                if(searchInputsAux.schedule[idx-1].checked === true){
                     inputs.days[idx-1] = 1;
-                    inputs.fromTime[idx-1] = event.target[2+(3*idx)].value;
-                    inputs.toTime[idx-1] = event.target[3+(3*idx)].value;
+                    inputs.fromTime[idx-1] = searchInputsAux.schedule[idx-1].fromTime;
+                    inputs.toTime[idx-1] = searchInputsAux.schedule[idx-1].toTime;
                 }
             }
+
+            setSearchInputs(searchInputsAux);
+            console.log("searchInputsAux (up to date)", searchInputs);
+
             setSearchFilters(inputs);
+            console.log("searchFilters (late?)", searchFilters);
+
+            //will always search/fetch for page 1
             QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages);
         }
 
         setClinicSearchValidated(true);
+
+        /////in case you need to know how to read the form from the event prop:
         /////
         //event.target[0] -> clinicName
         ///event.target[1] -> insurancePlan
@@ -359,9 +402,6 @@ function CreateOrder(){
         //event.target[4+N] -> isAvailableN
         //event.target[4+1+N] -> day-N-ot
         //event.target[4+2+N] -> day-N-ct
-        ///////
-        //CODE HERE THAT CALLS THE API AND FILLS UP clinicsList with the results
-        //will always search/fetch for page 1
     };
 
     const changePageAndFetch = (pageNumber) => {
@@ -466,7 +506,7 @@ function CreateOrder(){
                 <th>{props.item.name}</th>
                 <th>
                     <Form.Group controlId={"isAvailable" + props.item.id}>
-                        <Form.Control
+                        <Form.Control defaultChecked={searchInputs.schedule[props.item.id].checked}
                             type="checkbox" name={"isAvailable" + props.item.id}
                         />
                     </Form.Group>
@@ -477,6 +517,7 @@ function CreateOrder(){
                             type="text" className="form-control time-input"
                             placeholder="00:00" maxLength="5"
                             name={"day-" + props.item.id + "-ot"}
+                            defaultValue={searchInputs.schedule[props.item.id].fromTime}
                         />
                     </Form.Group>
                 </th>
@@ -486,6 +527,7 @@ function CreateOrder(){
                             type="text" className="form-control time-input"
                             placeholder="00:00" maxLength="5"
                             name={"day-" + props.item.id + "-ct"}
+                            defaultValue={searchInputs.schedule[props.item.id].toTime}
                         />
                     </Form.Group>
                 </th>
@@ -517,6 +559,11 @@ function CreateOrder(){
             aux.studyType = event.target[5].value;
             aux.orderDescription = event.target[6].value;
             setOrderInfo(aux);
+
+            let searchInputsAux = searchInputs;
+            searchInputsAux.insurancePlan = orderInfo.patientInsurancePlan;
+            searchInputsAux.studyType = orderInfo.studyType;
+            setSearchInputs(searchInputsAux)
 
             QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType, clinicName: ""}, setClinicsList, count, setCount, 1, setTotalClinicPages);
             changeToClinicStep();
@@ -725,7 +772,7 @@ function CreateOrder(){
                                         <Form.Label className="bmd-label-static">Search by clinic name</Form.Label>
                                         <Form.Control
                                             type="text" style={{paddingTop: "10px"}}
-                                            name="clinicName"
+                                            name="clinicName" defaultValue={searchInputs.clinicName}
                                         />
                                     </Form.Group>
                                     <Form.Group className="form-group col" controlId="insurancePlan">
@@ -735,7 +782,7 @@ function CreateOrder(){
                                             name="insurancePlan"
                                         >
                                             {insurancePlans.map((item) => (
-                                                <option selected={item.name === orderInfo.patientInsurancePlan}>{item.name}</option>
+                                                <option selected={item.name === searchInputs.insurancePlan}>{item.name}</option>
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
