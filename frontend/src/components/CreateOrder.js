@@ -285,7 +285,6 @@ function CreateOrder(){
         const fetchData = async () => {
             await GetLoggedMedic(orderInfo, setOrderInfo, count, setCount);
             await GetStudyTypes(setStudyTypes, count, setCount);
-            console.log("ja");
         };
 
         fetchData();
@@ -382,10 +381,10 @@ function CreateOrder(){
             }
 
             setSearchInputs(searchInputsAux);
-            console.log("searchInputsAux (up to date)", searchInputs);
+            //console.log("searchInputsAux (up to date)", searchInputs);
 
             setSearchFilters(inputs);
-            console.log("searchFilters (late?)", searchFilters);
+            //console.log("searchFilters (late?)", searchFilters);
 
             //will always search/fetch for page 1
             QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages);
@@ -546,8 +545,6 @@ function CreateOrder(){
         event.preventDefault();
         const form = event.currentTarget;
 
-        console.log(event);
-
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
@@ -600,10 +597,14 @@ function CreateOrder(){
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
+            let aux = orderInfo;
+            let idx = studyTypes.findIndex(s => s.name === aux.studyType);
+            if(idx !== -1){
+                console.log(idx, aux.studyType);
+                aux.studyType = studyTypes[idx].id;
+                setOrderInfo(aux);
+            }
             CreateMedicalOrder(orderInfo);
-            //checking if it worked...
-            console.log("orderInfo", orderInfo);
-            //changeToVerifyStep();
             //now it should send the order to the API and redirect the user to /view-study
         }
 
