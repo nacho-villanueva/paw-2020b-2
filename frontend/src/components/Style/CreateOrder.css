@@ -1,0 +1,185 @@
+.form-card{
+    width: 40%;
+    margin-top: 2em;
+    margin-bottom: 7rem;
+    transition: width 0.2s;
+}
+
+.form-card.clinic{
+    width: 60%;
+}
+
+.stepper-wrapper-horizontal{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    align-self: center;
+    width: 90%;
+}
+.stepper-wrapper-horizontal > .step-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 23%;
+    position: relative;
+}
+.stepper-wrapper-horizontal > .step-wrapper > .step-number {
+    border-radius: 80%;
+    border: 1px solid grey;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: absolute;
+    top: 20%;
+
+    transition: border 0.5s, color 0.5s;
+
+}
+.stepper-wrapper-horizontal > .step-wrapper > .step-description {
+    position: absolute;
+    top: 3rem;
+
+}
+.stepper-wrapper-horizontal > .step-wrapper > .divider-line {
+    height: 1px;
+    background-color: #bdbdbd;
+    position: absolute;
+    width: 90%;
+    top: 1rem;
+    left: 90%;
+}
+
+
+
+
+.step-wrapper > .step-number.active{
+    border-radius: 80%;
+    border: 2px solid var(--primary);
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    font-weight: bolder;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: absolute;
+    top: 20%;
+}
+.step-wrapper > .step-description.active {
+    position: absolute;
+    top: 3rem;
+    font-weight: bolder;
+    color: var(--primary);
+
+}
+
+
+.spacer{
+    width: 90%;
+    margin: 7rem auto 2rem auto;
+}
+
+.custom-form{
+    margin: 0 2rem 0 2rem;
+}
+
+.area-custom{
+    width: 100%;
+    resize: none;
+}
+
+.create-btn{
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+.custom-hidden{
+    visibility: hidden;
+    height: 0.1rem;
+    padding: 0;
+}
+
+.search-block{
+    background-color:#f8f8f8;
+    border-radius: 5px;
+    border-color: #bdbdbd;
+    border-width:thin;
+    border-style: solid;
+}
+
+.clinic-btn{
+    width: 40%;
+    height: min-content;
+    margin-bottom: 1rem;
+}
+
+.search-btn{
+    font-size: larger;
+    border-color: var(--primary) !important;
+    border-width: thin;
+    border-style: solid;
+    height: min-content;
+    float: right;
+}
+
+.custom-table{
+    align-self: center;
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    transition: height 0.2s, width 0.2s;
+}
+
+.collapse-custom{
+    visibility: hidden;
+    height: 0.1rem;
+    transition: visibility 0.1s, height 0.2s;
+}
+.collapse-custom.active{
+    visibility: visible;
+    height:auto;
+}
+
+.signature{
+    width: 5rem;
+    max-height: 5rem;
+}
+
+/*
+from the old css
+*/
+
+.result-section {
+    width: 20%;
+    max-height: 32em;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height:90%;
+}
+
+.results-card {
+    margin-top: 2em;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 2em;
+
+    animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+
+.data-section {
+    width: 60%;
+    margin-left:3rem;
+    float:right;
+}
+
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
+}
+.type {
+    margin-bottom: 0.75rem;
+}

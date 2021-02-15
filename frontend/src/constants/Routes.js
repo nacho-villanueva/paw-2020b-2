@@ -4,6 +4,7 @@ import LandingPage from "../components/LandingPage";
 import DashboardPage from "../components/DashboardPage";
 import MyOrders from "../components/MyOrders";
 import {Route} from "react-router-dom";
+import CreateOrder from "../components/CreateOrder";
 
 export const Routes = {
     LANDING_PAGE: {
@@ -25,6 +26,13 @@ export const Routes = {
         path: "/dashboard/my-orders",
         component: MyOrders,
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
+    },
+
+    CREATE_ORDER: {
+        name: "Create Order",
+        path: "/dashboard/create-order",
+        component: CreateOrder,
+        role: [Roles.MEDIC]
     },
 
     SEARCH_CLINIC: {

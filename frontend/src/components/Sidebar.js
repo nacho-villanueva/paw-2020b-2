@@ -28,6 +28,7 @@ const navigations = [
     {route: Routes.DASHBOARD, icon: "fas fa-fw fa-clinic-medical"},
     {route: "divider", divider:true},
     {route: Routes.MY_ORDERS, icon: "fas fa-fw fa-table"},
+    {route: Routes.CREATE_ORDER, icon: "fas fa-fw fa-plus"},
     {route: Routes.SEARCH_CLINIC, icon: "fas fa-fw fa-search"},
     {route: "divider", divider:true},
     {route: {name: "Logout", path: "/"}, icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); console.log("asdasd"); }},
