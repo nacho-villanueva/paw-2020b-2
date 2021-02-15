@@ -200,7 +200,7 @@ export function CreateMedicalOrder(order){
         clinicId: order.clinicId,
         patientEmail: order.patientEmail,
         patientName: order.patientName,
-        studyTypeId: order.studyType,
+        studyTypeId: order.studyTypeId,
         description: order.orderDescription,
         medicPlan : {
             plan: order.patientInsurancePlan,

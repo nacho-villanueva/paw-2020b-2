@@ -604,7 +604,7 @@ function CreateOrder(){
             let aux = orderInfo;
             let idx = studyTypes.findIndex(s => s.name === aux.studyType);
             if(idx !== -1){
-                aux.studyType = studyTypes[idx].id;
+                aux.studyTypeId = studyTypes[idx].id;
                 setOrderInfo(aux);
             }
             CreateMedicalOrder(orderInfo);
