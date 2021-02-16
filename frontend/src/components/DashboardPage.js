@@ -20,6 +20,7 @@ const DashboardPage = () => {
                     <Route path="/dashboard/test" component={Test}/>
                     <Route path="/dashboard/search-clinic" component={DashboardPage}/>
                     <Route path="/dashboard/create-order" component={CreateOrder}/>
+                    <Route path="/dashboard/view-order" component={ViewOrder}/>
                 </div>
             </div>
         </div>
