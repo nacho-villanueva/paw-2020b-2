@@ -6,6 +6,7 @@ import {Route} from "react-router-dom";
 import Test from "./Test";
 import {useSelector} from "react-redux";
 import CreateOrder from "./CreateOrder";
+import ViewOrder from "./ViewOrder";
 
 
 const DashboardPage = () => {

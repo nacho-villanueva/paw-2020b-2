@@ -11,6 +11,7 @@ export function login(user, pass){
     })
         .then((r) => {
             store.dispatch(authenticate(r.headers.authorization));
+            console.log(store.getState().auth);
         }).catch();
 }
 
@@ -67,7 +68,7 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
         out.loading = false;
         console.log(out);
         setPatientInfo(out);
-        setCount(count+4);
+        setCount(count+3);
 
     })
     .catch((e) => {
@@ -89,7 +90,7 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id};
         }
         setStudyTypesList(stl);
-        setCount(count+1);
+        setCount(count+5);
     })
     .catch((error) => {console.log("bruh", error)});
 }
@@ -208,4 +209,61 @@ export function CreateMedicalOrder(order){
         }
     }).then((r) => {console.log("nice order", r);})
     .catch((error) => { console.log("OH NO", error);});
+}
+
+export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
+
+}
+export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
+    apiInstance.get("/orders/"+orderId)
+    .then((r) => {
+        console.log("nice order", r);
+        let data = r.data;
+
+        let aux = orderInfo;
+
+        aux.date = data.date;
+        aux.description = data.description;
+        aux.identification = data.identification;
+        aux.medicPlan = data.medicPlan;
+        aux.patientEmail = data.patientEmail;
+        aux.patientName = data.patientName;
+
+        InternalQuery(data.clinic).then((res) => {
+            aux["clinic"] = res.name;
+        });
+        InternalQuery(data.medic).then((res) => {
+            aux["medicName"] = res.name;
+        });
+        InternalQuery(data.studyType).then((res) => {
+            aux["studyType"] = res.name;
+        });
+
+
+        setOrderInfo(aux);
+        setCount(count+7);
+
+    }).catch((e) => {
+        console.log("getting results for order error", e)
+    });
+}
+
+export function GetResults(orderId, results, setResults, count, setCount){
+    const request = "/orders/"+orderId+"/results/";
+    console.log("req", request);
+
+    apiInstance.get(request)
+    .then((r) => {
+        console.log("results", r);
+        let data = r.data;
+
+        let aux = results;
+        aux = data;
+
+        setResults(aux);
+        setCount(count+11);
+
+    }).catch((e) => {
+        console.log("getting results for order error", e)
+    });
 }
