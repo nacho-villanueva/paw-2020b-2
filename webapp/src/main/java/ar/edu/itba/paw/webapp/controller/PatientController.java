@@ -54,7 +54,7 @@ public class PatientController {
                 .path(String.valueOf(patientOptional.get().getUser().getId())).build();
         EntityTag entityTag = new EntityTag(Integer.toHexString(uri.hashCode()));
 
-        ResponseBuilder response = Response.noContent().location(uri)
+        ResponseBuilder response = Response.temporaryRedirect(uri)
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
@@ -147,7 +147,7 @@ public class PatientController {
         );
 
         //Location is same as request url
-        return Response.noContent().location(uriInfo.getRequestUriBuilder().build()).build();
+        return Response.noContent().build();
     }
 
     private User getLoggedUser() {

@@ -253,10 +253,8 @@ public class MedicController {
 
         if(!hasField)
             return Response.status(Response.Status.NOT_FOUND).build();
-
-        URI uri = uriInfo.getBaseUriBuilder()
-                .path("medical-fields").path(String.valueOf(medicalFieldId)).build();
-        return Response.noContent().location(uri).build();
+        else
+            return Response.noContent().build();
     }*/
 
     // auxiliar functions

@@ -160,10 +160,8 @@ public class ClinicController {
 
         if(!hasStudy)
             return Response.status(Response.Status.NOT_FOUND).build();
-
-        URI uri = uriInfo.getBaseUriBuilder()
-                .path("study-types").path(String.valueOf(studyTypeId)).build();
-        return Response.noContent().location(uri).build();
+        else
+            return Response.noContent().build();
     }
 
     @GET
