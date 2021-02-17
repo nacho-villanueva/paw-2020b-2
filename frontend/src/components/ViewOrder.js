@@ -16,6 +16,7 @@ function ViewOrder(){
     const uploadPath = "http://localhost:8080/";
 
     const [count, setCount] = useState(0);
+    const [orderCount, setOrderCount] = useState(0);
     const [orderInfo, setOrderInfo] = useState({
         orderId: '',
         date: '',
@@ -30,7 +31,7 @@ function ViewOrder(){
     useEffect(async () => {
         const fetchData = async () => {
             await GetLogguedUser(userInfo, setUserInfo, count, setCount);
-            await GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount);
+            await GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, orderCount, setOrderCount);
             await GetResults(orderId, results, setResults, count, setCount);
         };
 
@@ -92,7 +93,7 @@ function ViewOrder(){
     const ResultItem = (props) => {
         const result = props.result;
         return(
-            <aside key={"resultItem-"+props.index}>
+            <aside>
                 <li className="nav-item">
                     <a
                         className="nav-link" id={"res-"+props.index+"-tab"}
@@ -120,15 +121,13 @@ function ViewOrder(){
                 >
                     <ul className="nav flex-column" id="myTab" role="tablist">
                         {results.map((item, index) => (
-                            <ResultItem result={item} index={index}/>
+                            <ResultItem result={item} index={index} key={"resultItem_"+index}/>
                         ))}
                     </ul>
                 </div>
                 <div className="col-8 float-right">
                     <div className="tab-content">
-                        {/*results.map((item) => (
-                            <ResultCardView result={item}/>
-                        ))*/
+                        {
                             <ResultCardView key={"resultView_"+viewCount} item={selectedResult}/>
                         }
                     </div>
@@ -166,7 +165,7 @@ function ViewOrder(){
         <div className="row justify-content-center" key={"view-order_" + count}>
             <div className="col-sm-5">
                 <div className="card order-card bg-light float-right">
-                    <div className="row">
+                    <div className="row" key={"orderInfo_"+orderCount}>
                         <div className="col">
                             <p className="card-title ml-3 h4">Order Number: {orderInfo.orderId}</p>
                         </div>

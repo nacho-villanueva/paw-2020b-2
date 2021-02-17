@@ -214,7 +214,7 @@ export function CreateMedicalOrder(order){
 export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
 
 }
-export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
+export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, orderCount, setOrderCount){
     apiInstance.get("/orders/"+orderId)
     .then((r) => {
         console.log("nice order", r);
@@ -231,12 +231,15 @@ export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
 
         InternalQuery(data.clinic).then((res) => {
             aux["clinic"] = res.name;
+            setOrderCount(orderCount+2);
         });
         InternalQuery(data.medic).then((res) => {
             aux["medicName"] = res.name;
+            setOrderCount(orderCount+3);
         });
         InternalQuery(data.studyType).then((res) => {
             aux["studyType"] = res.name;
+            setOrderCount(orderCount+5);
         });
 
 
