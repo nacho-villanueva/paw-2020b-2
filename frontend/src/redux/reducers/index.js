@@ -13,6 +13,7 @@ const reducer = (state = InitState, action) => {
                     role: action.auth.role,
                     userId: action.auth.userId,
                     email: action.auth.email,
+                    expire: action.auth.expire,
                 }};
         default:
             return state;

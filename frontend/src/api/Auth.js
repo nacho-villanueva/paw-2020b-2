@@ -1,17 +1,23 @@
-import { useJwt, decodeToken } from "react-jwt";
 import apiInstance from "./"
 import {store} from "../redux";
 import {authenticate, deAuthenticate} from "../redux/actions";
-import {Roles} from "../constants/Roles";
 
-export function login(user, pass){
+export function login(user, pass, rememberMe){
+
+    let expire = new Date();
+    if(rememberMe)
+        expire.setDate( expire.getDate() + 7);
+    else
+        expire.setHours( expire.getHours() + 12);
+    const expireEpoch = Math.floor( expire / 1000 );
+
     apiInstance.post("/", {
         "username": user,
         "password": pass
     })
         .then((r) => {
-            store.dispatch(authenticate(r.headers.authorization));
-        }).catch();
+            store.dispatch(authenticate(r.headers.authorization, expireEpoch));
+        }).catch((e)  => console.log(e + " - "));
 }
 
 export function registerUser(email, pass){

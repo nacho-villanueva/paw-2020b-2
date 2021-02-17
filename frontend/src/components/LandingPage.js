@@ -40,18 +40,14 @@ function LandingPage() {
 
         const inputs = {
             email: form[0],
-            password: form[1]
+            password: form[1],
+            rememberMe: form[2],
         }
 
         if(form.checkValidity() === false) {
             event.stopPropagation();
         }else{
-            //          ideal/future code
-            //let data = {email: event.target[0], password: event.target[1]};
-            //let return = Wrapper.Authenticate(data);
-            //dispatch(authenticate(return.token, return.role));
-            // dispatch(authenticate("T3ST0k3N", "Medic"));
-            login(inputs.email.value, inputs.password.value);
+            login(inputs.email.value, inputs.password.value, inputs.rememberMe.checked);
         }
 
         setLoginValidated(true);
