@@ -28,13 +28,13 @@ const Item = (props) => {
 
 const navigations = [
     {route: Routes.DASHBOARD, label: "fragments.sidebar.home", icon: "fas fa-fw fa-clinic-medical"},
-    {route: "divider", divider:true},
+    {route: {path: "divider1"}, divider:true},
     {route: Routes.MY_ORDERS, label: "fragments.sidebar.my-orders", icon: "fas fa-fw fa-table"},
     {route: Routes.CREATE_ORDER, label: "fragments.sidebar.create-order", icon: "fas fa-fw fa-plus"},
     {route: Routes.SEARCH_CLINIC, label: "fragments.sidebar.search-clinic", icon: "fas fa-fw fa-search"},
-    {route: "divider", divider:true},
-    {route: {name: "Logout", path: "/"}, label: "fragments.sidebar.logout", icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); console.log("asdasd"); }},
-    {route: "divider", divider:true},
+    {route: {path: "divider2"}, divider:true},
+    {route: {name: "Logout", path: "/"}, label: "fragments.sidebar.logout", icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); }},
+    {route: {path: "divider3"}, divider:true},
     ]
 
 const Sidebar = () => {

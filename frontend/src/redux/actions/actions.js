@@ -17,5 +17,6 @@ export const InitState = {
         role: Roles.ANON,
         userId: null,
         email: null,
+        expire: null,
     }
 }
