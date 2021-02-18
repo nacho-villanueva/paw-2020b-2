@@ -3,28 +3,22 @@ import {Form} from "react-bootstrap";
 import "./Style/LandingPage.css";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
+import { Trans, useTranslation } from 'react-i18next'
 
 import {authenticate} from "../redux/actions";
 import {useDispatch} from "react-redux";
 import {registerUser, login} from "../api/Auth";
 
 function LandingPage() {
-    //strings
-    const title1 = "Welcome to";
-    const title2 = "MedTransfer";
-    const loginButton = "log in!";
-    const emailLabel = "Email address";
-    const passwordLabel = "Password";
-    const rememberMeLabel = "Remember Me";
-    const submitLogin = "Log In";
-    const invalidEmail = "Please input a correct email";
-    const invalidPassword = "Please input a correct password";
-    const repeatPasswordLabel = "Please repeat the Password";
-    const submitRegister = "Register";
 
-    const register = "register!";
+    // password length values
+    const passwordMin = 8;
+    const passwordMax = 100;
+    
     const loginLink = "/login";
     const registerLink = "/register";
+
+    const { t } = useTranslation();
 
     const history = useHistory();
 
@@ -109,19 +103,24 @@ function LandingPage() {
             <NavBar />
             <div className="card main-card bg-light">
                 <div className="card-body">
-                    <h1 className="text-center text-highlight">{title1}</h1>
-                    <h4 className="text-center text-highlight">{title2}</h4>
+                    <Trans t={t} i18nKey="home.title">
+                        <h1 className="text-center text-highlight">Welcome to</h1><h4 className="text-center text-highlight">MedTransfer</h4>
+                    </Trans>
                     <hr className="divider my-4"/>
                     <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
                         <li className="nav-item">
                             <a className={"nav-item nav-link " + activeLoginTab} href={"/#"}
                                id="login-tab" data-toggle="tab" role="tab" onClick={changeToLogin}
-                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{loginButton}</a>
+                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>
+                                   <Trans t={t} i18nKey="home.tabs.login.title"/>
+                            </a>
                         </li>
                         <li className="nav-item">
                             <a className={"nav-link " + activeRegisterTab} href={"/#"}
                                id="register-tab" data-toggle="tab" onClick={changeToRegister}
-                               role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>{register}</a>
+                               role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>
+                                   <Trans t={t} i18nKey="home.tabs.register.title"/>
+                            </a>
                         </li>
                     </ul>
 
@@ -131,22 +130,22 @@ function LandingPage() {
                         <div id="login" className={loginTab}>
                             <Form className="form-signin" noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
                                 <Form.Group controlId="loginEmail">
-                                    <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter email" name="email"/>
-                                    <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.login.form.email.label"/></Form.Label>
+                                    <Form.Control required type="email" placeholder={t("home.tabs.login.form.email.placeholder")} name="email"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.login.form.email.errors.invalid"/></Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="loginPassword">
-                                    <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Password" name="password"/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.login.form.password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.login.form.password.placeholder")} name="password" minLength={passwordMin} maxLength={passwordMax}/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.login.form.password.errors.invalid" values={{ min: passwordMin, max: passwordMax}}/></Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Check label={rememberMeLabel} name="rememberme"/>
+                                    <Form.Check label={t("home.tabs.login.form.remember-me.label")} name="rememberme"/>
                                 </Form.Group>
 
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" className="row btn btn-lg action-btn" value={submitLogin}/>
+                                    <input type="submit" className="row btn btn-lg action-btn" value={t("home.tabs.login.form.submit.value")}/>
                                 </div>
                             </Form>
                         </div>
@@ -156,23 +155,23 @@ function LandingPage() {
                         <div id="register" className={registerTab}>
                             <Form noValidate validated={registerValidated} className="form-signin" onSubmit={handleRegisterSubmit}>
                                 <Form.Group controlId="registerEmail">
-                                    <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter email" name="email"/>
-                                    <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.email.label"/></Form.Label>
+                                    <Form.Control required type="email" placeholder={t("home.tabs.register.form.email.placeholder")} name="email"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.register.form.email.errors.invalid"/></Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="registerPassword">
-                                    <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Password" name="password"/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.register.form.password.placeholder")} name="password" minLength={passwordMin} maxLength={passwordMax}/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.login.form.password.errors.invalid" values={{ min: passwordMin, max: passwordMax}}/></Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="registerPasswordConfirm">
-                                    <Form.Label className="bmd-label-static">{repeatPasswordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Repeat Password" name="passwordConfirm"/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.repeat-password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.register.form.repeat-password.placeholder")} name="passwordConfirm"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.register.form.repeat-password.errors.invalid"></Trans></Form.Control.Feedback>
                                 </Form.Group>
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" className="row btn btn-lg action-btn" value={submitRegister} />
+                                    <input type="submit" className="row btn btn-lg action-btn" value={t("home.tabs.register.form.submit.value")} />
                                 </div>
                             </Form>
                         </div>

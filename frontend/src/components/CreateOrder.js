@@ -1,6 +1,7 @@
 import {Form, Button, Table, Collapse, Pagination, Spinner, Alert} from "react-bootstrap";
 import {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
+import { Trans, useTranslation } from 'react-i18next'
 import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder, FindPatient} from "../api/Auth";
 
 import "./Style/CreateOrder.css";
@@ -8,6 +9,8 @@ import { store } from "../redux";
 
 function CreateOrder(){
 
+    const { t } = useTranslation();
+    
     const history = useHistory();
 
     /*******************************
@@ -504,7 +507,7 @@ function CreateOrder(){
     const Day = (props) => {
         return (
             <tr>
-                <th>{props.item.name}</th>
+                <th><Trans t={t} i18nKey={"days.day-"+props.item.id} >{props.item.name}</Trans></th>
                 <th>
                     <Form.Group controlId={"isAvailable" + props.item.id}>
                         <Form.Control defaultChecked={searchInputs.schedule[props.item.id].checked}
@@ -624,17 +627,23 @@ function CreateOrder(){
                 <div className="stepper-wrapper-horizontal">
                     <div className="step-wrapper">
                         <div className={"step-number " + activeOrderStep}>1</div>
-                        <div className={"step-description text-center " + activeOrderStep}>Create a new medical order</div>
+                        <div className={"step-description text-center " + activeOrderStep}>
+                            <Trans t={t} i18nKey="create-order.steps.step-1.title" />
+                        </div>
                         <div className="divider-line"></div>
                     </div>
                     <div className="step-wrapper">
                         <div className={"step-number " + activeClinicStep}>2</div>
-                        <div className={"step-description text-center " + activeClinicStep}>Select clinic</div>
+                        <div className={"step-description text-center " + activeClinicStep}>
+                            <Trans t={t} i18nKey="create-order.steps.step-2.title" />
+                        </div>
                         <div className="divider-line"></div>
                     </div>
                     <div className="step-wrapper">
                         <div className={"step-number " + activeVerifyStep}>3</div>
-                        <div className={"step-description text-center " + activeVerifyStep}>Submit medical order</div>
+                        <div className={"step-description text-center " + activeVerifyStep}>
+                            <Trans t={t} i18nKey="create-order.steps.step-3.title" />
+                        </div>
                     </div>
                 </div>
                 <div className="row justify-content-center">
@@ -646,7 +655,7 @@ function CreateOrder(){
                     <div id="info-form" className={"custom-form tab-pane fade in " + orderStep}>
                             <Form noValidate validated={infoValidated} onSubmit={handleInfoSubmit}>
                                 <Form.Group>
-                                    <Form.Label className="text-muted">Medic</Form.Label>
+                                    <Form.Label className="text-muted"><Trans t={t} i18nKey="create-order.steps.step-1.form.medic.label" /></Form.Label>
                                     <p className="lead mb-0">{orderInfo.medicName}</p>
                                     <Form.Control
                                             required type="text"
@@ -660,14 +669,13 @@ function CreateOrder(){
                                     <Alert show={patientInfo.error} variant="warning">
                                         <div className="d-flex justify-content-between">
                                         <span className="my-2">
-                                            Sorry, we couldn't find this email in our patients' database.
-
+                                            <Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.errors.missing.message" />
                                         </span>
                                         <Button
                                             variant="outline-warning"
                                             onClick={() => {closePatientInfoAlert()}}
                                         >
-                                            Close
+                                            <Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.errors.missing.close-alert" />
                                         </Button>
                                         </div>
 
@@ -675,7 +683,7 @@ function CreateOrder(){
                                 </div>
                                 <div className="row mx-1">
                                     <Form.Group className="form-group col" controlId="patientEmail">
-                                        <Form.Label className="bmd-label-floating">Patient's email</Form.Label>
+                                        <Form.Label className="bmd-label-floating"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.label" /></Form.Label>
                                         <Form.Control
                                             required type="email"
                                             name="patientEmail"
@@ -689,24 +697,24 @@ function CreateOrder(){
                                             size="sm" role="status"
                                         /> : <></>}
 
-                                        <Form.Control.Feedback type="invalid">Please input a valid email address</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.errors.invalid" /></Form.Control.Feedback>
                                     </Form.Group>
                                 </div>
 
                                 <div className="row mx-1">
                                     <Form.Group className="form-group col" controlId="patientName">
-                                        <Form.Label className="bmd-label-floating">Patient's name</Form.Label>
+                                        <Form.Label className="bmd-label-floating"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-name.label" /></Form.Label>
                                         <Form.Control
                                             required type="text"
                                             name="patientName"
                                             defaultValue={patientInfo.name}
                                         />
-                                        <Form.Control.Feedback type="invalid">Please write the patient's name</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-name.errors.missing-field" /></Form.Control.Feedback>
                                     </Form.Group>
                                 </div>
                                 <div className="row mx-1">
                                     <Form.Group className="form-group col" controlId="patientInsurancePlan">
-                                        <Form.Label className="bmd-label-floating">Patient's insurance plan</Form.Label>
+                                        <Form.Label className="bmd-label-floating"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.label" /></Form.Label>
                                         <Form.Control
                                             required as="select"
                                             name="patientInsurancePlan"
@@ -715,24 +723,24 @@ function CreateOrder(){
                                                 <option selected={item.name === patientInfo.insurance.plan}>{item.name}</option>
                                             ))}
                                         </Form.Control>
-                                        <Form.Control.Feedback type="invalid">Please select an insurance plan</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.errors.missing-field" /></Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group className="form-group col" controlId="patientInsuranceNumber">
-                                        <Form.Label className="bmd-label-floating">Patient's insurance number</Form.Label>
+                                        <Form.Label className="bmd-label-floating"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-number.label" /></Form.Label>
                                         <Form.Control
                                             required type="text"
                                             name="patientInsuranceNumber"
                                             className="mt-2"
                                             defaultValue={patientInfo.insurance.number}
                                         />
-                                        <Form.Control.Feedback type="invalid">Please enter the patient's insurance number</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.errors.missing-field" /></Form.Control.Feedback>
                                     </Form.Group>
                                 </div>
                                 <hr className="mt-3 mb-2"/>
                                 <div className="row mx-1">
                                     <div className="col">
                                         <Form.Group className="form-group" controlId="studyType">
-                                            <Form.Label className="bmd-label-static">Study type</Form.Label>
+                                            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="create-order.steps.step-1.form.study-type.label" /></Form.Label>
                                             <Form.Control
                                                 required as="select"
                                                 name="studyType"
@@ -742,29 +750,29 @@ function CreateOrder(){
                                                     <option>{item.name}</option>
                                                 ))}
                                             </Form.Control>
-                                            <Form.Control.Feedback type="invalid">Please pick a study type</Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.study-type.errors.missing-field" /></Form.Control.Feedback>
                                         </Form.Group>
                                     </div>
                                 </div>
                                 <div className="col">
                                     <Form.Group controlId="orderDescription">
-                                        <Form.Label className="bmd-label-static">Order description</Form.Label>
+                                        <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="create-order.steps.step-1.form.description.label" /></Form.Label>
                                         <textarea
                                             type="text"
                                             name="orderDescription"
                                             rows="10" className="form-control area-custom"
                                         />
-                                        <Form.Control.Feedback type="invalid">interesting...</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.description.errors.missing-field" /></Form.Control.Feedback>
                                     </Form.Group>
                                 </div>
                                 <hr className="mt-3 mb-2"/>
 
-                                <a onClick={history.goBack} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Cancel</a>
+                                <a onClick={history.goBack} className="btn btn-secondary mt-4 mb-4 float-left" role="button"><Trans t={t} i18nKey="create-order.buttons.cancel" /></a>
 
                                 <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="infoSubmit"
-                                    value={infoSubmit}
-                                >Next</Button>
+                                    value="infoSubmit"
+                                ><Trans t={t} i18nKey="create-order.buttons.next" /></Button>
                             </Form>
                     </div>
 
@@ -773,14 +781,14 @@ function CreateOrder(){
                             <div className="search-block">
                                 <div className="row mx-1 pt-2">
                                     <Form.Group className="form-group col mt-1" controlId="clinicName">
-                                        <Form.Label className="bmd-label-static">Search by clinic name</Form.Label>
+                                        <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="create-order.steps.step-2.form.clinic-name.label" /></Form.Label>
                                         <Form.Control
                                             type="text" style={{paddingTop: "10px"}}
                                             name="clinicName" defaultValue={searchInputs.clinicName}
                                         />
                                     </Form.Group>
                                     <Form.Group className="form-group col" controlId="insurancePlan">
-                                        <Form.Label className="bmd-label-static">Search by insurance plan</Form.Label>
+                                        <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="create-order.steps.step-2.form.insurance-plan.label" /></Form.Label>
                                         <Form.Control
                                             as="select"
                                             name="insurancePlan"
@@ -798,15 +806,15 @@ function CreateOrder(){
                                         variant="primary"
                                         onClick={() => {setShow(!show);}}
                                     >
-                                        {"Schedule availability "}
+                                        {t("create-order.steps.step-2.form.available-hours.buttons.show")}
                                         {show===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
                                     </Button>
                                     <Button
                                         className="clinic-btn search-btn mx-auto"
                                         type="submit" name="clinicSearchSubmit"
-                                        value="search this"
+                                        value="create-order.steps.step-2.form.submit.value"
                                     >
-                                        Search
+                                        <Trans t={t} i18nKey="create-order.steps.step-2.form.submit.value" />
                                     </Button>
                                 </div>
                                 <div className="row mx-1 justify-content-center">
@@ -818,10 +826,10 @@ function CreateOrder(){
                                             >
                                                 <thead>
                                                     <tr>
-                                                        <th>Day</th>
-                                                        <th>Available</th>
-                                                        <th>From</th>
-                                                        <th>To</th>
+                                                        <th><Trans t={t} i18nKey="create-order.steps.step-2.form.available-hours.columns.day" /></th>
+                                                        <th><Trans t={t} i18nKey="create-order.steps.step-2.form.available-hours.columns.available" /></th>
+                                                        <th><Trans t={t} i18nKey="create-order.steps.step-2.form.available-hours.columns.from-time" /></th>
+                                                        <th><Trans t={t} i18nKey="create-order.steps.step-2.form.available-hours.columns.to-time" /></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -839,11 +847,11 @@ function CreateOrder(){
                         <Form noValidate validated={clinicValidated} onSubmit={handleClinicSubmit}>
                             <div className="card results-card mt-5">
                                 <div className="card-body">
-                                    <p className="card-title h4">Results</p>
+                                    <p className="card-title h4"><Trans t={t} i18nKey="create-order.steps.step-2.form.results.title" /></p>
                                     <hr/>
                                     <div className="d-flex flex-row">
                                         <div id="results" className="list-group result-section">
-                                            {clinicsList.length === 0 ? <h3 className="text-center py-5 lead">No clinics found based on search filters</h3>
+                                            {clinicsList.length === 0 ? <h3 className="text-center py-5 lead"><Trans t={t} i18nKey="create-order.steps.step-2.form.results.no-results" /></h3>
                                             :
                                             <ul className="nav flex-column" id="myTab" role="tablist">
                                             {clinicsList.map((item) => (
@@ -855,20 +863,20 @@ function CreateOrder(){
 
                                         </div>
                                         <div id="data" className="data-section">
-                                            <h5 class="text-muted">Selected Clinic</h5>
+                                            <h5 class="text-muted"><Trans t={t} i18nKey="create-order.steps.step-2.form.results.selected" /></h5>
                                             <div className="">
-                                                {selectedClinic === null ? <h4>No clinic selected</h4> : <ClinicInfo key={"selected_" + selectedClinic.userId} item={selectedClinic}/>}
+                                                {selectedClinic === null ? <h4><Trans t={t} i18nKey="create-order.steps.step-2.form.results.no-selected" /></h4> : <ClinicInfo key={"selected_" + selectedClinic.userId} item={selectedClinic}/>}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
+                            <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button"><Trans t={t} i18nKey="create-order.buttons.prev" /></a>
                             <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="clinicSubmit"
-                                    value={clinicSubmit}
-                            >Next</Button>
+                                    value="clinicSubmit"
+                            ><Trans t={t} i18nKey="create-order.buttons.next" /></Button>
                         </Form>
                     </div>
 
@@ -878,44 +886,54 @@ function CreateOrder(){
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col">
-                                            <p className="card-title ml-3 h4">Medical order</p>
+                                            <p className="card-title ml-3 h4"><Trans t={t} i18nKey="create-order.steps.step-3.form.title" /></p>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col">
-                                            <p className="card-subtitle ml-3 text-muted lead">Date: {getCurrentDate()}</p>
+                                            <p className="card-subtitle ml-3 text-muted lead"><Trans t={t} i18nKey="create-order.steps.step-3.form.date" values={{today: getCurrentDate()}} /></p>
                                         </div>
                                     </div>
                                     <hr className="mt-3 mb-4"/>
                                     <div className="row justify-content-start">
                                         <div className="col type">
-                                            <p className="type-title">Patient</p>
-                                            {orderInfo.patientName}
+                                            <Trans t={t} i18nKey="create-order.steps.step-3.form.patient" values={{patientName: orderInfo.patientName}} >
+                                                <p className="type-title">Patient</p>
+                                                {orderInfo.patientName}
+                                            </Trans>
                                         </div>
                                         <div className="col type">
-                                            <p className="type-title">Medical Clinic</p>
-                                            {selectedClinic !== null ? selectedClinic.name : ""}
+                                            <Trans t={t} i18nKey="create-order.steps.step-3.form.clinic" values={{clinicName: selectedClinic !== null ? selectedClinic.name : ""}} >
+                                                <p className="type-title">Medical Clinic</p>
+                                                {selectedClinic !== null ? selectedClinic.name : ""}
+                                            </Trans>
                                         </div>
                                         <div class="w-100"></div>
                                         <div className="col type">
-                                            <p className="type-title">Patient insurance plan</p>
-                                            {orderInfo.patientInsurancePlan}
+                                            <Trans t={t} i18nKey="create-order.steps.step-3.form.patient-insurance-plan" values={{patientInsurancePlan: orderInfo.patientInsurancePlan}} >
+                                                <p className="type-title">Patient insurance plan</p>
+                                                {orderInfo.patientInsurancePlan}
+                                            </Trans>
                                         </div>
                                         <div className="col type">
-                                            <p className="type-title">Patient insurance number</p>
-                                            {orderInfo.patientInsuranceNumber}
+                                            <Trans t={t} i18nKey="create-order.steps.step-3.form.patient-insurance-number" values={{patientInsuranceNumber: orderInfo.patientInsuranceNumber}} >
+                                                <p className="type-title">Patient insurance number</p>
+                                                {orderInfo.patientInsuranceNumber}
+                                            </Trans>
                                         </div>
                                     </div>
                                     <hr className="mt-3 mb-5"/>
                                     <p className="card-text text-center h5">
-                                        Study type: {orderInfo.studyType}
+                                        <Trans t={t} i18nKey="create-order.steps.step-3.form.study-type" values={{studyType: orderInfo.studyType}} />
                                     </p>
                                     <p className="card-text text-center">{orderInfo.orderDescription}</p>
                                     <hr className="mt-5 mb-4"/>
                                     <div className="media">
                                         <div className="media-body">
-                                            <h5 className="mt-0 mb-1 text-center">{orderInfo.medicName}</h5>
-                                            <p className="text-center">M.N.: {orderInfo.medicLicenceNumber}</p>
+                                            <Trans t={t} i18nKey="create-order.steps.step-3.form.medic-id" values={{medicName: orderInfo.medicName, medicLicence: orderInfo.medicLicenceNumber}} >
+                                                <h5 className="mt-0 mb-1 text-center">{orderInfo.medicName}</h5>
+                                                <p className="text-center">M.N.: {orderInfo.medicLicenceNumber}</p>
+                                            </Trans>
                                         </div>
                                         <img
                                             className="align-self-end ml-3 signature"
@@ -926,11 +944,11 @@ function CreateOrder(){
                                 </div>
 
                             </div>
-                            <a onClick={changeToClinicStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button">Back</a>
+                            <a onClick={changeToClinicStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button"><Trans t={t} i18nKey="create-order.buttons.prev" /></a>
                             <Button className="create-btn mt-4 mb-2 float-right"
                                     type="submit" name="verifySubmit"
-                                    value={verifySubmit}
-                            >Submit order</Button>
+                                    value="verifySubmit"
+                            ><Trans t={t} i18nKey="create-order.buttons.submit" /></Button>
                         </Form>
                     </div>
                 </div>
