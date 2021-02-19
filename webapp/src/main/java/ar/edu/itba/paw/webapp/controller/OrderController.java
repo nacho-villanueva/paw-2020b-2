@@ -399,14 +399,9 @@ public class OrderController {
 
         Integer clinicId = orderPutDto.getClinicId();
 
-        final String encodedPath;
-        final URI uri;
 
         if(clinicId == null){
-            uri = uriInfo.getAbsolutePathBuilder().build();
-            response = Response.noContent().location(uri);
-
-            return response.build();
+            return Response.noContent().build();
         }
 
         final Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPutDto.getClinicId());
@@ -422,11 +417,8 @@ public class OrderController {
             return Response.status(422).build();
         }
 
-        encodedPath = urlEncoderService.encode(newOrder.getOrderId());
-        uri = uriInfo.getBaseUriBuilder().path("orders").path(encodedPath).build();
-        response = Response.noContent().location(uri);
 
-        return response.build();
+        return Response.noContent().build();
     }
 
     // auxiliar functions

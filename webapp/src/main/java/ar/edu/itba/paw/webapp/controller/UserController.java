@@ -169,7 +169,7 @@ public class UserController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        return Response.noContent().location(uriInfo.getAbsolutePathBuilder().build()).build();
+        return Response.noContent().build();
     }
 
     private User getLoggedUser() {

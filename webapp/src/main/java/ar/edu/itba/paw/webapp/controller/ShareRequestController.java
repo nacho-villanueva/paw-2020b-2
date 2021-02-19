@@ -170,7 +170,7 @@ public class ShareRequestController {
                 .build();
         */
 
-        return Response.status(201).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
