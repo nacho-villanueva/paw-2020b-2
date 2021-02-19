@@ -36,7 +36,9 @@ public class OrderGetDto {
 
     private String identification;
 
-    private MedicPlanDto medicPlan;
+    private String medicPlan;
+
+    private String medicPlanNumber;
 
     private String sharedWith;
 
@@ -54,7 +56,8 @@ public class OrderGetDto {
         this.patientName = order.getPatientName();
         this.patientEmail = order.getPatientEmail();
         this.description = order.getDescription();
-        this.medicPlan = new MedicPlanDto(order.getPatientInsurancePlan(),order.getPatientInsuranceNumber());
+        this.medicPlan = order.getPatientInsurancePlan();
+        this.medicPlanNumber = order.getPatientInsuranceNumber();
 
         this.medic = uriInfo.getBaseUriBuilder().path(MEDIC_PATH).path(String.valueOf(order.getMedic().getUser().getId())).build().toString();
         this.clinic = uriInfo.getBaseUriBuilder().path(CLINIC_PATH).path(String.valueOf(order.getClinic().getUser().getId())).build().toString();
@@ -135,11 +138,11 @@ public class OrderGetDto {
         this.identification = identification;
     }
 
-    public MedicPlanDto getMedicPlan() {
+    public String getMedicPlan() {
         return medicPlan;
     }
 
-    public void setMedicPlan(MedicPlanDto medicPlan) {
+    public void setMedicPlan(String medicPlan) {
         this.medicPlan = medicPlan;
     }
 
@@ -174,11 +177,19 @@ public class OrderGetDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderGetDto that = (OrderGetDto) o;
-        return Objects.equals(medic, that.medic) && Objects.equals(date, that.date) && Objects.equals(clinic, that.clinic) && Objects.equals(patientName, that.patientName) && Objects.equals(patientEmail, that.patientEmail) && Objects.equals(studyType, that.studyType) && Objects.equals(description, that.description) && Objects.equals(identification, that.identification) && Objects.equals(medicPlan, that.medicPlan) && Objects.equals(sharedWith, that.sharedWith) && Objects.equals(results, that.results) && Objects.equals(url, that.url);
+        return Objects.equals(medic, that.medic) && Objects.equals(date, that.date) && Objects.equals(clinic, that.clinic) && Objects.equals(patientName, that.patientName) && Objects.equals(patientEmail, that.patientEmail) && Objects.equals(studyType, that.studyType) && Objects.equals(description, that.description) && Objects.equals(identification, that.identification) && Objects.equals(medicPlan, that.medicPlan) && Objects.equals(medicPlanNumber, that.medicPlanNumber) && Objects.equals(sharedWith, that.sharedWith) && Objects.equals(results, that.results) && Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(medic, date, clinic, patientName, patientEmail, studyType, description, identification, medicPlan, sharedWith, results, url);
+        return Objects.hash(medic, date, clinic, patientName, patientEmail, studyType, description, identification, medicPlan, medicPlanNumber, sharedWith, results, url);
+    }
+
+    public String getMedicPlanNumber() {
+        return medicPlanNumber;
+    }
+
+    public void setMedicPlanNumber(String medicPlanNumber) {
+        this.medicPlanNumber = medicPlanNumber;
     }
 }

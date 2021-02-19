@@ -30,6 +30,7 @@ public class ClinicDaoTest {
     private static final String CLINIC_HOURS_TABLE_NAME = "clinic_hours";
     private static final String CLINIC_PLANS_TABLE_NAME = "clinic_accepted_plans";
     private static final String CLINICS_RELATION_TABLE_NAME = "clinic_available_studies";
+    private static final String MEDIC_PLANS_TABLE_NAME = "medical_plans";
 
     private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
@@ -44,7 +45,8 @@ public class ClinicDaoTest {
             clinicDaysHoursTwoTue,
             clinicDaysHoursTwoWed)));
     private static final Clinic clinicTwo = new Clinic(userTwo, "Clinic two", null, true);
-    private static final String CLINIC_TWO_ACCEPTED_PLAN = "Osde";
+    private static final MedicPlan medicPlanOne = new MedicPlan(1,"Osde");
+    private static final MedicPlan medicPlanTwo = new MedicPlan(2,"Swiss Medical");
     private static final StudyType studyTypeOne = new StudyType(1,"X-ray");
     private static final StudyType studyTypeSix = new StudyType(6,"Surgery");
 
@@ -61,9 +63,6 @@ public class ClinicDaoTest {
     private static final String OPEN_TIME_ALT = "09:00:00";
     private static final String CLOSE_TIME = "18:00:00";
     private static final String CLOSE_TIME_ALT = "15:00:00";
-
-    private static final String MEDIC_PLAN = "OSDE";
-    private static final String MEDIC_PLAN_ALT = "Swiss Medical";
 
     private static final String NEW_NAME_TWO = "Refurbished Two's Clinic";
 
@@ -96,7 +95,7 @@ public class ClinicDaoTest {
         Assert.assertTrue(maybeClinic.isPresent());
         Assert.assertEquals(clinicTwo.getName(), maybeClinic.get().getName());
         Assert.assertTrue(maybeClinic.get().getHours().getDays()[ClinicHours.SUNDAY]);
-        Assert.assertTrue(maybeClinic.get().getAcceptedPlans().contains(CLINIC_TWO_ACCEPTED_PLAN));
+        Assert.assertTrue(maybeClinic.get().getAcceptedPlans().contains(medicPlanOne)); //TODO: see if contains is the right way to do this
     }
 
     @Test
@@ -211,13 +210,14 @@ public class ClinicDaoTest {
         Collection<StudyType> availableStudies = new ArrayList<>();
         availableStudies.add(studyTypeOne);
         availableStudies.add(studyTypeSix);
-        Set<String> plans = new HashSet<>();
-        plans.add(MEDIC_PLAN);
-        plans.add(MEDIC_PLAN_ALT);
+        Collection<MedicPlan> plans = new HashSet<>();
+        plans.add(medicPlanOne);
+        plans.add(medicPlanTwo);
 
         int rowsClinicTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME);
         int rowsClinicPlansTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME);
         int rowsClinicHoursTable = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME);
+        int rowsMedicPlans = JdbcTestUtils.countRowsInTable(jdbcTemplate,MEDIC_PLANS_TABLE_NAME);
 
 
         final Clinic clinic = dao.register(userSeven, NAME_ZERO,TELEPHONE, availableStudies,plans,getClinicHours(),false);
@@ -230,8 +230,9 @@ public class ClinicDaoTest {
         StudyType study = clinic.getMedicalStudies().stream().findFirst().get();
         Assert.assertTrue(study.getName().equals(studyTypeOne.getName()) || study.getName().equals(studyTypeSix.getName()));
         Assert.assertEquals(1+rowsClinicTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINICS_TABLE_NAME));
-        Assert.assertEquals(plans.size()+rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
+        Assert.assertEquals(plans.size() + rowsClinicPlansTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
         Assert.assertEquals(5+rowsClinicHoursTable, JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_HOURS_TABLE_NAME));
+        Assert.assertEquals(rowsMedicPlans,JdbcTestUtils.countRowsInTable(jdbcTemplate,MEDIC_PLANS_TABLE_NAME));
     }
 
     @Test(expected = PersistenceException.class)
@@ -241,9 +242,9 @@ public class ClinicDaoTest {
         Collection<StudyType> availableStudies = new ArrayList<>();
         availableStudies.add(studyTypeOne);
         availableStudies.add(studyTypeSix);
-        Set<String> plans = new HashSet<>();
-        plans.add(MEDIC_PLAN);
-        plans.add(MEDIC_PLAN_ALT);
+        Collection<MedicPlan> plans = new HashSet<>();
+        plans.add(medicPlanOne);
+        plans.add(medicPlanTwo);
 
         dao.register(userTwo,NAME_ZERO,null,availableStudies,plans,getClinicHours(),false);
     }
@@ -278,8 +279,8 @@ public class ClinicDaoTest {
         availableStudies.add(studyTypeSix);
 
         //New plans
-        Set<String> newPlans = new HashSet<>();
-        newPlans.add(MEDIC_PLAN_ALT);
+        Collection<MedicPlan> newPlans = new HashSet<>();
+        newPlans.add(medicPlanTwo);
 
         //New hours
         ClinicHours newHours = getClinicHoursAlt();
@@ -296,7 +297,7 @@ public class ClinicDaoTest {
         Assert.assertEquals(LocalTime.parse(OPEN_TIME),clinic.getHours().getOpenHours()[ClinicHours.SUNDAY]);
         Assert.assertEquals(LocalTime.parse(CLOSE_TIME_ALT),clinic.getHours().getCloseHours()[ClinicHours.TUESDAY]);
         Assert.assertEquals(amountofPlansEntiresBefore,JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME));
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_PLANS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND lower(medic_plan) = lower('" + MEDIC_PLAN_ALT + "')"));
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_PLANS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND plan_id = " + medicPlanTwo.getId()));
         Assert.assertEquals(3, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINIC_HOURS_TABLE_NAME,"clinic_id = " + userTwo.getId() + " AND close_time = '" + CLOSE_TIME_ALT + "'"));
     }
 

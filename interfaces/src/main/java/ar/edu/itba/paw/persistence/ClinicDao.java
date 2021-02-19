@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.models.ClinicHours;
-import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -21,17 +18,21 @@ public interface ClinicDao {
 
     long getAllUnverifiedCount();
 
-    Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
+    Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified);
 
-    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified);
 
     boolean hasStudy(int clinicId, int studyTypeId);
+
+    boolean acceptsPlan(int clinicId, int planId);
 
     Collection<Clinic> getByStudyTypeId(int studyTypeId, int page, int pageSize);
 
     long getByStudyTypeIdCount(int studyTypeId);
 
     StudyType registerStudyToClinic(int clinicId, StudyType studyType);
+
+    MedicPlan registerPlanToClinic(int clinicId, MedicPlan medicPlan);
 
     //If parameters are null, search will ignore those values
     Collection<Clinic> searchClinicsBy(String clinicName, ClinicHours hours, String acceptedPlan, String studyName, int page, int pageSize);

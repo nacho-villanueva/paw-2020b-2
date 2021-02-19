@@ -31,10 +31,12 @@ public class Clinic {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "clinic")
     private Collection<ClinicDayHours> hours;
 
-    @ElementCollection
-    @CollectionTable(name="clinic_accepted_plans", joinColumns=@JoinColumn(name="clinic_id", referencedColumnName = "user_id"))
-    @Column(name="medic_plan", nullable = false)
-    private Set<String> acceptedPlans;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name="clinic_accepted_plans",
+            joinColumns = @JoinColumn(name="clinic_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name="plan_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"clinic_id","plan_id"}))
+    private Collection<MedicPlan> acceptedPlans;
 
     @Column(name="verified",nullable=false)
     private boolean verified;
@@ -44,12 +46,12 @@ public class Clinic {
         this.verified = false;
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final ClinicHours hours, final Set<String> acceptedPlans, final boolean verified) {
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final ClinicHours hours, final Collection<MedicPlan> acceptedPlans, final boolean verified) {
         this(user,name,telephone,medicalStudies,acceptedPlans,verified);
         this.hours = hours.createClinicDayHoursCollection();
     }
 
-    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final Set<String> acceptedPlans, final boolean verified) {
+    public Clinic(final User user, final String name, final String telephone, final Collection<StudyType> medicalStudies, final Collection<MedicPlan> acceptedPlans, final boolean verified) {
         this(user,name,telephone,verified);
         this.medicalStudies = medicalStudies;
         this.acceptedPlans = acceptedPlans;
@@ -174,11 +176,11 @@ public class Clinic {
         });
     }
 
-    public Set<String> getAcceptedPlans() {
+    public Collection<MedicPlan> getAcceptedPlans() {
         return acceptedPlans;
     }
 
-    public void setAcceptedPlans(Set<String> acceptedPlans) {
+    public void setAcceptedPlans(Collection<MedicPlan> acceptedPlans) {
         this.acceptedPlans = acceptedPlans;
     }
 }

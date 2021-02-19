@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.annotations.MedicPlan;
+import ar.edu.itba.paw.models.MedicPlan;
+import ar.edu.itba.paw.webapp.dto.annotations.PatientPlan;
 import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.Valid;
 
 public class PatientPostDto {
 
@@ -14,8 +13,8 @@ public class PatientPostDto {
     @NotBlank(message = "Please provide a name.")
     private String name;
 
-    @MedicPlan
-    private MedicPlanDto medicPlanInfo;
+    @PatientPlan
+    private PatientPlanDto patientPlanInfo;
 
     public PatientPostDto() {
 
@@ -29,25 +28,33 @@ public class PatientPostDto {
         this.name = name;
     }
 
-    public String getMedicPlan() {
-        if (medicPlanInfo != null) {
-            return medicPlanInfo.getPlan();
+    public MedicPlan getMedicPlan() {
+        String planName = getMedicPlanName();
+        if(planName != null) {
+            return new MedicPlan(planName);
+        }
+        return null;
+    }
+
+    public String getMedicPlanName() {
+        if (patientPlanInfo != null && patientPlanInfo.getPlan() != null) {
+            return patientPlanInfo.getPlan().getName();
         }
         return null;
     }
 
     public String getMedicPlanNumber() {
-        if (medicPlanInfo != null) {
-            return medicPlanInfo.getNumber();
+        if (patientPlanInfo != null) {
+            return patientPlanInfo.getNumber();
         }
         return null;
     }
 
-    public MedicPlanDto getMedicPlanInfo() {
-        return medicPlanInfo;
+    public PatientPlanDto getPatientPlanInfo() {
+        return patientPlanInfo;
     }
 
-    public void setMedicPlanInfo(MedicPlanDto medicPlanInfo) {
-        this.medicPlanInfo = medicPlanInfo;
+    public void setPatientPlanInfo(PatientPlanDto patientPlanInfo) {
+        this.patientPlanInfo = patientPlanInfo;
     }
 }

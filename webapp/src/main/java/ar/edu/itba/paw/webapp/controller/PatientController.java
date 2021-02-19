@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.MedicPlan;
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.PatientService;
@@ -91,8 +92,8 @@ public class PatientController {
 
         Patient patient;
         String name = patientDto.getName();
-        //If medic plan is empty, then given the dto is valid as requested, plan number is also empty
-        if(isEmpty(patientDto.getMedicPlan())) {
+        //If medic plan is empty then, given the dto is valid as requested, plan number is also empty
+        if(isEmpty(patientDto.getMedicPlanName())) {
             patient = patientService.register(loggedUser, name);
         } else {
             //They can specify medic plan but no number so we don't care what's on the medic plan number in this case
@@ -135,7 +136,7 @@ public class PatientController {
 
         //We extract the data we need from the given DTO and use previous values for the ones missing
         String name = (isEmpty(patientDto.getName())) ? (patient.getName()) : (patientDto.getName());
-        String medicPlan = (isEmpty(patientDto.getMedicPlan())) ? patient.getMedicPlan() : patientDto.getMedicPlan();
+        MedicPlan medicPlan = (isEmpty(patientDto.getMedicPlanName())) ? patient.getMedicPlan() : patientDto.getMedicPlan();
         String medicPlanNumber = (isEmpty(patientDto.getMedicPlanNumber())) ? patient.getMedicPlanNumber() : patientDto.getMedicPlanNumber();
 
         //We persist the changes

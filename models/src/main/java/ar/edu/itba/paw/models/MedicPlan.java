@@ -1,17 +1,16 @@
 package ar.edu.itba.paw.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Table(name = "medical_plans")
 public class MedicPlan implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "medical_plans_id_seq")
+    @SequenceGenerator(sequenceName = "medical_plans_id_seq", name = "medical_plans_id_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false, unique = true)

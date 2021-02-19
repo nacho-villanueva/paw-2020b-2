@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.models.ClinicHours;
-import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,13 +22,17 @@ public interface ClinicService {
 
     int getAllUnverifiedLastPage(int pageSize);
 
-    Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours);
+    Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours);
 
-    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Set<String> medicPlans, ClinicHours hours, boolean verified);
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified);
 
     boolean hasStudy(int clinicId, int studyTypeId);
 
+    boolean acceptsPlan(int clinicId, int planId);
+
     StudyType registerStudyToClinic(int clinicId, StudyType studyType);
+
+    MedicPlan registerPlanToClinic(int clinicId, MedicPlan medicPlan);
 
     Collection<Clinic> getByStudyTypeId(int studyTypeId, int page, int pageSize);
 

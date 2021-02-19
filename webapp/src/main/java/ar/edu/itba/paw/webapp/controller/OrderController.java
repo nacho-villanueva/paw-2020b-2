@@ -335,8 +335,8 @@ public class OrderController {
         String description = orderPostDto.getDescription();
         String identificationType = medic.getIdentificationType();
         byte[] identification = medic.getIdentification();
-        String medicPlan = (orderPostDto.getMedicPlan()==null)? null : orderPostDto.getMedicPlan().getPlan();
-        String medicPlanNumber = (orderPostDto.getMedicPlan()==null)? null : orderPostDto.getMedicPlan().getNumber();
+        String medicPlan = orderPostDto.getPatientMedicPlan();
+        String medicPlanNumber = orderPostDto.getPatientMedicPlanNumber();
 
         Order order;
         try{

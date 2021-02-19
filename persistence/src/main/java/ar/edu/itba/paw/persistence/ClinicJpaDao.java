@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.models.ClinicHours;
-import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +18,9 @@ public class ClinicJpaDao implements ClinicDao {
 
     @Autowired
     private StudyTypeDao studyTypeDao;
+
+    @Autowired
+    private MedicPlanDao medicPlanDao;
 
     @Override
     public Optional<Clinic> findByUserId(int userId) {
@@ -118,7 +118,7 @@ public class ClinicJpaDao implements ClinicDao {
 
 
     @Override
-    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
+    public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Collection<MedicPlan> medicPlans, final ClinicHours hours, final boolean verified) {
 
         //Getting references
         User userRef = em.getReference(User.class,user.getId());
@@ -126,8 +126,12 @@ public class ClinicJpaDao implements ClinicDao {
         availableStudies.forEach(studyType -> {
             studyTypesRef.add(getStudyRef(studyType));
         });
+        Collection<MedicPlan> plansRef = new HashSet<>();
+        medicPlans.forEach(plan -> {
+            plansRef.add(getPlanRef(plan));
+        });
 
-        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,medicPlans,false);
+        final Clinic clinic = new Clinic(userRef,name,telephone,studyTypesRef,plansRef,false);
 
         em.persist(clinic);
 
@@ -137,14 +141,18 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Set<String> medicPlans, final ClinicHours hours, final boolean verified) {
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Collection<MedicPlan> medicPlans, final ClinicHours hours, final boolean verified) {
         Optional<Clinic> clinicDB = findByUserId(user.getId());
 
         clinicDB.ifPresent(clinic -> {
             clinic.setName(name);
             clinic.setTelephone(telephone);
             clinic.setVerified(verified);
-            clinic.setAcceptedPlans(medicPlans);
+            Collection<MedicPlan> plansRef = new HashSet<>();
+            medicPlans.forEach(plan -> {
+                plansRef.add(getPlanRef(plan));
+            });
+            clinic.setAcceptedPlans(plansRef);
 
             Collection<StudyType> studiesRef = new HashSet<>();
             availableStudies.forEach(study -> {
@@ -175,12 +183,33 @@ public class ClinicJpaDao implements ClinicDao {
         return em.getReference(StudyType.class,newStudy.getId());
     }
 
+    private MedicPlan getPlanRef(MedicPlan medicPlan) {
+        MedicPlan planRef;
+        if(medicPlan.getId() != null) {
+            planRef = em.getReference(MedicPlan.class, medicPlan.getId());
+            if(planRef != null) {
+                return planRef;
+            }
+        }
+
+        MedicPlan newPlan = medicPlanDao.findOrRegister(medicPlan.getName());
+        return em.getReference(MedicPlan.class, newPlan.getId());
+    }
+
     @Override
     public boolean hasStudy(final int clinicId, final int studyTypeId) {
         Optional<Clinic> clinicOptional = findByUserId(clinicId);
         Optional<StudyType> studyTypeOptional = studyTypeDao.findById(studyTypeId);
 
         return clinicOptional.isPresent() && studyTypeOptional.isPresent() && clinicOptional.get().getMedicalStudies().contains(studyTypeOptional.get());
+    }
+
+    @Override
+    public boolean acceptsPlan(final int clinicId, final int planId) {
+        Optional<Clinic> clinicOptional = findByUserId(clinicId);
+        Optional<MedicPlan> planOptional = medicPlanDao.findById(planId);
+
+        return clinicOptional.isPresent() && planOptional.isPresent() && clinicOptional.get().getAcceptedPlans().contains(planOptional.get());
     }
 
     @Override
@@ -202,6 +231,27 @@ public class ClinicJpaDao implements ClinicDao {
 
         //Todo: verify success
         return studyTypeFromDB;
+    }
+
+    @Override
+    public MedicPlan registerPlanToClinic(final int clinicId, final MedicPlan medicPlan) {
+
+        Optional<Clinic> clinicOptional = Optional.ofNullable(em.find(Clinic.class,clinicId));
+
+        MedicPlan medicPlanFromDB = null;
+
+        if(clinicOptional.isPresent()){
+            //We check if it exists
+            medicPlanFromDB = medicPlanDao.findOrRegister(medicPlan.getName());
+            Clinic clinic = clinicOptional.get();
+
+            //TODO check it works
+            clinic.getAcceptedPlans().add(medicPlanFromDB);
+            em.flush();
+        }
+
+        //Todo: verify success
+        return medicPlanFromDB;
     }
 
     @Override
@@ -308,7 +358,7 @@ public class ClinicJpaDao implements ClinicDao {
 
         if(acceptedPlan != null) {
             //Add plan condition
-            query.append(" AND LOWER(cap) LIKE :clinicAcceptedPlan");
+            query.append(" AND LOWER(cap.name) LIKE :clinicAcceptedPlan");
         }
 
         if(studyName != null) {

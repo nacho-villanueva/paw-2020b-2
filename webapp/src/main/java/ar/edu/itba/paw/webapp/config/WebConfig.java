@@ -208,7 +208,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         map.put(IntegerSize.class.getName(), INVALID);
         map.put(Locale.class.getName(), INVALID);
         map.put(MedicId.class.getName(), MISSING);
-        map.put(MedicPlan.class.getName(), INVALID);
+        map.put(PatientPlan.class.getName(), INVALID);
         map.put(NotRegistered.class.getName(),ALREADY_EXISTS);
         map.put(Number.class.getName(), INVALID);
         map.put(Password.class.getName(), INVALID);

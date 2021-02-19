@@ -80,6 +80,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/study-types").permitAll()    //Can be deleted, but stated for clarity
                     .antMatchers(HttpMethod.GET, "/study-types/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/study-types").authenticated()
+                    //Rules for /medic-plans
+                    .antMatchers(HttpMethod.GET, "/medic-plans").permitAll()    //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/medic-plans/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/medic-plans").authenticated()
                     //Rules for /medics
                     .antMatchers(HttpMethod.GET, "/medics").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")     //Can be deleted, but stated for clarity
                     .antMatchers(HttpMethod.GET, "/medics/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")

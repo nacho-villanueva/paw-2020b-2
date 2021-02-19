@@ -82,31 +82,8 @@ public class StudyTypeController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response registerStudyType(@Valid StudyTypeDto studyTypeDto){
-
-        Response.ResponseBuilder response;
-        final URI uri;
-        String name = studyTypeDto.getName();
-
-        Optional<StudyType> studyTypeOptional = studyTypeService.findByName(name);
-        if(studyTypeOptional.isPresent()){
-            // 422 Unprocessable Entity
-            StudyType studyType = studyTypeOptional.get();
-
-            uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(studyType.getId())).build();
-            EntityTag entityTag = new EntityTag(Integer.toHexString(uri.toString().hashCode()));
-
-            response = Response.status(422).location(uri)
-                    .tag(entityTag).cacheControl(cacheControl);
-        }else{
-            // register
-            final StudyType studyType = studyTypeService.register(name);
-
-            uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(studyType.getId())).build();
-
-            response = Response.created(uri);
-        }
-
-        return response.build();
+        StudyType newType = studyTypeService.register(studyTypeDto.getName());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(newType.getId())).build()).build();
     }
 
     @GET
