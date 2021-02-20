@@ -45,9 +45,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User tokenUser = jwtTokenUtil.parseToken(token);
         if(tokenUser == null) {
             //Very likely an expired token
+            response.addHeader("Token-Status","Expired");
             chain.doFilter(request,response);
             return;
         }
+        response.addHeader("Token-Status","Healthy");
 
         //Get user identity and set it on the spring security context
         UserDetails userDetails = userDetailsService.loadUserByUsername(tokenUser.getEmail());
