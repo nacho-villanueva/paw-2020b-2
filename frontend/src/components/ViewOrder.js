@@ -45,27 +45,26 @@ function ViewOrder(){
     const ResultCardView = (props) => {
         return(
             <div
-                id={"res-"+viewCount}
-                className="tab-pane fade tab-result"
+                id={"res-"+viewCount}   key={"resultView_"+viewCount}
+                className=""
             >
                 {props.item !== null ?
                     <div className="card overflow-auto border-primary" key={"resCardView_"+viewCount}>
                         <div className="card-body">
                             <div className="row justify-content-start">
                                 <div className="col type">
-                                    <p>Date: {props.item.date}</p>
-                                </div>
-                                <div className="col type">
-                                    <p>Clinic: {props.item.clinic}</p>
+                                    <p className="type-title">Date:</p> {props.item.date}
                                 </div>
                             </div>
 
                             <hr className="mt-3 mb-4 text-center"/>
-                            <img
-                                src={props.item.file}
-                                className="align-self-end ml-3"
-                                alt="result image"
-                            />
+                            <section className="row justify-content-center">
+                                <img
+                                    src={props.item.file}
+                                    className="result-image align-self-center"
+                                    alt="result image"
+                                />
+                            </section>
 
                             <hr className="mt-3 mb-4"/>
                             <div className="media">
@@ -82,7 +81,7 @@ function ViewOrder(){
                             </div>
                         </div>
                     </div>
-                : <p>HEY THERE</p>
+                : <p>Select a result</p>
                 }
 
 
@@ -128,7 +127,7 @@ function ViewOrder(){
                 <div className="col-8 float-right">
                     <div className="tab-content">
                         {
-                            <ResultCardView key={"resultView_"+viewCount} item={selectedResult}/>
+                            <ResultCardView  item={selectedResult}/>
                         }
                     </div>
                 </div>
@@ -165,7 +164,7 @@ function ViewOrder(){
         <div className="row justify-content-center" key={"view-order_" + count}>
             <div className="col-sm-5">
                 <div className="card order-card bg-light float-right">
-                    <div className="row" key={"orderInfo_"+orderCount}>
+                    <div className="row mt-4" key={"orderInfo_"+orderCount}>
                         <div className="col">
                             <p className="card-title ml-3 h4">Order Number: {orderInfo.orderId}</p>
                         </div>
@@ -191,7 +190,7 @@ function ViewOrder(){
                     </div>
 
                     <hr className="mt-3 mb-4"/>
-                    <div className="row justify-content-start">
+                    <div className="row justify-content-start mx-4">
                         <div className="col type">
                             <p className="type-title">Patient</p>
                             {orderInfo.patientName}
