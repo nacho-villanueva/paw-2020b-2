@@ -84,6 +84,7 @@
 						"label": "Email address",
 						"placeholder": "Enter an email address",
 						"errors": {
+							"missing-field": "Email field can't be empty",
 							"invalid": "Please input a valid email"
 						}
 					},
@@ -91,11 +92,18 @@
 						"label": "Password",
 						"placeholder": "******",
 						"errors": {
+							"missing-field": "Password can't be empty",
 							"invalid": "Password length must be between {{min}} and {{max}} characters"
 						}
 					},
 					"remember-me": {
 						"label": "Remember Me"
+					},
+					"errors":{
+						"unauthorized":{
+							"message": "Wrong password/username or account in the process of email verification.",
+							"close-alert": "Close"
+						}
 					},
 					"submit": {
 						"value": "Log In"
@@ -109,6 +117,8 @@
 						"label": "Email address",
 						"placeholder": "Enter an email address",
 						"errors": {
+							"already-exists": "Email is already registered",
+							"missing-field": "Email field can't be empty",
 							"invalid": "Please input a valid email"
 						}
 					},
@@ -116,6 +126,7 @@
 						"label": "Password",
 						"placeholder": "******",
 						"errors": {
+							"missing-field": "Password can't be empty",
 							"invalid": "Password length must be between {{min}} and {{max}} characters"
 						}
 					},
@@ -140,6 +151,13 @@
 			"next": "Next",
 			"submit": "Submit Order"
 		},
+		"clinic-info":{
+			"email": "Email",
+			"telephone": "Telephone",
+			"open-hours": "Open Hours",
+			"insurance": "Accepted Insurance",
+			"studies": "Available Studies"
+		},
 		"steps":{
 			"step-1":{
 				"title": "Create a new medical order",
@@ -154,7 +172,8 @@
 							"missing": {
 								"message": "Sorry, we couldn't find this email in our patients' database.",
 								"close-alert": "Close"
-							}
+							},
+							"missing-field": "Please write the $t(role.patient)'s email"
 						}
 					},
 					"patient-name":{
@@ -166,7 +185,11 @@
 					"patient-insurance-plan":{
 						"label": "$t(role.patient)'s insurance plan",
 						"errors":{
-							"missing-field": "Please write the $t(role.patient)'s insurance plan"
+							"missing-field": "Please write the $t(role.patient)'s insurance plan",
+							"invalid": {
+								"message": "Either fill both Insurance Plan and Insurance Number or leave both empty.",
+								"close-alert": "Close"
+							}
 						}
 					},
 					"patient-insurance-number":{
@@ -177,6 +200,7 @@
 					},
 					"study-type":{
 						"label": "Study Type",
+						"placeholder": "Pick a Study Type",
 						"errors":{
 							"missing-field": "Please pick a Study Type"
 						}
@@ -217,6 +241,11 @@
 						"no-results": "No clinics found based on search filters",
 						"selected": "Selected Clinic",
 						"no-selected": "No clinic selected"
+					},
+					"errors": {
+						"missing": "Specified Clinic doesn't exist",
+						"missing-field": "Please select a Clinic",
+						"close-alert": "Close"
 					}
 				}
 			},

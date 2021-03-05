@@ -2,7 +2,7 @@ import apiInstance from "./"
 import {store} from "../redux";
 import {authenticate, deAuthenticate} from "../redux/actions";
 
-export function login(user, pass, rememberMe){
+export function login(user, pass, rememberMe, setStatusCode, setErrors){
 
     let expire = new Date();
     if(rememberMe)
@@ -16,11 +16,26 @@ export function login(user, pass, rememberMe){
         "password": pass
     })
         .then((r) => {
+            setStatusCode(r.status);
             store.dispatch(authenticate(r.headers.authorization, expireEpoch));
-        }).catch((e)  => console.log(e + " - "));
+        }).catch((e)  => {
+            if(e.response){
+                // error in response
+                setStatusCode(e.response.status);
+                if(e.response.status === 400 && e.response.data !== undefined){
+                    setErrors(e.response.data)
+                }
+            }else if(e.request){
+                // no response received
+                console.log('Error in request: ',e.request);
+            }else{
+                // error in the request building, which shouldn't happen
+                console.log('Error in request: ', e.message);
+            }
+        });
 }
 
-export function registerUser(email, pass){
+export function registerUser(email, pass, setStatusCode, setErrors){
 
     apiInstance.post("/users",
         {
@@ -28,7 +43,22 @@ export function registerUser(email, pass){
             "password": pass,
             "locale": navigator.language
         })
-        .then( (r) => console.log(r.status)).catch(() => "Fuck you");
+        .then( (r) => {setStatusCode(r.status);})
+        .catch((e)  => {
+            if(e.response){
+                // error in response
+                setStatusCode(e.response.status);
+                if(e.response.status === 400 && e.response.data !== undefined){
+                    setErrors(e.response.data)
+                }
+            }else if(e.request){
+                // no response received
+                console.log('Error in request: ',e.request);
+            }else{
+                // error in the request building, which shouldn't happen
+                console.log('Error in request: ', e.message);
+            }
+        });
 
 }
 
@@ -37,7 +67,7 @@ export function logout(){
 }
 
 
-export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
+export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount, setStatusCode, setErrors){
     apiInstance.get( "/medics/" + store.getState().auth.userId )
     .then((r) => {
         orderInfo.medicName = r.data.name;
@@ -46,8 +76,23 @@ export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
         orderInfo.identificationSrc = r.data.identification;
         setOrderInfo(orderInfo);
         setCount(count+2);
+        setStatusCode(r.status);
     })
-    .catch();
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }
 
 export function FindPatient(patientEmail, count, setCount, patientInfo, setPatientInfo){
@@ -71,18 +116,17 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
         out.insurance.plan= r.data.medicPlan;
         out.error = false;
         out.loading = false;
-        console.log(out);
         setPatientInfo(out);
         setCount(count+4);
 
     })
     .catch((e) => {
         let out = patientInfo;
-        patientInfo.email = patientEmail;
-        patientInfo.error = true;
-        patientInfo.loading = false;
+        out.email = patientEmail;
+        out.error = true;
+        out.loading = false;
 
-        setPatientInfo(patientInfo);
+        setPatientInfo(out);
         setCount(count+4);
     });
 }
@@ -118,7 +162,7 @@ function checkUndefinedArray(array){
     return (count > 0);
 }
 
-export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
+export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages, setStatusCode, setErrors){
     let params = {
         'page': page,
         'days': filters.days,
@@ -194,14 +238,30 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
             }
             setClinicsList(clinicsList);
 
+            setStatusCode(r.status);
+
             //setCount(count+3);
         }
 
     })
-    .catch();
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }
 
-export function CreateMedicalOrder(order){
+export function CreateMedicalOrder(order, setStatusCode, setErrors){
     apiInstance.post("/orders",{
         clinicId: order.clinicId,
         patientEmail: order.patientEmail,
@@ -212,6 +272,20 @@ export function CreateMedicalOrder(order){
             plan: order.patientInsurancePlan,
             number: order.patientInsuranceNumber
         }
-    }).then((r) => {console.log("nice order", r);})
-    .catch((error) => { console.log("OH NO", error);});
+    }).then( (r) => {setStatusCode(r.status);})
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }

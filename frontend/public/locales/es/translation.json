@@ -83,6 +83,7 @@
 						"label": "Dirección de correo electrónico",
 						"placeholder": "Ingrese un correo electrónico",
 						"errors": {
+							"missing-field": "El correo electrónico no puede estar vacío",
 							"invalid": "Ingrese un correo electrónico válido"
 						}
 					},
@@ -90,11 +91,18 @@
 						"label": "Contraseña",
 						"placeholder": "******",
 						"errors": {
+							"missing-field": "La contraseña no puede ser vacía",
 							"invalid": "La contraseña debe tener entre {{min}} y {{max}} caracteres"
 						}
 					},
 					"remember-me": {
 						"label": "Recuérdame"
+					},
+					"errors":{
+						"unauthorized":{
+							"message": "Contraseña/Usuario incorrecto o la cuenta está en proceso de verficación via correo electrónico.",
+							"close-alert": "Cerrar"
+						}
 					},
 					"submit": {
 						"value": "Iniciar Sesión"
@@ -108,13 +116,16 @@
 						"label": "Dirección de correo electrónico",
 						"placeholder": "Ingrese un correo electrónico",
 						"errors": {
-							"invalid": "Ingrese un correo electrónico válido "
+							"already-exists": "El correo electrónico ya fue registrado",
+							"missing-field": "El correo electrónico no puede estar vacío ",
+							"invalid": "Ingrese un correo electrónico válido"
 						}
 					},
 					"password": {
 						"label": "Contraseña",
 						"placeholder": "******",
 						"errors": {
+							"missing-field": "La contraseña no puede ser vacía",
 							"invalid": "La longitud de la contraseña debe tener entre {{min}} y {{max}} caracteres"
 						}
 					},
@@ -139,6 +150,13 @@
 			"next": "Siguiente",
 			"submit": "Subir Orden"
 		},
+		"clinic-info":{
+			"email": "Correo Electrónico",
+			"telephone": "Número de Teléfono",
+			"open-hours": "Horarios Abiertos",
+			"insurance": "Planes Médicos Aceptados",
+			"studies": "Tipos de Estudio Disponibles"
+		},
 		"steps":{
 			"step-1":{
 				"title": "Crear una nueva orden médica",
@@ -153,7 +171,8 @@
 							"missing": {
 								"message": "Lo sentimos, no pudimos encontrar este correo electrónico en la base de datos de nuestros pacientes.",
 								"close-alert": "Cerrar"
-							}
+							},
+							"missing-field": "Por favor ingrese el correo electrónico del $t(role.patient)"
 						}
 					},
 					"patient-name":{
@@ -165,7 +184,11 @@
 					"patient-insurance-plan":{
 						"label": "Plan médico del $t(role.patient)",
 						"errors":{
-							"missing-field": "Por favor ingrese el Plan médico del $t(role.patient)"
+							"missing-field": "Por favor ingrese el Plan Médico del $t(role.patient)",
+							"invalid": {
+								"message": "Por favor, complete ambos Plan Médico y Número de Plan Médico o ninguno.",
+								"close-alert": "Cerrar"
+							}
 						}
 					},
 					"patient-insurance-number":{
@@ -176,6 +199,7 @@
 					},
 					"study-type":{
 						"label": "Tipo de estudio",
+						"placeholder": "Por favor ingrese un tipo de estudio",
 						"errors":{
 							"missing-field": "Elija un tipo de estudio"
 						}
@@ -216,6 +240,10 @@
 						"no-results": "No se encontraron clínicas según los filtros de búsqueda",
 						"selected": "Clínica seleccionada",
 						"no-selected": "Ninguna clínica seleccionada"
+					},
+					"errors": {
+						"missing": "Clínica seleccionada no existe",
+						"missing-field": "Por favor seleccione una clínica"
 					}
 				}
 			},

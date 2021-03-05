@@ -6,12 +6,18 @@ import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder, FindPat
 
 import "./Style/CreateOrder.css";
 import { store } from "../redux";
+import { ERROR_CODES } from "../constants/ErrorCodes"
+import InvalidFeedback from "./InvalidFeedback.js";
 
 function CreateOrder(){
 
     const { t } = useTranslation();
     
     const history = useHistory();
+
+    const [errors, setErrors] = useState([]);
+    const [statusCode, setStatusCode] = useState(0);
+
 
     /*******************************
     **DATA
@@ -286,7 +292,7 @@ function CreateOrder(){
 
     useEffect(async () => {
         const fetchData = async () => {
-            await GetLoggedMedic(orderInfo, setOrderInfo, count, setCount);
+            await GetLoggedMedic(orderInfo, setOrderInfo, count, setCount, setStatusCode, setErrors);
             await GetStudyTypes(setStudyTypes, count, setCount);
         };
 
@@ -392,7 +398,7 @@ function CreateOrder(){
             //console.log("searchFilters (late?)", searchFilters);
 
             //will always search/fetch for page 1
-            QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages);
+            QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages, setStatusCode, setErrors);
         }
 
         setClinicSearchValidated(true);
@@ -411,7 +417,7 @@ function CreateOrder(){
     const changePageAndFetch = (pageNumber) => {
         //will fetch clinics based on the already picked filters
         //only will change the currentPage value (and might update totalClinicPages if the fetch comes up with a different value for that)
-        QueryClinics(searchFilters, setClinicsList, count, setCount, pageNumber, setTotalClinicPages);
+        QueryClinics(searchFilters, setClinicsList, count, setCount, pageNumber, setTotalClinicPages, setStatusCode, setErrors);
         setCurrentPage(pageNumber);
     };
 
@@ -461,26 +467,26 @@ function CreateOrder(){
                 <Table className="table table-borderless">
                     <tbody>
                         <tr>
-                            <td>Email</td>
+                            <td><Trans t={t} i18nKey="create-order.clinic-info.email"/></td>
                             <td className="output">{props.item.email}</td>
                         </tr>
                         <tr>
-                            <td>Telephone</td>
+                            <td><Trans t={t} i18nKey="create-order.clinic-info.telephone"/></td>
                             <td className="output">{props.item.telephone}</td>
                         </tr>
                         <tr>
-                            <td>Open hours</td>
+                            <td><Trans t={t} i18nKey="create-order.clinic-info.open-hours"/></td>
                             <td>
                                 {props.item.hours.map((piano) => (
                                     <div key={"oh_"+props.item.userId+"_"+piano.day}>
-                                        <span>{daysOfTheWeek[piano.day].name}</span>&nbsp;&nbsp;&nbsp;
+                                        <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
                                         <span>{piano.openTime + " - " + piano.closeTime}</span>
                                     </div>
                                 ))}
                             </td>
                         </tr>
                         <tr>
-                            <td>Accepted insurance</td>
+                            <td><Trans t={t} i18nKey="create-order.clinic-info.insurance"/></td>
                             <td className="output">
                                 {props.item.acceptedPlans.map((pico) => (
                                     <span
@@ -491,7 +497,7 @@ function CreateOrder(){
                             </td>
                         </tr>
                         <tr>
-                            <td>Available studies</td>
+                            <td><Trans t={t} i18nKey="create-order.clinic-info.studies"/></td>
                             <td className="output">
                                 {props.item.medicalStudies.map((study) => (
                                     <p key={"study_"+props.item.userId+"_"+study.name}>{study.name}</p>
@@ -569,7 +575,7 @@ function CreateOrder(){
             searchInputsAux.studyType = orderInfo.studyType;
             setSearchInputs(searchInputsAux)
 
-            QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType, clinicName: ""}, setClinicsList, count, setCount, 1, setTotalClinicPages);
+            QueryClinics({plan: orderInfo.patientInsurancePlan, studyType: orderInfo.studyType, clinicName: ""}, setClinicsList, count, setCount, 1, setTotalClinicPages, setStatusCode, setErrors);
             changeToClinicStep();
         }
 
@@ -610,7 +616,7 @@ function CreateOrder(){
                 aux.studyTypeId = studyTypes[idx].id;
                 setOrderInfo(aux);
             }
-            CreateMedicalOrder(orderInfo);
+            CreateMedicalOrder(orderInfo, setStatusCode, setErrors);
             //now it should send the order to the API and redirect the user to /view-study
         }
 
@@ -698,6 +704,14 @@ function CreateOrder(){
                                         /> : <></>}
 
                                         <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.errors.invalid" /></Form.Control.Feedback>
+                                        <InvalidFeedback
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "patientEmail"}).length>0} 
+                                            message={t("create-order.steps.step-1.form.patient-email.errors.invalid")}
+                                        />
+                                        <InvalidFeedback
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientEmail"}).length>0} 
+                                            message={t("create-order.steps.step-1.form.patient-email.errors.missing-field")}
+                                        />
                                     </Form.Group>
                                 </div>
 
@@ -710,6 +724,10 @@ function CreateOrder(){
                                             defaultValue={patientInfo.name}
                                         />
                                         <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-name.errors.missing-field" /></Form.Control.Feedback>
+                                        <InvalidFeedback
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientName"}).length>0} 
+                                            message={t("create-order.steps.step-1.form.patient-name.errors.missing-field")}
+                                        />
                                     </Form.Group>
                                 </div>
                                 <div className="row mx-1">
@@ -735,6 +753,20 @@ function CreateOrder(){
                                         />
                                         <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.errors.missing-field" /></Form.Control.Feedback>
                                     </Form.Group>
+
+                                    <Alert show={statusCode === 400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "medicPlan"}).length>0 && "true"} variant="warning">
+                                        <div className="d-flex justify-content-between">
+                                        <span className="my-2">
+                                            <Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.errors.invalid.message" />
+                                        </span>
+                                        <Button
+                                            variant="outline-warning"
+                                            onClick={() => {setStatusCode(0)}}
+                                        >
+                                            <Trans t={t} i18nKey="create-order.steps.step-1.form.patient-insurance-plan.errors.invalid.close-alert" />
+                                        </Button>
+                                        </div>
+                                    </Alert>
                                 </div>
                                 <hr className="mt-3 mb-2"/>
                                 <div className="row mx-1">
@@ -744,13 +776,17 @@ function CreateOrder(){
                                             <Form.Control
                                                 required as="select"
                                                 name="studyType"
-                                                placeholder="Pick a study type"
+                                                placeholder={t("create-order.steps.step-1.form.study-type.placeholder")}
                                             >
                                                 {studyTypes.map((item) => (
                                                     <option>{item.name}</option>
                                                 ))}
                                             </Form.Control>
                                             <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.study-type.errors.missing-field" /></Form.Control.Feedback>
+                                            <InvalidFeedback
+                                                condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "studyType"}).length>0} 
+                                                message={t("create-order.steps.step-1.form.study-type.errors.missing-field")}
+                                            />
                                         </Form.Group>
                                     </div>
                                 </div>
@@ -871,6 +907,34 @@ function CreateOrder(){
                                     </div>
                                 </div>
                             </div>
+
+                            <Alert show={statusCode === 400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING && e.property === "clinicId"}).length>0 && "true"} variant="warning">
+                                <div className="d-flex justify-content-between">
+                                <span className="my-2">
+                                    <Trans t={t} i18nKey="create-order.steps.step-2.form.errors.missing" />
+                                </span>
+                                <Button
+                                    variant="outline-warning"
+                                    onClick={() => {closePatientInfoAlert()}}
+                                >
+                                    <Trans t={t} i18nKey="create-order.steps.step-2.form.errors.close-alert" />
+                                </Button>
+                                </div>
+                            </Alert>
+                            
+                            <Alert show={statusCode === 400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "clinicId"}).length>0 && "true"} variant="warning">
+                                <div className="d-flex justify-content-between">
+                                <span className="my-2">
+                                    <Trans t={t} i18nKey="create-order.steps.step-2.form.errors.missing-field" />
+                                </span>
+                                <Button
+                                    variant="outline-warning"
+                                    onClick={() => {closePatientInfoAlert()}}
+                                >
+                                    <Trans t={t} i18nKey="create-order.steps.step-2.form.errors.close-alert" />
+                                </Button>
+                                </div>
+                            </Alert>
 
                             <a onClick={changeToOrderInfoStep} className="btn btn-secondary mt-4 mb-4 float-left" role="button"><Trans t={t} i18nKey="create-order.buttons.prev" /></a>
                             <Button className="create-btn mt-4 mb-2 float-right"
