@@ -217,7 +217,7 @@ export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
 export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, orderCount, setOrderCount){
     apiInstance.get("/orders/"+orderId)
     .then((r) => {
-        console.log("nice order", r);
+        console.log("nice order info", r);
         let data = r.data;
 
         let aux = orderInfo;
@@ -235,6 +235,7 @@ export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, 
         });
         InternalQuery(data.medic).then((res) => {
             aux["medicName"] = res.name;
+            aux["medicLicenceNumber"] = res.licenceNumber;
             setOrderCount(orderCount+3);
         });
         InternalQuery(data.studyType).then((res) => {

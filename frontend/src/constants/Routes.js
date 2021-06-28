@@ -5,6 +5,7 @@ import DashboardPage from "../components/DashboardPage";
 import MyOrders from "../components/MyOrders";
 import {Route} from "react-router-dom";
 import CreateOrder from "../components/CreateOrder";
+import ViewOrder from "../components/ViewOrder";
 
 export const Routes = {
     LANDING_PAGE: {
@@ -40,6 +41,12 @@ export const Routes = {
         path: "/dashboard/search-clinics",
         component: MyOrders, //TODO: CHANGE
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
+    },
+    VIEW_ORDER: {
+        name: "View Study",
+        path: "/dashboard/view-study",
+        component: ViewOrder,
+        role: [Roles.ANY]
     }
 }
 

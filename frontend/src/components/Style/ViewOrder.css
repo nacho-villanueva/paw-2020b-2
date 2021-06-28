@@ -1,8 +1,18 @@
+.row-custom {
+    display: flex;
+    margin-right: 2vh;
+    margin-left: 2vh;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+}
+
 .order-card {
     margin-top: 2em;
-    width: 35em;
+    width: auto;
     padding: 10px;
-    height: 43em;
+    height: max-content;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
@@ -30,9 +40,9 @@
 .results-card {
     left: 0;
     margin-top: 2em;
-    width: 45em;
+    width: auto;
     padding: 10px;
-    height:43em;
+    height: 95%;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;

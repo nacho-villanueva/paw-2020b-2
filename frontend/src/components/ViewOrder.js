@@ -161,7 +161,7 @@ function ViewOrder(){
     }
 
     return(
-        <div className="row justify-content-center" key={"view-order_" + count}>
+        <div className="row-custom justify-content-center" key={"view-order_" + count}>
             <div className="col-sm-5">
                 <div className="card order-card bg-light float-right">
                     <div className="row mt-4" key={"orderInfo_"+orderCount}>
@@ -233,7 +233,7 @@ function ViewOrder(){
                 </div>
             </div>
             <div className="col-sm-6">
-                <div className="card results-card float-left">
+                <div className="card results-card bg-light float-left">
                     <div className="card-body"  key={"results-container_"+viewCount}>
                         <div className="row">
                             <div className="col">
