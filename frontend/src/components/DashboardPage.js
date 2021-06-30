@@ -7,6 +7,7 @@ import Test from "./Test";
 import {useSelector} from "react-redux";
 import CreateOrder from "./CreateOrder";
 import ViewOrder from "./ViewOrder";
+import MyOrders from "./MyOrders";
 
 
 const DashboardPage = () => {
@@ -22,6 +23,8 @@ const DashboardPage = () => {
                     <Route path="/dashboard/search-clinic" component={DashboardPage}/>
                     <Route path="/dashboard/create-order" component={CreateOrder}/>
                     <Route path="/dashboard/view-study" component={ViewOrder}/>
+                    <Route path="/dashboard/my-orders"
+                    component={MyOrders}/>
                 </div>
             </div>
         </div>
