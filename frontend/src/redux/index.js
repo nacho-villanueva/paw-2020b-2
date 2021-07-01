@@ -12,8 +12,6 @@ const expireSessionTransform = createTransform(
         return inboundState;
     },
     (outboundState, key) => {
-        console.log(outboundState);
-        console.log(Math.floor(new Date() / 1000));
         if(outboundState.status === StatusType.AUTHENTICATED && outboundState.expire <= Math.floor(new Date() / 1000)){
             logout();
             return deAuthenticate();

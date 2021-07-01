@@ -1,28 +1,29 @@
 import NavBar from "./NavBar.js";
-import {Form} from "react-bootstrap";
+import {Alert, Form, InputGroup} from "react-bootstrap";
 import "./Style/LandingPage.css";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
-import {authenticate} from "../redux/actions";
 import {useDispatch} from "react-redux";
 import {registerUser, login} from "../api/Auth";
+import Loader from "react-loader-spinner";
 
 function LandingPage() {
     //strings
     const title1 = "Welcome to";
     const title2 = "MedTransfer";
-    const loginButton = "log in!";
+    const loginButton = "login";
     const emailLabel = "Email address";
     const passwordLabel = "Password";
     const rememberMeLabel = "Remember Me";
     const submitLogin = "Log In";
     const invalidEmail = "Please input a correct email";
     const invalidPassword = "Please input a correct password";
+    const invalidRepeatPassword = "Passwords do not match";
     const repeatPasswordLabel = "Please repeat the Password";
     const submitRegister = "Register";
 
-    const register = "register!";
+    const register = "register";
     const loginLink = "/login";
     const registerLink = "/register";
 
@@ -32,6 +33,22 @@ function LandingPage() {
 
     //////////////////////////////////////////////////////////
     //form validation
+
+    const [isLoading, setLoading] = useState(false);
+
+    const onLoginSuccess = () => {
+        setLoginValidated(true);
+        setLoading(false)
+    }
+
+    const [invalidLogin, setInvalidLogin] = useState(false);
+
+    const onLoginFail = () => {
+        setInvalidLogin(true)
+        setLoginValidated(false);
+        setLoading(false)
+        setIsRegistered(false)
+    }
 
     const [loginValidated, setLoginValidated] = useState(false);
     const handleLoginSubmit = (event) => {
@@ -47,11 +64,27 @@ function LandingPage() {
         if(form.checkValidity() === false) {
             event.stopPropagation();
         }else{
-            login(inputs.email.value, inputs.password.value, inputs.rememberMe.checked);
+            setInvalidLogin(false)
+            login(inputs.email.value, inputs.password.value, inputs.rememberMe.checked, onLoginSuccess, onLoginFail);
+            setLoading(true);
         }
-
-        setLoginValidated(true);
     };
+
+    const [isRegistered, setIsRegistered] = useState(false);
+    const onRegisterSuccess = () => {
+        setRegisterValidated(true);
+        setLoading(false)
+        changeToLogin()
+        setIsRegistered(true)
+    }
+
+
+    const [registerErrors, setRegisterErrors] = useState({email:false, password:false, repeat: false});
+    const onRegisterFail = (errors) => {
+        setRegisterErrors({email: errors.email, password: errors.password, repeat: false})
+        setRegisterValidated(false);
+        setLoading(false)
+    }
 
     const [registerValidated, setRegisterValidated] = useState(false);
     const handleRegisterSubmit = (event) => {
@@ -71,12 +104,14 @@ function LandingPage() {
         */
 
         if(form.checkValidity() === false || inputs.password.value !== inputs.passwordConfirm.value) {
+            if(inputs.password.value !== inputs.passwordConfirm.value){
+                setRegisterErrors({email: false, password:false, repeat: true})
+            }
             event.stopPropagation();
         }else{
-            registerUser(inputs.email.value, inputs.password.value, inputs.passwordConfirm.value);
+            registerUser(inputs.email.value, inputs.password.value, onRegisterSuccess, onRegisterFail);
+            setLoading(true);
         }
-
-        setRegisterValidated(true);
     };
 
     //////////////////////////////////////////////////////////
@@ -115,7 +150,7 @@ function LandingPage() {
                                aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{loginButton}</a>
                         </li>
                         <li className="nav-item">
-                            <a className={"nav-link " + activeRegisterTab} href={"/#"}
+                            <a className={"nav-item nav-link " + activeRegisterTab} href={"/#"}
                                id="register-tab" data-toggle="tab" onClick={changeToRegister}
                                role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>{register}</a>
                         </li>
@@ -126,6 +161,8 @@ function LandingPage() {
                     <div className="tab-content">
                         <div id="login" className={loginTab}>
                             <Form className="form-signin" noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
+                                <Alert show={invalidLogin} variant={'danger'}> Email/Password is invalid, please try again.</Alert>
+                                <Alert show={isRegistered} variant={'success'}> Registration Successful! Please verify your email before attempting to log in. </Alert>
                                 <Form.Group controlId="loginEmail">
                                     <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
                                     <Form.Control required type="email" placeholder="Enter email" name="email"/>
@@ -136,39 +173,64 @@ function LandingPage() {
                                     <Form.Control required type="password" placeholder="Password" name="password"/>
                                     <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group>
-                                    <Form.Check label={rememberMeLabel} name="rememberme"/>
+
+
+                                <Form.Group controlId="loginRememberMe">
+                                    <Form.Check type="checkbox" className={"muted"} name={"rememberme"} label={rememberMeLabel} />
                                 </Form.Group>
 
 
+
                                 <div className="row justify-content-center">
-                                    <input type="submit" className="row btn btn-lg action-btn" value={submitLogin}/>
+                                    {
+                                        !isLoading &&
+                                        <input type="submit" className="row btn btn-lg action-btn" value={submitLogin}/>
+                                    }
+                                    {
+                                        isLoading &&
+                                        <Loader
+                                        className="row btn btn-lg action-btn"
+                                        type="ThreeDots"
+                                        color="#FFFFFF"
+                                        height={"25"}
+                                        />
+                                    }
                                 </div>
                             </Form>
                         </div>
-
 
 
                         <div id="register" className={registerTab}>
                             <Form noValidate validated={registerValidated} className="form-signin" onSubmit={handleRegisterSubmit}>
                                 <Form.Group controlId="registerEmail">
                                     <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter email" name="email"/>
+                                    <Form.Control required type="email" placeholder="Enter email" name="email" isInvalid={!!registerErrors.email}/>
                                     <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="registerPassword">
                                     <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Password" name="password"/>
+                                    <Form.Control required type="password" placeholder="Password" name="password" isInvalid={registerErrors.password}/>
                                     <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="registerPasswordConfirm">
                                     <Form.Label className="bmd-label-static">{repeatPasswordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Repeat Password" name="passwordConfirm"/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Control required type="password" placeholder="Repeat Password" name="passwordConfirm" isInvalid={registerErrors.repeat}/>
+                                    <Form.Control.Feedback type="invalid">{invalidRepeatPassword}</Form.Control.Feedback>
                                 </Form.Group>
 
                                 <div className="row justify-content-center">
-                                    <input type="submit" className="row btn btn-lg action-btn" value={submitRegister} />
+
+                                    {!isLoading && <input type="submit" className="row btn btn-lg action-btn"
+                                            value={submitRegister}/>}
+                                    {
+                                        isLoading &&
+                                        <Loader
+                                            className="row btn btn-lg action-btn"
+                                            type="ThreeDots"
+                                            color="#FFFFFF"
+                                            height={"25"}
+                                        />
+                                    }
                                 </div>
                             </Form>
                         </div>

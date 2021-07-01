@@ -8,12 +8,16 @@ export const Roles = {
 }
 
 export function getRoleFromID(id){
-    switch (id){
-        case 0:
+    switch (parseInt(id)){
         case 1:
+            return Roles.PATIENT;
         case 2:
-        case 3: //TODO
+            return Roles.MEDIC;
+        case 3:
+            return Roles.CLINIC;
         case 4:
             return Roles.UNREGISTERED;
+        default:
+            return Roles.ANON;
     }
 }
