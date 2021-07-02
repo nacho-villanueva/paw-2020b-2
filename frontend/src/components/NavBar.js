@@ -2,6 +2,7 @@ import { Navbar, Button } from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
 import "./Style/NavBar.css";
 import "./../css/bootstrap-related.css";
+import { useTranslation, Trans } from 'react-i18next'
 import {useSelector} from "react-redux";
 import {Roles} from "../constants/Roles";
 import {StatusType} from "../redux/actions/actions";
@@ -10,6 +11,9 @@ import {logout} from "../api/Auth";
 function NavBar() {
   const homepage = "/";
   const profile = "/profile";
+  const { t } = useTranslation();
+
+  //TODO: change profile to Available clinics
 
   const history = useHistory();
 
@@ -30,7 +34,7 @@ function NavBar() {
       <div className="navbarContainer">
         <Link className="navbar-title text-primary" to={homepage}>
             <i className="fas fa-laptop-medical fa-lg icons"/>
-            &nbsp;&nbsp;/&nbsp;&nbsp; MedTransfer
+            &nbsp;&nbsp;/&nbsp;&nbsp; <Trans t={t} i18nKey="appname">MedTransfer</Trans>
         </Link>
 
         <Button
@@ -48,7 +52,7 @@ function NavBar() {
             {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Link className="navbar-options" to={profile}>
               <li className="nav-item">
                   <i className="fas fa-lg fa-user-circle icons"/>
-                  Profile
+                  <Trans t={t} i18nKey="fragments.sidebar.profile"/>
               </li>
             </Link>}
             {status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Link onClick={navbarLogout} className="navbar-options" to={profile}>

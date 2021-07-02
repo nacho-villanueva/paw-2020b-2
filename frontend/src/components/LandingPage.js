@@ -1,31 +1,25 @@
 import NavBar from "./NavBar.js";
-import {Alert, Form, InputGroup} from "react-bootstrap";
+import {Alert, Button, Form} from "react-bootstrap";
 import "./Style/LandingPage.css";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
+import { Trans, useTranslation } from 'react-i18next'
 
 import {useDispatch} from "react-redux";
 import {registerUser, login} from "../api/Auth";
-import Loader from "react-loader-spinner";
+import { ERROR_CODES } from "../constants/ErrorCodes"
+import InvalidFeedback from "./InvalidFeedback";
 
 function LandingPage() {
-    //strings
-    const title1 = "Welcome to";
-    const title2 = "MedTransfer";
-    const loginButton = "login";
-    const emailLabel = "Email address";
-    const passwordLabel = "Password";
-    const rememberMeLabel = "Remember Me";
-    const submitLogin = "Log In";
-    const invalidEmail = "Please input a correct email";
-    const invalidPassword = "Please input a correct password";
-    const invalidRepeatPassword = "Passwords do not match";
-    const repeatPasswordLabel = "Please repeat the Password";
-    const submitRegister = "Register";
 
-    const register = "register";
+    // password length values
+    const passwordMin = 8;
+    const passwordMax = 100;
+    
     const loginLink = "/login";
     const registerLink = "/register";
+
+    const { t } = useTranslation();
 
     const history = useHistory();
 
@@ -34,21 +28,8 @@ function LandingPage() {
     //////////////////////////////////////////////////////////
     //form validation
 
-    const [isLoading, setLoading] = useState(false);
-
-    const onLoginSuccess = () => {
-        setLoginValidated(true);
-        setLoading(false)
-    }
-
-    const [invalidLogin, setInvalidLogin] = useState(false);
-
-    const onLoginFail = () => {
-        setInvalidLogin(true)
-        setLoginValidated(false);
-        setLoading(false)
-        setIsRegistered(false)
-    }
+    const [errors, setErrors] = useState([]);
+    const [statusCode, setStatusCode] = useState(0);
 
     const [loginValidated, setLoginValidated] = useState(false);
     const handleLoginSubmit = (event) => {
@@ -64,9 +45,7 @@ function LandingPage() {
         if(form.checkValidity() === false) {
             event.stopPropagation();
         }else{
-            setInvalidLogin(false)
-            login(inputs.email.value, inputs.password.value, inputs.rememberMe.checked, onLoginSuccess, onLoginFail);
-            setLoading(true);
+            login(inputs.email.value, inputs.password.value, inputs.rememberMe.checked, setStatusCode, setErrors);
         }
     };
 
@@ -103,14 +82,14 @@ function LandingPage() {
         }
         */
 
-        if(form.checkValidity() === false || inputs.password.value !== inputs.passwordConfirm.value) {
-            if(inputs.password.value !== inputs.passwordConfirm.value){
-                setRegisterErrors({email: false, password:false, repeat: true})
-            }
+        if(form.checkValidity() === false) {
             event.stopPropagation();
+        }else if(inputs.password.value !== inputs.passwordConfirm.value){
+            event.stopPropagation();
+            setStatusCode(400);
+            setErrors([{property: "passwordConfirm",code:"invalid"}])
         }else{
-            registerUser(inputs.email.value, inputs.password.value, onRegisterSuccess, onRegisterFail);
-            setLoading(true);
+            registerUser(inputs.email.value, inputs.password.value, setStatusCode, setErrors);
         }
     };
 
@@ -140,19 +119,24 @@ function LandingPage() {
             <NavBar />
             <div className="card main-card bg-light">
                 <div className="card-body">
-                    <h1 className="text-center text-highlight">{title1}</h1>
-                    <h4 className="text-center text-highlight">{title2}</h4>
+                    <Trans t={t} i18nKey="home.title">
+                        <h1 className="text-center text-highlight">Welcome to</h1><h4 className="text-center text-highlight">MedTransfer</h4>
+                    </Trans>
                     <hr className="divider my-4"/>
                     <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
                         <li className="nav-item">
                             <a className={"nav-item nav-link " + activeLoginTab} href={"/#"}
                                id="login-tab" data-toggle="tab" role="tab" onClick={changeToLogin}
-                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>{loginButton}</a>
+                               aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>
+                                   <Trans t={t} i18nKey="home.tabs.login.title"/>
+                            </a>
                         </li>
                         <li className="nav-item">
                             <a className={"nav-item nav-link " + activeRegisterTab} href={"/#"}
                                id="register-tab" data-toggle="tab" onClick={changeToRegister}
-                               role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>{register}</a>
+                               role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>
+                                   <Trans t={t} i18nKey="home.tabs.register.title"/>
+                            </a>
                         </li>
                     </ul>
 
@@ -164,37 +148,52 @@ function LandingPage() {
                                 <Alert show={invalidLogin} variant={'danger'}> Email/Password is invalid, please try again.</Alert>
                                 <Alert show={isRegistered} variant={'success'}> Registration Successful! Please verify your email before attempting to log in. </Alert>
                                 <Form.Group controlId="loginEmail">
-                                    <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter email" name="email"/>
-                                    <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.login.form.email.label"/></Form.Label>
+                                    <Form.Control required type="email" placeholder={t("home.tabs.login.form.email.placeholder")} name="email"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.login.form.email.errors.invalid"/></Form.Control.Feedback>
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "email"}).length>0} 
+                                        message={t("home.tabs.login.form.email.errors.missing-field")}
+                                    />
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "email"}).length>0} 
+                                        message={t("home.tabs.login.form.email.errors.invalid",{ min: passwordMin, max: passwordMax})}
+                                    />
                                 </Form.Group>
                                 <Form.Group controlId="loginPassword">
-                                    <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Password" name="password"/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.login.form.password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.login.form.password.placeholder")} name="password" minLength={passwordMin} maxLength={passwordMax}/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.login.form.password.errors.invalid" values={{ min: passwordMin, max: passwordMax}}/></Form.Control.Feedback>
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "password"}).length>0} 
+                                        message={t("home.tabs.login.form.password.errors.missing-field")}
+                                    />
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "password"}).length>0} 
+                                        message={t("home.tabs.login.form.password.errors.invalid",{ min: passwordMin, max: passwordMax})}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Check label={t("home.tabs.login.form.remember-me.label")} name="rememberme"/>
                                 </Form.Group>
 
-
-                                <Form.Group controlId="loginRememberMe">
-                                    <Form.Check type="checkbox" className={"muted"} name={"rememberme"} label={rememberMeLabel} />
-                                </Form.Group>
-
+                                <Alert show={statusCode === 401 && "true"} variant="warning">
+                                    <div className="d-flex justify-content-between">
+                                    <span className="my-2">
+                                        <Trans t={t} i18nKey="home.tabs.login.form.errors.unauthorized.message" />
+                                    </span>
+                                    <Button
+                                        variant="outline-warning"
+                                        onClick={() => {setStatusCode(0)}}
+                                    >
+                                        <Trans t={t} i18nKey="home.tabs.login.form.errors.unauthorized.close-alert" />
+                                    </Button>
+                                    </div>
+                                </Alert>
 
 
                                 <div className="row justify-content-center">
-                                    {
-                                        !isLoading &&
-                                        <input type="submit" className="row btn btn-lg action-btn" value={submitLogin}/>
-                                    }
-                                    {
-                                        isLoading &&
-                                        <Loader
-                                        className="row btn btn-lg action-btn"
-                                        type="ThreeDots"
-                                        color="#FFFFFF"
-                                        height={"25"}
-                                        />
-                                    }
+                                    <input type="submit" className="row btn btn-lg action-btn" value={t("home.tabs.login.form.submit.value")}/>
                                 </div>
                             </Form>
                         </div>
@@ -203,34 +202,47 @@ function LandingPage() {
                         <div id="register" className={registerTab}>
                             <Form noValidate validated={registerValidated} className="form-signin" onSubmit={handleRegisterSubmit}>
                                 <Form.Group controlId="registerEmail">
-                                    <Form.Label className="bmd-label-static">{emailLabel}</Form.Label>
-                                    <Form.Control required type="email" placeholder="Enter email" name="email" isInvalid={!!registerErrors.email}/>
-                                    <Form.Control.Feedback type="invalid">{invalidEmail}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.email.label"/></Form.Label>
+                                    <Form.Control required type="email" placeholder={t("home.tabs.register.form.email.placeholder")} name="email"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.register.form.email.errors.invalid"/></Form.Control.Feedback>
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.ALREADY_EXISTS && e.property === "email"}).length>0} 
+                                        message={t("home.tabs.register.form.email.errors.already-exists")}
+                                    />
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "email"}).length>0} 
+                                        message={t("home.tabs.register.form.email.errors.missing-field")}
+                                    />
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "email"}).length>0} 
+                                        message={t("home.tabs.register.form.email.errors.invalid",{ min: passwordMin, max: passwordMax})}
+                                    />
                                 </Form.Group>
                                 <Form.Group controlId="registerPassword">
-                                    <Form.Label className="bmd-label-static">{passwordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Password" name="password" isInvalid={registerErrors.password}/>
-                                    <Form.Control.Feedback type="invalid">{invalidPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.register.form.password.placeholder")} name="password" minLength={passwordMin} maxLength={passwordMax}/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.register.form.password.errors.invalid" values={{ min: passwordMin, max: passwordMax}}/></Form.Control.Feedback>
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "password"}).length>0} 
+                                        message={t("home.tabs.register.form.password.errors.missing-field")}
+                                    />
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "password"}).length>0} 
+                                        message={t("home.tabs.register.form.password.errors.invalid",{ min: passwordMin, max: passwordMax})}
+                                    />
                                 </Form.Group>
                                 <Form.Group controlId="registerPasswordConfirm">
-                                    <Form.Label className="bmd-label-static">{repeatPasswordLabel}</Form.Label>
-                                    <Form.Control required type="password" placeholder="Repeat Password" name="passwordConfirm" isInvalid={registerErrors.repeat}/>
-                                    <Form.Control.Feedback type="invalid">{invalidRepeatPassword}</Form.Control.Feedback>
+                                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.register.form.repeat-password.label"/></Form.Label>
+                                    <Form.Control required type="password" placeholder={t("home.tabs.register.form.repeat-password.placeholder")} name="passwordConfirm"/>
+                                    <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="home.tabs.register.form.repeat-password.errors.invalid"></Trans></Form.Control.Feedback>
+                                    <InvalidFeedback
+                                        condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "passwordConfirm"}).length>0} 
+                                        message={t("home.tabs.register.form.repeat-password.errors.invalid")}
+                                    />
                                 </Form.Group>
 
                                 <div className="row justify-content-center">
-
-                                    {!isLoading && <input type="submit" className="row btn btn-lg action-btn"
-                                            value={submitRegister}/>}
-                                    {
-                                        isLoading &&
-                                        <Loader
-                                            className="row btn btn-lg action-btn"
-                                            type="ThreeDots"
-                                            color="#FFFFFF"
-                                            height={"25"}
-                                        />
-                                    }
+                                    <input type="submit" className="row btn btn-lg action-btn" value={t("home.tabs.register.form.submit.value")} />
                                 </div>
                             </Form>
                         </div>

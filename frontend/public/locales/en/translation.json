@@ -1,0 +1,270 @@
+{
+	"appname": "MedTransfer",
+	"role": {
+		"user": "User",
+		"patient": "Patient",
+		"medic": "Medic",
+		"clinic": "Clinic"
+	},
+	"days":{
+		"day-0": "Sunday",
+		"day-1": "Monday",
+		"day-2": "Tuesday",
+		"day-3": "Wednesday",
+		"day-4": "Thursday",
+		"day-5": "Friday",
+		"day-6": "Saturday",
+		
+		"day-short-0": "Sun",
+		"day-short-1": "Mon",
+		"day-short-2": "Tue",
+		"day-short-3": "Wed",
+		"day-short-4": "Thu",
+		"day-short-5": "Fri",
+		"day-short-6": "Sat"
+	},
+	"fragments":{
+		"navbar":{
+			"search-clinic": "Available Clinics"
+		},
+		"sidebar":{
+			"my-orders": "My Orders",
+			"create-order": "Create Order",
+			"profile": "My Profile",
+			"search-clinic": "Available Clinics",
+			"logout": "Logout",
+			"home": "Home",
+			"create-data-type": "Create Data Type",
+			"search": "Search Clinics",
+			"request-order": "Request Access to Orders",
+			"access-requests": "Access Requests",
+			"heading": {
+				"orders": "Orders"
+			}
+		}
+	},
+	"access-requests":{
+		"body":{
+			"title": "Request to Access Your Orders",
+			"form":{
+				"medic":{
+					"label": "Medic's Name"
+				},
+				"study-id":{
+					"label": "Study Type: {{studyType}}"
+				},
+				"button":{
+					"deny": "Deny",
+					"accept": "Accept",
+					"preview": "Preview"
+				}
+			},
+			"no-requests": "It seems there are no new requests for access to your orders right now.",
+			"requests":{
+				"title": "Requests to Access Your Orders",
+				"medic": "Medic: {{name}}"
+			}
+		}
+	},
+	"advanced-search-clinics":{
+		"title": "Advanced Search | Clinic",
+		"form":{
+			"clinic-name":{
+				"label": "Clinic Name"
+			}
+		}
+	},
+    "home":{
+        "title": "<0>Welcome to </0><1>$t(appname)</1>",
+		"tabs": {
+			"login": {
+				"title": "Login",
+				"form": {
+					"email": {
+						"label": "Email address",
+						"placeholder": "Enter an email address",
+						"errors": {
+							"missing-field": "Email field can't be empty",
+							"invalid": "Please input a valid email"
+						}
+					},
+					"password": {
+						"label": "Password",
+						"placeholder": "******",
+						"errors": {
+							"missing-field": "Password can't be empty",
+							"invalid": "Password length must be between {{min}} and {{max}} characters"
+						}
+					},
+					"remember-me": {
+						"label": "Remember Me"
+					},
+					"errors":{
+						"unauthorized":{
+							"message": "Wrong password/username or account in the process of email verification.",
+							"close-alert": "Close"
+						}
+					},
+					"submit": {
+						"value": "Log In"
+					}
+				}
+			},
+			"register": {
+				"title": "Register",
+				"form": {
+					"email": {
+						"label": "Email address",
+						"placeholder": "Enter an email address",
+						"errors": {
+							"already-exists": "Email is already registered",
+							"missing-field": "Email field can't be empty",
+							"invalid": "Please input a valid email"
+						}
+					},
+					"password": {
+						"label": "Password",
+						"placeholder": "******",
+						"errors": {
+							"missing-field": "Password can't be empty",
+							"invalid": "Password length must be between {{min}} and {{max}} characters"
+						}
+					},
+					"repeat-password": {
+						"label": "Please repeat the password",
+						"placeholder": "******",
+						"errors": {
+							"invalid": "Passwords must match"
+						}
+					},
+					"submit": {
+						"value": "Register"
+					}
+				}
+			}
+		}
+    },
+	"create-order":{
+		"buttons":{
+			"cancel": "Cancel",
+			"prev": "Back",
+			"next": "Next",
+			"submit": "Submit Order"
+		},
+		"clinic-info":{
+			"email": "Email",
+			"telephone": "Telephone",
+			"open-hours": "Open Hours",
+			"insurance": "Accepted Insurance",
+			"studies": "Available Studies"
+		},
+		"steps":{
+			"step-1":{
+				"title": "Create a new medical order",
+				"form":{
+					"medic":{
+						"label": "$t(role.medic)"
+					},
+					"patient-email":{
+						"label": "$t(role.patient)'s email",
+						"errors":{
+							"invalid": "Please input a valid email",
+							"missing": {
+								"message": "Sorry, we couldn't find this email in our patients' database.",
+								"close-alert": "Close"
+							},
+							"missing-field": "Please write the $t(role.patient)'s email"
+						}
+					},
+					"patient-name":{
+						"label": "$t(role.patient)'s name",
+						"errors":{
+							"missing-field": "Please write the $t(role.patient)'s name"
+						}
+					},
+					"patient-insurance-plan":{
+						"label": "$t(role.patient)'s insurance plan",
+						"errors":{
+							"missing-field": "Please write the $t(role.patient)'s insurance plan",
+							"invalid": {
+								"message": "Either fill both Insurance Plan and Insurance Number or leave both empty.",
+								"close-alert": "Close"
+							}
+						}
+					},
+					"patient-insurance-number":{
+						"label": "$t(role.patient)'s insurance number",
+						"errors":{
+							"missing-field": "Please write the $t(role.patient)'s insurance plan"
+						}
+					},
+					"study-type":{
+						"label": "Study Type",
+						"placeholder": "Pick a Study Type",
+						"errors":{
+							"missing-field": "Please pick a Study Type"
+						}
+					},
+					"description":{
+						"label": "Order description",
+						"errors":{
+							"missing-field": "Please provide more information about this order"
+						}
+					}
+				}
+			},
+			"step-2":{
+				"title": "Select clinic",
+				"form":{
+					"clinic-name":{
+						"label": "Search by clinic name"
+					},
+					"insurance-plan":{
+						"label": "Search by insurance plan"
+					},
+					"available-hours":{
+						"buttons":{
+							"show": "Schedule availability "
+						},
+						"columns":{
+							"day": "Day",
+							"available": "Available",
+							"from-time": "From",
+							"to-time": "To"
+						}
+					},
+					"submit":{
+						"value": "Search"
+					},
+					"results":{
+						"title": "Results",
+						"no-results": "No clinics found based on search filters",
+						"selected": "Selected Clinic",
+						"no-selected": "No clinic selected"
+					},
+					"errors": {
+						"missing": "Specified Clinic doesn't exist",
+						"missing-field": "Please select a Clinic",
+						"close-alert": "Close"
+					}
+				}
+			},
+			"step-3":{
+				"title": "Submit medical order",
+				"form":{
+					"title": "Medical Order",
+					"date": "Date: {{today}}",
+					"patient": "<0>Patient</0>{{patientName}}",
+					"clinic": "<0>Medical Clinic</0>{{clinicName}}",
+					"patient-insurance-plan": "<0>Patient's Insurance Plan</0>{{patientInsurancePlan}}",
+					"patient-insurance-number": "<0>Patient's Insurance Number</0>{{patientInsuranceNumber}}",
+					"study-type": "Study Type: {{studyType}}",
+					"medic-id": "<0>{{medicName}}</0><1>M.N.: {{medicLicence}}</1>",
+					"medic-sign-alt": "medic's signature"
+				}
+			}
+		}
+	}
+	
+
+}
