@@ -5,6 +5,7 @@ import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder, FindPat
 
 import "./Style/CreateOrder.css";
 import { store } from "../redux";
+import { getAuthorizedImage } from "../api/utils";
 
 function CreateOrder(){
 
@@ -280,6 +281,7 @@ function CreateOrder(){
     const [query, setQuery] = useState("redux");
     const [data, setData] = useState(null); //test if i'm not making a mistake
     const [count, setCount] = useState(1);
+    const [image, setImage] = useState(undefined);
 
     useEffect(async () => {
         const fetchData = async () => {
@@ -289,6 +291,13 @@ function CreateOrder(){
 
         fetchData();
     }, [, query]);
+
+    useEffect(() => {
+        if(orderInfo !== undefined){
+            setImage(getAuthorizedImage(orderInfo.identificationSrc));
+            setCount(count+1);
+        }
+    }, [orderInfo]);
 
 
     const [patientInfo, setPatientInfo] = useState({
@@ -433,7 +442,7 @@ function CreateOrder(){
 
     const Item = (props) => {
         return(
-            <li class="nav-item" key={props.clinic.name}>
+            <li className="nav-item" key={props.clinic.name}>
                 <a
                     id={props.clinic.userId} onClick={() =>{selectClinic(props.clinic)}}
                     className="list-group-item list-group-item-action"
@@ -855,7 +864,7 @@ function CreateOrder(){
 
                                         </div>
                                         <div id="data" className="data-section">
-                                            <h5 class="text-muted">Selected Clinic</h5>
+                                            <h5 className="text-muted">Selected Clinic</h5>
                                             <div className="">
                                                 {selectedClinic === null ? <h4>No clinic selected</h4> : <ClinicInfo key={"selected_" + selectedClinic.userId} item={selectedClinic}/>}
                                             </div>
@@ -896,7 +905,7 @@ function CreateOrder(){
                                             <p className="type-title">Medical Clinic</p>
                                             {selectedClinic !== null ? selectedClinic.name : ""}
                                         </div>
-                                        <div class="w-100"></div>
+                                        <div className="w-100"></div>
                                         <div className="col type">
                                             <p className="type-title">Patient insurance plan</p>
                                             {orderInfo.patientInsurancePlan}
@@ -920,7 +929,8 @@ function CreateOrder(){
                                         <img
                                             className="align-self-end ml-3 signature"
                                             alt="medic's signature"
-                                            src={orderInfo.identificationSrc}
+                                            src={image.src}
+                                            ref={image}
                                         />
                                     </div>
                                 </div>
