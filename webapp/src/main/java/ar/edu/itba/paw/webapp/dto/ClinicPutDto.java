@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.ClinicDayHours;
 import ar.edu.itba.paw.models.ClinicHours;
+import ar.edu.itba.paw.models.MedicPlan;
 import ar.edu.itba.paw.models.StudyType;
 import ar.edu.itba.paw.webapp.dto.annotations.Days;
 
@@ -116,11 +117,11 @@ public class ClinicPutDto {
         return this.availableStudies.stream().map(st -> new StudyType(st.getName())).collect(Collectors.toList());
     }
 
-    public Set<String> getMedicPlansCollection(){
+    public Collection<MedicPlan> getMedicPlansCollection(){
 
         if(this.acceptedPlans==null)
             return null;
 
-        return this.acceptedPlans.stream().map(p -> p.plan).collect(Collectors.toSet());
+        return this.acceptedPlans.stream().map(p -> new MedicPlan(p.getName())).collect(Collectors.toList());
     }
 }

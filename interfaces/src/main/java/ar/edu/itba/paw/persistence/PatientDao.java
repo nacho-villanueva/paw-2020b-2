@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.MedicPlan;
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 
@@ -13,9 +14,9 @@ public interface PatientDao {
 
     Patient register(User user, String name);
 
-    Patient register(User user, String name, String medicPlan, String medicPlanNumber);
+    Patient register(User user, String name, MedicPlan medicPlan, String medicPlanNumber);
 
-    Patient updatePatientInfo(Patient patient, String name, String medicPlan, String medicPlanNumber);
+    Patient updatePatientInfo(Patient patient, String name, MedicPlan medicPlan, String medicPlanNumber);
 
-    Patient updateMedicPlan(Patient patient, String medicPlan, String medicPlanNumber);
+    Patient updateMedicPlan(Patient patient, MedicPlan medicPlan, String medicPlanNumber);
 }

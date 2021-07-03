@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Clinic;
-import ar.edu.itba.paw.models.ClinicHours;
-import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.*;
@@ -174,17 +171,35 @@ public class ClinicController {
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        Collection<String> acceptedPlans = clinicOptional.get().getAcceptedPlans();
+        Collection<MedicPlan> acceptedPlans = clinicOptional.get().getAcceptedPlans();
         if(acceptedPlans.isEmpty())
             return Response.noContent().build();
 
-        Collection<MedicPlanDto> medicPlanDtos = acceptedPlans.stream().map(MedicPlanDto::new).collect(Collectors.toList());
+        Collection<MedicPlanDto> medicPlanDtos = acceptedPlans.stream().map(medicPlan -> (new MedicPlanDto(medicPlan,uriInfo))).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
                 .type(MedicPlanDto.CONTENT_TYPE+"+json")
                 .tag(entityTag).cacheControl(cacheControl);
 
         return response.build();
+    }
+
+    @GET
+    @Path("/{id}/accepted-plans/{plan}")
+    @Produces(value = { MediaType.APPLICATION_JSON, MedicPlanDto.CONTENT_TYPE+"+json"})
+    public Response getClinicAcceptsPlan(
+            @PathParam("id") final int clinicId,
+            @PathParam("plan") final int medicPlanId
+    ){
+
+        boolean acceptsPlan = clinicService.acceptsPlan(clinicId,medicPlanId);
+
+        if(!acceptsPlan)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        URI uri = uriInfo.getBaseUriBuilder()
+                .path(MedicPlanDto.REQUEST_PATH).path(String.valueOf(medicPlanId)).build();
+        return Response.noContent().location(uri).build();
     }
 
     @POST
@@ -199,7 +214,7 @@ public class ClinicController {
         String name = clinicPostDto.getName();
         String telephone = clinicPostDto.getTelephone();
         Collection<StudyType> availableStudies = clinicPostDto.getStudiesCollection();
-        Set<String> medicPlans = clinicPostDto.getMedicPlansCollection();
+        Collection<MedicPlan> medicPlans = clinicPostDto.getMedicPlansCollection();
         ClinicHours clinicHours = clinicPostDto.getClinicHours();
 
         Clinic clinic = clinicService.register(
@@ -258,8 +273,8 @@ public class ClinicController {
             availableStudies = clinic.getMedicalStudies();
         else
             availableStudies = clinicPutDto.getStudiesCollection();
-        Set<String> medicPlans;
-        if (clinicPutDto.getMedicPlansCollection() == null)
+        Collection<MedicPlan> medicPlans;
+        if (clinicPutDto.getMedicPlansCollection() == null || clinicPutDto.getMedicPlansCollection().isEmpty())
             medicPlans = clinic.getAcceptedPlans();
         else
             medicPlans = clinicPutDto.getMedicPlansCollection();

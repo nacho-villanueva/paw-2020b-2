@@ -29,6 +29,13 @@ insert into medical_studies(id,name) values ((next value for medical_studies_id_
                                          ((next value for medical_studies_id_seq),'Rehab'),
                                          ((next value for medical_studies_id_seq),'Surgery');
 
+insert into medical_plans(id,name) values ((next value for medical_plans_id_seq),'Osde'),
+                                            ((next value for medical_plans_id_seq),'Swiss Medical'),
+                                            ((next value for medical_plans_id_seq),'Galeno'),
+                                            ((next value for medical_plans_id_seq),'Omit'),
+                                            ((next value for medical_plans_id_seq),'Pami'),
+                                            ((next value for medical_plans_id_seq),'Other');
+
 insert into medical_fields(id,name) values ((next value for medical_fields_id_seq),'Neurology'),
                                         ((next value for medical_fields_id_seq),'Cardiology'), ((next value for medical_fields_id_seq),'Endocrinology'), ((next value for medical_fields_id_seq),'Pulmonology'), ((next value for medical_fields_id_seq),'Ophthalmology');
 
@@ -109,12 +116,12 @@ insert into clinic_hours(clinic_id,day_of_week,close_time,open_time) values
                                                                         (21,3,'14:00:00','20:00:00'),
                                                                         (21,6,'10:00:00','19:00:00');
 
-insert into clinic_accepted_plans(clinic_id,medic_plan) values (3,'Osde'),(6,'Osde'),(9,'OSDE'),(10,'Swiss'),
-                                                               (11,'Osde 310'),(12,'Galeno'),(13,'Omit'),(14,'Galeno'),
-                                                               (15,'Pami'),(16,'Osde 210'),(17,'Swiss'),(18,'Osde 210'),
-                                                               (19,'Galeno'),(20,'Swiss'),(21,'Pami'),(11,'Pami'),(15,'Swiss'),
-                                                               (17,'Galeno'),(19,'OSDE'),(20,'OSDE'),(11,'Omit'),(10,'Omit'),
-                                                               (6,'Omit'),(15,'Omit');
+insert into clinic_accepted_plans(clinic_id,plan_id) values (3,1),(6,1),(9,1),(10,2),
+                                                               (11,1),(12,3),(13,4),(14,3),
+                                                               (15,5),(16,1),(17,2),(18,1),
+                                                               (19,3),(20,2),(21,5),(11,5),(15,2),
+                                                               (17,3),(19,1),(20,1),(11,4),(10,4),
+                                                               (6,4),(15,4);
 
 insert into medics(user_id,name,identification_type,identification,licence_number,verified) values
                     (2,'Medic one','image/png','\000','1234567',true),

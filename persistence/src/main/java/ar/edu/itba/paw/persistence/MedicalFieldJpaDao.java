@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MedicalFieldJpaDao implements MedicalFieldDao{
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<MedicalField> findById(int id) {

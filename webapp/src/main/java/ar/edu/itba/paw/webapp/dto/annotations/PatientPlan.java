@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.annotations;
 
-import ar.edu.itba.paw.webapp.dto.validators.MedicPlanValidator;
+import ar.edu.itba.paw.webapp.dto.validators.PatientPlanValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,11 +13,11 @@ import static java.lang.annotation.ElementType.FIELD;
 
 @Target({FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MedicPlanValidator.class)
+@Constraint(validatedBy = PatientPlanValidator.class)
 @Documented
-public @interface MedicPlan {
+public @interface PatientPlan {
 
-    String message() default "Invalid Medic Plan.";
+    String message() default "Invalid Patient Medic Plan.";
 
     public Class<?>[] groups() default {};
 

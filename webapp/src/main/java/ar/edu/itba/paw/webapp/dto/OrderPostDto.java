@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.dto.annotations.MedicPlan;
+import ar.edu.itba.paw.webapp.dto.annotations.PatientPlan;
 import ar.edu.itba.paw.webapp.dto.annotations.ClinicId;
 import ar.edu.itba.paw.webapp.dto.annotations.StudyTypeId;
 import org.hibernate.validator.constraints.Email;
@@ -32,8 +32,9 @@ public class OrderPostDto {
 
     private String description;
 
-    @MedicPlan(message = "OrderPostAndPutDto.medicPlan.MedicPlanDtoIsCompleteAndValid")
-    private MedicPlanDto medicPlan;
+    private String patientMedicPlan;
+
+    private String patientMedicPlanNumber;
 
     // Getters&Setters
     public Integer getClinicId() {
@@ -76,14 +77,6 @@ public class OrderPostDto {
         this.description = description;
     }
 
-    public MedicPlanDto getMedicPlan() {
-        return medicPlan;
-    }
-
-    public void setMedicPlan(MedicPlanDto medicPlan) {
-        this.medicPlan = medicPlan;
-    }
-
 
     // Equals&Hashcode
     @Override
@@ -91,11 +84,27 @@ public class OrderPostDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderPostDto that = (OrderPostDto) o;
-        return Objects.equals(clinicId, that.clinicId) && Objects.equals(patientEmail, that.patientEmail) && Objects.equals(patientName, that.patientName) && Objects.equals(studyTypeId, that.studyTypeId) && Objects.equals(description, that.description) && Objects.equals(medicPlan, that.medicPlan);
+        return Objects.equals(clinicId, that.clinicId) && Objects.equals(patientEmail, that.patientEmail) && Objects.equals(patientName, that.patientName) && Objects.equals(studyTypeId, that.studyTypeId) && Objects.equals(description, that.description) && Objects.equals(patientMedicPlan, that.patientMedicPlan) && Objects.equals(patientMedicPlanNumber, that.patientMedicPlanNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clinicId, patientEmail, patientName, studyTypeId, description, medicPlan);
+        return Objects.hash(clinicId, patientEmail, patientName, studyTypeId, description, patientMedicPlan, patientMedicPlanNumber);
+    }
+
+    public String getPatientMedicPlan() {
+        return patientMedicPlan;
+    }
+
+    public void setPatientMedicPlan(String patientMedicPlan) {
+        this.patientMedicPlan = patientMedicPlan;
+    }
+
+    public String getPatientMedicPlanNumber() {
+        return patientMedicPlanNumber;
+    }
+
+    public void setPatientMedicPlanNumber(String patientMedicPlanNumber) {
+        this.patientMedicPlanNumber = patientMedicPlanNumber;
     }
 }
