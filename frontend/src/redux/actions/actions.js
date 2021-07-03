@@ -2,7 +2,8 @@ import {Roles} from "../../constants/Roles";
 
 export const ActionType = {
     AUTHENTICATE: "AUTHENTICATE",
-    DE_AUTHENTICATE: "UN_AUTHENTICATE"
+    DE_AUTHENTICATE: "UN_AUTHENTICATE",
+    UPDATE_ROLE: "UPDATE_ROLE"
 }
 
 export const StatusType = {

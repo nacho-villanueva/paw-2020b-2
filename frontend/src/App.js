@@ -7,20 +7,27 @@ import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-do
 import {useSelector} from "react-redux";
 import {store} from "./redux";
 import {StatusType} from "./redux/actions/actions";
+import {Roles} from "./constants/Roles";
+import RegisterPage from "./components/registration/RegisterPage";
 
 function App() {
   const status = useSelector(state => state.auth.status);
+  const role = useSelector(state => state.auth.role);
 
   return (
     <Router>
       <div className="main-container">
         <div className="wrapper">
           <Switch>
+
             <Route path="/" exact>
-              {status === StatusType.AUTHENTICATED ? <Redirect to="/dashboard" /> : <LandingPage />}
+              {status === StatusType.AUTHENTICATED ? (role === Roles.UNREGISTERED ? <Redirect to={"/register"}/> : <Redirect to="/dashboard" />) : <LandingPage />}
             </Route>
-            {status === StatusType.AUTHENTICATED && <Route path="/dashboard" component={DashboardPage}/>}
             {status === StatusType.DE_AUTHENTICATED && <Redirect to={"/"} />}
+
+            {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Route path="/dashboard" component={DashboardPage}/>}
+            {/*{status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Route path="/register" component={RegisterPage}/>}*/}
+            <Route path="/register" component={RegisterPage}/>
             <Redirect from={"*"} to={"/"}/>
           </Switch>
         </div>

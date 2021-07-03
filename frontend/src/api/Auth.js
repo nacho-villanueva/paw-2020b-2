@@ -1,8 +1,10 @@
 import apiInstance from "./"
 import {store} from "../redux";
-import {authenticate, deAuthenticate} from "../redux/actions";
+import {authenticate, deAuthenticate, updateRole} from "../redux/actions";
+import {Roles} from "../constants/Roles";
+import {ERROR_CODES} from "../constants/ErrorCodes";
 
-export function login(user, pass, rememberMe, setStatusCode, setErrors){
+export function login(user, pass, rememberMe, onSuccess, onFail){
 
     let expire = new Date();
     if(rememberMe)
@@ -16,50 +18,103 @@ export function login(user, pass, rememberMe, setStatusCode, setErrors){
         "password": pass
     })
         .then((r) => {
-            setStatusCode(r.status);
             store.dispatch(authenticate(r.headers.authorization, expireEpoch));
-        }).catch((e)  => {
-            if(e.response){
-                // error in response
-                setStatusCode(e.response.status);
-                if(e.response.status === 400 && e.response.data !== undefined){
-                    setErrors(e.response.data)
-                }
-            }else if(e.request){
-                // no response received
-                console.log('Error in request: ',e.request);
-            }else{
-                // error in the request building, which shouldn't happen
-                console.log('Error in request: ', e.message);
-            }
-        });
+            onSuccess()
+        }).catch(onFail);
 }
 
-export function registerUser(email, pass, setStatusCode, setErrors){
+export function registerUser(email, pass, onSuccess, onFail){
 
     apiInstance.post("/users",
         {
             "email": email,
             "password": pass,
             "locale": navigator.language
-        })
-        .then( (r) => {setStatusCode(r.status);})
-        .catch((e)  => {
-            if(e.response){
-                // error in response
-                setStatusCode(e.response.status);
-                if(e.response.status === 400 && e.response.data !== undefined){
-                    setErrors(e.response.data)
+        }).then(onSuccess)
+        .catch((err) => {
+            let errors = {email: false, password: false}
+            if(err.response != null) {
+                for (const e of err.response.data) {
+                    switch (e.property) {
+                        case "email":
+                            if(e.code === ERROR_CODES.ALREADY_EXISTS)
+                                errors.email = ERROR_CODES.ALREADY_EXISTS;
+                            else
+                                errors.email = ERROR_CODES.INVALID
+                            break;
+                        case "password":
+                            errors.password = true;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }else if(e.request){
-                // no response received
-                console.log('Error in request: ',e.request);
-            }else{
-                // error in the request building, which shouldn't happen
-                console.log('Error in request: ', e.message);
             }
+            onFail(errors)
         });
 
+}
+
+export function registerPatient(name, insurancePlan, insuranceNumber, onSuccess, onFail){
+    apiInstance.post("/patients/",
+        {
+            "name": name,
+            "patientPlanInfo": {
+                "plan": {
+                    "id": insurancePlan.id,
+                    "name": insurancePlan.name,
+                    "url": insurancePlan.url
+                },
+                "number": insuranceNumber
+            }
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.PATIENT));
+            onSuccess()
+        }).catch((err) => {
+            onFail();
+        });
+}
+
+export function registerMedic(medic, onSuccess, onFail){
+
+    apiInstance.post("/medics/",
+        {
+            "name": medic.name,
+            "telephone": medic.telephone,
+            "identification": medic.identification,
+            "licenceNumber": medic.licenceNumber,
+            "medicalFields": medic.medicalFields
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.MEDIC));
+            onSuccess();
+        }).catch((err) => {
+            let response = []
+            if(err.response != null)
+                response = err.response.data
+            onFail(response);
+        });
+}
+
+export function registerClinic(clinic, onSuccess, onFail){
+    apiInstance.post("/clinics/",
+        {
+            "name": clinic.name,
+            "telephone": clinic.phoneNumber,
+            "availableStudies": clinic.studyTypes,
+            "acceptedPlans": clinic.acceptedInsurance,
+            "hours": clinic.hours
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.CLINIC));
+            onSuccess()
+        }).catch((err) => {
+            let response = []
+            if(err.response != null)
+                response = err.response.data
+            onFail(response);
+    });
 }
 
 export function logout(){
@@ -288,4 +343,16 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors){
             console.log('Error in request: ', e.message);
         }
     });
+}
+
+export function RegisterPatient(patient){
+
+}
+
+export function RegisterMedic(medic){
+
+}
+
+export function RegisterClinic(clinic){
+
 }

@@ -32,3 +32,10 @@ export const deAuthenticate = () => {
         }
     }
 }
+
+export const updateRole = (role) => {
+    return {
+        type: ActionType.UPDATE_ROLE,
+        role: role
+    }
+}
