@@ -7,6 +7,7 @@ import {registerMedic} from "../../api/Auth";
 import ErrorFeedback from "../inputs/ErrorFeedback";
 import {useHistory} from "react-router-dom";
 import Loader from "react-loader-spinner";
+import {Trans, useTranslation} from "react-i18next";
 
 function getBase64(file) {
     return new Promise((resolve) => {
@@ -23,6 +24,8 @@ const MedicRegistrationForm = () => {
     const [medicalFields, setMedicalFields] = useState([])
     const [medicalFieldsOptions, setMedicalFieldsOptions] = useState([])
     const [validated, setValidated] = useState(false)
+
+    const { t } = useTranslation();
 
     const history = useHistory();
     const [isLoading, setLoading] = useState(false);
@@ -158,60 +161,60 @@ const MedicRegistrationForm = () => {
         <MedicalFieldModal show={showMedicalFieldModal} setShow={setShowMedicalFieldModal} callbackSuccess={mfCallbackSuccess} callbackFail={mfCallbackFail}/>
         <div style={{display:"flex"}}>
             <Form.Group className="form-group col mt-1" controlId="firstName">
-                <Form.Label className="bmd-label-static">First Name</Form.Label>
+                <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.medic.firstname.label"/></Form.Label>
                 <Form.Control
                     type="text" className={"registrationInput"}
-                    name="firstName" placeholder={"First Name"}
+                    name="firstName" placeholder={t("registration.medic.firstname.label")}
                     required
                 />
-                <ErrorFeedback key={formErrors.firstName} isInvalid={formErrors.firstName}>Please insert your first name</ErrorFeedback>
+                <ErrorFeedback key={formErrors.firstName} isInvalid={formErrors.firstName}><Trans t={t} i18nKey="registration.medic.firstname.error"/></ErrorFeedback>
             </Form.Group>
 
             <Form.Group className="form-group col mt-1" controlId="lastName">
-                <Form.Label className="bmd-label-static">Last Name</Form.Label>
+                <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.medic.lastname.label"/></Form.Label>
                 <Form.Control
                     type="text" className={"registrationInput"}
-                    name="lastName" placeholder={"Last Name"}
+                    name="lastName" placeholder={t("registration.medic.lastname.label")}
                     required
                 />
-                <ErrorFeedback key={formErrors.lastName} isInvalid={formErrors.lastName}>Please insert your last name</ErrorFeedback>
+                <ErrorFeedback key={formErrors.lastName} isInvalid={formErrors.lastName}><Trans t={t} i18nKey="registration.medic.lastname.error"/></ErrorFeedback>
             </Form.Group>
         </div>
 
         <Form.Group className="form-group col mt-1" controlId="medicPhoneNumber">
-            <Form.Label className="bmd-label-static">Phone Number</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.medic.phone-number.label"/></Form.Label>
             <Form.Control
                 type="text" className={"registrationInput"}
-                name="medicPhoneNumber" placeholder={"Phone Number"}
+                name="medicPhoneNumber" placeholder={t("registration.medic.phone-number.label")}
                 required
             />
-            <ErrorFeedback key={formErrors.phoneNumber} isInvalid={formErrors.phoneNumber}>Please insert a valid phone number</ErrorFeedback>
+            <ErrorFeedback key={formErrors.phoneNumber} isInvalid={formErrors.phoneNumber}><Trans t={t} i18nKey="registration.medic.phone-number.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col mt-1" controlId="medicLicenseNumber">
-            <Form.Label className="bmd-label-static">License Number Number</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.medic.license.label"/></Form.Label>
             <Form.Control
                 type="text" className={"registrationInput"}
-                name="medicLicenseNumber" placeholder={"Medical License Number"}
+                name="medicLicenseNumber" placeholder={t("registration.medic.license.label")}
                 required
             />
-            <ErrorFeedback key={formErrors.licenseNumber} isInvalid={formErrors.licenseNumber}>Please insert your licence number</ErrorFeedback>
+            <ErrorFeedback key={formErrors.licenseNumber} isInvalid={formErrors.licenseNumber}><Trans t={t} i18nKey="registration.medic.license.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col mt-1" controlId="medicLicenseNumber">
-            <Form.Label className="bmd-label">Seal and Signature</Form.Label>
+            <Form.Label className="bmd-label"><Trans t={t} i18nKey="registration.medic.identification.label"/></Form.Label>
             <Form.Control
                 type="file" className={"registrationInput"}
-                name="medicLicenseNumber" placeholder={"Medical License Number"}
+                name="medicIdentification" placeholder={t("registration.medic.identification.label")}
                 accept=".jpg,.jpeg.,.png"
                 required
             />
-            <small className="text-muted">Please upload a photo of your seal and signature</small>
-            <ErrorFeedback key={formErrors.identification} isInvalid={formErrors.identification}>Please upload a valid image</ErrorFeedback>
+            <small className="text-muted"><Trans t={t} i18nKey="registration.medic.identification.help"/></small>
+            <ErrorFeedback key={formErrors.identification} isInvalid={formErrors.identification}><Trans t={t} i18nKey="registration.medic.identification.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col" controlId="medicInsurancePlan">
-            <Form.Label className="bmd-label-static">Medical Fields</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.medic.medical-fields.label"/></Form.Label>
             <Typeahead
                 key={medicalFieldsOptions}
                 selected={medicalFields}
@@ -220,19 +223,18 @@ const MedicRegistrationForm = () => {
                 dropup
                 highlightOnlyResult
                 options={Array.from(medicalFieldsOptions, item => item.name)}
-                placeholder="Choose Medical Fields"
+                placeholder={t("registration.medic.medical-fields.placeholder")}
                 id={"medicInsurancePlan"}
                 required
             />
-            <a href={"#/"} onClick={() => setShowMedicalFieldModal(true)}>Your field is not on the list? Click here to add it our systems</a>
-            <ErrorFeedback key={formErrors.medicalFields} isInvalid={formErrors.medicalFields}>Please insert a valid medical field</ErrorFeedback>
+            <a href={"#/"} onClick={() => setShowMedicalFieldModal(true)}><Trans t={t} i18nKey="registration.medic.medical-fields.modal"/></a>
+            <ErrorFeedback key={formErrors.medicalFields} isInvalid={formErrors.medicalFields}><Trans t={t} i18nKey="registration.medic.medical-fields.error"/></ErrorFeedback>
         </Form.Group>
 
 
         {!isLoading &&
         <Button className= "create-btn registrationSubmitButton"
-                type="submit" name="medicSubmit"
-                value={"Continue"}> Continue </Button>}
+                type="submit" name="medicSubmit"> <Trans t={t} i18nKey="registration.medic.continue"/> </Button>}
 
         {isLoading &&
         <Loader

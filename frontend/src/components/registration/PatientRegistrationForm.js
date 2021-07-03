@@ -6,8 +6,11 @@ import {registerPatient} from "../../api/Auth";
 import ErrorFeedback from "../inputs/ErrorFeedback";
 import {useHistory} from "react-router-dom";
 import Loader from "react-loader-spinner";
+import {Trans, useTranslation} from "react-i18next";
 
 const PatientRegistrationForm = () => {
+
+    const { t } = useTranslation();
 
     const history = useHistory();
     const [isLoading, setLoading] = useState(false);
@@ -74,56 +77,56 @@ const PatientRegistrationForm = () => {
     return <Form className={"registrationForm form-signin"} noValidate validated={validated} onSubmit={handleRegisterSubmit}>
         <div style={{display:"flex"}}>
             <Form.Group className="form-group col mt-1" controlId="firstName">
-                <Form.Label className="bmd-label-static">First Name</Form.Label>
+                <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.patient.firstname.label"/></Form.Label>
                 <Form.Control
                     type="text" className={"registrationInput"}
-                    name="firstName" placeholder={"First Name"}
+                    name="firstName" placeholder={t("registration.patient.firstname.label")}
                     isInvalid={!!formErrors.firstName}
                     required
                 />
-                <ErrorFeedback key={formErrors.firstName} isInvalid={formErrors.firstName}>Please insert your First Name</ErrorFeedback>
+                <ErrorFeedback key={formErrors.firstName} isInvalid={formErrors.firstName}><Trans t={t} i18nKey="registration.patient.firstname.error"/></ErrorFeedback>
             </Form.Group>
 
             <Form.Group className="form-group col mt-1" controlId="lastName">
-                <Form.Label className="bmd-label-static">Last Name</Form.Label>
+                <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.patient.lastname.label"/></Form.Label>
                 <Form.Control
                     type="text" className={"registrationInput"}
-                    name="lastName" placeholder={"Last Name"}
+                    name="lastName" placeholder={t("registration.patient.lastname.label")}
                     isInvalid={!!formErrors.lastName}
                     required
                 />
-                <ErrorFeedback isInvalid={formErrors.lastName}>Please insert your Last Name</ErrorFeedback>
+                <ErrorFeedback isInvalid={formErrors.lastName}><Trans t={t} i18nKey="registration.patient.lastname.error"/></ErrorFeedback>
             </Form.Group>
         </div>
 
         <Form.Group className="form-group col" controlId="patientInsurancePlan">
-            <Form.Label className="bmd-label-static">Insurance Plan</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.patient.insurance-plan.label"/></Form.Label>
             <Typeahead
                 key={formErrors.insurancePlan}
                 options={Array.from(insurancePlans, item => item.name)}
-                placeholder="Medical Insurance Plan"
+                placeholder={t("registration.patient.insurance-plan.placeholder")}
                 id={"patientInsurancePlan"}
                 isInvalid={!!formErrors.insurancePlan}
                 required
             />
-            <ErrorFeedback isInvalid={formErrors.insurancePlan}>Please enter a valid Insurance Plan</ErrorFeedback>
+            <ErrorFeedback isInvalid={formErrors.insurancePlan}><Trans t={t} i18nKey="registration.patient.insurance-plan.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col mt-1" controlId="patientInsuranceNumber">
-            <Form.Label className="bmd-label-static">Insurance Number</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.patient.insurance-number.label"/></Form.Label>
             <Form.Control
                 type="text" className={"registrationInput"}
-                name="patientInsuranceNumber" placeholder={"Medical Insurance Number"}
+                name="patientInsuranceNumber" placeholder={t("registration.patient.insurance-number.placeholder")}
                 required
             />
-            <ErrorFeedback isInvalid={formErrors.insuranceNumber}>Please enter a valid insurance number</ErrorFeedback>
+            <ErrorFeedback isInvalid={formErrors.insuranceNumber}><Trans t={t} i18nKey="registration.patient.insurance-number.error"/></ErrorFeedback>
         </Form.Group>
 
 
         {!isLoading &&
         <Button className= "create-btn registrationSubmitButton"
                 type="submit" name="patientSubmit"
-                value={"Continue"}> Continue </Button>}
+                value={t("registration.patient.continue")}> <Trans t={t} i18nKey="registration.patient.continue"/> </Button>}
 
         {isLoading &&
         <Loader

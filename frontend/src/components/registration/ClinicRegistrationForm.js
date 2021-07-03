@@ -10,6 +10,7 @@ import InsurancePlanModal from "./InsurancePlanModal";
 import StudyTypesModal from "./StudyTypesModal";
 import {registerClinic} from "../../api/Auth";
 import Loader from "react-loader-spinner";
+import {Trans, useTranslation} from "react-i18next";
 
 const ClinicRegistrationForm = () => {
 
@@ -20,6 +21,8 @@ const ClinicRegistrationForm = () => {
     const [acceptedStudies, setAcceptedStudies] = useState([]);
 
     const history = useHistory();
+
+    const { t } = useTranslation();
 
 
     const defaultFormErrors = {
@@ -135,27 +138,27 @@ const ClinicRegistrationForm = () => {
         <StudyTypesModal show={showStudyTypesModal} setShow={setShowStudyTypesModal} callbackSuccess={stCallbackSuccess} callbackFail={stCallbackFail}/>
 
         <Form.Group className="form-group col mt-1" controlId="clinicName">
-            <Form.Label className="bmd-label-static">Clinic's Name</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.clinic.name.label"/></Form.Label>
             <Form.Control
                 type="text" className={"clinicName"}
-                name="lastName" placeholder={"Clinic's Name"}
+                name="lastName" placeholder={t("registration.clinic.name.label")}
                 required
             />
-            <ErrorFeedback key={formErrors.clinicName} isInvalid={formErrors.clinicName}>Please insert clinic's name</ErrorFeedback>
+            <ErrorFeedback key={formErrors.clinicName} isInvalid={formErrors.clinicName}><Trans t={t} i18nKey="registration.clinic.name.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col mt-1" controlId="clinicPhoneNumber">
-            <Form.Label className="bmd-label-static">Phone Number</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.clinic.phone-number.label"/></Form.Label>
             <Form.Control
                 type="text" className={"registrationInput"}
-                name="medicPhoneNumber" placeholder={"Phone Number"}
+                name="medicPhoneNumber" placeholder={t("registration.clinic.phone-number.label")}
                 required
             />
-            <ErrorFeedback key={formErrors.phoneNumber} isInvalid={formErrors.phoneNumber}>Please insert clinic's phone number</ErrorFeedback>
+            <ErrorFeedback key={formErrors.phoneNumber} isInvalid={formErrors.phoneNumber}><Trans t={t} i18nKey="registration.clinic.phone-number.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col" controlId="clinicStudyTypes">
-            <Form.Label className="bmd-label-static">Study Types</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.clinic.study-types.label"/></Form.Label>
             <Typeahead
                 multiple
                 key={studyTypesOptions}
@@ -163,16 +166,16 @@ const ClinicRegistrationForm = () => {
                 onChange={setAcceptedStudies}
                 highlightOnlyResult
                 options={Array.from(studyTypesOptions, item => item.name)}
-                placeholder="Choose Accepted Study Types"
+                placeholder={t("registration.clinic.study-types.placeholder")}
                 id={"clinicStudyTypes"}
                 required
             />
-            <a href={"#/"} onClick={() => setShowStudyTypesModal(true)}>A study is not on the list? Click here to add it to our systems</a>
-            <ErrorFeedback key={formErrors.acceptedStudies} isInvalid={formErrors.acceptedStudies}>Please insert clinic's accepted studies</ErrorFeedback>
+            <a href={"#/"} onClick={() => setShowStudyTypesModal(true)}><Trans t={t} i18nKey="registration.clinic.study-types.modal"/></a>
+            <ErrorFeedback key={formErrors.acceptedStudies} isInvalid={formErrors.acceptedStudies}><Trans t={t} i18nKey="registration.clinic.study-types.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col" controlId="clinicInsurancePlans">
-            <Form.Label className="bmd-label-static">Medical Insurance Plans</Form.Label>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.clinic.insurances.label"/></Form.Label>
             <Typeahead
                 multiple
                 key={insurancePlansOptions}
@@ -180,25 +183,24 @@ const ClinicRegistrationForm = () => {
                 onChange={setInsurancePlans}
                 highlightOnlyResult
                 options={Array.from(insurancePlansOptions, item => item.name)}
-                placeholder="Choose Accepted Medical Insurance Plans"
+                placeholder={t("registration.clinic.insurances.placeholder")}
                 id={"clinicInsurancePlans"}
                 required
             />
-            <a href={"#/"} onClick={() => setShowInsurancePlansModal(true)}>Insurance Plan is not on the list? Click here to add it to our systems</a>
-            <ErrorFeedback key={formErrors.acceptedPlans} isInvalid={formErrors.acceptedPlans}>Please insert clinic's accepted plans</ErrorFeedback>
+            <a href={"#/"} onClick={() => setShowInsurancePlansModal(true)}><Trans t={t} i18nKey="registration.clinic.insurances.modal"/></a>
+            <ErrorFeedback key={formErrors.acceptedPlans} isInvalid={formErrors.acceptedPlans}><Trans t={t} i18nKey="registration.clinic.insurances.error"/></ErrorFeedback>
         </Form.Group>
 
         <Form.Group className="form-group col" controlId="clinicOpenDays">
-            <Form.Label className="bmd-label-static">Open Days & Hours</Form.Label>
-            <ErrorFeedback key={formErrors.hours} isInvalid={formErrors.hours}>Please insert valid hours</ErrorFeedback>
-            <SelectDaysHours onChange={setSelectedHours} selectStyle={{top:"-1000%!important;"}} selectPlaceholder={"Select Clinic's Open Days"}/>
+            <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="registration.clinic.hours.label"/></Form.Label>
+            <ErrorFeedback key={formErrors.hours} isInvalid={formErrors.hours}><Trans t={t} i18nKey="registration.clinic.hours.error"/></ErrorFeedback>
+            <SelectDaysHours onChange={setSelectedHours} selectStyle={{top:"-1000%!important;"}} selectPlaceholder={t("registration.clinic.hours.placeholder")}/>
 
         </Form.Group>
 
         {!isLoading &&
         <Button className= "create-btn registrationSubmitButton"
-                type="submit" name="clinicSubmit"
-                value={"Continue"}> Continue </Button>}
+                type="submit" name="clinicSubmit"> <Trans t={t} i18nKey="registration.clinic.continue"/> </Button>}
 
         {isLoading &&
         <Loader
