@@ -95,7 +95,7 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .catch((error) => {console.log("bruh", error)});
 }
 
-async function InternalQuery(request){
+export async function InternalQuery(request){
     return apiInstance.get(request)
     .then((r) => {
         return r.data;

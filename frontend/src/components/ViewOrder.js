@@ -139,7 +139,7 @@ function ViewOrder(){
         return(
             <section>
                 <div className="align-items-end result-not">
-                    <h1 className="text-cener mt-5 py-5">No Results Found For This Medical Order</h1>
+                    <h1 className="text-center mt-5 py-5">No Results Found For This Medical Order</h1>
                 </div>
                 {userInfo.role === 'PATIENT' ?
                     <div className="content-align-center">

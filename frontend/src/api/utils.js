@@ -1,3 +1,6 @@
+import apiInstance from "./"
+import {store} from "../redux";
+
 function checkUndefinedArray(array){
     var count = 0;
     for(var idx in array){
@@ -32,4 +35,20 @@ export function parameterSerializer(params){
     }
 
     return output;
+}
+
+export function getAuthorizedImage(src){
+    apiInstance.get( src )
+    .then((r) => {
+        console.log("IMAGENNN",r);
+        let data = new Uint8Array(r.data);
+        let raw = String.fromCharCode.apply(null, data);
+        let base64 = btoa(raw);
+        let src = "data:image;base64," + base64;
+
+        let img;
+        img.src = src;
+        return src;
+    })
+    .catch((e) => { return undefined;});
 }
