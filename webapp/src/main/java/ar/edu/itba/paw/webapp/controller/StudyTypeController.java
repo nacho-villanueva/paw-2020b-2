@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
@@ -81,7 +82,7 @@ public class StudyTypeController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
-    public Response registerStudyType(@Valid StudyTypeDto studyTypeDto){
+    public Response registerStudyType(@Valid @NotNull StudyTypeDto studyTypeDto){
         StudyType newType = studyTypeService.register(studyTypeDto.getName());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(newType.getId())).build()).build();
     }

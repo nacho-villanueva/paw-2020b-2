@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.*;
@@ -119,7 +120,7 @@ public class UserController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response registerUser(@Valid @RequestBody UserPostDto userDto) {
+    public Response registerUser(@Valid @RequestBody @NotNull UserPostDto userDto) {
         if(isEmpty(userDto.getLocale())) {
             userDto.setLocale(Locale.getDefault().toString());
         }
@@ -131,7 +132,7 @@ public class UserController {
     @PUT
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response modifyUser(@PathParam("id") final int id, @Valid UserPutDto userDto) {
+    public Response modifyUser(@PathParam("id") final int id, @Valid @NotNull UserPutDto userDto) {
         Optional<User> maybeUser = userService.findById(id);
 
         if(!maybeUser.isPresent()) {

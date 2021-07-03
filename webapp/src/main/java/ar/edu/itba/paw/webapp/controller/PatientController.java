@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -81,7 +82,7 @@ public class PatientController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerPatient(
-            @Valid PatientPostDto patientDto
+            @Valid @NotNull PatientPostDto patientDto
     ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
@@ -115,7 +116,7 @@ public class PatientController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updatePatient(
             @PathParam("id") final int patientId,
-            PatientPostDto patientDto
+            @Valid @NotNull PatientPostDto patientDto
     ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();

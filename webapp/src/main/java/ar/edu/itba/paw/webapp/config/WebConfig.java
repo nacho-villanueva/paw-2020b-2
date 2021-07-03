@@ -165,6 +165,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return getValidatorFactory.getValidator();
     }
 
+    // Default behaviour of cache control
     @Bean
     public CacheControl cacheControl(){
         CacheControl cacheControl = new CacheControl();

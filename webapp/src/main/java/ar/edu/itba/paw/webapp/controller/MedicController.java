@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -90,7 +91,7 @@ public class MedicController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerMedic(
-            @Valid MedicPostDto medicDto
+            @Valid @NotNull MedicPostDto medicDto
             ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
@@ -148,7 +149,7 @@ public class MedicController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateMedic(
             @PathParam("id") final int id,
-            @Valid MedicPutDto medicDto
+            @Valid @NotNull MedicPutDto medicDto
     ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();

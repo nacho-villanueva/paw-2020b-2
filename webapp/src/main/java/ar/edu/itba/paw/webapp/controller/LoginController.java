@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -37,7 +38,7 @@ public class LoginController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Consumes(value = { MediaType.APPLICATION_JSON, })
-    public Response login(@Valid final UserCredentials credentials) {
+    public Response login(@Valid @NotNull final UserCredentials credentials) {
         try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -63,7 +64,7 @@ public class LoginController {
     @GET
     @Path("/{token}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response enableUser(@PathParam("token") String token) {
+    public Response enableUser(@NotNull @PathParam("token") String token) {
         Optional<VerificationToken> verificationToken = us.getVerificationToken(token);
 
         if(!verificationToken.isPresent()) {

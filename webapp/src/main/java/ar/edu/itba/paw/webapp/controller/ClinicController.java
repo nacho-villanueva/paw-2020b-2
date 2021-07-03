@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -205,7 +206,7 @@ public class ClinicController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response registerClinic(
-            @Valid ClinicPostDto clinicPostDto
+            @Valid @NotNull ClinicPostDto clinicPostDto
     ){
         User user = getLoggedUser();
         if(user == null)
@@ -237,7 +238,7 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateClinic(
             @PathParam("id") final int id,
-            @Valid ClinicPutDto clinicPutDto
+            @Valid @NotNull ClinicPutDto clinicPutDto
     ){
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(id);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
@@ -71,7 +72,7 @@ public class MedicalFieldController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
-    public Response registerMedicalField(@Valid MedicalFieldDto medicalFieldDto){
+    public Response registerMedicalField(@Valid @NotNull MedicalFieldDto medicalFieldDto){
         final MedicalField medicalField = medicalFieldService.register(medicalFieldDto.getName());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(medicalField.getId())).build()).build();
     }

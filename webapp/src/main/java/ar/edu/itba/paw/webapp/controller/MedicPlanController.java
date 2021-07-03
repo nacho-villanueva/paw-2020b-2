@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
@@ -59,7 +60,7 @@ public class MedicPlanController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON, MedicPlanDto.CONTENT_TYPE+"+json"})
-    public Response registerMedicPlan(@Valid MedicPlanDto medicPlanDto) {
+    public Response registerMedicPlan(@Valid @NotNull MedicPlanDto medicPlanDto) {
         MedicPlan newPlan = medicPlanService.register(medicPlanDto.getName());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(newPlan.getId())).build()).build();
     }

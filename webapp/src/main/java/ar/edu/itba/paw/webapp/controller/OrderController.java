@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -264,7 +265,7 @@ public class OrderController {
     @Path("{id}/shared-with")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addMedicsSharedWith(
-            @Valid UserGetDto userDto,
+            @Valid @NotNull UserGetDto userDto,
             @PathParam("id") final String encodedId
     ){
 
@@ -307,7 +308,7 @@ public class OrderController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createOrder(
-            @Valid OrderPostDto orderPostDto
+            @Valid @NotNull OrderPostDto orderPostDto
     ){
 
         User user = getLoggedUser();
@@ -370,7 +371,7 @@ public class OrderController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateOrder(
             @PathParam("id") final String encodedId,
-            @Valid OrderPutDto orderPutDto
+            @Valid @NotNull OrderPutDto orderPutDto
     ){
 
         Response.ResponseBuilder response;

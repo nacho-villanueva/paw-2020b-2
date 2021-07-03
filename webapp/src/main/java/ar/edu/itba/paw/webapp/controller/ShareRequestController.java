@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -139,7 +140,7 @@ public class ShareRequestController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response requestShare(
-            @Valid ShareRequestPostDto shareRequestPostDto
+            @Valid @NotNull ShareRequestPostDto shareRequestPostDto
     ){
 
         User user = getLoggedUser();

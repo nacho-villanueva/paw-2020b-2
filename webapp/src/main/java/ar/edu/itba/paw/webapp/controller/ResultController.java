@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -201,7 +202,7 @@ public class ResultController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createResult(
             @PathParam("orderId") final String oid,
-            @Valid ResultPostDto resultPostDto
+            @Valid @NotNull ResultPostDto resultPostDto
             ){
         Response.ResponseBuilder response;
 
