@@ -17,7 +17,6 @@ import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("clinics")
@@ -30,7 +29,7 @@ public class ClinicController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
+    // Default cache, do not include if response is non cacheable or immutable
     @Autowired
     private CacheControl cacheControl;
 
@@ -47,24 +46,21 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response listClinics(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
-            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
                     Integer page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
                     Integer perPage,
             @QueryParam("clinic") String clinicName,
             @Valid @BeanParam ClinicHoursAvailabilityDto hours,
             @QueryParam("plan") String acceptedPlan,
             @QueryParam("study-type") String studyType
     ) {
+        boolean isGetAllQuery = (clinicName == null &&
+                (hours == null || hours.getDays() == null) && acceptedPlan == null && studyType == null);
 
-        Collection<Clinic> clinics;
-        Response.ResponseBuilder response;
-
-        boolean isGetAllQuery = (clinicName==null && (hours==null || hours.getDays()==null) && acceptedPlan==null && studyType==null);
-
-        ClinicHours clinicHours=null;
-        if(hours!=null && hours.getDays()!=null){
+        ClinicHours clinicHours = null;
+        if(hours != null && hours.getDays() != null){
             clinicHours = hours.getClinicHours();
         }
 
@@ -75,12 +71,10 @@ public class ClinicController {
             lastPage = clinicService.searchClinicsByLastPage(clinicName,clinicHours,acceptedPlan,studyType,perPage);
         }
 
-        if(lastPage <= 0)
+        if(lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
 
-        if(page > lastPage)
-            return Response.status(422).build();
-
+        Collection<Clinic> clinics;
         if(isGetAllQuery){
             clinics = clinicService.getAll(page,perPage);
         }else{
@@ -89,7 +83,7 @@ public class ClinicController {
 
         Collection<ClinicGetDto> clinicDtos = (clinics.stream().map(c -> (new ClinicGetDto(c,uriInfo))).collect(Collectors.toList()));
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
-        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
                 .type(ClinicGetDto.CONTENT_TYPE+"+json")
                 .tag(etag).cacheControl(cacheControl);
 
@@ -110,7 +104,6 @@ public class ClinicController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE+"+json"})
     public Response getClinicById(@PathParam("id") final int id){
-
         Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
         if(!clinicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -127,7 +120,6 @@ public class ClinicController {
     @Path("/{id}/available-studies")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response getClinicStudyTypes(@PathParam("id") final int id){
-
         Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
 
         if(!clinicOptional.isPresent())
@@ -153,20 +145,20 @@ public class ClinicController {
             @PathParam("id") final int clinicId,
             @PathParam("study") final int studyTypeId
     ){
-
         boolean hasStudy = clinicService.hasStudy(clinicId,studyTypeId);
 
         if(!hasStudy)
             return Response.status(Response.Status.NOT_FOUND).build();
-        else
-            return Response.noContent().build();
+
+        URI uri = uriInfo.getBaseUriBuilder()
+                .path(StudyTypeDto.REQUEST_PATH).path(String.valueOf(studyTypeId)).build();
+        return Response.noContent().location(uri).build();
     }
 
     @GET
     @Path("/{id}/accepted-plans")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicPlanDto.CONTENT_TYPE+"+json"})
     public Response getClinicAcceptedPlans(@PathParam("id") final int id){
-
         Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
 
         if(!clinicOptional.isPresent())
@@ -192,7 +184,6 @@ public class ClinicController {
             @PathParam("id") final int clinicId,
             @PathParam("plan") final int medicPlanId
     ){
-
         boolean acceptsPlan = clinicService.acceptsPlan(clinicId,medicPlanId);
 
         if(!acceptsPlan)
@@ -286,7 +277,7 @@ public class ClinicController {
             clinicHours = clinicPutDto.getClinicHours();
         boolean isVerified = clinic.isVerified();
 
-        Clinic newClinic = clinicService.updateClinicInfo(
+        clinicService.updateClinicInfo(
                 user,
                 name,
                 telephone,

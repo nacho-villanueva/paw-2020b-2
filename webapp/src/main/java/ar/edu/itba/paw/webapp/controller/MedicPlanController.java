@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("medic-plans")
@@ -54,8 +55,10 @@ public class MedicPlanController {
 
         MedicPlanDto medicPlanDto = new MedicPlanDto(medicPlanOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDto.hashCode()));
+        CacheControl cache = new CacheControl();
+        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
         return Response.ok(medicPlanDto).type(MedicPlanDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl).build();
+                .tag(entityTag).cacheControl(cache).build();
     }
 
     @POST

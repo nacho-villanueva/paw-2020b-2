@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
+
+    private static final String TOKEN_STATUS_HEADER = "Token-Status";
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -36,6 +36,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         //Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
+            // No token provided
+            response.addHeader(TOKEN_STATUS_HEADER, "Missing");
             chain.doFilter(request,response);
             return;
         }
@@ -45,11 +47,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User tokenUser = jwtTokenUtil.parseToken(token);
         if(tokenUser == null) {
             //Very likely an expired token
-            response.addHeader("Token-Status","Expired");
+            response.addHeader(TOKEN_STATUS_HEADER,"Expired");
             chain.doFilter(request,response);
             return;
         }
-        response.addHeader("Token-Status","Healthy");
+        response.addHeader(TOKEN_STATUS_HEADER,"Healthy");
 
         //Get user identity and set it on the spring security context
         UserDetails userDetails = userDetailsService.loadUserByUsername(tokenUser.getEmail());

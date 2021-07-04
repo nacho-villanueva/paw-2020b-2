@@ -73,11 +73,8 @@ public class ResultController {
 
         long lastPage = resultService.findByOrderIdLastPage(orderId,perPage);
 
-        if(lastPage <= 0)
+        if(lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
-
-        if(page > lastPage)
-            return Response.status(422).build();
 
         Collection<Result> results = resultService.findByOrderId(orderId,page,perPage);
 

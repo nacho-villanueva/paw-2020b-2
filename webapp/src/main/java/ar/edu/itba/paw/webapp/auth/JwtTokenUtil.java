@@ -5,23 +5,31 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.Date;
 import java.util.UUID;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Component
 public class JwtTokenUtil {
-
-    //TODO: wire to something, not sure if having it in the code is a good idea.
-    private final String secret = "hudhas8912893ioushdda2das&23bS^!@jsada9123wdfs";
+    @Value("classpath:key")
+    private Resource key;
 
     private static final int WEEK_IN_MILLISECONDS = (1000*3600*24*7);
 
     public User parseToken(String token) {
         try {
             Claims body = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(asString(key))
                     .parseClaimsJws(token)
                     .getBody();
 
@@ -55,7 +63,15 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setId(id)
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, asString(key))
                 .compact();
+    }
+
+    private static String asString(Resource resource) {
+        try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

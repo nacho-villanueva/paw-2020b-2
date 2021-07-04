@@ -5,13 +5,11 @@ import ar.edu.itba.paw.webapp.dto.annotations.Number;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -37,6 +35,7 @@ import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -53,13 +52,6 @@ import javax.ws.rs.core.CacheControl;
 })
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
-
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
-
-    @Value("classpath:initialPopulator.sql")
-    private Resource initialPopulatorSql;
-
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -97,8 +89,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public URL getURL() throws MalformedURLException {
-        final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
-        return url;
+        return new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
     }
 
     @Bean(name = "multipartResolver")
@@ -118,14 +109,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return dsi;
     }
 
+    // Use addScript(Resource) to include .sql files
     private DatabasePopulator databasePopulator() {
-        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-
-        //Commented for the introduction of hibernate
-        //dbp.addScript(schemaSql);
-        //dbp.addScript(initialPopulatorSql);
-
-        return dbp;
+        return new ResourceDatabasePopulator();
     }
 
     @Override
@@ -165,11 +151,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return getValidatorFactory.getValidator();
     }
 
-    // Default behaviour of cache control
+    // Including this cache control into a response means the response is going to be cached
+    // Do not include if you dont want to cache answer
     @Bean
     public CacheControl cacheControl(){
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setNoCache(true);
+        // We inform clients that they should cache our responses only on their browsers
+        cacheControl.setPrivate(true);
+        // Set freshness to 1 minute, determine what is the amount we want to cache for
+        cacheControl.setMaxAge(Math.toIntExact(TimeUnit.MINUTES.toSeconds(1)));
+        // We tell client to revalidate stale caches
+        cacheControl.setMustRevalidate(true);
         return cacheControl;
     }
 

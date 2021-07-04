@@ -65,18 +65,14 @@ public class ShareRequestController {
             @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
                     Integer perPage
     ){
-
         String patientEmail = getLoggedUserEmail();
         if(patientEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
         long lastPage = shareRequestService.getAllPatientRequestsLastPage(patientEmail,perPage);
 
-        if(lastPage <= 0)
+        if(lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
-
-        if(page > lastPage)
-            return Response.status(422).build();
 
         Collection<ShareRequest> shareRequests = shareRequestService.getAllPatientRequests(patientEmail,page,perPage);
 

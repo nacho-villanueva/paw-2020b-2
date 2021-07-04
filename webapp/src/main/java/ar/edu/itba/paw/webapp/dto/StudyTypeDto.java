@@ -11,7 +11,7 @@ public class StudyTypeDto {
 
     // Constants
     public static final String CONTENT_TYPE = "application/vnd.study-type.v1";
-    private static final String REQUEST_PATH = "study-types";
+    public static final String REQUEST_PATH = "study-types";
     private static final String CLINICS_PATH = "clinics";
 
     // Variables

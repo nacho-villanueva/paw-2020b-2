@@ -58,10 +58,10 @@ public class OrderController {
     @Produces(value = { MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE+"+json"})
     public Response getOrders(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
-            @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
                     Integer page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
                     Integer perPage,
             @Valid @BeanParam OrderFilterDto orderFilterDto
     ){
@@ -120,11 +120,8 @@ public class OrderController {
             );
         }
 
-        if(lastPage <= 0)
+        if(lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
-
-        if(page > lastPage)
-            return Response.status(422).build();
 
         Collection<Order> orders;
         if(isGetAllQuery){
@@ -373,9 +370,6 @@ public class OrderController {
             @PathParam("id") final String encodedId,
             @Valid @NotNull OrderPutDto orderPutDto
     ){
-
-        Response.ResponseBuilder response;
-
         long orderId;
         try {
             orderId = urlEncoderService.decode(encodedId);
@@ -386,7 +380,7 @@ public class OrderController {
         // only affected members should be able to change
         String userEmail = getLoggedUserEmail();
         if(userEmail == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
 
         final Optional<Order> orderOptional = orderService.findById(orderId);
         if(!orderOptional.isPresent())
@@ -411,11 +405,10 @@ public class OrderController {
 
         Clinic clinic = clinicOptional.get();
 
-        Order newOrder;
         try{
-            newOrder = orderService.changeOrderClinic(order,clinic);
+            orderService.changeOrderClinic(order,clinic);
         }catch (Exception e){
-            return Response.status(422).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
 

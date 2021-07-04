@@ -232,32 +232,6 @@ public class MedicController {
                 .build();
     }
 
-    //Medical fields have their own location, this endpoint should not be neccesary
-    /*@GET
-    @Path("/{id}/medical-fields/{mfid}")
-    @Produces(value = { MedicalFieldDto.CONTENT_TYPE+"+json"})
-    public Response getMedicHasMedicalField(
-            @PathParam("id") final String id,
-            @PathParam("mfid") final String mfid
-    ){
-
-        int medicId;
-        int medicalFieldId;
-        try {
-            medicId = Integer.parseInt(id);
-            medicalFieldId = Integer.parseInt(mfid);
-        }catch (NumberFormatException e){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        boolean hasField = medicService.knowsField(medicId,medicalFieldId);
-
-        if(!hasField)
-            return Response.status(Response.Status.NOT_FOUND).build();
-        else
-            return Response.noContent().build();
-    }*/
-
     // auxiliar functions
     private boolean isEmptyCollection(Collection<?> collection){
         return collection==null || collection.isEmpty();

@@ -12,12 +12,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("medical-fields")
 @Component
 public class MedicalFieldController {
-
     // default cache
     @Autowired
     private CacheControl cacheControl;
@@ -31,31 +31,22 @@ public class MedicalFieldController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
     public Response listMedicalFields() {
-
-        Collection<MedicalField> medicalFields ;
-        Response.ResponseBuilder response;
-
-        medicalFields = medicalFieldService.getAll();
+        Collection<MedicalField> medicalFields = medicalFieldService.getAll();
 
         if(medicalFields.isEmpty())
-            response = Response.noContent();
-        else{
-            Collection<MedicalFieldDto> medicalFieldDtos = (medicalFields.stream().map(mf -> (new MedicalFieldDto(mf,uriInfo))).collect(Collectors.toList()));
-            EntityTag etag = new EntityTag(Integer.toHexString(medicalFieldDtos.hashCode()));
-            response = Response.ok(new GenericEntity<Collection<MedicalFieldDto>>( medicalFieldDtos ) {})
-                    .type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                    .tag(etag).cacheControl(cacheControl);
-        }
+            return Response.noContent().build();
 
-        return response.build();
+        Collection<MedicalFieldDto> medicalFieldDtos = (medicalFields.stream().map(mf -> (new MedicalFieldDto(mf,uriInfo))).collect(Collectors.toList()));
+        EntityTag etag = new EntityTag(Integer.toHexString(medicalFieldDtos.hashCode()));
+        return Response.ok(new GenericEntity<Collection<MedicalFieldDto>>( medicalFieldDtos ) {})
+                .type(MedicalFieldDto.CONTENT_TYPE+"+json")
+                .tag(etag).cacheControl(cacheControl).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json",})
     public Response getMedicalFieldById(@PathParam("id") final int id){
-
-        Response.ResponseBuilder response;
 
         Optional<MedicalField> medicalFieldOptional = medicalFieldService.findById(id);
 
@@ -64,10 +55,12 @@ public class MedicalFieldController {
 
         MedicalFieldDto medicalFieldDto = new MedicalFieldDto(medicalFieldOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicalFieldDto.hashCode()));
-        response = Response.ok(medicalFieldDto).type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+        // Immutable resource
+        CacheControl cache = new CacheControl();
+        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
 
-        return response.build();
+        return Response.ok(medicalFieldDto).type(MedicalFieldDto.CONTENT_TYPE+"+json")
+                .tag(entityTag).cacheControl(cache).build();
     }
 
     @POST

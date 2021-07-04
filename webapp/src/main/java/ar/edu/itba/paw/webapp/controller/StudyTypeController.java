@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("study-types")
@@ -66,7 +67,6 @@ public class StudyTypeController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE+"+json"})
     public Response getStudyTypeById(@PathParam("id") final int id){
-
         Optional<StudyType> studyTypeOptional = studyTypeService.findById(id);
 
         if (!studyTypeOptional.isPresent())
@@ -74,8 +74,10 @@ public class StudyTypeController {
 
         StudyTypeDto studyTypeDto = new StudyTypeDto(studyTypeOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDto.hashCode()));
+        CacheControl cache = new CacheControl();
+        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
         Response.ResponseBuilder response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag).cacheControl(cache);
 
         return response.build();
     }
@@ -99,14 +101,10 @@ public class StudyTypeController {
                     Integer perPage,
             @PathParam("id") final int id
     ){
-
         long lastPage = clinicService.getByStudyTypeIdLastPage(id,perPage);
 
-        if(lastPage <= 0)
+        if(lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
-
-        if(page > lastPage)
-            return Response.status(422).build();
 
         Collection<Clinic> clinics = clinicService.getByStudyTypeId(id,page,perPage);
 
