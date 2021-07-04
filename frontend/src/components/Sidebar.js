@@ -37,13 +37,22 @@ const navigations = [
     {route: {path: "divider3"}, divider:true},
     ]
 
+function filterNavigations(role) {
+    let navs = []
+    for(let n of navigations){
+        if(n.divider)
+            navs.push(n)
+        else if(n.route.role === undefined || n.route.role.includes(role))
+            navs.push(n)
+    }
+    return navs
+}
+
 const Sidebar = () => {
     const roleType = useSelector(state => state.auth.role);
-    const routes = getAllRoutes(roleType);
-
     return(
     <ul className={"sidebar2"}>
-        {navigations.map( (i) => (
+        {filterNavigations(roleType).map( (i) => (
             <Item key={i.route.path} item={i} />
         ))}
     </ul>
