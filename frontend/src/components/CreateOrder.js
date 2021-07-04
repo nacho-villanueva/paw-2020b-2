@@ -929,8 +929,7 @@ function CreateOrder(){
                                         <img
                                             className="align-self-end ml-3 signature"
                                             alt="medic's signature"
-                                            src={image.src}
-                                            ref={image}
+                                            src={image}
                                         />
                                     </div>
                                 </div>
