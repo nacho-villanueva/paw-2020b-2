@@ -2,3 +2,16 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.reorder {
+    order: 2;
+}
+
+.filters-card{
+    width: 80%;
+}
+@media screen and (max-width: 800px) {
+    .filters-card{
+        width: 100%;
+    }
+}

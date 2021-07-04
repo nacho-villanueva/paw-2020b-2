@@ -116,7 +116,7 @@ function MyOrders(){
             event.stopPropagation();
         }else{
             let aux = searchFilters;
-            console.log("BEFORE READING", aux);
+            //console.log("BEFORE READING", aux);
             aux.page = 1;
             aux.studyType = getValueFromEvent("studyTypeSelect", event);
 
@@ -131,7 +131,7 @@ function MyOrders(){
             setCurrentPage(aux.page);
             setSearchFilters(aux);
 
-            console.log("after READING", searchFilters);
+            //console.log("after READING", searchFilters);
 
             setUpdate(update+1);
             setSearching(searching +1);
@@ -168,7 +168,7 @@ function MyOrders(){
     return(
         <div className="custom-row justify-content-center mt-5" key={"my-orders_" + update}>
             <div className="col-sm-7">
-                <div className="card bg-light">
+                <div className="card bg-light float-right">
                     <div className="card-body">
                         <p className="card-title h4">Orders</p>
                         <hr className="mt-3 mb-4"/>
@@ -180,7 +180,7 @@ function MyOrders(){
                 </div>
             </div>
             <div className="col-sm-5">
-                <div className="card bg-light">
+                <div className="card bg-light float-left filters-card">
                     <div className="card-body">
                         <p className="card-title h4">Filters</p>
                         <hr/>
