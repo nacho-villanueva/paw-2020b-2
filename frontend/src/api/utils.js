@@ -67,3 +67,8 @@ export function findLastPageNumber(last){
     }
     return 1;
 }
+
+export function prepareViewStudyUrl(url){
+    let sts = url.split("/");
+    return sts[sts.length - 1];
+}

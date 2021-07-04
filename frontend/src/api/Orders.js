@@ -1,15 +1,30 @@
 import {store} from "../redux";
 import apiInstance from ".";
-import { parameterSerializer, parseHeadersLinks, findLastPageNumber } from "./utils";
+import { parameterSerializer, parseHeadersLinks, findLastPageNumber, prepareViewStudyUrl } from "./utils";
 import {InternalQuery} from "./Auth";
 
-export async function SetUpStudyTypes(orders, setOrders){
+export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
+    let aux = orders;
+    orders.forEach((val, idx) => {
+        for(let s in studyTypesList){
+            if(studyTypesList[s].url === val["studyType"]){
+                aux[idx]["studyType"] = studyTypesList[s].name;
+            }
+        }
+        aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
+    });
+    setOrders(aux);
+}
+
+export async function GetAndSetUpStudyTypesAndLink(orders, setOrders){
     apiInstance.get("/study-types")
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
+        SetUpStudyTypesAndLink(stl, orders, setOrders);
+        /*
         let aux = orders;
         orders.forEach((val, idx) => {
             for(let s in stl){
@@ -17,8 +32,10 @@ export async function SetUpStudyTypes(orders, setOrders){
                     aux[idx]["studyType"] = stl[s].name;
                 }
             }
+            aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
         });
         setOrders(aux);
+        */
         return r.status;
     })
     .catch((error) => {return -1;} );

@@ -16,9 +16,10 @@ export function MyOrdersFilters(props){
                     name="studyType"
                     placeholder="Any study type"
                 >
-                    {studyTypesList.map((item) => (
+                    {studyTypesList.map((item, index) => (
                         <option value={item.id}
-                            selected={item.id === searchFilters.studyType}
+                            key={"study-"+index+"-"+item.id}
+                            defaultValue={item.id === searchFilters.studyType}
                         >{item.name}</option>
                     ))}
                 </Form.Control>
@@ -30,9 +31,10 @@ export function MyOrdersFilters(props){
                     name="clinic"
                     placeholder="Any clinic"
                 >
-                    {clinicsList.map((item) => (
+                    {clinicsList.map((item, index) => (
                         <option value={item.id}
-                            selected={item.id === searchFilters.clinicIDs}
+                            key={"clinic-"+index+"-"+item.id}
+                            defaultValue={item.id === searchFilters.clinicIDs}
                         >{item.name}</option>
                     ))}
                 </Form.Control>

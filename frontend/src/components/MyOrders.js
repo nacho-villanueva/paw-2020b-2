@@ -1,5 +1,5 @@
-import {useState, useEffect, useLayoutEffect} from "react";
-import { GetOrders, SetUpStudyTypes } from "../api/Orders";
+import {useState, useLayoutEffect} from "react";
+import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink } from "../api/Orders";
 import {useSelector} from "react-redux";
 import { Form, Button} from "react-bootstrap";
 
@@ -58,14 +58,20 @@ function MyOrders(){
 
         GetOrders(setOrders,searchFilters, setTotalOrderPages)
             .then( (res) => {
-                if(res !== -1 ) {
-                    SetUpStudyTypes(orders, setOrders)
+                if(studyTypesList.length === 0 ) {
+                    GetAndSetUpStudyTypesAndLink(orders, setOrders)
                         .then((r) => {
-                            if(r !== -1){
-                                SetUpClinicNames();
-                                console.log("FETCHING PAGE", orders)
-                            }
+                            console.log("running on fetched studytypeslist");
+                            SetUpClinicNames();
+                            setUpdate(update+1);
+                            console.log("FETCHING PAGE", orders)
+
                         });
+                }else{
+                    console.log("running on saved studytypeslist", studyTypesList);
+                    SetUpStudyTypesAndLink(studyTypesList, orders, setOrders);
+                    SetUpClinicNames();
+                    setUpdate(update+1);
                 }
             });
         setCurrentPage(pageNumber);
@@ -77,11 +83,13 @@ function MyOrders(){
         */
     }
 
+    const [searching, setSearching] = useState(0);
+
     //calling on mount...
     useLayoutEffect( () => {
         fetchAndChangePage(currentPage);
         GetStudyTypes(setStudyTypesList, update, setUpdate);
-    }, []);
+    }, [,searching]);
 
 
     const [filtersValidated, setFiltersValidated] = useState(false);
@@ -98,10 +106,14 @@ function MyOrders(){
             aux.patientEmail = event.target[2].value;
             aux.fromTime = event.target[3].value;
             aux.toTime = event.target[4].value;
-            console.log("AUX", aux);
-            console.log("event", event);
-
+            aux.page = 1;
+            setCurrentPage(aux.page);
+            setSearchFilters(searchFilters);
+            setSearching(searching +1);
+            //fetchAndChangePage(currentPage);
         }
+
+        setFiltersValidated(true);
     }
 
 
@@ -116,7 +128,7 @@ function MyOrders(){
     const FetchedResults = () => {
         return(
             <div className="custom-row" key={"fetchedResults_"+update}>
-                <ul className="nav flex-column" id="orders" role="tablist">
+                <ul className="nav flex-column w-100" id="orders" role="tablist">
                     {
                         orders.map((item, index) => (
                             <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
@@ -129,17 +141,17 @@ function MyOrders(){
 
 
     return(
-        <div className="custom-row justify-content-center" key={"my-orders_" + update}>
+        <div className="custom-row justify-content-center mt-5" key={"my-orders_" + update}>
             <div className="col-sm-7">
                 <div className="card bg-light">
-                    <div className="custom-row mt-4">
+                    <div className="card-body">
                         <p className="card-title h4">Orders</p>
                         <hr className="mt-3 mb-4"/>
+                        {orders.length === 0 ?
+                            <NoOrdersFound/> :
+                            <FetchedResults/>
+                        }
                     </div>
-                    {orders.length === 0 ?
-                        <NoOrdersFound/> :
-                        <FetchedResults/>
-                    }
                 </div>
             </div>
             <div className="col-sm-5">
@@ -159,6 +171,7 @@ function MyOrders(){
                     <button onClick={()=>{fetchAndChangePage(currentPage);}}>CLICK ME {currentPage}</button>
                     <button onClick={()=>{setCurrentPage(currentPage + 1);}}>pageNumber++</button>
                     <button onClick={()=>{setCurrentPage(1);}}>RESET PAGE NUMBER</button>
+                    <button onClick={()=>{setUpdate(update+1);}}>UPDATE++</button>
                 </div>
             </div>
 

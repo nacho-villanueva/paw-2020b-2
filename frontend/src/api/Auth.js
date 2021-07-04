@@ -87,7 +87,7 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
-            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id};
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
         setStudyTypesList(stl);
         setCount(count+5);
