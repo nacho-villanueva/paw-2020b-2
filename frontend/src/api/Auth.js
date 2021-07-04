@@ -33,7 +33,7 @@ export function logout(){
 
 
 export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
-    apiInstance.get( "/medics/" + store.getState().auth.userId )
+    return apiInstance.get( "/medics/" + store.getState().auth.userId )
     .then((r) => {
         orderInfo.medicName = r.data.name;
         orderInfo.medicEmail = store.getState().auth.email;
