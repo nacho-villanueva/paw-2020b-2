@@ -1,6 +1,7 @@
 .custom-row{
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .reorder {
@@ -8,10 +9,32 @@
 }
 
 .filters-card{
-    width: 80%;
+    width: 30%;
+    margin: 1.25rem;
+    max-width: 30rem;
+
 }
-@media screen and (max-width: 800px) {
+.orders-card{
+    width: 60%;
+    margin:1.25rem;
+    max-width: 60rem;
+}
+@media screen and (max-width: 1024px) {
     .filters-card{
-        width: 100%;
+        width:90%;
+        margin:1.25rem;
+        max-width: none;
+    }
+    .reorder{
+        order:initial;
+    }
+    .orders-card{
+        width:90%;
+        margin:1.25rem;
+    }
+    .custom-row{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }

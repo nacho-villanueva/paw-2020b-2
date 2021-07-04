@@ -39,13 +39,12 @@ function MyOrders(){
 
     const SetUpClinicNames = () => {
         if(orders.length > 0){
-            let count = 0;
             let aux = orders;
             Promise.all(orders.map(async (order, index) => {
                 if(order["clinic"].includes("http")){
                     await InternalQuery(order["clinic"]).then((res) => {aux[index]["clinic"] = res.name;});
                     setOrders(aux);
-                    count++;
+                    setCount(count +1)
                     setUpdate(update+count);
                 }
             }))
@@ -74,7 +73,7 @@ function MyOrders(){
         GetOrders(setOrders,searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
-                    GetAndSetUpStudyTypesAndLink(orders, setOrders)
+                    GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate)
                         .then((r) => {
                             //console.log("running on fetched studytypeslist");
                             SetUpClinicNames();
@@ -167,37 +166,34 @@ function MyOrders(){
 
     return(
         <div className="custom-row justify-content-center mt-5" key={"my-orders_" + update}>
-            <div className="col-sm-7">
-                <div className="card bg-light float-right">
-                    <div className="card-body">
-                        <p className="card-title h4">Orders</p>
-                        <hr className="mt-3 mb-4"/>
-                        {orders.length === 0 ?
-                            <NoOrdersFound/> :
-                            <FetchedResults/>
-                        }
-                    </div>
+            <div className="card bg-light float-left filters-card reorder">
+                <div className="card-body">
+                    <p className="card-title h4">Filters</p>
+                    <hr/>
+                    <MyOrdersFilters
+                        filtersValidated={filtersValidated}
+                        handleFiltersSubmit={handleFilterSubmit}
+                        searchFilters={searchFilters}
+                        clinicsList={clinicsList}
+                        studyTypesList={studyTypesList}
+                        role={roleType}
+                    />
                 </div>
+                {/* ::::::::!!!DEV TOOLS!!!::::::::
+                <button onClick={()=>{fetchAndChangePage(currentPage);}}>CLICK ME {currentPage}</button>
+                <button onClick={()=>{setCurrentPage(currentPage + 1);}}>pageNumber++</button>
+                <button onClick={()=>{setCurrentPage(1);}}>RESET PAGE NUMBER</button>
+                <button onClick={()=>{setUpdate(update+1);}}>UPDATE++</button>
+                */}
             </div>
-            <div className="col-sm-5">
-                <div className="card bg-light float-left filters-card">
-                    <div className="card-body">
-                        <p className="card-title h4">Filters</p>
-                        <hr/>
-                        <MyOrdersFilters
-                            filtersValidated={filtersValidated}
-                            handleFiltersSubmit={handleFilterSubmit}
-                            searchFilters={searchFilters}
-                            clinicsList={clinicsList}
-                            studyTypesList={studyTypesList}
-                            role={roleType}
-                        />
-                    </div>
-                    {/* ::::::::!!!DEV TOOLS!!!:::::::: */}
-                    <button onClick={()=>{fetchAndChangePage(currentPage);}}>CLICK ME {currentPage}</button>
-                    <button onClick={()=>{setCurrentPage(currentPage + 1);}}>pageNumber++</button>
-                    <button onClick={()=>{setCurrentPage(1);}}>RESET PAGE NUMBER</button>
-                    <button onClick={()=>{setUpdate(update+1);}}>UPDATE++</button>
+            <div className="card bg-light float-right orders-card">
+                <div className="card-body">
+                    <p className="card-title h4">Orders</p>
+                    <hr className="mt-3 mb-4"/>
+                    {orders.length === 0 ?
+                        <NoOrdersFound/> :
+                        <FetchedResults/>
+                    }
                 </div>
             </div>
 

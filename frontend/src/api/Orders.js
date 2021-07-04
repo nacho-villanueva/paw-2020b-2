@@ -5,10 +5,12 @@ import {InternalQuery} from "./Auth";
 
 export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
     let aux = orders;
+    console.log("WHY", studyTypesList);
     orders.forEach((val, idx) => {
         for(let s in studyTypesList){
             if(studyTypesList[s].url === val["studyType"]){
                 aux[idx]["studyType"] = studyTypesList[s].name;
+                console.log("YES");
             }
         }
         //eww...
@@ -17,7 +19,7 @@ export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
     setOrders(aux);
 }
 
-export async function GetAndSetUpStudyTypesAndLink(orders, setOrders){
+export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate){
     apiInstance.get("/study-types")
     .then((r) => {
         let stl = [];
@@ -25,18 +27,7 @@ export async function GetAndSetUpStudyTypesAndLink(orders, setOrders){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
         SetUpStudyTypesAndLink(stl, orders, setOrders);
-        /*
-        let aux = orders;
-        orders.forEach((val, idx) => {
-            for(let s in stl){
-                if(stl[s].url === val["studyType"]){
-                    aux[idx]["studyType"] = stl[s].name;
-                }
-            }
-            aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
-        });
-        setOrders(aux);
-        */
+        setUpdate(update+1);
         return r.status;
     })
     .catch((error) => {return -1;} );
