@@ -72,3 +72,14 @@ export function prepareViewStudyUrl(url){
     let sts = url.split("/");
     return sts[sts.length - 1];
 }
+
+export function getValueFromEvent(name, event){
+    for(var t of event.target){
+        if(t.name === name){
+            //console.log("NAME", t.name);
+            //console.log("VALUE", t.value);
+
+            return t.value;
+        }
+    }
+}

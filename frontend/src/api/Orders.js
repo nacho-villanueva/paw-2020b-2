@@ -11,6 +11,7 @@ export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
                 aux[idx]["studyType"] = studyTypesList[s].name;
             }
         }
+        //eww...
         aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
     });
     setOrders(aux);

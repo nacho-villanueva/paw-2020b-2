@@ -8,6 +8,7 @@ import { GetStudyTypes, InternalQuery } from "../api/Auth";
 import { Roles } from "../constants/Roles";
 import { OrderItem} from "./order_components/OrderItem";
 import { MyOrdersFilters} from "./order_components/MyOrdersFilter";
+import { getValueFromEvent } from "../api/utils";
 
 function MyOrders(){
     const roleType = useSelector(state => state.auth.role);
@@ -18,12 +19,11 @@ function MyOrders(){
     const [searchFilters, setSearchFilters] = useState({
         page: 1,
         perPage: '',
-        clinicIDs: '',
-        medicIDs: '',
+        clinicIDs: -1,
         patientEmail: '',
         fromTime: '',
         toTime: '',
-        studyType: '5',
+        studyType: -1,
         includeShared: true
     });
     const [studyTypesList, setStudyTypesList] = useState([]);
@@ -52,23 +52,38 @@ function MyOrders(){
         }
     }
 
+    const cleanUpFilters = () => {
+        let aux = searchFilters;
+        if(aux.clinicIDs === '-1'){
+            aux.clinicIDs = '';
+        }
+        if(aux.studyType === '-1'){
+            aux.studyType = '';
+        }
+        if(aux.page < 1 || aux.page > totalOrderPages){
+            aux.page = 1;
+        }
+        setSearchFilters(aux);
+    }
 
-   const fetchAndChangePage = (pageNumber) => {
-        searchFilters.page = pageNumber;
+
+    const fetchAndChangePage = (pageNumber) => {
+        cleanUpFilters();
+        setCurrentPage(searchFilters.page);
 
         GetOrders(setOrders,searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
                     GetAndSetUpStudyTypesAndLink(orders, setOrders)
                         .then((r) => {
-                            console.log("running on fetched studytypeslist");
+                            //console.log("running on fetched studytypeslist");
                             SetUpClinicNames();
                             setUpdate(update+1);
-                            console.log("FETCHING PAGE", orders)
+                           // console.log("FETCHING PAGE", orders)
 
                         });
                 }else{
-                    console.log("running on saved studytypeslist", studyTypesList);
+                    //console.log("running on saved studytypeslist", studyTypesList);
                     SetUpStudyTypesAndLink(studyTypesList, orders, setOrders);
                     SetUpClinicNames();
                     setUpdate(update+1);
@@ -87,7 +102,7 @@ function MyOrders(){
 
     //calling on mount...
     useLayoutEffect( () => {
-        fetchAndChangePage(currentPage);
+        fetchAndChangePage(searchFilters.page);
         GetStudyTypes(setStudyTypesList, update, setUpdate);
     }, [,searching]);
 
@@ -101,14 +116,24 @@ function MyOrders(){
             event.stopPropagation();
         }else{
             let aux = searchFilters;
-            aux.studyType = event.target[0].value;
-            aux.clinicIDs = event.target[1].value;
-            aux.patientEmail = event.target[2].value;
-            aux.fromTime = event.target[3].value;
-            aux.toTime = event.target[4].value;
+            console.log("BEFORE READING", aux);
             aux.page = 1;
+            aux.studyType = getValueFromEvent("studyTypeSelect", event);
+
+            aux.clinicIDs = getValueFromEvent("clinicSelect", event);
+
+            aux.patientEmail = getValueFromEvent("patientEmailInput", event);
+            aux.fromTime = getValueFromEvent("from-datePick", event);
+            aux.toTime = getValueFromEvent("to-datePick", event);
+
+
+
             setCurrentPage(aux.page);
-            setSearchFilters(searchFilters);
+            setSearchFilters(aux);
+
+            console.log("after READING", searchFilters);
+
+            setUpdate(update+1);
             setSearching(searching +1);
             //fetchAndChangePage(currentPage);
         }
@@ -127,7 +152,7 @@ function MyOrders(){
 
     const FetchedResults = () => {
         return(
-            <div className="custom-row" key={"fetchedResults_"+update}>
+            <div className="custom-row" key={"fetchedResults_"+update+"+"+searching}>
                 <ul className="nav flex-column w-100" id="orders" role="tablist">
                     {
                         orders.map((item, index) => (
@@ -165,6 +190,7 @@ function MyOrders(){
                             searchFilters={searchFilters}
                             clinicsList={clinicsList}
                             studyTypesList={studyTypesList}
+                            role={roleType}
                         />
                     </div>
                     {/* ::::::::!!!DEV TOOLS!!!:::::::: */}
