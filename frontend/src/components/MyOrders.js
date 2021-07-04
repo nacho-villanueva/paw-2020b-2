@@ -14,12 +14,13 @@ function MyOrders(){
     const [orders, setOrders] = useState([]);
     const [searchFilters, setSearchFilters] = useState({
         page: 1,
+        perPage: '',
         clinicIDs: '',
         medicIDs: '',
         patientEmail: '',
         fromTime: '',
         toTime: '',
-        studyType: '',
+        studyType: '5',
         includeShared: true
     });
     const [totalOrderPages, setTotalOrderPages] = useState(1);
@@ -47,14 +48,27 @@ function MyOrders(){
 
 
    const fetchAndChangePage = (pageNumber) => {
-       searchFilters.page = pageNumber;
-       //GetOrders(orders, setOrders, searchFilters, setTotalOrderPages, update, setUpdate);
-       GetOrders(setOrders,searchFilters, setTotalOrderPages).then( (r) => {SetUpStudyTypes(orders, setOrders).then((r) => { SetUpClinicNames(); console.log("FETCHING PAGE")})});
-       setCurrentPage(pageNumber);
+        searchFilters.page = pageNumber;
+
+        GetOrders(setOrders,searchFilters, setTotalOrderPages)
+            .then( (res) => {
+                if(res !== -1 ) {
+                    SetUpStudyTypes(orders, setOrders)
+                        .then((r) => {
+                            if(r !== -1){
+                                SetUpClinicNames();
+                                console.log("FETCHING PAGE", orders)
+                            }
+                        });
+                }
+            });
+        setCurrentPage(pageNumber);
+       /*
        console.log("ROLE TYPE", roleType);
        console.log("STATUS", status);
        console.log("auth", auth);
-
+       console.log("TOTAL PAGES", totalOrderPages);
+        */
     }
 
     //calling on mount...

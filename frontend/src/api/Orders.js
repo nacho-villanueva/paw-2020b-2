@@ -1,6 +1,6 @@
 import {store} from "../redux";
 import apiInstance from ".";
-import { parameterSerializer } from "./utils";
+import { parameterSerializer, parseHeadersLinks, findLastPageNumber } from "./utils";
 import {InternalQuery} from "./Auth";
 
 export async function SetUpStudyTypes(orders, setOrders){
@@ -21,19 +21,20 @@ export async function SetUpStudyTypes(orders, setOrders){
         setOrders(aux);
         return r.status;
     })
-    .catch((error) => {return error;} );
+    .catch((error) => {return -1;} );
 }
 
 export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
     let params = {
         'page': searchFilters.page,
+        'per_page': searchFilters.perPage,
         'clinics' : searchFilters.clinicIDs,
         'medics' : searchFilters.medicIDs,
-        'patientEmails' : searchFilters.patientEmail,
-        'fromTime' : searchFilters.fromTime,
-        'toTime' : searchFilters.toTime,
-        'studyTypes' : searchFilters.studyType,
-        'includeShared' : searchFilters.includeShared
+        'patient-email' : searchFilters.patientEmail,
+        'from-date' : searchFilters.fromTime,
+        'to-date' : searchFilters.toTime,
+        'study-type' : searchFilters.studyType,
+        'include-shared' : searchFilters.includeShared
     }
 
     let serializedParams = parameterSerializer(params);
@@ -42,13 +43,14 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
         (r) => {
             if(r.status === 200){
                 let headerInfo = r.headers;
-                /*
-                let headerInfo = r.headers.link;
-                headerInfo = headerInfo.split(',');
-                headerInfo = headerInfo.pop().split('?').pop().split('>').reverse().pop().split('=').pop();
-                */
+                if(headerInfo.hasOwnProperty("link")){
+                    let headerInfo = r.headers.link;
+                    //this is ugly
+                    let links = parseHeadersLinks(headerInfo);
+                    let lastPageNumber = findLastPageNumber(links['last']);
+                    setTotalOrderPages(lastPageNumber);
+                }
                 let orders = r.data;
-                //setUpdate(update+1);
                 setOrders(orders);
                 setTotalOrderPages(1);
 
@@ -58,7 +60,6 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
     ).catch((e) => {
         setOrders([]);
         setTotalOrderPages(0);
-        //setUpdate(update+1);
-        return e;
+        return -1;
     })
 }

@@ -45,3 +45,25 @@ export function getAuthorizedImage(src, setImage){
     })
     .catch((e) => { return undefined;});
 }
+
+export function parseHeadersLinks(link){
+    let data = link.split(",");
+    let parsedLinks = {};
+    for(var d of data){
+        let linkInfo = /<([^>]+)>;\s+rel="([^"]+)"/ig.exec(d);
+        parsedLinks[linkInfo[2]] = linkInfo[1];
+    }
+    return parsedLinks;
+}
+
+export function findLastPageNumber(last){
+    let sts = last.split("&");
+    console.log("STRINGS", sts);
+    for(var s of sts){
+        if(!s.includes("per_page") && s.includes("page")){
+            let aux = s.split("=");
+            return aux[1];
+        }
+    }
+    return 1;
+}
