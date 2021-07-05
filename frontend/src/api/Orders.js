@@ -59,10 +59,11 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
                     let links = parseHeadersLinks(headerInfo);
                     let lastPageNumber = findLastPageNumber(links['last']);
                     setTotalOrderPages(lastPageNumber);
+                }else{
+                    setTotalOrderPages(1);
                 }
                 let orders = r.data;
                 setOrders(orders);
-                setTotalOrderPages(1);
 
             }
             return r.status;

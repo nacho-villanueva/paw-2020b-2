@@ -179,15 +179,18 @@ function MyOrders(){
 
     const FetchedResults = () => {
         return(
-            <div className="row list-results" key={"fetchedResults_"+update+"+"+searching}>
-                <ul className="nav flex-column w-100 ul-results" id="orders" role="tablist">
-                    {
-                        orders.map((item, index) => (
-                            <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
-                        ))
-                    }
-                </ul>
+            <div style={{height: "90%"}}>
+                <div className="row list-results" key={"fetchedResults_"+update+"+"+searching}>
+                    <ul className="nav flex-column w-100 ul-results" id="orders" role="tablist">
+                        {
+                            orders.map((item, index) => (
+                                <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
+                            ))
+                        }
+                    </ul>
+                </div>
                 <PaginationComponent
+                    update={update}
                     current={currentPage}
                     changePageAndFetch={changePageAndFetch}
                     total={totalOrderPages}

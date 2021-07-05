@@ -3,10 +3,12 @@ import {Pagination} from "react-bootstrap";
 export function PaginationComponent(props){
     let active = props.current;
     let changePageAndFetch = props.changePageAndFetch;
-    let total = props.total
+    let total = props.total;
+    let update = props.update;
+    console.log("PAGE TOTAL",total);
 
         return(
-            <div className="row justify-content-center">
+            <div className="row justify-content-center w-100" key={"page_"+update} style={{position: "aboslute", bottom: "0", marginTop: "0.5em"}}>
                 {
                     total === 1 ?
                     <></>
