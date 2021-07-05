@@ -7,6 +7,7 @@ import ar.edu.itba.paw.services.PatientService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.PatientGetDto;
 import ar.edu.itba.paw.webapp.dto.PatientPostDto;
+import ar.edu.itba.paw.webapp.dto.PatientPutDto;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -112,7 +113,7 @@ public class PatientController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updatePatient(
             @PathParam("id") final int patientId,
-            @Valid @NotNull PatientPostDto patientDto
+            @Valid @NotNull PatientPutDto patientDto
     ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
