@@ -1,30 +1,120 @@
-import { useJwt, decodeToken } from "react-jwt";
 import apiInstance from "./"
 import {store} from "../redux";
-import {authenticate, deAuthenticate} from "../redux/actions";
+import {authenticate, deAuthenticate, updateRole} from "../redux/actions";
 import {Roles} from "../constants/Roles";
+import {ERROR_CODES} from "../constants/ErrorCodes";
 
-export function login(user, pass){
+export function login(user, pass, rememberMe, onSuccess, onFail){
+
+    let expire = new Date();
+    if(rememberMe)
+        expire.setDate( expire.getDate() + 7);
+    else
+        expire.setHours( expire.getHours() + 12);
+    const expireEpoch = Math.floor( expire / 1000 );
+
     apiInstance.post("/", {
         "username": user,
         "password": pass
     })
         .then((r) => {
-            store.dispatch(authenticate(r.headers.authorization));
-            console.log(store.getState().auth);
-        }).catch();
+            store.dispatch(authenticate(r.headers.authorization, expireEpoch));
+            onSuccess()
+        }).catch(onFail);
 }
 
-export function registerUser(email, pass){
+export function registerUser(email, pass, onSuccess, onFail){
 
     apiInstance.post("/users",
         {
             "email": email,
             "password": pass,
             "locale": navigator.language
-        })
-        .then( (r) => console.log(r.status)).catch(() => "Fuck you");
+        }).then(onSuccess)
+        .catch((err) => {
+            let errors = {email: false, password: false}
+            if(err.response != null) {
+                for (const e of err.response.data) {
+                    switch (e.property) {
+                        case "email":
+                            if(e.code === ERROR_CODES.ALREADY_EXISTS)
+                                errors.email = ERROR_CODES.ALREADY_EXISTS;
+                            else
+                                errors.email = ERROR_CODES.INVALID
+                            break;
+                        case "password":
+                            errors.password = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            onFail(errors)
+        });
 
+}
+
+export function registerPatient(name, insurancePlan, insuranceNumber, onSuccess, onFail){
+    apiInstance.post("/patients/",
+        {
+            "name": name,
+            "patientPlanInfo": {
+                "plan": {
+                    "id": insurancePlan.id,
+                    "name": insurancePlan.name,
+                    "url": insurancePlan.url
+                },
+                "number": insuranceNumber
+            }
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.PATIENT));
+            onSuccess()
+        }).catch((err) => {
+            onFail();
+        });
+}
+
+export function registerMedic(medic, onSuccess, onFail){
+
+    apiInstance.post("/medics/",
+        {
+            "name": medic.name,
+            "telephone": medic.telephone,
+            "identification": medic.identification,
+            "licenceNumber": medic.licenceNumber,
+            "medicalFields": medic.medicalFields
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.MEDIC));
+            onSuccess();
+        }).catch((err) => {
+            let response = []
+            if(err.response != null)
+                response = err.response.data
+            onFail(response);
+        });
+}
+
+export function registerClinic(clinic, onSuccess, onFail){
+    apiInstance.post("/clinics/",
+        {
+            "name": clinic.name,
+            "telephone": clinic.phoneNumber,
+            "availableStudies": clinic.studyTypes,
+            "acceptedPlans": clinic.acceptedInsurance,
+            "hours": clinic.hours
+        })
+        .then( (r) => {
+            store.dispatch(updateRole(Roles.CLINIC));
+            onSuccess()
+        }).catch((err) => {
+            let response = []
+            if(err.response != null)
+                response = err.response.data
+            onFail(response);
+    });
 }
 
 export function logout(){
@@ -32,8 +122,8 @@ export function logout(){
 }
 
 
-export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
-    return apiInstance.get( "/medics/" + store.getState().auth.userId )
+export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount, setStatusCode, setErrors){
+    apiInstance.get( "/medics/" + store.getState().auth.userId )
     .then((r) => {
         orderInfo.medicName = r.data.name;
         orderInfo.medicEmail = store.getState().auth.email;
@@ -41,8 +131,23 @@ export function GetLoggedMedic(orderInfo, setOrderInfo, count, setCount){
         orderInfo.identificationSrc = r.data.identification;
         setOrderInfo(orderInfo);
         setCount(count+2);
+        setStatusCode(r.status);
     })
-    .catch();
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }
 
 export function FindPatient(patientEmail, count, setCount, patientInfo, setPatientInfo){
@@ -66,18 +171,17 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
         out.insurance.plan= r.data.medicPlan;
         out.error = false;
         out.loading = false;
-        console.log(out);
         setPatientInfo(out);
         setCount(count+3);
 
     })
     .catch((e) => {
         let out = patientInfo;
-        patientInfo.email = patientEmail;
-        patientInfo.error = true;
-        patientInfo.loading = false;
+        out.email = patientEmail;
+        out.error = true;
+        out.loading = false;
 
-        setPatientInfo(patientInfo);
+        setPatientInfo(out);
         setCount(count+4);
     });
 }
@@ -113,7 +217,7 @@ function checkUndefinedArray(array){
     return (count > 0);
 }
 
-export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages){
+export function QueryClinics(filters, setClinicsList, count, setCount, page, setTotalClinicPages, setStatusCode, setErrors){
     let params = {
         'page': page,
         'days': filters.days,
@@ -189,14 +293,30 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
             }
             setClinicsList(clinicsList);
 
+            setStatusCode(r.status);
+
             //setCount(count+3);
         }
 
     })
-    .catch();
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }
 
-export function CreateMedicalOrder(order){
+export function CreateMedicalOrder(order, setStatusCode, setErrors){
     apiInstance.post("/orders",{
         clinicId: order.clinicId,
         patientEmail: order.patientEmail,
@@ -207,8 +327,22 @@ export function CreateMedicalOrder(order){
             plan: order.patientInsurancePlan,
             number: order.patientInsuranceNumber
         }
-    }).then((r) => {console.log("nice order", r);})
-    .catch((error) => { console.log("OH NO", error);});
+    }).then( (r) => {setStatusCode(r.status);})
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
 }
 
 export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
@@ -270,4 +404,16 @@ export function GetResults(orderId, results, setResults, count, setCount){
     }).catch((e) => {
         console.log("getting results for order error", e)
     });
+}
+
+export function RegisterPatient(patient){
+
+}
+
+export function RegisterMedic(medic){
+
+}
+
+export function RegisterClinic(clinic){
+
 }

@@ -1,0 +1,351 @@
+{
+  "access-requests": {
+    "body": {
+      "form": {
+        "button": {
+          "accept": "Aceptar",
+          "deny": "Rechazar",
+          "preview": "Vista previa"
+        },
+        "medic": {
+          "label": "Nombre del médico"
+        },
+        "study-id": {
+          "label": "Tipo de Estudio: {{studyType}}"
+        }
+      },
+      "no-requests": "Parece que no hay nuevas solicitudes de acceso a sus órdenes en este momento.",
+      "requests": {
+        "medic": "Médico: {{name}}",
+        "title": "Solicitudes de acceso a sus órdenes"
+      },
+      "title": "Solicitud de acceso a Órdenes"
+    }
+  },
+  "advanced-search-clinics": {
+    "form": {
+      "clinic-name": {
+        "label": "Nombre de la clínica"
+      }
+    },
+    "title": "Búsqueda avanzada | Clínica"
+  },
+  "appname": "MedTransfer",
+  "create-order": {
+    "buttons": {
+      "cancel": "Cancelar",
+      "next": "Siguiente",
+      "prev": "Volver",
+      "submit": "Subir Orden"
+    },
+    "clinic-info": {
+      "email": "Correo Electrónico",
+      "insurance": "Planes Médicos Aceptados",
+      "open-hours": "Horarios Abiertos",
+      "studies": "Tipos de Estudio Disponibles",
+      "telephone": "Número de Teléfono"
+    },
+    "steps": {
+      "step-1": {
+        "form": {
+          "description": {
+            "errors": {
+              "missing-field": "Por favor proporcione más información sobre este pedido."
+            },
+            "label": "Descripción de la orden"
+          },
+          "medic": {
+            "label": "$t(role.medic)"
+          },
+          "patient-email": {
+            "errors": {
+              "invalid": "Introduzca un correo electrónico válido ",
+              "missing": {
+                "close-alert": "Cerrar",
+                "message": "Lo sentimos, no pudimos encontrar este correo electrónico en la base de datos de nuestros pacientes."
+              },
+              "missing-field": "Por favor ingrese el correo electrónico del $t(role.patient)"
+            },
+            "label": "Dirección de Correo del $t(role.patient)"
+          },
+          "patient-insurance-number": {
+            "errors": {
+              "missing-field": "Por favor ingrese el número del Plan médico del $t(role.patient)"
+            },
+            "label": "Número de Plan médico del $t(role.patient)"
+          },
+          "patient-insurance-plan": {
+            "errors": {
+              "invalid": {
+                "close-alert": "Cerrar",
+                "message": "Por favor, complete ambos Plan Médico y Número de Plan Médico o ninguno."
+              },
+              "missing-field": "Por favor ingrese el Plan Médico del $t(role.patient)"
+            },
+            "label": "Plan médico del $t(role.patient)"
+          },
+          "patient-name": {
+            "errors": {
+              "missing-field": "Por favor ingrese el nombre del $t(role.patient)"
+            },
+            "label": "Nombre del $t(role.patient)"
+          },
+          "study-type": {
+            "errors": {
+              "missing-field": "Elija un tipo de estudio"
+            },
+            "label": "Tipo de estudio",
+            "placeholder": "Por favor ingrese un tipo de estudio"
+          }
+        },
+        "title": "Crear una nueva orden médica"
+      },
+      "step-2": {
+        "form": {
+          "available-hours": {
+            "buttons": {
+              "show": "Buscar por disponibilidad"
+            },
+            "columns": {
+              "available": "Disponible",
+              "day": "Día",
+              "from-time": "Desde",
+              "to-time": "Hasta"
+            }
+          },
+          "clinic-name": {
+            "label": "Buscar por nombre de la clínica"
+          },
+          "errors": {
+            "missing": "Clínica seleccionada no existe",
+            "missing-field": "Por favor seleccione una clínica"
+          },
+          "insurance-plan": {
+            "label": "Buscar por Plan médico"
+          },
+          "results": {
+            "no-results": "No se encontraron clínicas según los filtros de búsqueda",
+            "no-selected": "Ninguna clínica seleccionada",
+            "selected": "Clínica seleccionada",
+            "title": "Resultados"
+          },
+          "submit": {
+            "value": "Buscar"
+          }
+        },
+        "title": "Seleccionar clínica"
+      },
+      "step-3": {
+        "form": {
+          "clinic": "\u003c0\u003eClinica\u003c/0\u003e{{clinicName}}",
+          "date": "Fecha: {{today}}",
+          "medic-id": "\u003c0\u003e{{medicName}}\u003c/0\u003e\u003c1\u003eN.M.: {{medicLicence}}\u003c/1\u003e",
+          "medic-sign-alt": "firma del médico",
+          "patient": "\u003c0\u003ePaciente\u003c/0\u003e{{patientName}}",
+          "patient-insurance-number": "\u003c0\u003eNúmero de Plan médico del paciente\u003c/0\u003e{{patientInsuranceNumber}}",
+          "patient-insurance-plan": "\u003c0\u003ePlan médico del paciente\u003c/0\u003e{{patientInsurancePlan}}",
+          "study-type": "Tipo de estudio: {{studyType}}",
+          "title": "Orden médica"
+        },
+        "title": "Subir órden médica"
+      }
+    }
+  },
+  "days": {
+    "day-0": "Domingo",
+    "day-1": "Lunes",
+    "day-2": "Martes",
+    "day-3": "Miércoles",
+    "day-4": "Jueves",
+    "day-5": "Viernes",
+    "day-6": "Sábado",
+    "day-short-0": "Do",
+    "day-short-1": "Lu",
+    "day-short-2": "Ma",
+    "day-short-3": "Mi",
+    "day-short-4": "Ju",
+    "day-short-5": "Vi",
+    "day-short-6": "Sa"
+  },
+  "fragments": {
+    "navbar": {
+      "search-clinic": "Clínicas disponibles"
+    },
+    "sidebar": {
+      "access-requests": "Solicitudes de acceso",
+      "create-data-type": "Crear tipo de datos",
+      "create-order": "Crear orden",
+      "heading": {
+        "orders": "Órdenes"
+      },
+      "home": "Hogar",
+      "logout": "Cerrar sesión",
+      "my-orders": "Mis órdenes",
+      "profile": "Mi perfil",
+      "request-order": "Solicitar acceso a órdenes",
+      "search": "Buscar clínicas",
+      "search-clinic": "Clínicas disponibles"
+    }
+  },
+  "home": {
+    "tabs": {
+      "login": {
+        "form": {
+          "email": {
+            "errors": {
+              "invalid": "Ingrese un correo electrónico válido",
+              "missing-field": "El correo electrónico no puede estar vacío"
+            },
+            "label": "Dirección de correo electrónico",
+            "placeholder": "Ingrese un correo electrónico"
+          },
+          "errors": {
+            "unauthorized": {
+              "close-alert": "Cerrar",
+              "message": "Contraseña/Usuario incorrecto o la cuenta está en proceso de verficación via correo electrónico."
+            }
+          },
+          "password": {
+            "errors": {
+              "invalid": "La contraseña debe tener entre {{min}} y {{max}} caracteres",
+              "missing-field": "La contraseña no puede ser vacía"
+            },
+            "label": "Contraseña",
+            "placeholder": "******"
+          },
+          "remember-me": {
+            "label": "Recuérdame"
+          },
+          "submit": {
+            "value": "Iniciar Sesión"
+          }
+        },
+        "title": "Iniciar Sesión"
+      },
+      "register": {
+        "form": {
+          "email": {
+            "errors": {
+              "already-exists": "El correo electrónico ya fue registrado",
+              "invalid": "Ingrese un correo electrónico válido",
+              "missing-field": "El correo electrónico no puede estar vacío "
+            },
+            "label": "Dirección de correo electrónico",
+            "placeholder": "Ingrese un correo electrónico"
+          },
+          "password": {
+            "errors": {
+              "invalid": "La longitud de la contraseña debe tener entre {{min}} y {{max}} caracteres",
+              "missing-field": "La contraseña no puede ser vacía"
+            },
+            "label": "Contraseña",
+            "placeholder": "******"
+          },
+          "repeat-password": {
+            "errors": {
+              "invalid": "Las contraseñas deben coincidir"
+            },
+            "label": "Repita la contraseña",
+            "placeholder": "******"
+          },
+          "submit": {
+            "value": "Registrarse"
+          },
+          "success": "Registration Successful! Please verify your email before attempting to log in."
+        },
+        "title": "Registrarse"
+      }
+    },
+    "title": "\u003c0\u003eBienvenido a \u003c/0\u003e\u003c1\u003e$t(appname)\u003c/1\u003e"
+  },
+  "registration": {
+    "clinic": {
+      "continue": "Continuar",
+      "hours": {
+        "error": "Por favor insertar horarios validos",
+        "label": "Dias Abiertos",
+        "placeholder": "Seleccione los Dias Abiertos"
+      },
+      "insurances": {
+        "error": "Por favor insertar seguros medicos",
+        "label": "Seguros Medicos Aceptados",
+        "modal": "¿No encuentra un seguro medico? Haga clic aquí para agregarlo a nuestros sistemas  ",
+        "placeholder": "Elige las Obras Sociales Aceptadas"
+      },
+      "name": {
+        "error": "Por favor insertar el nombre de la clínica",
+        "label": "Nombre de la Clínica"
+      },
+      "phone-number": {
+        "error": "Por favor insertar el número de teléfono de la clinica",
+        "label": "Número de Teléfono"
+      },
+      "study-types": {
+        "error": "Por favor insertar los tipos de estudios aceptados",
+        "label": "Tipos de Estudios",
+        "modal": "¿No encuentra un tipo de estudio? Haga clic aquí para agregarlo a nuestros sistemas  ",
+        "placeholder": "Elige los Tipos de Estudios Aceptados"
+      }
+    },
+    "medic": {
+      "continue": "Continuar",
+      "firstname": {
+        "error": "Por favor insertar su nombre",
+        "label": "Nombre"
+      },
+      "identification": {
+        "error": "Por favor insertar una imagen valida",
+        "help": "Por favor subir una foto de su sello y firma",
+        "label": "Sello y Firma"
+      },
+      "lastname": {
+        "error": "Por favor insertar su apellido",
+        "label": "Apellido"
+      },
+      "license": {
+        "error": "Por favor insertar su numero de licencia",
+        "label": "Número de Licencia"
+      },
+      "medical-fields": {
+        "error": "Por favor insertar un campo valido",
+        "label": "Campos Médicos",
+        "modal": "¿No encuentra su campo médico? Haga clic aquí para agregarlo a nuestros sistemas",
+        "placeholder": "Elige sus Campos Médicos"
+      },
+      "phone-number": {
+        "error": "Por favor insetar su número de teléfono",
+        "label": "Número de Teléfono"
+      }
+    },
+    "patient": {
+      "continue": "Continuar",
+      "firstname": {
+        "error": "Por favor insertar su nombre",
+        "label": "Nombre"
+      },
+      "insurance-number": {
+        "error": "Por favor insertar un numero de obra social válido",
+        "label": "Numero del Seguro Medico",
+        "placeholder": "Numero del Seguro Medico"
+      },
+      "insurance-plan": {
+        "error": "Por favor insertar una obra social válida",
+        "label": "Seguro Medico",
+        "placeholder": "Seguro Medico"
+      },
+      "lastname": {
+        "error": "Por favor insertar su apellido",
+        "label": "Apellido"
+      }
+    },
+    "subtitle": "Necesitamos un par de datos.",
+    "tabs": "Eligí entrar como: ",
+    "title": "Antes de continuar..."
+  },
+  "role": {
+    "clinic": "Clínica",
+    "medic": "Médico",
+    "patient": "Paciente",
+    "user": "Usuario"
+  }
+}

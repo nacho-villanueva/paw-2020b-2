@@ -1,0 +1,352 @@
+{
+  "access-requests": {
+    "body": {
+      "form": {
+        "button": {
+          "accept": "Accept",
+          "deny": "Deny",
+          "preview": "Preview"
+        },
+        "medic": {
+          "label": "Medic\u0027s Name"
+        },
+        "study-id": {
+          "label": "Study Type: {{studyType}}"
+        }
+      },
+      "no-requests": "It seems there are no new requests for access to your orders right now.",
+      "requests": {
+        "medic": "Medic: {{name}}",
+        "title": "Requests to Access Your Orders"
+      },
+      "title": "Request to Access Your Orders"
+    }
+  },
+  "advanced-search-clinics": {
+    "form": {
+      "clinic-name": {
+        "label": "Clinic Name"
+      }
+    },
+    "title": "Advanced Search | Clinic"
+  },
+  "appname": "MedTransfer",
+  "create-order": {
+    "buttons": {
+      "cancel": "Cancel",
+      "next": "Next",
+      "prev": "Back",
+      "submit": "Submit Order"
+    },
+    "clinic-info": {
+      "email": "Email",
+      "insurance": "Accepted Insurance",
+      "open-hours": "Open Hours",
+      "studies": "Available Studies",
+      "telephone": "Telephone"
+    },
+    "steps": {
+      "step-1": {
+        "form": {
+          "description": {
+            "errors": {
+              "missing-field": "Please provide more information about this order"
+            },
+            "label": "Order description"
+          },
+          "medic": {
+            "label": "$t(role.medic)"
+          },
+          "patient-email": {
+            "errors": {
+              "invalid": "Please input a valid email",
+              "missing": {
+                "close-alert": "Close",
+                "message": "Sorry, we couldn\u0027t find this email in our patients\u0027 database."
+              },
+              "missing-field": "Please write the $t(role.patient)\u0027s email"
+            },
+            "label": "$t(role.patient)\u0027s email"
+          },
+          "patient-insurance-number": {
+            "errors": {
+              "missing-field": "Please write the $t(role.patient)\u0027s insurance plan"
+            },
+            "label": "$t(role.patient)\u0027s insurance number"
+          },
+          "patient-insurance-plan": {
+            "errors": {
+              "invalid": {
+                "close-alert": "Close",
+                "message": "Either fill both Insurance Plan and Insurance Number or leave both empty."
+              },
+              "missing-field": "Please write the $t(role.patient)\u0027s insurance plan"
+            },
+            "label": "$t(role.patient)\u0027s insurance plan"
+          },
+          "patient-name": {
+            "errors": {
+              "missing-field": "Please write the $t(role.patient)\u0027s name"
+            },
+            "label": "$t(role.patient)\u0027s name"
+          },
+          "study-type": {
+            "errors": {
+              "missing-field": "Please pick a Study Type"
+            },
+            "label": "Study Type",
+            "placeholder": "Pick a Study Type"
+          }
+        },
+        "title": "Create a new medical order"
+      },
+      "step-2": {
+        "form": {
+          "available-hours": {
+            "buttons": {
+              "show": "Schedule availability "
+            },
+            "columns": {
+              "available": "Available",
+              "day": "Day",
+              "from-time": "From",
+              "to-time": "To"
+            }
+          },
+          "clinic-name": {
+            "label": "Search by clinic name"
+          },
+          "errors": {
+            "close-alert": "Close",
+            "missing": "Specified Clinic doesn\u0027t exist",
+            "missing-field": "Please select a Clinic"
+          },
+          "insurance-plan": {
+            "label": "Search by insurance plan"
+          },
+          "results": {
+            "no-results": "No clinics found based on search filters",
+            "no-selected": "No clinic selected",
+            "selected": "Selected Clinic",
+            "title": "Results"
+          },
+          "submit": {
+            "value": "Search"
+          }
+        },
+        "title": "Select clinic"
+      },
+      "step-3": {
+        "form": {
+          "clinic": "\u003c0\u003eMedical Clinic\u003c/0\u003e{{clinicName}}",
+          "date": "Date: {{today}}",
+          "medic-id": "\u003c0\u003e{{medicName}}\u003c/0\u003e\u003c1\u003eM.N.: {{medicLicence}}\u003c/1\u003e",
+          "medic-sign-alt": "medic\u0027s signature",
+          "patient": "\u003c0\u003ePatient\u003c/0\u003e{{patientName}}",
+          "patient-insurance-number": "\u003c0\u003ePatient\u0027s Insurance Number\u003c/0\u003e{{patientInsuranceNumber}}",
+          "patient-insurance-plan": "\u003c0\u003ePatient\u0027s Insurance Plan\u003c/0\u003e{{patientInsurancePlan}}",
+          "study-type": "Study Type: {{studyType}}",
+          "title": "Medical Order"
+        },
+        "title": "Submit medical order"
+      }
+    }
+  },
+  "days": {
+    "day-0": "Sunday",
+    "day-1": "Monday",
+    "day-2": "Tuesday",
+    "day-3": "Wednesday",
+    "day-4": "Thursday",
+    "day-5": "Friday",
+    "day-6": "Saturday",
+    "day-short-0": "Sun",
+    "day-short-1": "Mon",
+    "day-short-2": "Tue",
+    "day-short-3": "Wed",
+    "day-short-4": "Thu",
+    "day-short-5": "Fri",
+    "day-short-6": "Sat"
+  },
+  "fragments": {
+    "navbar": {
+      "search-clinic": "Available Clinics"
+    },
+    "sidebar": {
+      "access-requests": "Access Requests",
+      "create-data-type": "Create Data Type",
+      "create-order": "Create Order",
+      "heading": {
+        "orders": "Orders"
+      },
+      "home": "Home",
+      "logout": "Logout",
+      "my-orders": "My Orders",
+      "profile": "My Profile",
+      "request-order": "Request Access to Orders",
+      "search": "Search Clinics",
+      "search-clinic": "Available Clinics"
+    }
+  },
+  "home": {
+    "tabs": {
+      "login": {
+        "form": {
+          "email": {
+            "errors": {
+              "invalid": "Please input a valid email",
+              "missing-field": "Email field can\u0027t be empty"
+            },
+            "label": "Email address",
+            "placeholder": "Enter an email address"
+          },
+          "errors": {
+            "unauthorized": {
+              "close-alert": "Close",
+              "message": "Wrong password/username or account in the process of email verification."
+            }
+          },
+          "password": {
+            "errors": {
+              "invalid": "Password length must be between {{min}} and {{max}} characters",
+              "missing-field": "Password can\u0027t be empty"
+            },
+            "label": "Password",
+            "placeholder": "******"
+          },
+          "remember-me": {
+            "label": "Remember Me"
+          },
+          "submit": {
+            "value": "Log In"
+          }
+        },
+        "title": "Login"
+      },
+      "register": {
+        "form": {
+          "email": {
+            "errors": {
+              "already-exists": "Email is already registered",
+              "invalid": "Please input a valid email",
+              "missing-field": "Email field can\u0027t be empty"
+            },
+            "label": "Email address",
+            "placeholder": "Enter an email address"
+          },
+          "password": {
+            "errors": {
+              "invalid": "Password length must be between {{min}} and {{max}} characters",
+              "missing-field": "Password can\u0027t be empty"
+            },
+            "label": "Password",
+            "placeholder": "******"
+          },
+          "repeat-password": {
+            "errors": {
+              "invalid": "Passwords must match"
+            },
+            "label": "Please repeat the password",
+            "placeholder": "******"
+          },
+          "submit": {
+            "value": "Register"
+          },
+          "success": "Registration Successful! Please verify your email before attempting to log in."
+        },
+        "title": "Register"
+      }
+    },
+    "title": "\u003c0\u003eWelcome to \u003c/0\u003e\u003c1\u003e$t(appname)\u003c/1\u003e"
+  },
+  "registration": {
+    "clinic": {
+      "continue": "Continue",
+      "hours": {
+        "error": "Please insert valid hours",
+        "label": "Open Days \u0026 Hours",
+        "placeholder": "Select Clinic\u0027s Open Days"
+      },
+      "insurances": {
+        "error": "Please insert clinic\u0027s accepted insurance plans",
+        "label": "Medical Insurance Plans",
+        "modal": "Insurance Plan is not on the list? Click here to add it to our systems",
+        "placeholder": "Choose Accepted Medical Insurance Plans"
+      },
+      "name": {
+        "error": "Please insert clinic\u0027s name",
+        "label": "Clinic\u0027s Name"
+      },
+      "phone-number": {
+        "error": "Please insert clinic\u0027s phone number",
+        "label": "Phone Number"
+      },
+      "study-types": {
+        "error": "Please insert clinic\u0027s accepted studies",
+        "label": "Study Types",
+        "modal": "A study is not on the list? Click here to add it to our systems",
+        "placeholder": "Choose Accepted Study Types"
+      }
+    },
+    "medic": {
+      "continue": "Continue",
+      "firstname": {
+        "error": "Please insert your First Name",
+        "label": "First Name"
+      },
+      "identification": {
+        "error": "Please upload a valid image",
+        "help": "Please upload a photo of your seal and signature",
+        "label": "Seal and Signature"
+      },
+      "lastname": {
+        "error": "Please insert your Last Name",
+        "label": "Last Name"
+      },
+      "license": {
+        "error": "Please insert your license number",
+        "label": "Medical License Number"
+      },
+      "medical-fields": {
+        "error": "Please insert a valid medical field",
+        "label": "Medical Fields",
+        "modal": "Your field is not on the list? Click here to add it our systems",
+        "placeholder": "Choose Medical Fields"
+      },
+      "phone-number": {
+        "error": "Please insert a valid phone number",
+        "label": "Phone Number"
+      }
+    },
+    "patient": {
+      "continue": "Continue",
+      "firstname": {
+        "error": "Please insert your First Name",
+        "label": "First Name"
+      },
+      "insurance-number": {
+        "error": "Please enter a valid insurance number",
+        "label": "Insurance Number",
+        "placeholder": "Medical Insurance Number"
+      },
+      "insurance-plan": {
+        "error": "Please enter a valid Insurance Plan",
+        "label": "Insurance Plan",
+        "placeholder": "Medical Insurance Plan"
+      },
+      "lastname": {
+        "error": "Please insert your Last Name",
+        "label": "Last Name"
+      }
+    },
+    "subtitle": "We need a couple more details.",
+    "tabs": "Choose to register as a: ",
+    "title": "Before you continue..."
+  },
+  "role": {
+    "clinic": "Clinic",
+    "medic": "Medic",
+    "patient": "Patient",
+    "user": "User"
+  }
+}

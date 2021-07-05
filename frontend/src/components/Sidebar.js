@@ -5,10 +5,12 @@ import {getAllRoutes, Routes} from "../constants/Routes";
 import {logout} from "../api/Auth";
 import {deAuthenticate} from "../redux/actions";
 import {store} from "../redux";
+import { useTranslation } from 'react-i18next'
 
 const Item = (props) => {
     const history = useHistory();
     const location = useLocation();
+    const { t } = useTranslation();
 
     if(props.item.divider){
         return <hr className={"sidebarDivider"}/>
@@ -20,19 +22,19 @@ const Item = (props) => {
         history.push(props.item.route.path);
     }
     return <li>
-        <NavLink exact to={props.item.route.path} onClick={click} className={"sidebarItem"}><i className={props.item.icon} /><span>{props.item.route.name}</span></NavLink>
+        <NavLink exact to={props.item.route.path} onClick={click} className={"sidebarItem"}><i className={props.item.icon} /><span>{t(props.item.label)}</span></NavLink>
     </li>
 }
 
 const navigations = [
-    {route: Routes.DASHBOARD, icon: "fas fa-fw fa-clinic-medical"},
-    {route: "divider", divider:true},
-    {route: Routes.MY_ORDERS, icon: "fas fa-fw fa-table"},
-    {route: Routes.CREATE_ORDER, icon: "fas fa-fw fa-plus"},
-    {route: Routes.SEARCH_CLINIC, icon: "fas fa-fw fa-search"},
-    {route: "divider", divider:true},
-    {route: {name: "Logout", path: "/"}, icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); console.log("asdasd"); }},
-    {route: "divider", divider:true},
+    {route: Routes.DASHBOARD, label: "fragments.sidebar.home", icon: "fas fa-fw fa-clinic-medical"},
+    {route: {path: "divider1"}, divider:true},
+    {route: Routes.MY_ORDERS, label: "fragments.sidebar.my-orders", icon: "fas fa-fw fa-table"},
+    {route: Routes.CREATE_ORDER, label: "fragments.sidebar.create-order", icon: "fas fa-fw fa-plus"},
+    {route: Routes.SEARCH_CLINIC, label: "fragments.sidebar.search-clinic", icon: "fas fa-fw fa-search"},
+    {route: {path: "divider2"}, divider:true},
+    {route: {name: "Logout", path: "/"}, label: "fragments.sidebar.logout", icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); }},
+    {route: {path: "divider3"}, divider:true},
     ]
 
 const Sidebar = () => {

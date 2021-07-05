@@ -2,7 +2,7 @@ import {ActionType, StatusType} from "./actions";
 import {getRoleFromID, Roles} from "../../constants/Roles";
 import {decodeToken} from "react-jwt";
 
-export const authenticate = (token) => {
+export const authenticate = (token, expire) => {
 
    const user = decodeToken(token);
 
@@ -14,6 +14,7 @@ export const authenticate = (token) => {
             role: getRoleFromID(user.role),
             userId: user.id,
             email: user.sub,
+            expire: expire,
         }
     }
 }
@@ -27,6 +28,14 @@ export const deAuthenticate = () => {
             role: Roles.ANON,
             userId: null,
             email: null,
+            expire: null,
         }
+    }
+}
+
+export const updateRole = (role) => {
+    return {
+        type: ActionType.UPDATE_ROLE,
+        role: role
     }
 }
