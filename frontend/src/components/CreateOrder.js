@@ -8,12 +8,12 @@ import "./Style/CreateOrder.css";
 import { store } from "../redux";
 import { ERROR_CODES } from "../constants/ErrorCodes"
 import InvalidFeedback from "./InvalidFeedback.js";
-import { getAuthorizedImage } from "../api/utils";
+import { getAuthorizedImage, getValueFromEvent } from "../api/utils";
 
 function CreateOrder(){
 
     const { t } = useTranslation();
-    
+
     const history = useHistory();
 
     const [errors, setErrors] = useState([]);
@@ -304,6 +304,7 @@ function CreateOrder(){
     useEffect(() => {
         if(orderInfo !== undefined){
             setImage(getAuthorizedImage(orderInfo.identificationSrc));
+            console.log("getting image...");
             setCount(count+1);
         }
     }, [orderInfo]);
@@ -467,10 +468,11 @@ function CreateOrder(){
     }
 
     const ClinicInfo = (props) => {
+        const id = props.item.userId
         return(
             <div
                 className="tab-pane tab-result"
-                key={"clinicInfo_" + props.item.userId}
+                key={"clinicInfo_" + id}
             >
                 <h3>{props.item.name}</h3>
                 <Table className="table table-borderless">
@@ -487,7 +489,7 @@ function CreateOrder(){
                             <td><Trans t={t} i18nKey="create-order.clinic-info.open-hours"/></td>
                             <td>
                                 {props.item.hours.map((piano) => (
-                                    <div key={"oh_"+props.item.userId+"_"+piano.day}>
+                                    <div key={"oh_"+id+"_"+piano.day}>
                                         <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
                                         <span>{piano.openTime + " - " + piano.closeTime}</span>
                                     </div>
@@ -499,9 +501,10 @@ function CreateOrder(){
                             <td className="output">
                                 {props.item.acceptedPlans.map((pico) => (
                                     <span
-                                        key={"plan_"+props.item.userId+"_"+pico.plan}
+                                        key={"plan_"+ id +"_"+pico.id}
                                         className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
                                     >{pico.plan}</span>
+
                                 ))}
                             </td>
                         </tr>
@@ -509,7 +512,7 @@ function CreateOrder(){
                             <td><Trans t={t} i18nKey="create-order.clinic-info.studies"/></td>
                             <td className="output">
                                 {props.item.medicalStudies.map((study) => (
-                                    <p key={"study_"+props.item.userId+"_"+study.name}>{study.name}</p>
+                                    <p key={"study_"+ id +"_"+study.name}>{study.name}</p>
                                 ))}
                             </td>
                         </tr>
@@ -570,14 +573,16 @@ function CreateOrder(){
         if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
+            console.log("event", event);
             let aux = orderInfo;
-            aux.patientEmail = event.target[1].value;
-            aux.patientName = event.target[2].value;
-            aux.patientInsurancePlan = event.target[3].value;
-            aux.patientInsuranceNumber = event.target[4].value;
-            aux.studyType = event.target[5].value;
-            aux.orderDescription = event.target[6].value;
+            aux.patientEmail = getValueFromEvent("patientEmail", event);
+            aux.patientName = getValueFromEvent("patientName", event);
+            aux.patientInsurancePlan = getValueFromEvent("patientInsurancePlan", event);
+            aux.patientInsuranceNumber = getValueFromEvent("patientInsuranceNumber", event);
+            aux.studyType = getValueFromEvent("studyType", event);
+            aux.orderDescription = getValueFromEvent("orderDescription", event);
             setOrderInfo(aux);
+            console.log("orderInfo", orderInfo)
 
             let searchInputsAux = searchInputs;
             searchInputsAux.insurancePlan = orderInfo.patientInsurancePlan;
@@ -625,6 +630,7 @@ function CreateOrder(){
                 aux.studyTypeId = studyTypes[idx].id;
                 setOrderInfo(aux);
             }
+            console.log(orderInfo);
             CreateMedicalOrder(orderInfo, setStatusCode, setErrors);
             //now it should send the order to the API and redirect the user to /view-study
         }
@@ -714,11 +720,11 @@ function CreateOrder(){
 
                                         <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-email.errors.invalid" /></Form.Control.Feedback>
                                         <InvalidFeedback
-                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "patientEmail"}).length>0} 
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.INVALID && e.property === "patientEmail"}).length>0}
                                             message={t("create-order.steps.step-1.form.patient-email.errors.invalid")}
                                         />
                                         <InvalidFeedback
-                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientEmail"}).length>0} 
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientEmail"}).length>0}
                                             message={t("create-order.steps.step-1.form.patient-email.errors.missing-field")}
                                         />
                                     </Form.Group>
@@ -734,7 +740,7 @@ function CreateOrder(){
                                         />
                                         <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.patient-name.errors.missing-field" /></Form.Control.Feedback>
                                         <InvalidFeedback
-                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientName"}).length>0} 
+                                            condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "patientName"}).length>0}
                                             message={t("create-order.steps.step-1.form.patient-name.errors.missing-field")}
                                         />
                                     </Form.Group>
@@ -793,7 +799,7 @@ function CreateOrder(){
                                             </Form.Control>
                                             <Form.Control.Feedback type="invalid"><Trans t={t} i18nKey="create-order.steps.step-1.form.study-type.errors.missing-field" /></Form.Control.Feedback>
                                             <InvalidFeedback
-                                                condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "studyType"}).length>0} 
+                                                condition={statusCode===400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "studyType"}).length>0}
                                                 message={t("create-order.steps.step-1.form.study-type.errors.missing-field")}
                                             />
                                         </Form.Group>
@@ -930,7 +936,7 @@ function CreateOrder(){
                                 </Button>
                                 </div>
                             </Alert>
-                            
+
                             <Alert show={statusCode === 400 && errors.filter(e => {return e.code === ERROR_CODES.MISSING_FIELD && e.property === "clinicId"}).length>0 && "true"} variant="warning">
                                 <div className="d-flex justify-content-between">
                                 <span className="my-2">
@@ -1012,6 +1018,7 @@ function CreateOrder(){
                                             className="align-self-end ml-3 signature"
                                             alt="medic's signature"
                                             src={image}
+                                            key={"img-"+count}
                                         />
                                     </div>
                                 </div>
