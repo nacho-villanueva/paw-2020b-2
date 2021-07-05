@@ -18,7 +18,7 @@ function ViewOrder(){
     const [count, setCount] = useState(0);
     const [orderCount, setOrderCount] = useState(0);
     const [orderInfo, setOrderInfo] = useState({
-        orderId: '',
+        id: '',
         date: '',
         medicPlan: {
             name:'',
@@ -166,7 +166,7 @@ function ViewOrder(){
                 <div className="card order-card bg-light float-right">
                     <div className="row mt-4" key={"orderInfo_"+orderCount}>
                         <div className="col">
-                            <p className="card-title ml-3 h4">Order Number: {orderInfo.orderId}</p>
+                            <p className="card-title ml-3 h4">Order Number: {orderInfo.id}</p>
                         </div>
                         {userInfo.role === 'PATIENT' ?
                             <div className="col">
