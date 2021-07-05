@@ -196,7 +196,7 @@ public class MedicController {
     @GET
     @Path("/{id}/identification")
     @Produces(value = { ImageDto.CONTENT_TYPE })
-    public Response getMedicIdentification(@PathParam("id") final int id){
+    public Response getMedicIdentification(@Context HttpHeaders httpHeaders, @PathParam("id") final int id){
         Optional<Medic> medicOptional = medicService.findByUserId(id);
         if(!medicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -204,20 +204,33 @@ public class MedicController {
         Medic medic = medicOptional.get();
 
         String contentType = medic.getIdentificationType();
-        ByteArrayInputStream identification = new ByteArrayInputStream(medic.getIdentification());
-        EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(medic.getIdentification())));
+
         CacheControl cc = new CacheControl();
         // It can cache the response but must ask if it changed before using that cached image
         cc.setNoCache(true);
-        Response.ResponseBuilder response = request.evaluatePreconditions(entityTag);
-        if (response == null) {
-            return Response.ok(identification).type(contentType)
-                    .tag(entityTag)
+        // Get etag
+        EntityTag etag = new EntityTag(Integer.toHexString(Arrays.hashCode(medic.getIdentification())));
+        // Evaluate etag
+        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
+        if (builder != null) {
+            builder.cacheControl(cc);
+            return builder.build();
+        }
+        // Return based on accept header
+        String acceptHeader = httpHeaders.getHeaderString("Accept");
+
+        if (acceptHeader.contains("image/*;encoding=base64")) {
+            String b64Image = Base64.getEncoder().encodeToString(medic.getIdentification());
+            return Response.ok(b64Image).type(contentType + ";encoding=base64")
+                    .tag(etag)
                     .cacheControl(cc)
                     .build();
         }
-        response.cacheControl(cc);
-        return response.build();
+        ByteArrayInputStream identification = new ByteArrayInputStream(medic.getIdentification());
+        return Response.ok(identification).type(contentType)
+                .tag(etag)
+                .cacheControl(cc)
+                .build();
     }
 
     @GET
