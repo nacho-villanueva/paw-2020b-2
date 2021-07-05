@@ -157,28 +157,10 @@ public class UserController {
         if (!passwordEncoder.matches(userDto.getOldPassword(), user.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-
-        //TODO: try and make this part smaller
+        
         //We make the changes based on the input dto
-        if(!isEmpty(userDto.getEmail())) {
-            user = userService.updateEmail(user, userDto.getEmail());
-        }
 
-        if(user == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-
-        if(!isEmpty(userDto.getPassword())) {
-            user = userService.updatePassword(user, userDto.getPassword());
-        }
-
-        if(user == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-
-        if(!isEmpty(userDto.getLocale())) {
-            user = userService.updateLocale(user, userDto.getLocale());
-        }
+        user = userService.updateUser(user, userDto.getEmail(), userDto.getPassword(), userDto.getLocale());
 
         if(user == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

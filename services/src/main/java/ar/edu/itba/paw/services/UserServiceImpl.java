@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Primary
 @Service
 @Transactional
@@ -60,6 +62,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password, String locale) {
+        Optional<User> maybeUser = findByEmail(email);
+        if (maybeUser.isPresent())
+            return null;
         final User user = userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
         //Since user has just been created, he is not registered as patient/clinic or medic
         user.setRegistered(false);
@@ -82,6 +87,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateEmail(User user, String email) {
+        Optional<User> maybeUser = findByEmail(email);
+        if (maybeUser.isPresent())
+            return null;
         return userDao.updateEmail(user,email);
     }
 
@@ -114,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user, String email, String password, String locale) {
-        return userDao.updateUser(user,email,password,locale);
+        return userDao.updateUser(user,email,isEmpty(password) ? null : encoder.encode(password),locale);
     }
 
     @Override

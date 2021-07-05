@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.dto.annotations.Locale;
+import ar.edu.itba.paw.webapp.dto.annotations.NotRegistered;
 import ar.edu.itba.paw.webapp.dto.annotations.Password;
 import org.hibernate.validator.constraints.Email;
 
@@ -10,6 +11,7 @@ public class UserPutDto {
 
     public static final String CONTENT_TYPE = "application/vnd.user.v1";
     @Email(message = "Please provide a valid email account.")
+    @NotRegistered(message = "Email already used.")
     private String email;
 
     @Password(message = "Password must be between 8 and 100 characters long.")

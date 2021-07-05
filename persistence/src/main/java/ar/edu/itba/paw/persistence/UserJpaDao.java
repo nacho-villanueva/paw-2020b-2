@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public class UserJpaDao implements UserDao {
 
@@ -49,9 +51,12 @@ public class UserJpaDao implements UserDao {
     public User updateUser(User user, String email, String password, String locale) {
         Optional<User> userDB = findById(user.getId());
         userDB.ifPresent(user1 -> {
-            user1.setEmail(email);
-            user1.setPassword(password);
-            user1.setLocale(locale);
+            if (!isEmpty(email))
+                user1.setEmail(email);
+            if (!isEmpty(password))
+                user1.setPassword(password);
+            if (!isEmpty(locale))
+                user1.setLocale(locale);
         });
         em.flush();
         return userDB.orElse(null);
