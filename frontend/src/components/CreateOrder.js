@@ -174,6 +174,9 @@ function CreateOrder(){
         {name:"Friday", id: 5},
         {name:"Saturday", id: 6}
     ];
+    /*
+    *! NEED THAT END POINT!!!!
+    */
     const insurancePlans = [
         {name:'None (insert SS number)'},
         {name:'Galeno Azul'},
@@ -308,7 +311,7 @@ function CreateOrder(){
     useEffect(() => {
         if(orderInfo !== undefined){
             setImage(getAuthorizedImage(orderInfo.identificationSrc));
-            console.log("getting image...");
+            //console.log("getting image...");
             setCount(count+1);
         }
     }, [orderInfo]);
@@ -634,7 +637,7 @@ function CreateOrder(){
                 aux.studyTypeId = studyTypes[idx].id;
                 setOrderInfo(aux);
             }
-            console.log(orderInfo);
+            //console.log(orderInfo);
             CreateMedicalOrder(orderInfo, setStatusCode, setErrors, setOrderStatus);
             //now it should send the order to the API and redirect the user to /view-study
         }
