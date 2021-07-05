@@ -19,12 +19,12 @@ function MyOrders(){
     const [searchFilters, setSearchFilters] = useState({
         page: 1,
         perPage: '',
-        clinicIDs: -1,
-        medicIDs: -1,
+        clinicIDs: '',
+        medicIDs: '',
         patientEmail: '',
         fromTime: '',
         toTime: '',
-        studyType: -1,
+        studyType: '',
         includeShared: true
     });
     const [studyTypesList, setStudyTypesList] = useState([]);
@@ -86,13 +86,13 @@ function MyOrders(){
     }
 
     const fetchAndChangePage = (pageNumber) => {
-        cleanUpFilters();
+
         setCurrentPage(searchFilters.page);
 
         GetOrders(setOrders,searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
-                    GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate)
+                    GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList)
                         .then((r) => {
                             //console.log("running on fetched studytypeslist");
                             SetUpClinicNames();
@@ -147,7 +147,7 @@ function MyOrders(){
 
             setCurrentPage(aux.page);
             setSearchFilters(aux);
-
+            cleanUpFilters();
             //console.log("after READING", searchFilters);
 
             setUpdate(update+1);

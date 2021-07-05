@@ -19,13 +19,14 @@ export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
     setOrders(aux);
 }
 
-export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate){
+export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList){
     apiInstance.get("/study-types")
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
+        setStudyTypesList(stl);
         SetUpStudyTypesAndLink(stl, orders, setOrders);
         setUpdate(update+1);
         return r.status;
