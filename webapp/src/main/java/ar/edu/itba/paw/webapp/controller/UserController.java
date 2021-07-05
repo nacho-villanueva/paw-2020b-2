@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -52,6 +53,9 @@ public class UserController {
 
     @Autowired
     private CacheControl cacheControl;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json"})
@@ -143,9 +147,15 @@ public class UserController {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
+        User user = maybeUser.get();
+
+        //We make sure provided old password matches old password
+        if (!passwordEncoder.matches(userDto.getOldPassword(), user.getPassword())) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         //TODO: try and make this part smaller
         //We make the changes based on the input dto
-        User user = maybeUser.get();
         if(!isEmpty(userDto.getEmail())) {
             user = userService.updateEmail(user, userDto.getEmail());
         }

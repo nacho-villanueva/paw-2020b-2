@@ -13,6 +13,10 @@ public class UserPutDto {
     private String email;
 
     @Password(message = "Password must be between 8 and 100 characters long.")
+    @NotNull(message = "Please provide previous password")
+    private String oldPassword;
+
+    @Password(message = "Password must be between 8 and 100 characters long.")
     private String password;
 
     @Locale(message = "Please provide a Locale in the xx-XX format. For example, en-US")
@@ -44,5 +48,13 @@ public class UserPutDto {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 }
