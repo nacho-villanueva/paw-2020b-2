@@ -20,6 +20,7 @@ function MyOrders(){
         page: 1,
         perPage: '',
         clinicIDs: -1,
+        medicIDs: -1,
         patientEmail: '',
         fromTime: '',
         toTime: '',
@@ -28,6 +29,7 @@ function MyOrders(){
     });
     const [studyTypesList, setStudyTypesList] = useState([]);
     const [clinicsList, setClinicsList] = useState([]);
+    const [medicsList, setMedicsList] = useState([]);
 
     const [totalOrderPages, setTotalOrderPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,6 +55,9 @@ function MyOrders(){
 
     const cleanUpFilters = () => {
         let aux = searchFilters;
+        if(aux.medicIDs === '-1'){
+            aux.medicIDs = '';
+        }
         if(aux.clinicIDs === '-1'){
             aux.clinicIDs = '';
         }
@@ -65,6 +70,20 @@ function MyOrders(){
         setSearchFilters(aux);
     }
 
+    const resetSearchFilters = () => {
+        let aux = {
+            page: 1,
+            perPage: '',
+            clinicIDs: -1,
+            medicIDs: -1,
+            patientEmail: '',
+            fromTime: '',
+            toTime: '',
+            studyType: -1,
+            includeShared: true
+        };
+        setSearchFilters(aux);
+    }
 
     const fetchAndChangePage = (pageNumber) => {
         cleanUpFilters();
@@ -89,12 +108,6 @@ function MyOrders(){
                 }
             });
         setCurrentPage(pageNumber);
-       /*
-       console.log("ROLE TYPE", roleType);
-       console.log("STATUS", status);
-       console.log("auth", auth);
-       console.log("TOTAL PAGES", totalOrderPages);
-        */
     }
 
     const [searching, setSearching] = useState(0);
@@ -103,7 +116,12 @@ function MyOrders(){
     useLayoutEffect( () => {
         fetchAndChangePage(searchFilters.page);
         GetStudyTypes(setStudyTypesList, update, setUpdate);
-    }, [,searching]);
+    }, [searching]);
+    //calling on mount...
+    useLayoutEffect( () => {
+        fetchAndChangePage(searchFilters.page);
+        GetStudyTypes(setStudyTypesList, update, setUpdate);
+    }, []);
 
 
     const [filtersValidated, setFiltersValidated] = useState(false);
@@ -118,7 +136,7 @@ function MyOrders(){
             //console.log("BEFORE READING", aux);
             aux.page = 1;
             aux.studyType = getValueFromEvent("studyTypeSelect", event);
-
+            aux.medicIDs = getValueFromEvent("medicSelect", event);
             aux.clinicIDs = getValueFromEvent("clinicSelect", event);
 
             aux.patientEmail = getValueFromEvent("patientEmailInput", event);
@@ -151,7 +169,7 @@ function MyOrders(){
 
     const FetchedResults = () => {
         return(
-            <div className="custom-row" key={"fetchedResults_"+update+"+"+searching}>
+            <div className="custom-row list-results" key={"fetchedResults_"+update+"+"+searching}>
                 <ul className="nav flex-column w-100" id="orders" role="tablist">
                     {
                         orders.map((item, index) => (
@@ -177,6 +195,8 @@ function MyOrders(){
                         clinicsList={clinicsList}
                         studyTypesList={studyTypesList}
                         role={roleType}
+                        medicsList={medicsList}
+                        resetSearchFilters={resetSearchFilters}
                     />
                 </div>
                 {/* ::::::::!!!DEV TOOLS!!!::::::::
