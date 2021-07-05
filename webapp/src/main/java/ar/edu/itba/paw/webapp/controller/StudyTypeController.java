@@ -70,8 +70,11 @@ public class StudyTypeController {
 
         StudyTypeDto studyTypeDto = new StudyTypeDto(studyTypeOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDto.hashCode()));
+        CacheControl cc = new CacheControl();
+        // Non conditional, resource is static
+        cc.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
         Response.ResponseBuilder response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
-                .tag(entityTag);
+                .tag(entityTag).cacheControl(cc);
 
         return response.build();
     }

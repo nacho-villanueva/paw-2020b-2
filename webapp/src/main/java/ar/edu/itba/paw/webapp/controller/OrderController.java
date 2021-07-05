@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("orders")
@@ -49,6 +50,9 @@ public class OrderController {
 
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private Request request;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON, OrderGetDto.CONTENT_TYPE + "+json"})
@@ -212,10 +216,18 @@ public class OrderController {
         String contentType = order.getIdentificationType();
         ByteArrayInputStream identification = new ByteArrayInputStream(order.getIdentification());
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(order.getIdentification())));
-
-        return Response.ok(identification).type(contentType)
-                .tag(entityTag)
-                .build();
+        CacheControl cc = new CacheControl();
+        // They can store the cache but must revalidate before using it
+        cc.setNoCache(true);
+        Response.ResponseBuilder response = request.evaluatePreconditions(entityTag);
+        if (response == null) {
+            return Response.ok(identification).type(contentType)
+                    .tag(entityTag)
+                    .cacheControl(cc)
+                    .build();
+        }
+        response.cacheControl(cc);
+        return response.build();
     }
 
     @GET

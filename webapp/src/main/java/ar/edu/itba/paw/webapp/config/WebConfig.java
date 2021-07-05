@@ -35,6 +35,7 @@ import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -80,7 +81,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
         messageSource.setDefaultEncoding(Charset.defaultCharset().displayName());
-        messageSource.setCacheSeconds(5);
+        messageSource.setCacheSeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
 
         return messageSource;
     }
@@ -114,7 +115,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "file:/resources/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "file:/resources/")
+                .setCachePeriod(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
     }
 
     @Bean

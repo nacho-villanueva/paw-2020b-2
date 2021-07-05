@@ -52,8 +52,10 @@ public class MedicPlanController {
 
         MedicPlanDto medicPlanDto = new MedicPlanDto(medicPlanOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDto.hashCode()));
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
         return Response.ok(medicPlanDto).type(MedicPlanDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).build();
+                .tag(entityTag).cacheControl(cc).build();
     }
 
     @POST

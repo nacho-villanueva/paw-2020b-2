@@ -51,9 +51,10 @@ public class MedicalFieldController {
 
         MedicalFieldDto medicalFieldDto = new MedicalFieldDto(medicalFieldOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicalFieldDto.hashCode()));
-
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
         return Response.ok(medicalFieldDto).type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).build();
+                .tag(entityTag).cacheControl(cc).build();
     }
 
     @POST

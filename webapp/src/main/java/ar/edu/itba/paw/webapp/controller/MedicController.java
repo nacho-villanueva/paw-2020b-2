@@ -18,6 +18,7 @@ import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -40,6 +41,9 @@ public class MedicController {
 
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private Request request;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE+"+json"})
@@ -202,10 +206,18 @@ public class MedicController {
         String contentType = medic.getIdentificationType();
         ByteArrayInputStream identification = new ByteArrayInputStream(medic.getIdentification());
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(medic.getIdentification())));
-
-        return Response.ok(identification).type(contentType)
-                .tag(entityTag)
-                .build();
+        CacheControl cc = new CacheControl();
+        // It can cache the response but must ask if it changed before using that cached image
+        cc.setNoCache(true);
+        Response.ResponseBuilder response = request.evaluatePreconditions(entityTag);
+        if (response == null) {
+            return Response.ok(identification).type(contentType)
+                    .tag(entityTag)
+                    .cacheControl(cc)
+                    .build();
+        }
+        response.cacheControl(cc);
+        return response.build();
     }
 
     @GET
