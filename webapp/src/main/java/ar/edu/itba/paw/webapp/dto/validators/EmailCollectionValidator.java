@@ -17,14 +17,14 @@ public class EmailCollectionValidator implements ConstraintValidator<EmailCollec
     @Override
     public boolean isValid(Collection<String> emails, ConstraintValidatorContext constraintValidatorContext) {
 
-        if(emails==null || emails.isEmpty())
+        if (emails == null || emails.isEmpty())
             return true;
 
         EmailValidator emailValidator = new EmailValidator();
 
-        for (String email:emails) {
-            if(email==null) return false;
-            if(!emailValidator.isValid(email,constraintValidatorContext)) return false;
+        for (String email : emails) {
+            if (email != null && !emailValidator.isValid(email, constraintValidatorContext))
+                return false;
         }
 
         return true;

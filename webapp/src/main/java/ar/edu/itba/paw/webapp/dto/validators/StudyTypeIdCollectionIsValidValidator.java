@@ -20,12 +20,11 @@ public class StudyTypeIdCollectionIsValidValidator implements ConstraintValidato
 
     @Override
     public boolean isValid(Collection<Integer> ids, ConstraintValidatorContext constraintValidatorContext) {
-        if(ids == null || ids.isEmpty())
+        if (ids == null || ids.isEmpty())
             return true;
 
-        for (Integer id:ids) {
-            if(id==null) return false;
-            if (!studyTypeService.findById(id).isPresent()) return false;
+        for (Integer id : ids) {
+            if (id != null && !studyTypeService.findById(id).isPresent()) return false;
         }
 
         return true;

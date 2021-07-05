@@ -20,6 +20,8 @@ public class OrderGetDto {
     private static final String STUDY_TYPE_PATH = "study-types";
 
     // Variables
+    private Long id;
+
     private String medic;
 
     private LocalDate date;
@@ -52,6 +54,7 @@ public class OrderGetDto {
     }
 
     public OrderGetDto(Order order, String encodedUrlPath, UriInfo uriInfo) {
+        this.id = order.getOrderId();
         this.date = order.getDate();
         this.patientName = order.getPatientName();
         this.patientEmail = order.getPatientEmail();
@@ -74,6 +77,14 @@ public class OrderGetDto {
     }
 
     // Getters&Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getMedic() {
         return medic;
     }

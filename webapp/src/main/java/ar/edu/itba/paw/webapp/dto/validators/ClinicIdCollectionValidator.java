@@ -22,13 +22,14 @@ public class ClinicIdCollectionValidator implements ConstraintValidator<ClinicId
 
     @Override
     public boolean isValid(Collection<Integer> ids, ConstraintValidatorContext constraintValidatorContext) {
-        if(ids==null || ids.isEmpty())
+        if (ids == null || ids.isEmpty())
             return true;
 
-        for (Integer id:ids) {
-            if(id==null) return false;
-            Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
-            if(!clinicOptional.isPresent() || !clinicOptional.get().isVerified()) return false;
+        for (Integer id : ids) {
+            if (id != null) {
+                Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
+                if (!clinicOptional.isPresent() || !clinicOptional.get().isVerified()) return false;
+            }
         }
 
         return true;

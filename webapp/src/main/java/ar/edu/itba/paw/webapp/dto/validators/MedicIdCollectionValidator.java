@@ -23,13 +23,14 @@ public class MedicIdCollectionValidator implements ConstraintValidator<MedicId, 
     @Override
     public boolean isValid(Collection<Integer> ids, ConstraintValidatorContext constraintValidatorContext) {
 
-        if(ids==null || ids.isEmpty())
+        if (ids == null || ids.isEmpty())
             return true;
 
-        for (Integer id:ids) {
-            if(id==null) return false;
-            Optional<Medic> medicOptional = medicService.findByUserId(id);
-            if(!medicOptional.isPresent() || !medicOptional.get().isVerified()) return false;
+        for (Integer id : ids) {
+            if (id != null) {
+                Optional<Medic> medicOptional = medicService.findByUserId(id);
+                if (!medicOptional.isPresent() || !medicOptional.get().isVerified()) return false;
+            }
         }
 
         return true;

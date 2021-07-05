@@ -76,7 +76,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return ds;
     }
 
-    @Bean(name="messageSource")
+    @Bean(name = "messageSource")
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
@@ -94,7 +94,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(70*1024*1000000L);
+        multipartResolver.setMaxUploadSize(70 * 1024 * 1000000L);
         return multipartResolver;
     }
 
@@ -147,12 +147,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Validator validator(final ValidatorFactory getValidatorFactory){
+    public Validator validator(final ValidatorFactory getValidatorFactory) {
         return getValidatorFactory.getValidator();
     }
 
-    @Bean(name="annotationCodes")
-    public Map<String,String> configMap(){
+    @Bean(name = "annotationCodes")
+    public Map<String, String> configMap() {
 
         // possible error codes
         final String ALREADY_EXISTS = "already_exists";
@@ -162,11 +162,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final String UNPROCESSABLE = "unprocessable";
         final String OTHER = "other";
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
         // from javax validation
-        map.put(Max.class.getName(),INVALID);
-        map.put(Min.class.getName(),INVALID);
+        map.put(Max.class.getName(), INVALID);
+        map.put(Min.class.getName(), INVALID);
         map.put(NotNull.class.getName(), MISSING_FIELD);
         map.put(Null.class.getName(), INVALID);
         map.put(Pattern.class.getName(), INVALID);
@@ -181,17 +181,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         map.put(ArrayAsString.class.getName(), INVALID);
         map.put(BooleanArrayAsString.class.getName(), INVALID);
         map.put(ByteArray.class.getName(), INVALID);
-        map.put(ClinicId.class.getName(), MISSING);
+        map.put(ClinicId.class.getName(), INVALID);
         map.put(Days.class.getName(), INVALID);
         map.put(EmailCollection.class.getName(), INVALID);
         map.put(IntegerSize.class.getName(), INVALID);
         map.put(Locale.class.getName(), INVALID);
-        map.put(MedicId.class.getName(), MISSING);
+        map.put(MedicId.class.getName(), INVALID);
         map.put(PatientPlan.class.getName(), INVALID);
-        map.put(NotRegistered.class.getName(),ALREADY_EXISTS);
+        map.put(NotRegistered.class.getName(), ALREADY_EXISTS);
         map.put(Number.class.getName(), INVALID);
         map.put(Password.class.getName(), INVALID);
-        map.put(StudyTypeId.class.getName(), MISSING);
+        map.put(StudyTypeId.class.getName(), INVALID);
         map.put(TimeArrayAsString.class.getName(), INVALID);
         map.put(TimeIntervals.class.getName(), INVALID);
 
