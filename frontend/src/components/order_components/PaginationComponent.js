@@ -10,7 +10,7 @@ export function PaginationComponent(props){
         return(
             <div className="row justify-content-center w-100" key={"page_"+update} style={{position: "aboslute", bottom: "0", marginTop: "0.5em"}}>
                 {
-                    total === 1 ?
+                    total < 2 ?
                     <></>
                     :
                     <Pagination>
