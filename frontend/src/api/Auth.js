@@ -3,6 +3,7 @@ import {store} from "../redux";
 import {authenticate, deAuthenticate, updateRole} from "../redux/actions";
 import {Roles} from "../constants/Roles";
 import {ERROR_CODES} from "../constants/ErrorCodes";
+import { parseHeadersLinks, prepareViewStudyUrl } from "./utils";
 
 export function login(user, pass, rememberMe, onSuccess, onFail){
 
@@ -316,7 +317,7 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
     });
 }
 
-export function CreateMedicalOrder(order, setStatusCode, setErrors){
+export function CreateMedicalOrder(order, setStatusCode, setErrors, setOrderStatus){
     apiInstance.post("/orders",{
         clinicId: order.clinicId,
         patientEmail: order.patientEmail,
@@ -327,7 +328,13 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors){
             plan: order.patientInsurancePlan,
             number: order.patientInsuranceNumber
         }
-    }).then( (r) => {setStatusCode(r.status);})
+    }).then( (r) => {
+        setStatusCode(r.status);
+        //uh
+        let location = r.headers.location.split('/');
+        let aux = {code: r.status, id:location[location.length -1 ] };
+        setOrderStatus(aux);
+    })
     .catch((e)  => {
         if(e.response){
             // error in response

@@ -18,6 +18,10 @@ function CreateOrder(){
 
     const [errors, setErrors] = useState([]);
     const [statusCode, setStatusCode] = useState(0);
+    const [orderStatus, setOrderStatus] = useState({
+        code: '',
+        id: ''
+    });
 
 
     /*******************************
@@ -631,13 +635,18 @@ function CreateOrder(){
                 setOrderInfo(aux);
             }
             console.log(orderInfo);
-            CreateMedicalOrder(orderInfo, setStatusCode, setErrors);
+            CreateMedicalOrder(orderInfo, setStatusCode, setErrors, setOrderStatus);
             //now it should send the order to the API and redirect the user to /view-study
         }
 
         setVerifyValidated(true);
     };
 
+    useEffect(() => {
+        if(orderStatus.code === 201){
+            history.push('/dashboard/view-study/'+orderStatus.id)
+        }
+    }, [orderStatus]);
 
 
 
