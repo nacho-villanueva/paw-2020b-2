@@ -228,7 +228,7 @@ public class OrderController {
             return builder.build();
         }
         // Return based on accept header
-        String acceptHeader = httpHeaders.getHeaderString("Accept");
+        String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
         if (acceptHeader.contains("image/*;encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(order.getIdentification());

@@ -50,6 +50,9 @@ public class ResultController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
     public Response getResults(
@@ -135,7 +138,8 @@ public class ResultController {
     @Produces(value = { ImageDto.CONTENT_TYPE })
     public Response getResultIdentification(
             @PathParam("orderId") final String oid,
-            @PathParam("id") final int id
+            @PathParam("id") final int id,
+            @Context HttpHeaders httpHeaders
     ){
         long orderId;
         try {
@@ -152,12 +156,35 @@ public class ResultController {
         if(result.getOrderId()!=orderId)
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        String contentType = result.getIdentificationType();
-        ByteArrayInputStream identification = new ByteArrayInputStream(result.getIdentification());
-        EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getIdentification())));
+        // Cache control
+        CacheControl cc = new CacheControl();
+        // They can store the cache but must revalidate before using it
+        cc.setNoCache(true);
 
+        String contentType = result.getIdentificationType();
+        EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getIdentification())));
+        // Evaluate etag
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            builder.cacheControl(cc);
+            return builder.build();
+        }
+
+        // Return based on accept header
+        String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
+
+        if (acceptHeader.contains("image/*;encoding=base64")) {
+            String b64Image = Base64.getEncoder().encodeToString(result.getIdentification());
+            return Response.ok(b64Image).type(contentType + ";encoding=base64")
+                    .tag(entityTag)
+                    .cacheControl(cc)
+                    .build();
+        }
+
+        ByteArrayInputStream identification = new ByteArrayInputStream(result.getIdentification());
         return Response.ok(identification).type(contentType)
                 .tag(entityTag)
+                .cacheControl(cc)
                 .build();
     }
 
@@ -166,7 +193,8 @@ public class ResultController {
     @Produces(value = { ImageDto.CONTENT_TYPE })
     public Response getResultFile(
             @PathParam("orderId") final String oid,
-            @PathParam("id") final int id
+            @PathParam("id") final int id,
+            @Context HttpHeaders httpHeaders
     ){
         long orderId;
         try {
@@ -183,12 +211,36 @@ public class ResultController {
         if(result.getOrderId()!=orderId)
             return Response.status(Response.Status.NOT_FOUND).build();
 
+        // Cache control
+        CacheControl cc = new CacheControl();
+        // They can store the cache but must revalidate before using it
+        cc.setNoCache(true);
+
         String contentType = result.getDataType();
-        ByteArrayInputStream file = new ByteArrayInputStream(result.getData());
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getData())));
 
+        // Evaluate etag
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            builder.cacheControl(cc);
+            return builder.build();
+        }
+
+        // Return based on accept header
+        String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
+
+        if (acceptHeader.contains(";encoding=base64")) {
+            String b64Image = Base64.getEncoder().encodeToString(result.getData());
+            return Response.ok(b64Image).type(contentType + ";encoding=base64")
+                    .tag(entityTag)
+                    .cacheControl(cc)
+                    .build();
+        }
+
+        ByteArrayInputStream file = new ByteArrayInputStream(result.getData());
         return Response.ok(file).type(contentType)
                 .tag(entityTag)
+                .cacheControl(cc)
                 .build();
     }
 

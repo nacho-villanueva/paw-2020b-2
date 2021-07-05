@@ -46,7 +46,7 @@ public class MedicController {
     private Request request;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE+"+json"})
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE + "+json"})
     public Response getMedics(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
             @Min(value = MINIMUM_PAGE, message = "page!!Page number must be at least {value}")
@@ -55,29 +55,30 @@ public class MedicController {
             @Min(value = MINIMUM_PAGE_SIZE, message = "perPage!!Number of entries per page must be at least {value}")
             @Max(value = MAXIMUM_PAGE_SIZE, message = "perPage!!Page number must be at most {value}")
                     int perPage
-    ){
-        final Collection<Medic> medics = medicService.getAll(page,perPage);
+    ) {
+        final Collection<Medic> medics = medicService.getAll(page, perPage);
 
-        if(medics.isEmpty()) {
+        if (medics.isEmpty()) {
             return Response.noContent().build();
         }
 
         final int pages = medicService.getAllLastPage(perPage);
 
-        List<MedicGetDto> medicGetDtoList = medics.stream().map(m -> new MedicGetDto(m,uriInfo)).collect(Collectors.toList());
+        List<MedicGetDto> medicGetDtoList = medics.stream().map(m -> new MedicGetDto(m, uriInfo)).collect(Collectors.toList());
         EntityTag etag = new EntityTag(Integer.toHexString(medicGetDtoList.hashCode()));
 
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MedicGetDto>>(medicGetDtoList) {})
-                .type(MedicGetDto.CONTENT_TYPE+"+json")
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MedicGetDto>>(medicGetDtoList) {
+        })
+                .type(MedicGetDto.CONTENT_TYPE + "+json")
                 .tag(etag);
 
         //TODO: see if we can unify this on a util class and call it from the different controllers
         //We check what links apply
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(page > Integer.parseInt(DEFAULT_PAGE)) {
+        if (page > Integer.parseInt(DEFAULT_PAGE)) {
             response = response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
         }
-        if(page < pages) {
+        if (page < pages) {
             response = response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
         }
 
@@ -89,14 +90,14 @@ public class MedicController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response registerMedic(
             @Valid @NotNull MedicPostDto medicDto
-            ){
+    ) {
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
 
-        if(loggedUser == null) {
+        if (loggedUser == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -109,7 +110,7 @@ public class MedicController {
         Collection<MedicalField> knownFields = medicDto.getMedicalFieldCollection();
         String licenceNumber = medicDto.getLicenceNumber();
 
-        if(image==null || image.length==0)
+        if (image == null || image.length == 0)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
         Medic medic = medicService.register(
@@ -129,42 +130,42 @@ public class MedicController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE+"+json"})
-    public Response getMedicById(@PathParam("id") final int id){
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE + "+json"})
+    public Response getMedicById(@PathParam("id") final int id) {
         Optional<Medic> medicOptional = medicService.findByUserId(id);
-        if(!medicOptional.isPresent())
+        if (!medicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        MedicGetDto medicGetDto = new MedicGetDto(medicOptional.get(),uriInfo);
+        MedicGetDto medicGetDto = new MedicGetDto(medicOptional.get(), uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicGetDto.hashCode()));
 
         return Response.ok(medicGetDto)
-                .type(MedicGetDto.CONTENT_TYPE+"+json")
+                .type(MedicGetDto.CONTENT_TYPE + "+json")
                 .tag(entityTag)
                 .build();
     }
 
     @PUT
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response updateMedic(
             @PathParam("id") final int id,
             @Valid @NotNull MedicPutDto medicDto
-    ){
+    ) {
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
 
-        if(loggedUser == null) {
+        if (loggedUser == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
         //We search for medic based on input
         Optional<Medic> medicOptional = medicService.findByUserId(id);
-        if(!medicOptional.isPresent())
+        if (!medicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
         Medic medic = medicOptional.get();
 
-        if(!loggedUser.getId().equals(medic.getUser().getId()))
+        if (!loggedUser.getId().equals(medic.getUser().getId()))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         //We extract the data we need from the given DTO and use previous values for the ones missing
@@ -195,10 +196,10 @@ public class MedicController {
 
     @GET
     @Path("/{id}/identification")
-    @Produces(value = { ImageDto.CONTENT_TYPE })
-    public Response getMedicIdentification(@Context HttpHeaders httpHeaders, @PathParam("id") final int id){
+    @Produces(value = {ImageDto.CONTENT_TYPE})
+    public Response getMedicIdentification(@Context HttpHeaders httpHeaders, @PathParam("id") final int id) {
         Optional<Medic> medicOptional = medicService.findByUserId(id);
-        if(!medicOptional.isPresent())
+        if (!medicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Medic medic = medicOptional.get();
@@ -217,7 +218,7 @@ public class MedicController {
             return builder.build();
         }
         // Return based on accept header
-        String acceptHeader = httpHeaders.getHeaderString("Accept");
+        String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
         if (acceptHeader.contains("image/*;encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(medic.getIdentification());
@@ -235,32 +236,33 @@ public class MedicController {
 
     @GET
     @Path("/{id}/medical-fields")
-    @Produces(value = { MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE+"+json"})
-    public Response getMedicMedicalFields(@PathParam("id") final int id){
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE + "+json"})
+    public Response getMedicMedicalFields(@PathParam("id") final int id) {
         Optional<Medic> medicOptional = medicService.findByUserId(id);
-        if(!medicOptional.isPresent())
+        if (!medicOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Medic medic = medicOptional.get();
 
         Collection<MedicalFieldDto> medicalFieldDtos = medic.getMedicalFields().stream()
-                .map(mf -> (new MedicalFieldDto(mf,uriInfo))).collect(Collectors.toList());
+                .map(mf -> (new MedicalFieldDto(mf, uriInfo))).collect(Collectors.toList());
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicalFieldDtos.hashCode()));
 
-        return Response.ok(new GenericEntity<Collection<MedicalFieldDto>>(medicalFieldDtos){})
-                .type(MedicalFieldDto.CONTENT_TYPE+"+json")
+        return Response.ok(new GenericEntity<Collection<MedicalFieldDto>>(medicalFieldDtos) {
+        })
+                .type(MedicalFieldDto.CONTENT_TYPE + "+json")
                 .tag(entityTag)
                 .build();
     }
 
     // auxiliar functions
-    private boolean isEmptyCollection(Collection<?> collection){
-        return collection==null || collection.isEmpty();
+    private boolean isEmptyCollection(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
     }
 
     private User getLoggedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null || auth.getName() == null)
+        if (auth == null || auth.getName() == null)
             return null;
 
         Optional<User> maybeUser = userService.findByEmail(auth.getName());
