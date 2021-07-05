@@ -26,9 +26,23 @@
 .list-results {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: max-content;
+    height: 90%;
+}
+.ul-results {
+    height: 90%;
+    flex-wrap: nowrap;
 }
 
+.order-item{
+    float: left;
+    width: 100%;
+    list-style: none;
+    margin:0.5rem 1rem;
+    justify-content: left;
+}
+.order-item > a{
+    width: 100%;;
+}
 .select-picker {
     text-transform: uppercase;
     color: var(--primary);

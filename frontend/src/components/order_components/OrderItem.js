@@ -5,8 +5,8 @@ export function OrderItem(props) {
     const order = props.order;
     const roleType = props.role;
     return(
-        <aside>
-            <li className="nav-item">
+
+            <li className="nav-item order-item">
                 <Link to={"/dashboard/view-study/"+order.url }>
                     <Button className="nav-link w-100" id={"order-"+props.index+"-tab"}
                         data-toggle="tab" role="tab" style={{cursor:"pointer"}}
@@ -33,6 +33,6 @@ export function OrderItem(props) {
 
                 </Link>
             </li>
-        </aside>
+
     );
 }

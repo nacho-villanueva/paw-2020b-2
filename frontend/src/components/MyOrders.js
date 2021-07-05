@@ -8,6 +8,7 @@ import { GetStudyTypes, InternalQuery } from "../api/Auth";
 import { Roles } from "../constants/Roles";
 import { OrderItem} from "./order_components/OrderItem";
 import { MyOrdersFilters} from "./order_components/MyOrdersFilter";
+import { PaginationComponent } from "./order_components/PaginationComponent";
 import { getValueFromEvent } from "../api/utils";
 
 function MyOrders(){
@@ -110,6 +111,15 @@ function MyOrders(){
         setCurrentPage(pageNumber);
     }
 
+    const changePageAndFetch = (pageNumber) => {
+        if(pageNumber >= 1 && pageNumber <= totalOrderPages){
+            let aux = searchFilters;
+            aux.page = pageNumber;
+            setSearchFilters(aux);
+            setSearching(searching+1);
+        }
+    }
+
     const [searching, setSearching] = useState(0);
 
     //calling on mount...
@@ -169,14 +179,19 @@ function MyOrders(){
 
     const FetchedResults = () => {
         return(
-            <div className="custom-row list-results" key={"fetchedResults_"+update+"+"+searching}>
-                <ul className="nav flex-column w-100" id="orders" role="tablist">
+            <div className="row list-results" key={"fetchedResults_"+update+"+"+searching}>
+                <ul className="nav flex-column w-100 ul-results" id="orders" role="tablist">
                     {
                         orders.map((item, index) => (
                             <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
                         ))
                     }
                 </ul>
+                <PaginationComponent
+                    current={currentPage}
+                    changePageAndFetch={changePageAndFetch}
+                    total={totalOrderPages}
+                />
             </div>
         );
     }
