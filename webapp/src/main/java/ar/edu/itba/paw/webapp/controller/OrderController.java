@@ -198,7 +198,7 @@ public class OrderController {
     @GET
     @Path("/{id}/identification")
     @Produces(value = {ImageDto.CONTENT_TYPE})
-    public Response getOrderIdentification(@PathParam("id") final String encodedId) {
+    public Response getOrderIdentification(@Context HttpHeaders httpHeaders, @PathParam("id") final String encodedId) {
 
         long orderId;
         try {
@@ -214,20 +214,34 @@ public class OrderController {
         Order order = orderOptional.get();
 
         String contentType = order.getIdentificationType();
-        ByteArrayInputStream identification = new ByteArrayInputStream(order.getIdentification());
-        EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(order.getIdentification())));
+
+        // Cache control
         CacheControl cc = new CacheControl();
         // They can store the cache but must revalidate before using it
         cc.setNoCache(true);
-        Response.ResponseBuilder response = request.evaluatePreconditions(entityTag);
-        if (response == null) {
-            return Response.ok(identification).type(contentType)
-                    .tag(entityTag)
+        // Get etag
+        EntityTag etag = new EntityTag(Integer.toHexString(Arrays.hashCode(order.getIdentification())));
+        // Evaluate etag
+        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
+        if (builder != null) {
+            builder.cacheControl(cc);
+            return builder.build();
+        }
+        // Return based on accept header
+        String acceptHeader = httpHeaders.getHeaderString("Accept");
+
+        if (acceptHeader.contains("image/*;encoding=base64")) {
+            String b64Image = Base64.getEncoder().encodeToString(order.getIdentification());
+            return Response.ok(b64Image).type(contentType + ";encoding=base64")
+                    .tag(etag)
                     .cacheControl(cc)
                     .build();
         }
-        response.cacheControl(cc);
-        return response.build();
+        ByteArrayInputStream identification = new ByteArrayInputStream(order.getIdentification());
+        return Response.ok(identification).type(contentType)
+                .tag(etag)
+                .cacheControl(cc)
+                .build();
     }
 
     @GET
