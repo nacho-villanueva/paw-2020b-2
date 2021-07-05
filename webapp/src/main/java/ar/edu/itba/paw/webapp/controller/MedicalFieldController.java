@@ -18,10 +18,6 @@ import java.util.stream.Collectors;
 @Path("medical-fields")
 @Component
 public class MedicalFieldController {
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private MedicalFieldService medicalFieldService;
 
@@ -40,7 +36,7 @@ public class MedicalFieldController {
         EntityTag etag = new EntityTag(Integer.toHexString(medicalFieldDtos.hashCode()));
         return Response.ok(new GenericEntity<Collection<MedicalFieldDto>>( medicalFieldDtos ) {})
                 .type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl).build();
+                .tag(etag).build();
     }
 
     @GET
@@ -55,12 +51,9 @@ public class MedicalFieldController {
 
         MedicalFieldDto medicalFieldDto = new MedicalFieldDto(medicalFieldOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicalFieldDto.hashCode()));
-        // Immutable resource
-        CacheControl cache = new CacheControl();
-        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
 
         return Response.ok(medicalFieldDto).type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cache).build();
+                .tag(entityTag).build();
     }
 
     @POST

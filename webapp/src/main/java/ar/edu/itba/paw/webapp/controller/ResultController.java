@@ -34,9 +34,6 @@ public class ResultController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
 
     @Autowired
     private ResultService resultService;
@@ -85,7 +82,7 @@ public class ResultController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(resultGetDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ResultGetDto>>(resultGetDtos) {})
                 .type(ResultGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(page> MIN_PAGE)
@@ -128,7 +125,7 @@ public class ResultController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(resultGetDto.hashCode()));
         Response.ResponseBuilder response = Response.ok(resultGetDto)
                 .type(ResultGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -160,7 +157,7 @@ public class ResultController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getIdentification())));
 
         return Response.ok(identification).type(contentType)
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 
@@ -191,7 +188,7 @@ public class ResultController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getData())));
 
         return Response.ok(file).type(contentType)
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 

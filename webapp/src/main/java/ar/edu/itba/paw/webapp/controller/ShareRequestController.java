@@ -36,10 +36,6 @@ public class ShareRequestController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private ShareRequestService shareRequestService;
 
@@ -82,7 +78,7 @@ public class ShareRequestController {
         ResponseBuilder response =
                 Response.ok(new GenericEntity<Collection<ShareRequestGetDto>>( shareRequestGetDtos ) {})
                 .type(ShareRequestGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(page> MIN_PAGE)
@@ -128,7 +124,7 @@ public class ShareRequestController {
         ShareRequestGetDto shareRequestGetDto = new ShareRequestGetDto(shareRequest, uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(shareRequestGetDto.hashCode()));
         ResponseBuilder response = Response.ok(shareRequestGetDto).type(ShareRequestGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }

@@ -32,10 +32,6 @@ public class MedicController {
     private static final int MAXIMUM_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private MedicService medicService;
 
@@ -69,7 +65,7 @@ public class MedicController {
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<MedicGetDto>>(medicGetDtoList) {})
                 .type(MedicGetDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl);
+                .tag(etag);
 
         //TODO: see if we can unify this on a util class and call it from the different controllers
         //We check what links apply
@@ -140,7 +136,7 @@ public class MedicController {
 
         return Response.ok(medicGetDto)
                 .type(MedicGetDto.CONTENT_TYPE+"+json")
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 
@@ -208,7 +204,7 @@ public class MedicController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(medic.getIdentification())));
 
         return Response.ok(identification).type(contentType)
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 
@@ -228,7 +224,7 @@ public class MedicController {
 
         return Response.ok(new GenericEntity<Collection<MedicalFieldDto>>(medicalFieldDtos){})
                 .type(MedicalFieldDto.CONTENT_TYPE+"+json")
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 

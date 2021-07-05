@@ -53,9 +53,6 @@ public class UserController {
     private UriInfo uriInfo;
 
     @Autowired
-    private CacheControl cacheControl;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -86,7 +83,7 @@ public class UserController {
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<UserGetDto>>(userGetDtoList) {})
                 .type(UserGetDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl);
+                .tag(etag);
 
         //We check what links apply
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
@@ -123,7 +120,7 @@ public class UserController {
         EntityTag etag = new EntityTag(Integer.toHexString(userGetDto.hashCode()));
 
         return Response.ok(userGetDto).type(UserGetDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl).build();
+                .tag(etag).build();
     }
 
     @POST

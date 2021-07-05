@@ -27,10 +27,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Component
 public class PatientController {
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private PatientService patientService;
 
@@ -57,7 +53,7 @@ public class PatientController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(uri.hashCode()));
 
         ResponseBuilder response = Response.temporaryRedirect(uri)
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -74,7 +70,7 @@ public class PatientController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(patientDto.hashCode()));
 
         ResponseBuilder response = Response.ok(patientDto).type(PatientGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }

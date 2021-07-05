@@ -35,13 +35,11 @@ import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.*;
-import javax.ws.rs.core.CacheControl;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -149,20 +147,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Validator validator(final ValidatorFactory getValidatorFactory){
         return getValidatorFactory.getValidator();
-    }
-
-    // Including this cache control into a response means the response is going to be cached
-    // Do not include if you dont want to cache answer
-    @Bean
-    public CacheControl cacheControl(){
-        CacheControl cacheControl = new CacheControl();
-        // We inform clients that they should cache our responses only on their browsers
-        cacheControl.setPrivate(true);
-        // Set freshness to 1 minute, determine what is the amount we want to cache for
-        cacheControl.setMaxAge(Math.toIntExact(TimeUnit.MINUTES.toSeconds(1)));
-        // We tell client to revalidate stale caches
-        cacheControl.setMustRevalidate(true);
-        return cacheControl;
     }
 
     @Bean(name="annotationCodes")

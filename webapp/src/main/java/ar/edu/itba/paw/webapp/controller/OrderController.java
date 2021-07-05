@@ -29,10 +29,6 @@ public class OrderController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private UserService userService;
 
@@ -150,7 +146,7 @@ public class OrderController {
         response = Response.ok(new GenericEntity<Collection<OrderGetDto>>(orderDtos) {
         })
                 .type(OrderGetDto.CONTENT_TYPE + "+json")
-                .tag(etag).cacheControl(cacheControl);
+                .tag(etag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if (page > MIN_PAGE) {
@@ -190,7 +186,7 @@ public class OrderController {
         OrderGetDto orderGetDto = new OrderGetDto(order, encodedPath, uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(orderGetDto.hashCode()));
         Response.ResponseBuilder response = Response.ok(orderGetDto).type(OrderGetDto.CONTENT_TYPE + "+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -218,7 +214,7 @@ public class OrderController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(order.getIdentification())));
 
         return Response.ok(identification).type(contentType)
-                .cacheControl(cacheControl).tag(entityTag)
+                .tag(entityTag)
                 .build();
     }
 
@@ -259,7 +255,7 @@ public class OrderController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<MedicGetDto>>(medicGetDtos) {
         })
                 .type(MedicGetDto.CONTENT_TYPE + "+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -341,25 +337,19 @@ public class OrderController {
         String medicPlan = orderPostDto.getPatientMedicPlan();
         String medicPlanNumber = orderPostDto.getPatientMedicPlanNumber();
 
-        Order order;
-        try {
-            order = orderService.register(
-                    medic,
-                    localDate,
-                    clinic,
-                    patientEmail,
-                    patientName,
-                    studyType,
-                    description,
-                    identificationType,
-                    identification,
-                    medicPlan,
-                    medicPlanNumber
-            );
-        } catch (Exception e) {
-            return Response.status(422).build();
-        }
-
+        Order order = orderService.register(
+                medic,
+                localDate,
+                clinic,
+                patientEmail,
+                patientName,
+                studyType,
+                description,
+                identificationType,
+                identification,
+                medicPlan,
+                medicPlanNumber
+        );
 
         String encodedPath = urlEncoderService.encode(order.getOrderId());
         final URI uri = uriInfo.getAbsolutePathBuilder().path(encodedPath).build();

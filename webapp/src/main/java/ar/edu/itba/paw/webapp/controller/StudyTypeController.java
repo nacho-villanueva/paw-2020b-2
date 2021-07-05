@@ -31,10 +31,6 @@ public class StudyTypeController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // default cache
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private StudyTypeService studyTypeService;
 
@@ -58,7 +54,7 @@ public class StudyTypeController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>( studyTypeDtos ) {})
                 .type(StudyTypeDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -74,10 +70,8 @@ public class StudyTypeController {
 
         StudyTypeDto studyTypeDto = new StudyTypeDto(studyTypeOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDto.hashCode()));
-        CacheControl cache = new CacheControl();
-        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
         Response.ResponseBuilder response = Response.ok(studyTypeDto).type(StudyTypeDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cache);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -113,7 +107,7 @@ public class StudyTypeController {
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
                 .type(ClinicGetDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl);
+                .tag(etag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(page> MIN_PAGE){

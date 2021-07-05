@@ -29,10 +29,6 @@ public class ClinicController {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    // Default cache, do not include if response is non cacheable or immutable
-    @Autowired
-    private CacheControl cacheControl;
-
     @Autowired
     private ClinicService clinicService;
 
@@ -85,7 +81,7 @@ public class ClinicController {
         EntityTag etag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>( clinicDtos ) {})
                 .type(ClinicGetDto.CONTENT_TYPE+"+json")
-                .tag(etag).cacheControl(cacheControl);
+                .tag(etag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if(page> MIN_PAGE)
@@ -111,7 +107,7 @@ public class ClinicController {
         ClinicGetDto clinicGetDto = new ClinicGetDto(clinicOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(clinicGetDto.hashCode()));
         Response.ResponseBuilder response = Response.ok(clinicGetDto).type(ClinicGetDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -133,7 +129,7 @@ public class ClinicController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {})
                 .type(StudyTypeDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }
@@ -172,7 +168,7 @@ public class ClinicController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDtos.hashCode()));
         Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
                 .type(MedicPlanDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl);
+                .tag(entityTag);
 
         return response.build();
     }

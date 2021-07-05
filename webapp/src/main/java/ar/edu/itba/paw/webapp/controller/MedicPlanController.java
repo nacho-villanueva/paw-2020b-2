@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 public class MedicPlanController {
 
     @Autowired
-    private CacheControl cacheControl;
-
-    @Autowired
     private MedicPlanService medicPlanService;
 
     @Context
@@ -40,7 +37,7 @@ public class MedicPlanController {
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDtos.hashCode()));
         return Response.ok(new GenericEntity<Collection<MedicPlanDto>>(medicPlanDtos) {})
                 .type(MedicPlanDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cacheControl).build();
+                .tag(entityTag).build();
     }
 
     @GET
@@ -55,10 +52,8 @@ public class MedicPlanController {
 
         MedicPlanDto medicPlanDto = new MedicPlanDto(medicPlanOptional.get(),uriInfo);
         EntityTag entityTag = new EntityTag(Integer.toHexString(medicPlanDto.hashCode()));
-        CacheControl cache = new CacheControl();
-        cache.setMaxAge(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)));
         return Response.ok(medicPlanDto).type(MedicPlanDto.CONTENT_TYPE+"+json")
-                .tag(entityTag).cacheControl(cache).build();
+                .tag(entityTag).build();
     }
 
     @POST
