@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,7 +55,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         response.addHeader(TOKEN_STATUS_HEADER,"Healthy");
 
         //Get user identity and set it on the spring security context
-        UserDetails userDetails = userDetailsService.loadUserByUsername(tokenUser.getEmail());
+        UserDetails userDetails;
+        try {
+            userDetails = userDetailsService.loadUserByUsername(tokenUser.getEmail());
+        } catch (UsernameNotFoundException e) {
+            response.addHeader(TOKEN_STATUS_HEADER, "Expired");
+            chain.doFilter(request, response);
+            return;
+        }
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails == null ? Collections.emptyList() : userDetails.getAuthorities());
 

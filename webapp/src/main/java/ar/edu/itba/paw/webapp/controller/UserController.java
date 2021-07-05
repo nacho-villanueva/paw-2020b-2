@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ClinicService;
 import ar.edu.itba.paw.services.MedicService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.UserGetDto;
 import ar.edu.itba.paw.webapp.dto.UserPostDto;
 import ar.edu.itba.paw.webapp.dto.UserPutDto;
@@ -56,6 +57,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, UserGetDto.CONTENT_TYPE+"+json"})
@@ -180,7 +184,7 @@ public class UserController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        return Response.noContent().build();
+        return Response.noContent().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(user)).build();
     }
 
     private User getLoggedUser() {
