@@ -369,6 +369,7 @@ export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, 
         aux.medicPlan = data.medicPlan;
         aux.patientEmail = data.patientEmail;
         aux.patientName = data.patientName;
+        aux.id = data.id;
 
         InternalQuery(data.clinic).then((res) => {
             aux["clinic"] = res.name;
