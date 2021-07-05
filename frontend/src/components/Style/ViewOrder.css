@@ -31,11 +31,15 @@
 
 
 .upload-btn{
-    background: var(--primary);
-    color: rgb(167, 149, 149);
+    background: var(--primary) !important;
+    color: white !important;
 
 
     animation: 0.75s ease-out 0s 1 slideInFromDown;
+}
+.upload-btn:hover{
+    background: white !important;
+    color: var(--primary) !important;
 }
 .results-card {
     left: 0;

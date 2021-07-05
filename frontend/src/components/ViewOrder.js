@@ -5,8 +5,11 @@ import {GetLogguedUser, GetOrderInfo, GetResults} from "../api/Auth";
 
 import "./Style/ViewOrder.css";
 import { store } from "../redux";
+import { Roles } from "../constants/Roles";
+import {useSelector} from "react-redux";
 
 function ViewOrder(){
+    const roleType = useSelector(state => state.auth.role);
     const orderId = window.location.href.split('/').pop();
     //const orderId = "2a";
 
@@ -241,13 +244,14 @@ function ViewOrder(){
                             </div>
                             <div className="col">
                                 <div className="row justify-content-end">
-                                    {userInfo.role === "CLINIC" ?
-                                        <a
-                                            href={uploadPath}   role="button"
+                                    {roleType === Roles.CLINIC ?
+                                        <Button
+                                            role="button"
                                             className="btn upload-btn mt-0 mb-3 mr-4"
+                                            onClick={() => {console.log("UPLOAD RESULTS...")}}
                                         >
                                             Upload Results
-                                        </a>
+                                        </Button>
                                         : <></>
                                     }
                                 </div>
