@@ -1,7 +1,10 @@
 import {useEffect, useState} from "react";
 import "./style/EditField.css"
+import {Trans, useTranslation} from "react-i18next";
 
 const EditFieldRow = (props) => {
+
+    const {t} = useTranslation()
 
     const [edit, setEdit] = useState(false)
 
@@ -47,7 +50,7 @@ const EditFieldRow = (props) => {
                     setEdit(true);
                     if(props.onEdit)
                         props.onEdit()}}>
-                    Edit
+                    <Trans t={t} i18nKey={"edit-profile.edit"} />
                 </a>
             }
         </td>

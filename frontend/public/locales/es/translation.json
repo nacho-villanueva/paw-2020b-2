@@ -167,6 +167,100 @@
     "day-short-5": "Vi",
     "day-short-6": "Sa"
   },
+  "edit-profile": {
+    "edit": "Editar",
+    "save": {
+      "alert": "La informacion fue actualizada con exito.",
+      "cancel-button": "Cancelar",
+      "password": {
+        "error": "La contraseña es incorrecta",
+        "label": "Actual Contraseña",
+        "title": "Ingrese su contraseña antes de guardar cambios"
+      },
+      "submit-button": "Guardar Cambios"
+    },
+    "tabs": {
+      "clinic": {
+        "hours": {
+          "error": "Por favor inserte horarios validos",
+          "label": "Horarios",
+          "select": "Seleccionar Dias Abiertos"
+        },
+        "insurances": {
+          "error": "Por favor insert seguros medicos validos",
+          "label": "Seguros Medicos Acceptados"
+        },
+        "name": {
+          "error": "Por favor inserte un nombre valido",
+          "label": "Nombre"
+        },
+        "studies": {
+          "error": "Por favor inserte estudios medicos validos",
+          "label": "Tipos de Estudio"
+        },
+        "telephone": {
+          "error": "Por favor inserte telefono valido",
+          "label": "Teléfono"
+        },
+        "title": "Como Clínica",
+        "verified": "Verificado"
+      },
+      "medic": {
+        "fields": {
+          "error": "Por favor insertar campos medicos validos",
+          "label": "Cámpos Médicos"
+        },
+        "identification": {
+          "error": "Por favor insertar una imagen valida",
+          "label": "Identificacion"
+        },
+        "license": {
+          "error": "Por favor insertar un numero de licencia valido",
+          "label": "Número de Licencia"
+        },
+        "name": {
+          "error": "Por favor inserte un nombre valido",
+          "label": "Nombre"
+        },
+        "telephone": {
+          "error": "Por favor insert un teléfono valido",
+          "label": "Teléfono"
+        },
+        "title": "Como Médico",
+        "verified": "Verificado"
+      },
+      "patient": {
+        "insuranceNumber": {
+          "error": "Por favor insert un numero de seguro medico valido (Solo alfanumerico)",
+          "label": "Número de Seguro Medico"
+        },
+        "insurancePlan": {
+          "error": "Por favor insertar un seguro medico valido",
+          "label": "Seguro Medico"
+        },
+        "name": {
+          "error": "Por favor inserte un nombre valido",
+          "label": "Nombre"
+        },
+        "title": "Como Paciente"
+      },
+      "user": {
+        "email": {
+          "error": {
+            "already-exists": "El correo electrónico ya fue registrado",
+            "invalid": "Ingrese un correo electrónico válido"
+          },
+          "label": "Correo electrónico"
+        },
+        "password": {
+          "error": "La longitud de la contraseña debe tener entre {{min}} y {{max}} caracteres",
+          "label": "Contraseña"
+        },
+        "title": "Como Usuario"
+      }
+    },
+    "title": "Mi Perfil"
+  },
   "fragments": {
     "navbar": {
       "search-clinic": "Clínicas disponibles"

@@ -12,7 +12,7 @@ i18n
   .init({
     backend: {
       backends: [
-        LocalStorageBackend,  // primary
+        // LocalStorageBackend,  // primary
         HttpApi               // fallback
       ],
       backendOptions: [{

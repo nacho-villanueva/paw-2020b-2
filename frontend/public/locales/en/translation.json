@@ -168,6 +168,100 @@
     "day-short-5": "Fri",
     "day-short-6": "Sat"
   },
+  "edit-profile": {
+    "edit": "Edit",
+    "save": {
+      "alert": "Information has been updated successfully.",
+      "cancel-button": "Cancel",
+      "password": {
+        "error": "Password is incorrect",
+        "label": "Current Password",
+        "title": "Insert current password before saving changes"
+      },
+      "submit-button": "Save Changes"
+    },
+    "tabs": {
+      "clinic": {
+        "hours": {
+          "error": "Please insert valid hours",
+          "label": "Open Hours",
+          "select": "Select Open Days"
+        },
+        "insurances": {
+          "error": "Please insert valid medical insurances",
+          "label": "Accepted Medical Insurance "
+        },
+        "name": {
+          "error": "Please insert a valid name",
+          "label": "Name"
+        },
+        "studies": {
+          "error": "Please insert valid medical studies",
+          "label": "Study Types"
+        },
+        "telephone": {
+          "error": "Please insert a valid phone number ( +[Area Code] [Number] )",
+          "label": "Phone Number"
+        },
+        "title": "As Clinic",
+        "verified": "Verified"
+      },
+      "medic": {
+        "fields": {
+          "error": "Please insert valid medical fields",
+          "label": "Medical Fields"
+        },
+        "identification": {
+          "error": "Please upload a valid image",
+          "label": "Identification"
+        },
+        "license": {
+          "error": "Please insert a valid license number",
+          "label": "Licence Number"
+        },
+        "name": {
+          "error": "Please insert a valid name",
+          "label": "Name"
+        },
+        "telephone": {
+          "error": "Please enter a valid phone number",
+          "label": "Phone Number"
+        },
+        "title": "As Medic",
+        "verified": "Verified"
+      },
+      "patient": {
+        "insuranceNumber": {
+          "error": "Please insert a valid Insurance Number (Only alphanumeric)",
+          "label": "Medical Insurance Number"
+        },
+        "insurancePlan": {
+          "error": "Please insert a valid medical insurance",
+          "label": "Medical Insurance"
+        },
+        "name": {
+          "error": "Please insert a valid name",
+          "label": "Name"
+        },
+        "title": "As Patient"
+      },
+      "user": {
+        "email": {
+          "error": {
+            "already-exists": "Email is already registered",
+            "invalid": "Please input a valid email"
+          },
+          "label": "Email"
+        },
+        "password": {
+          "error": "Password length must be between {{min}} and {{max}} characters",
+          "label": "Password"
+        },
+        "title": "As User"
+      }
+    },
+    "title": "My Profile"
+  },
   "fragments": {
     "navbar": {
       "search-clinic": "Available Clinics"

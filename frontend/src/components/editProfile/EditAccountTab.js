@@ -7,8 +7,13 @@ import {store} from "../../redux";
 import {ERROR_CODES} from "../../constants/ErrorCodes";
 import ErrorFeedback from "../inputs/ErrorFeedback";
 import {GetUserInfo} from "../../api/UserInfo";
+import {Trans, useTranslation} from "react-i18next";
 
 const AccountTab = () => {
+
+    const {t} = useTranslation();
+
+    const passwordMin= 8; const passwordMax = 100;
 
     const [modified, setModified] = useState(false)
     const [viewPassword, setViewPassword] = useState(false)
@@ -68,32 +73,32 @@ const AccountTab = () => {
             <Alert show={success} variant={"success"}>Information has been updated successfully.</Alert>
             <table className={"fieldsTable"}>
                 <tbody>
-                    <EditFieldRow type={"text"} modified={modified} field={email} name={"Email"}
+                    <EditFieldRow type={"text"} modified={modified} field={email} name={t("edit-profile.tabs.user.email.label")}
                                   onEdit={()=> {setModifiedValues({...modifiedValues, email:email}); onEdit(); }}>
                         <Form.Group className="form-group col mt-1">
                             <FormControl
                                 className={"fieldEditInput"}
-                                placeholder={"Email"}
+                                placeholder={t("edit-profile.tabs.user.email.label")}
                                 value={modifiedValues.email}
                                 onChange={(val)=> {setModifiedValues({...modifiedValues, email: val.target.value})}}
                                 type={"email"} />
                         </Form.Group>
-                        <ErrorFeedback isInvalid={errors.email === ERROR_CODES.INVALID}>Invalid Email</ErrorFeedback>
-                        <ErrorFeedback isInvalid={errors.email === ERROR_CODES.ALREADY_EXISTS}>Email Already Exists</ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.email === ERROR_CODES.INVALID}><Trans t={t} i18nKey="edit-profile.tabs.user.email.error.invalid"/></ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.email === ERROR_CODES.ALREADY_EXISTS}><Trans t={t} i18nKey="edit-profile.tabs.user.email.error.already-exists"/></ErrorFeedback>
                     </EditFieldRow>
 
-                    <EditFieldRow type={"text"} modified={modified} field={"••••••••••••••"} name={"Password"}
+                    <EditFieldRow type={"text"} modified={modified} field={"••••••••••••••"} name={t("edit-profile.tabs.user.password.label")}
                                   onEdit={onEdit}>
                         <Form.Group className="form-group changePass col mt-1">
                             <FormControl
                                 className={"fieldEditInput"}
-                                placeholder={"Password"}
+                                placeholder={t("edit-profile.tabs.user.password.label")}
                                 value={modifiedValues.password}
                                 onChange={(val)=> {setModifiedValues({...modifiedValues, password: val.target.value})}}
                                 type={viewPassword? "text":"password"} />
                             <a href={"#/"} onClick={()=>setViewPassword(!viewPassword)}><i className={viewPassword? "far fa-lg icons fa-eye-slash": "far fa-lg icons fa-eye"}/></a>
                         </Form.Group>
-                        <ErrorFeedback isInvalid={errors.password === ERROR_CODES.INVALID}>Invalid Password</ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.password === ERROR_CODES.INVALID}><Trans t={t} i18nKey="edit-profile.tabs.user.password.error" values={{min: passwordMin, max: passwordMax}}/></ErrorFeedback>
                     </EditFieldRow>
                 </tbody>
             </table>
