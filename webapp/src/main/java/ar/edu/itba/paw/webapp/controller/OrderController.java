@@ -61,7 +61,7 @@ public class OrderController {
             @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
                     Integer page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
                     Integer perPage,
             @Valid @BeanParam OrderFilterDto orderFilterDto
     ) {
@@ -121,7 +121,7 @@ public class OrderController {
             );
         }
 
-        if(lastPage <= 0 || page > lastPage)
+        if (lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
 
         Collection<Order> orders;
@@ -228,9 +228,18 @@ public class OrderController {
             return builder.build();
         }
         // Return based on accept header
-        String acceptHeader = httpHeaders.getHeaderString("Accept");
+        String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
-        if (acceptHeader.contains("image/*;encoding=base64")) {
+        String ctType;
+        try {
+            ctType = MediaType.valueOf(contentType).getType();
+        } catch (Exception e) {
+            ctType = null;
+        }
+
+        if (acceptHeader.contains("*/*;encoding=base64") ||
+                (ctType != null && acceptHeader.contains(ctType + "/*;encoding=base64")) ||
+                acceptHeader.contains(contentType + ";encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(order.getIdentification());
             return Response.ok(b64Image).type(contentType + ";encoding=base64")
                     .tag(etag)
@@ -390,7 +399,7 @@ public class OrderController {
     public Response updateOrder(
             @PathParam("id") final String encodedId,
             @Valid @NotNull OrderPutDto orderPutDto
-    ){
+    ) {
         long orderId;
         try {
             orderId = urlEncoderService.decode(encodedId);
@@ -400,7 +409,7 @@ public class OrderController {
 
         // only affected members should be able to change
         String userEmail = getLoggedUserEmail();
-        if(userEmail == null)
+        if (userEmail == null)
             return Response.status(Response.Status.FORBIDDEN).build();
 
         final Optional<Order> orderOptional = orderService.findById(orderId);
