@@ -24,8 +24,40 @@
   },
   "advanced-search-clinics": {
     "form": {
+      "available-hours": {
+        "buttons": {
+          "show": "Schedule availability "
+        },
+        "columns": {
+          "available": "Available",
+          "day": "Day",
+          "from-time": "From",
+          "to-time": "To"
+        }
+      },
       "clinic-name": {
-        "label": "Clinic Name"
+        "label": "Search by clinic name"
+      },
+      "insurance-plan": {
+        "label": "Search by insurance plan"
+      },
+      "study-type": {
+        "label": "Search by study type"
+      },
+      "errors": {
+        "close-alert": "Close",
+        "missing": "Specified Clinic doesn\u0027t exist",
+        "missing-field": "Please select a Clinic"
+      },
+
+      "results": {
+        "no-results": "No clinics found based on search filters",
+        "no-selected": "No clinic selected",
+        "selected": "Selected Clinic",
+        "title": "Results"
+      },
+      "submit": {
+        "value": "Search"
       }
     },
     "title": "Advanced Search | Clinic"

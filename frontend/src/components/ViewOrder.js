@@ -15,6 +15,8 @@ import { UploadResult } from "../api/Results";
 import {ImageDataContainer} from "./vieworder_components/ImageDataContainer";
 import { GetIdentificationByURL } from "../api/UserInfo";
 
+import {ChangeClinic} from "./vieworder_components/ChangeClinic";
+
 function ViewOrder(){
     const roleType = useSelector(state => state.auth.role);
     var orderId = window.location.href.split('/');
@@ -69,6 +71,8 @@ function ViewOrder(){
     const [resultViewCount, setResultViewCount] = useState(0);
 
     const [statusCode, setStatusCode] = useState(0);
+
+    const [showChangeClinicModal, setShowChangeClinicModal] = useState(false);
 
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadValidated, setUploadValidated] = useState(false);
@@ -282,12 +286,13 @@ function ViewOrder(){
                 </div>
                 {roleType === Roles.PATIENT ?
                     <div className="row justify-content-center">
-                        <a
-                            href={changeClinicPath} role="button"
-                            className="btn upload-btn" type="button"
+                        <Button
+                            role="button" type="button"
+                            className="btn upload-btn mt-0 mb-3 mr-4"
+                            onClick={(e) => {e.preventDefault();setShowChangeClinicModal(true);e.stopPropagation();}}
                         >
                             Change Clinic
-                        </a>
+                        </Button>
                     </div>
                     :
                     <></>
@@ -411,6 +416,11 @@ function ViewOrder(){
                 uploadValidated={uploadValidated}
                 orderInfo={orderInfo}
                 uploadErrors={uploadErrors}
+            />
+            <ChangeClinic
+                show={showChangeClinicModal}
+                setShow={setShowChangeClinicModal}
+                orderInfo={orderInfo}
             />
         </>
     )
