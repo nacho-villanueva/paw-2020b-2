@@ -30,7 +30,7 @@ public class MedicPostDto {
     private ImageDto identification;
 
     @NotBlank(message = "Please provide a license number.")
-    //TODO: see if we use a pattern for this one, we dont know what a licence looks like @Pattern(regexp = "[0-9a-zA-Z]*",message = "MedicPostAndPutDto.licenceNumber.Pattern")
+    @Pattern(regexp = "[0-9a-zA-Z]*", message = "License number should only have alphanumeric characters")
     private String licenceNumber;
 
     @Valid
