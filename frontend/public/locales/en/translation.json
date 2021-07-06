@@ -56,6 +56,13 @@
         "selected": "Selected Clinic",
         "title": "Results"
       },
+      "clinic-info": {
+        "email": "Email",
+        "insurance": "Accepted Insurance",
+        "open-hours": "Open Hours",
+        "studies": "Available Studies",
+        "telephone": "Telephone"
+      },
       "submit": {
         "value": "Search"
       }

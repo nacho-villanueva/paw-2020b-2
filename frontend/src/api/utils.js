@@ -126,3 +126,26 @@ export function getBase64Image(src, setData){
 export function isValidImage(type){
     return (type === "image/jpeg" || type === "image/png" || type === "image/jpg");
 }
+
+export function getDaySchedule(event, idx){
+    let dayOp = {
+        checked: '',
+        fromTime: '',
+        toTime: ''
+    };
+
+    let avail = "isAvailable"+idx;
+    let ot = "day-"+idx+"-ot";
+    let ct = "day-"+idx+"-ct";
+    for(var t of event.target){
+        if(t.name === ot){
+            dayOp.fromTime = t.value;
+        }else if(t.name === ct){
+            dayOp.toTime = t.value;
+        }else if(t.name === avail){
+            dayOp.checked = t.checked;
+        }
+    }
+
+    return dayOp;
+}

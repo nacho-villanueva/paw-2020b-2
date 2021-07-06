@@ -9,12 +9,12 @@ export function Day(props){
     const { t } = useTranslation();
 
     return(
-        <tr>
+        <tr name={"dayOp-"+item.id}>
             <th><Trans t={t} i18nKey={"days.day-"+item.id} >{item.name}</Trans></th>
             <th>
                 <Form.Group controlId={"isAvailable" + item.id}>
                     <Form.Control defaultChecked={filters.schedule[item.id].checked}
-                        type="checkbox" name={"isAvailable" + item.id}
+                        type="checkbox" name={"isAvailable-" + item.id}
                     />
                 </Form.Group>
             </th>

@@ -1,0 +1,25 @@
+.cl-filters {
+
+}
+.cl-results {
+
+}
+
+.cl-search-btn {
+    width: fit-content;
+    font-size: larger;
+    height: min-content;
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+.cl-schedule-btn {
+    color: var(--primary) !important;
+    border-color: var(--secondary) !important;
+    border-style: solid;
+    border-width: thin;
+}
+
+.cl-modal > .modal-dialog {
+    width: fit-content;
+}
