@@ -54,80 +54,81 @@ public class ResultController {
     private Request request;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
+    @Produces(value = {MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE + "+json"})
     public Response getResults(
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
             @IntegerSize(min = MIN_PAGE, message = "page!!Page number must be at least {min}")
                     Integer page,
             @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
-            @IntegerSize(min = MIN_PAGE_SIZE, max=MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "perPage!!Number of entries per page must be between {min} and {max}")
                     Integer perPage,
             @PathParam("orderId") final String oid
-    ){
+    ) {
         long orderId;
         try {
             orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        long lastPage = resultService.findByOrderIdLastPage(orderId,perPage);
+        long lastPage = resultService.findByOrderIdLastPage(orderId, perPage);
 
-        if(lastPage <= 0 || page > lastPage)
+        if (lastPage <= 0 || page > lastPage)
             return Response.noContent().build();
 
-        Collection<Result> results = resultService.findByOrderId(orderId,page,perPage);
+        Collection<Result> results = resultService.findByOrderId(orderId, page, perPage);
 
         Collection<ResultGetDto> resultGetDtos = results.stream()
-                .map(r -> (new ResultGetDto(r,urlEncoderService.encode(r.getOrderId()),uriInfo)))
+                .map(r -> (new ResultGetDto(r, urlEncoderService.encode(r.getOrderId()), uriInfo)))
                 .collect(Collectors.toList());
 
         EntityTag entityTag = new EntityTag(Integer.toHexString(resultGetDtos.hashCode()));
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ResultGetDto>>(resultGetDtos) {})
-                .type(ResultGetDto.CONTENT_TYPE+"+json")
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<Collection<ResultGetDto>>(resultGetDtos) {
+        })
+                .type(ResultGetDto.CONTENT_TYPE + "+json")
                 .tag(entityTag);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        if(page> MIN_PAGE)
-            response.link(uriBuilder.replaceQueryParam("page",page-1).build(),"prev");
+        if (page > MIN_PAGE)
+            response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
 
-        if(page<lastPage)
-            response.link(uriBuilder.replaceQueryParam("page",page+1).build(),"next");
+        if (page < lastPage)
+            response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
 
-        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(),"first");
-        response.link(uriBuilder.replaceQueryParam("page",lastPage).build(),"last");
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(), "first");
+        response.link(uriBuilder.replaceQueryParam("page", lastPage).build(), "last");
 
         return response.build();
     }
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE+"+json"})
+    @Produces(value = {MediaType.APPLICATION_JSON, ResultGetDto.CONTENT_TYPE + "+json"})
     public Response getResultById(
             @PathParam("orderId") final String oid,
             @PathParam("id") final int id
-    ){
+    ) {
         long orderId;
         try {
             orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         Optional<Result> resultOptional = resultService.findById(id);
-        if(!resultOptional.isPresent())
+        if (!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Result result = resultOptional.get();
-        if(result.getOrderId()!=orderId)
+        if (result.getOrderId() != orderId)
             return Response.status(Response.Status.NOT_FOUND).build();
 
         String encodedPath = urlEncoderService.encode(result.getOrderId());
-        ResultGetDto resultGetDto = new ResultGetDto(result,encodedPath,uriInfo);
+        ResultGetDto resultGetDto = new ResultGetDto(result, encodedPath, uriInfo);
 
         EntityTag entityTag = new EntityTag(Integer.toHexString(resultGetDto.hashCode()));
         Response.ResponseBuilder response = Response.ok(resultGetDto)
-                .type(ResultGetDto.CONTENT_TYPE+"+json")
+                .type(ResultGetDto.CONTENT_TYPE + "+json")
                 .tag(entityTag);
 
         return response.build();
@@ -135,25 +136,25 @@ public class ResultController {
 
     @GET
     @Path("/{id}/identification")
-    @Produces(value = { ImageDto.CONTENT_TYPE })
+    @Produces(value = {ImageDto.CONTENT_TYPE})
     public Response getResultIdentification(
             @PathParam("orderId") final String oid,
             @PathParam("id") final int id,
             @Context HttpHeaders httpHeaders
-    ){
+    ) {
         long orderId;
         try {
             orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         Optional<Result> resultOptional = resultService.findById(id);
-        if(!resultOptional.isPresent())
+        if (!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Result result = resultOptional.get();
-        if(result.getOrderId()!=orderId)
+        if (result.getOrderId() != orderId)
             return Response.status(Response.Status.NOT_FOUND).build();
 
         // Cache control
@@ -173,7 +174,16 @@ public class ResultController {
         // Return based on accept header
         String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
-        if (acceptHeader.contains("image/*;encoding=base64")) {
+        String ctType;
+        try {
+            ctType = MediaType.valueOf(contentType).getType();
+        } catch (Exception e) {
+            ctType = null;
+        }
+
+        if (acceptHeader.contains("*/*;encoding=base64") ||
+                (ctType != null && acceptHeader.contains(ctType + "/*;encoding=base64")) ||
+                acceptHeader.contains(contentType + ";encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(result.getIdentification());
             return Response.ok(b64Image).type(contentType + ";encoding=base64")
                     .tag(entityTag)
@@ -190,25 +200,25 @@ public class ResultController {
 
     @GET
     @Path("/{id}/file")
-    @Produces(value = { ImageDto.CONTENT_TYPE })
+    @Produces(value = {ImageDto.CONTENT_TYPE})
     public Response getResultFile(
             @PathParam("orderId") final String oid,
             @PathParam("id") final int id,
             @Context HttpHeaders httpHeaders
-    ){
+    ) {
         long orderId;
         try {
             orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         Optional<Result> resultOptional = resultService.findById(id);
-        if(!resultOptional.isPresent())
+        if (!resultOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Result result = resultOptional.get();
-        if(result.getOrderId()!=orderId)
+        if (result.getOrderId() != orderId)
             return Response.status(Response.Status.NOT_FOUND).build();
 
         // Cache control
@@ -216,7 +226,7 @@ public class ResultController {
         // They can store the cache but must revalidate before using it
         cc.setNoCache(true);
 
-        String contentType = result.getDataType();
+        String contentType = result.getDataType().toLowerCase();
         EntityTag entityTag = new EntityTag(Integer.toHexString(Arrays.hashCode(result.getData())));
 
         // Evaluate etag
@@ -229,7 +239,16 @@ public class ResultController {
         // Return based on accept header
         String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
-        if (acceptHeader.contains(";encoding=base64")) {
+        String ctType;
+        try {
+            ctType = MediaType.valueOf(contentType).getType();
+        } catch (Exception e) {
+            ctType = null;
+        }
+
+        if (acceptHeader.contains("*/*;encoding=base64") ||
+                (ctType != null && acceptHeader.contains(ctType + "/*;encoding=base64")) ||
+                acceptHeader.contains(contentType + ";encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(result.getData());
             return Response.ok(b64Image).type(contentType + ";encoding=base64")
                     .tag(entityTag)
@@ -245,32 +264,32 @@ public class ResultController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createResult(
             @PathParam("orderId") final String oid,
             @Valid @NotNull ResultPostDto resultPostDto
-            ){
+    ) {
         Response.ResponseBuilder response;
 
         long orderId;
         try {
             orderId = urlEncoderService.decode(oid);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         Optional<Order> orderOptional = orderService.findById(orderId);
-        if(!orderOptional.isPresent())
+        if (!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
 
         Order order = orderOptional.get();
 
         // clinic should be the one doing this task
         String userEmail = getLoggedUserEmail();
-        if(userEmail == null)
+        if (userEmail == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        if(!order.getClinic().getEmail().equals(userEmail))
+        if (!order.getClinic().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
         String resultDataType = resultPostDto.getFile().getContentType();
@@ -301,7 +320,7 @@ public class ResultController {
     // auxiliar functions
     private User getLoggedUser() {
         String userEmail = getLoggedUserEmail();
-        if(userEmail==null)
+        if (userEmail == null)
             return null;
 
         Optional<User> maybeUser = userService.findByEmail(userEmail);
@@ -310,7 +329,7 @@ public class ResultController {
 
     private String getLoggedUserEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null || auth.getName() == null)
+        if (auth == null || auth.getName() == null)
             return null;
 
         return auth.getName();

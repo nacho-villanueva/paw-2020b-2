@@ -220,7 +220,16 @@ public class MedicController {
         // Return based on accept header
         String acceptHeader = httpHeaders.getHeaderString("Accept").toLowerCase();
 
-        if (acceptHeader.contains("image/*;encoding=base64")) {
+        String ctType;
+        try {
+            ctType = MediaType.valueOf(contentType).getType();
+        } catch (Exception e) {
+            ctType = null;
+        }
+
+        if (acceptHeader.contains("*/*;encoding=base64") ||
+                (ctType != null && acceptHeader.contains(ctType + "/*;encoding=base64")) ||
+                acceptHeader.contains(contentType + ";encoding=base64")) {
             String b64Image = Base64.getEncoder().encodeToString(medic.getIdentification());
             return Response.ok(b64Image).type(contentType + ";encoding=base64")
                     .tag(etag)
