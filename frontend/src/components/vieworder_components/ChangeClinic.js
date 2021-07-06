@@ -3,9 +3,11 @@ import {ClinicsFilters} from "../search_clinic/ClinicsFilters";
 import {ClinicsResults} from "../search_clinic/ClinicsResults";
 
 import { useCallback, useEffect, useState } from "react";
-import { GetStudyTypes, QueryClinics } from "../../api/Auth";
+import { GetStudyTypes } from "../../api/Auth";
 import { getValueFromEvent, getDaySchedule } from "../../api/utils";
 import { getAllInsurancePlans } from "../../api/CustomFields";
+
+import { SearchClinics } from "../../api/Clinics";
 
 export function ChangeClinic(props){
     const show = props.show;
@@ -75,7 +77,7 @@ export function ChangeClinic(props){
 
     const changePageAndFetch = (pageNumber) => {
         if(pageNumber >= 1 && pageNumber <= totalClinicPages){
-            QueryClinics(searchFilters, setClinicsList, update, setUpdate, pageNumber, setTotalClinicPages, setStatusCode, setErrors);
+            SearchClinics(searchFilters, setClinicsList, update, setUpdate, pageNumber, setTotalClinicPages, setStatusCode, setErrors);
             setCurrentPage(pageNumber)
         }
     }
@@ -104,7 +106,7 @@ export function ChangeClinic(props){
             auxInputs.insurancePlan = getValueFromEvent("insurancePlanSelect", event);
 
             let auxFilters = searchFilters;
-            auxFilters.studyType = auxInputs.studyType !== -1 ?  auxInputs.studyType : '';
+            auxFilters.studyType = auxInputs.studyType !== '-1' ?  auxInputs.studyType : '';
             auxFilters.clinicName = auxInputs.clinicName !== -1 ?  auxInputs.clinicName : '';
             auxFilters.insurancePlan = auxInputs.insurancePlan !== -1 ?  auxInputs.insurancePlan : '';
             auxFilters.days.fill(0);
@@ -128,7 +130,7 @@ export function ChangeClinic(props){
 
             console.log("event change clinic", event);
 
-            QueryClinics(searchFilters, setClinicsList, update, setUpdate, 1, setTotalClinicPages, setStatusCode, setErrors);
+            SearchClinics(searchFilters, setClinicsList, update, setUpdate, 1, setTotalClinicPages, setStatusCode, setErrors);
 
         }
 

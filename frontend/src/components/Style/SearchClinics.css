@@ -21,5 +21,8 @@
 }
 
 .cl-modal > .modal-dialog {
-    width: fit-content;
+    width: 80%;
+}
+.cl-modal > .modal-dialog > .modal-content {
+    width: max-content;
 }
