@@ -69,8 +69,13 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified) {
-        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields,verified);
+    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields) {
+        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields);
+    }
+
+    @Override
+    public void verifyMedic(int medicId) {
+        medicDao.verifyMedic(medicId);
     }
 
     @Override

@@ -168,26 +168,24 @@ public class MedicController {
         if (!loggedUser.getId().equals(medic.getUser().getId()))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
-        //We extract the data we need from the given DTO and use previous values for the ones missing
+        //We extract the data we need from the given DTO
         ImageDto identification = medicDto.getIdentification();
-
-        String name = (isEmpty(medicDto.getName())) ? medic.getName() : medicDto.getName();
-        String telephone = (isEmpty(medicDto.getTelephone())) ? medic.getTelephone() : medicDto.getTelephone();
-        String contentType = (identification == null) ? medic.getIdentificationType() : identification.getContentType();
-        byte[] image = (identification == null) ? medic.getIdentification() : identification.getImageAsByteArray();
-        Collection<MedicalField> knownFields = (isEmptyCollection(medicDto.getMedicalFieldCollection())) ? medic.getMedicalFields() : medicDto.getMedicalFieldCollection();
-        String licenceNumber = (isEmpty(medicDto.getLicenceNumber())) ? medic.getLicenceNumber() : medicDto.getLicenceNumber();
+        String contentType = null;
+        if (identification != null)
+            contentType = identification.getContentType();
+        byte[] image = null;
+        if (identification != null)
+            image = identification.getImageAsByteArray();
 
         //We persist the changes
         medicService.updateMedicInfo(
                 loggedUser,
-                name,
-                telephone,
+                medicDto.getName(),
+                medicDto.getTelephone(),
                 contentType,
                 image,
-                licenceNumber,
-                knownFields,
-                medic.isVerified()
+                medicDto.getLicenceNumber(),
+                medicDto.getMedicalFieldCollection()
         );
 
         //Location is same as request url

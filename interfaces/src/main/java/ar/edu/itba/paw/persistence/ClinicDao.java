@@ -30,6 +30,8 @@ public interface ClinicDao {
 
     long getByStudyTypeIdCount(int studyTypeId);
 
+    void verifyClinic(int clinicId);
+
     StudyType registerStudyToClinic(int clinicId, StudyType studyType);
 
     MedicPlan registerPlanToClinic(int clinicId, MedicPlan medicPlan);

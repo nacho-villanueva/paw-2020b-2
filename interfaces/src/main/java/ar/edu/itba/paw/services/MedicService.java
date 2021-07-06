@@ -27,7 +27,9 @@ public interface MedicService {
 
     MedicalField registerFieldToMedic(int medicId, MedicalField medicalField);
 
-    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
+    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields);
+
+    void verifyMedic(int medicId);
 
     boolean knowsField(int medicId, int fieldId);
 }

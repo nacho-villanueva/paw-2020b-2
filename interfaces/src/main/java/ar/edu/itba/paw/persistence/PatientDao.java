@@ -16,7 +16,7 @@ public interface PatientDao {
 
     Patient register(User user, String name, MedicPlan medicPlan, String medicPlanNumber);
 
-    Patient updatePatientInfo(Patient patient, String name, MedicPlan medicPlan, String medicPlanNumber);
+    Patient updatePatientInfo(User user, String name, MedicPlan medicPlan, String medicPlanNumber);
 
-    Patient updateMedicPlan(Patient patient, MedicPlan medicPlan, String medicPlanNumber);
+    Patient updateMedicPlan(User user, MedicPlan medicPlan, String medicPlanNumber);
 }

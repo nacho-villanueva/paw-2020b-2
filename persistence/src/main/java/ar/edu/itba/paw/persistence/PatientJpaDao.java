@@ -13,6 +13,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public class PatientJpaDao implements PatientDao {
 
@@ -58,23 +60,28 @@ public class PatientJpaDao implements PatientDao {
     }
 
     @Override
-    public Patient updatePatientInfo(final Patient patient, final String name, final MedicPlan medicPlan, final String medicPlanNumber) {
-        Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
+    public Patient updatePatientInfo(final User user, final String name, final MedicPlan medicPlan, final String medicPlanNumber) {
+        Optional<Patient> patientDB = findByUserId(user.getId());
         patientDB.ifPresent(patient1 -> {
-            patient1.setName(name);
-            patient1.setMedicPlan(getPlanRef(medicPlan));
-            patient1.setMedicPlanNumber(medicPlanNumber);
+            if(!isEmpty(name))
+                patient1.setName(name);
+            if(medicPlan != null)
+                patient1.setMedicPlan(getPlanRef(medicPlan));
+            if(!isEmpty(medicPlanNumber))
+                patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);
     }
 
     @Override
-    public Patient updateMedicPlan(final Patient patient, final MedicPlan medicPlan, final String medicPlanNumber) {
-        Optional<Patient> patientDB = findByUserId(patient.getUser().getId());
+    public Patient updateMedicPlan(final User user, final MedicPlan medicPlan, final String medicPlanNumber) {
+        Optional<Patient> patientDB = findByUserId(user.getId());
         patientDB.ifPresent(patient1 -> {
-            patient1.setMedicPlan(getPlanRef(medicPlan));
-            patient1.setMedicPlanNumber(medicPlanNumber);
+            if(medicPlan != null)
+                patient1.setMedicPlan(getPlanRef(medicPlan));
+            if(!isEmpty(medicPlanNumber))
+                patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);

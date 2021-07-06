@@ -66,6 +66,8 @@ public class ClinicDaoTest {
 
     private static final String NEW_NAME_TWO = "Refurbished Two's Clinic";
 
+    private static final int NON_VERIFIED_CLINIC_ID = 12;
+
     //Pagination related
     private static final int PAGE_SIZE_WITH_ALL_CLINICS = 99;
     private static final int DEFAULT_PAGE = 1;
@@ -399,6 +401,15 @@ public class ClinicDaoTest {
         Assert.assertFalse(clinicIds.contains(10));
         Assert.assertFalse(clinicIds.contains(12));
         Assert.assertEquals(7,clinics.size());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testVerifyNotVerifiedClinic() {
+        dao.verifyClinic(NON_VERIFIED_CLINIC_ID);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, CLINICS_TABLE_NAME, "user_id = " + NON_VERIFIED_CLINIC_ID + " AND verified = true"));
     }
 
 

@@ -126,7 +126,7 @@ public class PatientDaoTest {
     @Rollback
     @Test
     public void testUpdatePatientInfo() {
-        Patient patient = dao.updatePatientInfo(patientZero,patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
+        Patient patient = dao.updatePatientInfo(patientZero.getUser(),patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
 
         Assert.assertNotNull(patient);
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"name = '" + patientTest.getName() + "' AND plan_id = " + patientTest.getMedicPlan().getId() + " AND medic_plan_number = '" + patientTest.getMedicPlanNumber() + "' AND user_id = " + patientZero.getUser().getId()));
@@ -136,7 +136,7 @@ public class PatientDaoTest {
     @Rollback
     @Test
     public void testUpdatePatientInfoNonExistentPatient() {
-        Patient patient = dao.updatePatientInfo(patientTest,patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
+        Patient patient = dao.updatePatientInfo(patientTest.getUser(),patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
 
         Assert.assertNull(patient);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"user_id = " + patientTest.getUser().getId()));

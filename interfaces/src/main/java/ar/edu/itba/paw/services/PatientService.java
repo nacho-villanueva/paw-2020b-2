@@ -18,5 +18,5 @@ public interface PatientService {
 
     Patient updatePatientInfo(User user, String name, MedicPlan medicPlan, String medicPlanNumber);
 
-    Patient updateMedicPlan(Patient patient, MedicPlan medicPlan, String medicPlanNumber);
+    Patient updateMedicPlan(User user, MedicPlan medicPlan, String medicPlanNumber);
 }

@@ -98,6 +98,11 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
+    public void verifyClinic(int clinicId) {
+        clinicDao.verifyClinic(clinicId);
+    }
+
+    @Override
     public int getByStudyTypeIdLastPage(int studyTypeId, int pageSize) {
         return getLastPage(getByStudyTypeIdCount(studyTypeId),pageSize);
     }

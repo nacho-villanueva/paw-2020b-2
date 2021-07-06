@@ -118,6 +118,17 @@ public class ClinicJpaDao implements ClinicDao {
         return query.getSingleResult();
     }
 
+    @Override
+    public void verifyClinic(int clinicId) {
+        Optional<Clinic> clinicDB = findByUserId(clinicId);
+
+        clinicDB.ifPresent(clinic -> {
+            if(!clinic.isVerified())
+                clinic.setVerified(true);
+            em.flush();
+        });
+    }
+
 
     @Override
     public Clinic register(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Collection<MedicPlan> medicPlans, final ClinicHours hours, final boolean verified) {

@@ -131,18 +131,12 @@ public class PatientController {
         if(!loggedUser.getId().equals(patient.getUser().getId()))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
-
-        //We extract the data we need from the given DTO and use previous values for the ones missing
-        String name = (isEmpty(patientDto.getName())) ? (patient.getName()) : (patientDto.getName());
-        MedicPlan medicPlan = (isEmpty(patientDto.getMedicPlanName())) ? patient.getMedicPlan() : patientDto.getMedicPlan();
-        String medicPlanNumber = (isEmpty(patientDto.getMedicPlanNumber())) ? patient.getMedicPlanNumber() : patientDto.getMedicPlanNumber();
-
         //We persist the changes
         patientService.updatePatientInfo(
                 loggedUser,
-                name,
-                medicPlan,
-                medicPlanNumber
+                patientDto.getName(),
+                patientDto.getMedicPlan(),
+                patientDto.getMedicPlanNumber()
         );
 
         //Location is same as request url

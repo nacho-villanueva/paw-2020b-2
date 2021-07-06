@@ -19,7 +19,9 @@ public interface MedicDao {
 
     Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
 
-    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
+    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields);
+
+    void verifyMedic(int medicId);
 
     boolean knowsField(int medicId, int fieldId);
 

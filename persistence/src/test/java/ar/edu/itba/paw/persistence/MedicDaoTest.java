@@ -44,6 +44,7 @@ public class MedicDaoTest {
 
     //Known medics
     private static final Medic medicOne = new Medic(userOne,"Medic one","","image/png",new byte[1],"1234567",true);
+    private static final int NON_VERIFIED_MEDIC_ID = 5;
 
     //Pagination related
     private static final int PAGE_SIZE_WITH_ALL_MEDICS = 99;
@@ -137,7 +138,7 @@ public class MedicDaoTest {
         knownFields.add(fieldTwo);
         knownFields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicOne.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields);
 
         Assert.assertNotNull(medic);
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicOne.getUser().getId() + " AND name = '" + medicTest.getName() + "'"));
@@ -155,7 +156,7 @@ public class MedicDaoTest {
         knownFields.add(fieldTwo);
         knownFields.add(fieldThree);
 
-        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields,medicTest.isVerified());
+        Medic medic = dao.updateMedicInfo(medicTest.getUser(),medicTest.getName(),medicTest.getTelephone(),medicTest.getIdentificationType(),medicTest.getIdentification(),medicTest.getLicenceNumber(),knownFields);
 
         Assert.assertNull(medic);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDICS_TABLE_NAME,"user_id = " + medicTest.getUser().getId()));
@@ -207,5 +208,14 @@ public class MedicDaoTest {
 
         Assert.assertNull(mf);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,MEDIC_FIELDS_TABLE_NAME,"medic_id = " + medicTest.getUser().getId() + " AND field_id = " + fieldThree.getId()));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testVerifyNotVerifiedMedic() {
+        dao.verifyMedic(NON_VERIFIED_MEDIC_ID);
+
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, MEDICS_TABLE_NAME, "user_id = " + NON_VERIFIED_MEDIC_ID + " AND verified = true"));
     }
 }

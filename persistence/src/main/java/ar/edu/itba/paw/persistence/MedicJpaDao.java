@@ -11,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public class MedicJpaDao implements MedicDao {
 
@@ -91,6 +93,17 @@ public class MedicJpaDao implements MedicDao {
         return medic;
     }
 
+    @Override
+    public void verifyMedic(int medicId) {
+        Optional<Medic> medicDB = findByUserId(medicId);
+
+        medicDB.ifPresent(medic -> {
+            if(!medic.isVerified())
+                medic.setVerified(true);
+            em.flush();
+        });
+    }
+
     private MedicalField getFieldRef(MedicalField medicalField) {
         MedicalField retRef;
         if(medicalField.getId() != null) {
@@ -107,22 +120,28 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields) {
 
         Optional<Medic> medicDB = findByUserId(user.getId());
 
         medicDB.ifPresent(medic -> {
-            medic.setName(name);
-            medic.setTelephone(telephone);
-            medic.setIdentificationType(identificationType);
-            medic.setIdentification(identification);
-            medic.setLicenceNumber(licenceNumber);
-            medic.setVerified(verified);
-            Collection<MedicalField> fieldsRef = new HashSet<>();
-            knownFields.forEach(medicalField -> {
-                fieldsRef.add(getFieldRef(medicalField));
-            });
-            medic.setMedicalFields(fieldsRef);
+            if(!isEmpty(name))
+                medic.setName(name);
+            if(!isEmpty(telephone))
+                medic.setTelephone(telephone);
+            if(!isEmpty(identificationType))
+                medic.setIdentificationType(identificationType);
+            if(identification != null)
+                medic.setIdentification(identification);
+            if(!isEmpty(licenceNumber))
+                medic.setLicenceNumber(licenceNumber);
+            if(knownFields != null) {
+                Collection<MedicalField> fieldsRef = new HashSet<>();
+                knownFields.forEach(medicalField -> {
+                    fieldsRef.add(getFieldRef(medicalField));
+                });
+                medic.setMedicalFields(fieldsRef);
+            }
             em.flush();
         });
 

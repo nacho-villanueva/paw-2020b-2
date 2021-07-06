@@ -38,6 +38,8 @@ public interface ClinicService {
 
     long getByStudyTypeIdCount(int studyTypeId);
 
+    void verifyClinic(int clinicId);
+
     int getByStudyTypeIdLastPage(int studyTypeId, int pageSize);
 
     //If parameters are null, search will ignore those values

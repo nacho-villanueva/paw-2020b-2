@@ -50,12 +50,11 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient updatePatientInfo(User user, String name, MedicPlan medicPlan, String medicPlanNumber) {
-        Optional<Patient> patient = dao.findByUserId(user.getId());
-        return patient.map(value -> dao.updatePatientInfo(value, name, medicPlan, medicPlanNumber)).orElse(null);
+        return dao.updatePatientInfo(user, name, medicPlan, medicPlanNumber);
     }
 
     @Override
-    public Patient updateMedicPlan(Patient patient, MedicPlan medicPlan, String medicPlanNumber) {
-        return dao.updateMedicPlan(patient,medicPlan,medicPlanNumber);
+    public Patient updateMedicPlan(User user, MedicPlan medicPlan, String medicPlanNumber) {
+        return dao.updateMedicPlan(user,medicPlan,medicPlanNumber);
     }
 }
