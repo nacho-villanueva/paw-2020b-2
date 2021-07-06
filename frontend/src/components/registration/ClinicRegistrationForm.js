@@ -118,10 +118,6 @@ const ClinicRegistrationForm = () => {
                 e.phoneNumber = true
             if(inputs.studyTypes.length === 0)
                 e.acceptedStudies = true
-            if(inputs.acceptedInsurance.length === 0)
-                e.acceptedPlans = true;
-            if(selectedHours.length === 0)
-                e.hours = true
 
             setFormErrors(e)
         }

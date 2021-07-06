@@ -1,0 +1,46 @@
+.fieldRow {
+    height: 5em;
+    border-bottom: #f3f3f3 1px solid;
+}
+
+.fieldInput {
+    width: 60%;
+    padding-left: 1em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.multi-select {
+   width: 20em;
+}
+
+.fieldInput * {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.fieldInput ul{
+    list-style-type: none;
+}
+
+.fieldName {
+    width: 25%;
+    font-size: 1.1em;
+    font-weight: 800;
+    vertical-align: top;
+}
+
+.field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.fieldText {
+    vertical-align: middle;
+    margin-right: 3em;
+}
+
+.fieldImage {
+    width: 10rem;
+}

@@ -96,6 +96,11 @@
     color: white !important;
 }
 
+.create-btn:hover {
+    background: hsla(0,0%,60%,.2) !important;
+    color: black !important;
+}
+
 .custom-hidden{
     visibility: hidden;
     height: 0.1rem;

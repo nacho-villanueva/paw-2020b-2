@@ -49,13 +49,13 @@ function NavBar() {
           <span className="navbar-toggler-icon"/>
         </Button>
           <ul className="navbar-nav ml-auto my-2 my-lg-0">
-            {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Link className="navbar-options" to={profile}>
+            {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Link className="navbar-options" to={"/dashboard/edit-profile"}>
               <li className="nav-item">
                   <i className="fas fa-lg fa-user-circle icons"/>
                   <Trans t={t} i18nKey="fragments.sidebar.profile"/>
               </li>
             </Link>}
-            {status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Link onClick={navbarLogout} className="navbar-options" to={profile}>
+            {status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Link onClick={navbarLogout} className="navbar-options" to={""}>
               <li className="nav-item">
                 Logout
               </li>

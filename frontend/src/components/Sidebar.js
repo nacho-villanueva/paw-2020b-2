@@ -1,7 +1,7 @@
+import {Routes} from "../constants/Routes";
 import "./Style/Sidebar.css"
 import {NavLink, Route, useHistory, useLocation} from "react-router-dom"
 import {useSelector} from "react-redux";
-import {getAllRoutes, Routes} from "../constants/Routes";
 import {logout} from "../api/Auth";
 import {deAuthenticate} from "../redux/actions";
 import {store} from "../redux";

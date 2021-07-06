@@ -3,8 +3,8 @@ import {Roles} from "./Roles";
 import LandingPage from "../components/LandingPage";
 import DashboardPage from "../components/DashboardPage";
 import MyOrders from "../components/MyOrders";
-import {Route} from "react-router-dom";
 import CreateOrder from "../components/CreateOrder";
+import EditProfilePage from "../components/editProfile/EditProfilePage";
 
 export const Routes = {
     LANDING_PAGE: {
@@ -39,6 +39,13 @@ export const Routes = {
         name: "Search Clinics",
         path: "/dashboard/search-clinics",
         component: MyOrders, //TODO: CHANGE
+        role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
+    },
+
+    EDIT_PROFILE: {
+        name: "Edit Profile",
+        path: "/dashboard/edit-profile",
+        component: EditProfilePage,
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
     }
 }
