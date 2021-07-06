@@ -417,6 +417,25 @@
         "label": "Número de Teléfono"
       }
     },
+    "modals": {
+      "insurance-plan": {
+        "label": "Seguro Medico",
+        "placeholder": "Insertar Seguro Medico",
+        "title": "Agregar Seguro Medico"
+      },
+      "medical-fields": {
+        "label": "Campo Médico",
+        "placeholder": "Insertar Campo Médico",
+        "title": "Crear Campo Médico"
+      },
+      "return-button": "Retornar",
+      "study-types": {
+        "label": "Tipo de Estudio",
+        "placeholder": "Insertar Tipo de Estudio",
+        "title": "Crear Tipo de Estudio Medico"
+      },
+      "submit-button": "Crear"
+    },
     "patient": {
       "continue": "Continuar",
       "firstname": {

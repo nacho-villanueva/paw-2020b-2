@@ -418,6 +418,25 @@
         "label": "Phone Number"
       }
     },
+    "modals": {
+      "insurance-plan": {
+        "label": "Insurance Plan",
+        "placeholder": "Insert Insurance Plan",
+        "title": "Add Insurance Plan"
+      },
+      "medical-fields": {
+        "label": "Medical Field",
+        "placeholder": "Insert Medical Field",
+        "title": "Create Medical Field"
+      },
+      "return-button": "Return",
+      "study-types": {
+        "label": "Study Type",
+        "placeholder": "Insert Study Type",
+        "title": "Create Medical Study Type"
+      },
+      "submit-button": "Create"
+    },
     "patient": {
       "continue": "Continue",
       "firstname": {
