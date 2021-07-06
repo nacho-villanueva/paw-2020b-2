@@ -63,8 +63,8 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified) {
-        return clinicDao.updateClinicInfo(user,name,telephone,availableStudies,medicPlans,hours,verified);
+    public Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours) {
+        return clinicDao.updateClinicInfo(user,name,telephone,availableStudies,medicPlans,hours);
     }
 
     @Override

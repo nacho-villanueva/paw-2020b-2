@@ -10,6 +10,8 @@ import javax.persistence.TypedQuery;
 import java.time.LocalTime;
 import java.util.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public class ClinicJpaDao implements ClinicDao {
 
@@ -141,27 +143,33 @@ public class ClinicJpaDao implements ClinicDao {
     }
 
     @Override
-    public Clinic updateClinicInfo(final User user, final String name, final String telephone, final Collection<StudyType> availableStudies, final Collection<MedicPlan> medicPlans, final ClinicHours hours, final boolean verified) {
+    public Clinic updateClinicInfo(final User user, final String name, final String telephone,
+                                   final Collection<StudyType> availableStudies, final Collection<MedicPlan> medicPlans,
+                                   final ClinicHours hours) {
         Optional<Clinic> clinicDB = findByUserId(user.getId());
 
         clinicDB.ifPresent(clinic -> {
-            clinic.setName(name);
-            clinic.setTelephone(telephone);
-            clinic.setVerified(verified);
-            Collection<MedicPlan> plansRef = new HashSet<>();
-            medicPlans.forEach(plan -> {
-                plansRef.add(getPlanRef(plan));
-            });
-            clinic.setAcceptedPlans(plansRef);
-
-            Collection<StudyType> studiesRef = new HashSet<>();
-            availableStudies.forEach(study -> {
-                studiesRef.add(getStudyRef(study));
-            });
-            clinic.setMedicalStudies(studiesRef);
-
+            if(!isEmpty(name))
+                clinic.setName(name);
+            if(!isEmpty(telephone))
+                clinic.setTelephone(telephone);
+            if(medicPlans != null) {
+                Collection<MedicPlan> plansRef = new HashSet<>();
+                medicPlans.forEach(plan -> {
+                    plansRef.add(getPlanRef(plan));
+                });
+                clinic.setAcceptedPlans(plansRef);
+            }
+            if(availableStudies != null) {
+                Collection<StudyType> studiesRef = new HashSet<>();
+                availableStudies.forEach(study -> {
+                    studiesRef.add(getStudyRef(study));
+                });
+                clinic.setMedicalStudies(studiesRef);
+            }
             //Updating hours
-            clinic.setHours(hours);
+            if(hours != null)
+                clinic.setHours(hours);
 
             em.flush();
         });

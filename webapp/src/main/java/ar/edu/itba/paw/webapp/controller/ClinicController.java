@@ -244,49 +244,10 @@ public class ClinicController {
             return Response.status(Response.Status.FORBIDDEN).build();
 
         // no errors
-        final URI uri;
+        clinicService.updateClinicInfo(user, clinicPutDto.getName(), clinicPutDto.getTelephone(),
+                clinicPutDto.getStudiesCollection(), clinicPutDto.getMedicPlansCollection(), clinicPutDto.getClinicHours());
 
-        String name;
-        if (isEmpty(clinicPutDto.getName()))
-            name = clinic.getName();
-        else
-            name = clinicPutDto.getName();
-        String telephone;
-        if (isEmpty(clinicPutDto.getTelephone()))
-            telephone = clinic.getTelephone();
-        else
-            telephone = clinicPutDto.getTelephone();
-        Collection<StudyType> availableStudies;
-        if (clinicPutDto.getStudiesCollection() == null || clinicPutDto.getStudiesCollection().isEmpty())
-            availableStudies = clinic.getMedicalStudies();
-        else
-            availableStudies = clinicPutDto.getStudiesCollection();
-        Collection<MedicPlan> medicPlans;
-        if (clinicPutDto.getMedicPlansCollection() == null || clinicPutDto.getMedicPlansCollection().isEmpty())
-            medicPlans = clinic.getAcceptedPlans();
-        else
-            medicPlans = clinicPutDto.getMedicPlansCollection();
-        ClinicHours clinicHours;
-        if (clinicPutDto.getClinicHours() == null)
-            clinicHours = clinic.getHours();
-        else
-            clinicHours = clinicPutDto.getClinicHours();
-        boolean isVerified = clinic.isVerified();
-
-        clinicService.updateClinicInfo(
-                user,
-                name,
-                telephone,
-                availableStudies,
-                medicPlans,
-                clinicHours,
-                isVerified
-        );
-
-        uri = uriInfo.getAbsolutePathBuilder().build();
-        Response.ResponseBuilder response = Response.noContent().location(uri);
-
-        return response.build();
+        return Response.noContent().location(uriInfo.getAbsolutePathBuilder().build()).build();
     }
 
     // auxiliar functions

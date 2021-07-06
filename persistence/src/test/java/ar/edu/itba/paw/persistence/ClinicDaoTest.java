@@ -287,7 +287,7 @@ public class ClinicDaoTest {
 
         int amountofPlansEntiresBefore = JdbcTestUtils.countRowsInTable(jdbcTemplate, CLINIC_PLANS_TABLE_NAME);
 
-        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,newPlans,newHours,true);
+        Clinic clinic = dao.updateClinicInfo(userTwo, NEW_NAME_TWO,TELEPHONE,availableStudies,newPlans,newHours);
 
         Assert.assertEquals(availableStudies.size(), clinic.getMedicalStudies().size());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,CLINICS_TABLE_NAME,"name = '" + NEW_NAME_TWO.replace("'","''")  + "' AND telephone = '" + TELEPHONE + "'"));

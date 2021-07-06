@@ -20,7 +20,7 @@ public interface ClinicDao {
 
     Clinic register(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified);
 
-    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours, boolean verified);
+    Clinic updateClinicInfo(User user, String name, String telephone, Collection<StudyType> availableStudies, Collection<MedicPlan> medicPlans, ClinicHours hours);
 
     boolean hasStudy(int clinicId, int studyTypeId);
 
