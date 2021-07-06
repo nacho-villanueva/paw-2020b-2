@@ -1,5 +1,5 @@
 import {Form} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 function isDigit(s){
     return s >= '0' && s <= '9';
@@ -10,6 +10,12 @@ const TimeInput = (props) => {
 
 
     const [time, setTime] = useState('');
+
+    useEffect(() => {
+        if(props.defaultValue){
+            setTime(props.defaultValue)
+        }
+    }, [props.defaultValue])
 
     const onTimeChange = (event) => {
         let j;

@@ -7,9 +7,9 @@ import {ERROR_CODES} from "../constants/ErrorCodes";
 export function login(user, pass, rememberMe, onSuccess, onFail){
 
     let expire = new Date();
-    if(rememberMe)
+    if(rememberMe === true)
         expire.setDate( expire.getDate() + 7);
-    else
+    else if(rememberMe === false)
         expire.setHours( expire.getHours() + 12);
     const expireEpoch = Math.floor( expire / 1000 );
 
@@ -343,16 +343,4 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors){
             console.log('Error in request: ', e.message);
         }
     });
-}
-
-export function RegisterPatient(patient){
-
-}
-
-export function RegisterMedic(medic){
-
-}
-
-export function RegisterClinic(clinic){
-
 }

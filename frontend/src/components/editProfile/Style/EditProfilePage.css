@@ -1,0 +1,132 @@
+.profileContentContainer {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+}
+
+.profileCard{
+    width: 40em;
+    height: max-content;
+
+    background: white;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 0.35rem;
+    padding: 1.25rem;
+    margin-top: 2em;
+}
+
+.profileTitle {
+    margin-top: 1rem;
+    margin-bottom: .75rem;
+    text-align: center;
+}
+
+.tableContainer {
+    padding-right: 1em;
+    padding-left: 2em;
+}
+
+.fieldsTable {
+    width: 100%;
+    margin-left: 1em;
+}
+
+.fieldEditLabel {
+    color: var(--gray);
+    font-size: 1em;
+    margin-bottom: 0;
+}
+
+.fieldEditInput {
+    margin-top: 0;
+    border-top: 0;
+    padding-top: 0;
+}
+
+.dividerLight {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.changePass{
+    display: flex;
+    width: 100%;
+    padding-right: 0;
+}
+
+.changePass i{
+    font-weight: 200;
+    font-size: 1.2em;
+}
+
+.changePass a{
+    margin-left: 1.5em;
+    color: #3a3b45;
+}
+
+.changePass a:hover{
+    color: #009688;
+}
+
+.changePass input{
+    width: 75%;
+}
+
+.currentPasswordTitle {
+    font-size: 1.2em;
+    font-weight: 300;
+}
+
+.currentPasswordGroup {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-shrink: 1;
+}
+
+.currentPasswordGroup p{
+    font-weight: 500;
+}
+
+.currentPasswordGroup input{
+    width: 50%;
+    margin-left: 1em;
+}
+
+
+.saveButtonsGroup {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1em;
+    padding-left: 5em;
+    padding-right: 5em;
+}
+
+.saveButton {
+    width: 100%;
+    background: var(--primary) !important;
+    color: white !important;
+    font-size: 1.5em;
+    border-radius: 0.25em;
+}
+
+.saveButton:hover {
+    background: hsla(0,0%,60%,.2) !important;
+    color: black !important;
+}
+
+.cancelButton {
+    width: 100%;
+    font-size: 1.25em;
+}
+
+.verified {
+    color: green;
+}
+
+.notVerified {
+    color: red;
+}
