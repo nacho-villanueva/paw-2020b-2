@@ -355,7 +355,7 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors, setOrderStat
 export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
 
 }
-export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, orderCount, setOrderCount){
+export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
     apiInstance.get("/orders/"+orderId)
     .then((r) => {
         console.log("nice order info", r);
@@ -373,28 +373,27 @@ export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount, 
 
         InternalQuery(data.clinic).then((res) => {
             aux["clinic"] = res.name;
-            setOrderCount(orderCount+2);
+            setCount(count+1);
         });
         InternalQuery(data.medic).then((res) => {
             aux["medicName"] = res.name;
             aux["medicLicenceNumber"] = res.licenceNumber;
-            setOrderCount(orderCount+3);
+            setCount(count+5);
         });
         InternalQuery(data.studyType).then((res) => {
             aux["studyType"] = res.name;
-            setOrderCount(orderCount+5);
+            setCount(count+11);
         });
 
 
         setOrderInfo(aux);
-        setCount(count+7);
 
     }).catch((e) => {
         console.log("getting results for order error", e)
     });
 }
 
-export function GetResults(orderId, results, setResults, count, setCount){
+export function GetResults(orderId,setResults){
     const request = "/orders/"+orderId+"/results/";
     console.log("req", request);
 
@@ -404,7 +403,6 @@ export function GetResults(orderId, results, setResults, count, setCount){
         let data = r.data;
 
         setResults(data);
-        setCount(count+11);
 
     }).catch((e) => {
         console.log("getting results for order error", e)

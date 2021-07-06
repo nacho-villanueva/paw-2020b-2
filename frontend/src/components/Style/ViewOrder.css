@@ -1,23 +1,50 @@
 .row-custom {
     display: flex;
-    margin-right: 2vh;
-    margin-left: 2vh;
-    flex-direction: row;
     flex-wrap: wrap;
-    align-items: stretch;
-    justify-content: center;
+    flex-direction: row;
 }
 
+.result-item {
+    float: left;
+    width: 90%;
+    list-style: none;
+    margin: 0.5rem 1rem;
+    justify-content: left;
+}
+.ul-results {
+    height: 90%;
+    flex-wrap: nowrap;
+}
+
+.result-card-view {
+    height: 90%;
+}
 
 .order-card {
-    margin-top: 2em;
-    width: auto;
-    padding: 10px;
-    height: max-content;
+    width: 30%;
+    margin: 1.25rem;
+    max-width: 30rem;
 
 
-    animation: 0.75s ease-out 0s 1 slideInFromDown;
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
 }
+.results-info-card {
+    width: 60%;
+    margin: 1.25rem;
+    max-width: 60rem;
+
+
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
+}
+
+@media screen and (max-width: 1024px) {
+    .order-card, .results-info-card{
+        width: 90%;
+        margin: 1.25rem;
+        max-width: none;
+    }
+}
+
 .type-title {
     font-weight: bolder;
     margin-bottom: 0%;
@@ -36,22 +63,13 @@
     color: white !important;
 
 
-    animation: 0.75s ease-out 0s 1 slideInFromDown;
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
 }
 .upload-btn:hover{
     background: white !important;
     color: var(--primary) !important;
 }
-.results-card {
-    left: 0;
-    margin-top: 2em;
-    width: auto;
-    padding: 10px;
-    height: 95%;
 
-
-    animation: 0.75s ease-out 0s 1 slideInFromDown;
-}
 .result-not {
     margin-top: 20%;
 }
