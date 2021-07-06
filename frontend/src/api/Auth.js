@@ -403,10 +403,7 @@ export function GetResults(orderId, results, setResults, count, setCount){
         console.log("results", r);
         let data = r.data;
 
-        let aux = results;
-        aux = data;
-
-        setResults(aux);
+        setResults(data);
         setCount(count+11);
 
     }).catch((e) => {

@@ -83,3 +83,24 @@ export function getValueFromEvent(name, event){
         }
     }
 }
+
+export function getFilesFrom(name,event){
+    let files = [];
+    let i = 0
+    for(var t of event.target){
+        if(t.name === name){
+            for(var f of t['files']){
+                //const formData = new FormData();
+                //formData.append("result", f, f.name);
+                //files[i++] = formData;
+
+                files[i++] = f;
+            }
+        }
+    }
+    return files;
+}
+
+export function convertToBase64(file){
+    return btoa(decodeURIComponent(encodeURIComponent(file)));
+}
