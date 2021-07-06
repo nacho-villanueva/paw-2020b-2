@@ -35,7 +35,7 @@ const EditFieldRow = (props) => {
 
                 {(props.type === "hours") && (props.field !== null) && (
                     <ul>
-                        {Array.from(props.field, (o) => {return <li key={o.day}>{o.day}: {o.openTime} - {o.closeTime}</li>})}
+                        {Array.from(props.field, (o) => {return <li key={o.day}>{t("days.day-"+o.day)}: {o.openTime} - {o.closeTime}</li>})}
                     </ul>
                 )}
 

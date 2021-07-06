@@ -353,6 +353,12 @@
     },
     "title": "\u003c0\u003eWelcome to \u003c/0\u003e\u003c1\u003e$t(appname)\u003c/1\u003e"
   },
+  "inputs": {
+    "hours": {
+      "closeHour": "Closing Hour",
+      "openHour": "Opening Hour"
+    }
+  },
   "registration": {
     "clinic": {
       "continue": "Continue",

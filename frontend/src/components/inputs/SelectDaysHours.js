@@ -3,17 +3,20 @@ import MultiSelect from "react-multi-select-component";
 import {useEffect, useState} from "react";
 import TimeInput from "./TimeInput";
 import "./style/SelectDaysHours.css"
+import {Trans, useTranslation} from "react-i18next";
 
 const SelectDaysHours = (props) => {
 
+    const {t} = useTranslation()
+
     const days = [
-        { label: "Monday", value: 0 },
-        { label: "Tuesday", value: 1 },
-        { label: "Wednesday", value: 2 },
-        { label: "Thursday", value: 3 },
-        { label: "Friday", value: 4 },
-        { label: "Saturday", value: 5 },
-        { label: "Sunday", value: 6 },
+        { label: t("days.day-0"), value: 0 },
+        { label: t("days.day-1"), value: 1 },
+        { label: t("days.day-2"), value: 2 },
+        { label: t("days.day-3"), value: 3 },
+        { label: t("days.day-4"), value: 4 },
+        { label: t("days.day-5"), value: 5 },
+        { label: t("days.day-6"), value: 6 },
     ];
 
     const [value, setValue] = useState([])
@@ -114,10 +117,10 @@ const SelectDaysHours = (props) => {
             <tbody>
                 {selectedDays.sort((a, b) => a.value - b.value).map((x, i) => {return <tr key={x.value}>
                     <th><p>{x.label}</p></th>
-                    <th><div className={"time-picker"}><Form.Label className="bmd-label-static">Opening Hour</Form.Label>
+                    <th><div className={"time-picker"}><Form.Label className="bmd-label-static"><Trans t={t} i18nKey={"inputs.hours.openHour"} /></Form.Label>
                         <TimeInput defaultValue={getDefaultHour(x.value, "open")} onChange={(hour) => {updateOpenHour(x.value, hour)}} placeholder={"00:00"}/>
                     </div></th>
-                    <th><div className={"time-picker"}><Form.Label className="bmd-label-static">Closing Hour</Form.Label>
+                    <th><div className={"time-picker"}><Form.Label className="bmd-label-static"><Trans t={t} i18nKey={"inputs.hours.closeHour"} /></Form.Label>
                         <TimeInput defaultValue={getDefaultHour(x.value, "close")} onChange={(hour) => {updateCloseHour(x.value, hour)}} placeholder={"23:59"}/>
                     </div></th>
                 </tr>})}
