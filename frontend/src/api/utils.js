@@ -102,7 +102,12 @@ export function getFilesFrom(name,event){
 }
 
 export function convertToBase64(file){
-    return btoa(decodeURIComponent(encodeURIComponent(file)));
+    return new Promise((resolve) => {
+        let fileReader = new FileReader();
+        fileReader.onload = (e) => resolve(fileReader.result.split(",")[1]);
+        fileReader.readAsDataURL(file);
+    });
+    //return btoa(decodeURIComponent(encodeURIComponent(file)));
 }
 
 export function getBase64Image(src, setData){

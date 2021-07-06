@@ -96,16 +96,33 @@ function ViewOrder(){
             out.responsibleName = aux.responsibleName;
             out.responsibleLicenceNumber = aux.responsibleLicenceNumber;
 
-            out.responsibleIdentification.image =convertToBase64(aux.responsibleIdentification);
-            out.responseFile.image = convertToBase64(files[idx]);
 
-            let auxExtension = aux.responsibleIdentification.name.split('.');
-            out.responsibleIdentification.contentType="image/"+auxExtension[auxExtension.length - 1];
+            let promises = [];
 
-            auxExtension = files[idx].name.split('.');
-            out.responseFile.contentType = "image/"+auxExtension[auxExtension.length - 1];
+            promises.push(
+                convertToBase64(aux.responsibleIdentification)
+                .then((data) => {
+                    out.responsibleIdentification.image = data;
+                })
+            );
+            promises.push(
+                convertToBase64(files[idx])
+                .then((data) => {
+                    out.responseFile.image = data;
+                })
+            );
 
-            UploadResult(out, setStatusCode);
+            Promise.all(promises)
+            .then((results) => {
+                console.log("All conversions done...", results);
+                let auxExtension = aux.responsibleIdentification.name.split('.');
+                out.responsibleIdentification.contentType="image/"+auxExtension[auxExtension.length - 1];
+
+                auxExtension = files[idx].name.split('.');
+                out.responseFile.contentType = "image/"+auxExtension[auxExtension.length - 1];
+
+                UploadResult(out, setStatusCode);
+            });
         }
     }
 
@@ -139,12 +156,6 @@ function ViewOrder(){
                                     className="result-image align-self-center"
                                     alt="study result"
                                 />
-
-                    <ImageDataContainer
-                        src={props.item.file}
-                        alt={"medic's signature"}
-                        id={'order'}
-                    />
                             </section>
 
                             <hr className="mt-3 mb-4"/>
