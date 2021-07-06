@@ -104,3 +104,20 @@ export function getFilesFrom(name,event){
 export function convertToBase64(file){
     return btoa(decodeURIComponent(encodeURIComponent(file)));
 }
+
+export function getBase64Image(src, setData){
+    apiInstance
+    .get(src,
+        {
+            headers: {
+                'Accept': 'image/*;encoding=base64'
+            }
+        }
+    )
+    .then((res) => {
+        console.log(res);
+    })
+    .catch((e) => {
+        console.log(e);
+    });
+}

@@ -12,6 +12,8 @@ import {UploadResults} from "./vieworder_components/UploadResults";
 import {getFilesFrom, getValueFromEvent, convertToBase64, getAuthorizedImage} from "../api/utils";
 import { UploadResult } from "../api/Results";
 
+import {ImageDataContainer} from "./vieworder_components/ImageDataContainer";
+
 function ViewOrder(){
     const roleType = useSelector(state => state.auth.role);
     var orderId = window.location.href.split('/');
@@ -137,6 +139,12 @@ function ViewOrder(){
                                     className="result-image align-self-center"
                                     alt="study result"
                                 />
+
+                    <ImageDataContainer
+                        src={props.item.file}
+                        alt={"medic's signature"}
+                        id={'order'}
+                    />
                             </section>
 
                             <hr className="mt-3 mb-4"/>
