@@ -57,6 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, "/users").anonymous()
                     .antMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC", "UNDEFINED")
                     //Rules for /clinics
+                    .antMatchers(HttpMethod.PUT, "/clinics/**/verify").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/clinics").permitAll()    //Can be deleted, but stated for clarity
                     .antMatchers(HttpMethod.GET, "/clinics/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/clinics").hasRole("UNDEFINED")
@@ -70,6 +71,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/medic-plans/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/medic-plans").authenticated()
                     //Rules for /medics
+                    .antMatchers(HttpMethod.PUT, "/medics/**/verify").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/medics").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")     //Can be deleted, but stated for clarity
                     .antMatchers(HttpMethod.GET, "/medics/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
                     .antMatchers(HttpMethod.POST, "/medics").hasRole("UNDEFINED")

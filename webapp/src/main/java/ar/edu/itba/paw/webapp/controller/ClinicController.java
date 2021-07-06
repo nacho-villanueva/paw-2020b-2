@@ -250,6 +250,15 @@ public class ClinicController {
         return Response.noContent().location(uriInfo.getAbsolutePathBuilder().build()).build();
     }
 
+    // Basing URI definition on: https://docs.github.com/en/rest/reference/gists#star-a-gist
+    @PUT
+    @Path("/{id}/verify")
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE + "+json"})
+    public Response verifyClinic(@PathParam("id") final int id) {
+        clinicService.verifyClinic(id);
+        return Response.noContent().build();
+    }
+
     // auxiliar functions
     private boolean isEmpty(String s){
         return s==null || s.trim().isEmpty();

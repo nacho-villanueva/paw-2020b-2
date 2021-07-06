@@ -262,6 +262,15 @@ public class MedicController {
                 .build();
     }
 
+    // Basing URI definition on: https://docs.github.com/en/rest/reference/gists#star-a-gist
+    @PUT
+    @Path("/{id}/verify")
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicalFieldDto.CONTENT_TYPE + "+json"})
+    public Response verifyMedic(@PathParam("id") final int id) {
+        medicService.verifyMedic(id);
+        return Response.noContent().build();
+    }
+
     // auxiliar functions
     private boolean isEmptyCollection(Collection<?> collection) {
         return collection == null || collection.isEmpty();
