@@ -8,9 +8,9 @@ import { parseHeadersLinks, prepareViewStudyUrl } from "./utils";
 export function login(user, pass, rememberMe, onSuccess, onFail){
 
     let expire = new Date();
-    if(rememberMe)
+    if(rememberMe === true)
         expire.setDate( expire.getDate() + 7);
-    else
+    else if(rememberMe === false)
         expire.setHours( expire.getHours() + 12);
     const expireEpoch = Math.floor( expire / 1000 );
 

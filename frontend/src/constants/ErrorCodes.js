@@ -6,3 +6,10 @@ export const ERROR_CODES = {
     UNPROCESSABLE: "unprocessable",
     OTHER: "other"
 }
+
+export const HTTP_CODES = {
+    UNAUTHORIZED: 401,
+    BAD_REQUEST: 400
+
+
+}

@@ -1,6 +1,5 @@
 import axios from "axios"
 import {store} from "../redux"
-import {StatusType} from "../redux/actions/actions";
 import {logout} from "./Auth";
 
 const settings = {
@@ -28,3 +27,11 @@ apiInstance.interceptors.response.use(
 );
 
 export default apiInstance;
+
+
+export const apiRedirects = axios.create({timeout: 30000})
+apiRedirects.interceptors.request.use(function (config) {
+    if(store.getState().auth.token !== null)
+        config.headers["authorization"] = "Bearer " + store.getState().auth.token;
+    return config
+})

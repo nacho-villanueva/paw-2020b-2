@@ -1,6 +1,5 @@
 import apiInstance from "./index";
-import {store} from "../redux";
-import {authenticate} from "../redux/actions";
+import axios from "axios";
 
 export function getAllInsurancePlans(setInsurancePlans) {
 
@@ -21,6 +20,10 @@ export function createInsurancePlan(field, onSuccess, onFail){
     ).then(() => {onSuccess()}).catch(() => {onFail()});
 }
 
+export function GetInsurancePlanByURL(url){
+    return axios.get(url)
+}
+
 export function getAllStudyTypes(setStudyTypes){
     apiInstance.get("/study-types")
         .then((r) => {
@@ -34,6 +37,7 @@ export function createStudyType(field, onSuccess, onFail){
         {"name": field}
     ).then(() => {onSuccess()}).catch(() => {onFail()});
 }
+
 
 export function getAllMedicalFields(setMedicalFields){
     apiInstance.get("/medical-fields")
