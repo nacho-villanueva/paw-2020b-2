@@ -1,4 +1,5 @@
 import { Modal, Form, Button } from "react-bootstrap";
+import ErrorFeedback from "../inputs/ErrorFeedback";
 
 export function UploadResults(props){
     const show = props.show;
@@ -6,6 +7,7 @@ export function UploadResults(props){
     const handleUploadResults = props.handleUploadResults;
     const uploadValidated = props.uploadValidated;
     const orderInfo = props.orderInfo;
+    const uploadErrors = props.uploadErrors;
 
     const handleClose = () => {
         setShow(false);
@@ -47,6 +49,7 @@ export function UploadResults(props){
                         <Form.Text muted>
                             Only pick results in an image format (jpeg, png, etc.)
                         </Form.Text>
+                        <ErrorFeedback isInvalid={uploadErrors.fileUpload}>Results are required.</ErrorFeedback>
                     </Form.Group>
                     <hr/>
                     <div className="row">
@@ -58,7 +61,7 @@ export function UploadResults(props){
                                     placeholder="Dr. Jane Doe"
                                     required={true}
                                 />
-                                <Form.Control.Feedback type="invalid">Only use letters or numbers</Form.Control.Feedback>
+                                <ErrorFeedback isInvalid={uploadErrors.responsibleMedicName}>The responsible medic's name is required.</ErrorFeedback>
                             </Form.Group>
                         </div>
                         <div className="col">
@@ -70,6 +73,7 @@ export function UploadResults(props){
                                     pattern="[a-zA-Z0-9]+"
                                     required={true}
                                 />
+                                <ErrorFeedback isInvalid={uploadErrors.responsibleMedicLicenceNumber}>The responsible medic's licence number must be valid.</ErrorFeedback>
                             </Form.Group>
                         </div>
                     </div>
@@ -80,6 +84,7 @@ export function UploadResults(props){
                         <Form.Text muted>
                             Upload a picture of the responsible's signature
                         </Form.Text>
+                        <ErrorFeedback isInvalid={uploadErrors.signatureUpload}>Identification is required.</ErrorFeedback>
                     </Form.Group>
 
                 </Modal.Body>

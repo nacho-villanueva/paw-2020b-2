@@ -90,10 +90,6 @@ export function getFilesFrom(name,event){
     for(var t of event.target){
         if(t.name === name){
             for(var f of t['files']){
-                //const formData = new FormData();
-                //formData.append("result", f, f.name);
-                //files[i++] = formData;
-
                 files[i++] = f;
             }
         }
@@ -125,4 +121,8 @@ export function getBase64Image(src, setData){
     .catch((e) => {
         console.log(e);
     });
+}
+
+export function isValidImage(type){
+    return (type === "image/jpeg" || type === "image/png" || type === "image/jpg");
 }

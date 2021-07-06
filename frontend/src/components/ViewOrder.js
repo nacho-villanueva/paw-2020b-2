@@ -9,10 +9,11 @@ import { Roles } from "../constants/Roles";
 import {useSelector} from "react-redux";
 
 import {UploadResults} from "./vieworder_components/UploadResults";
-import {getFilesFrom, getValueFromEvent, convertToBase64, getAuthorizedImage} from "../api/utils";
+import {getFilesFrom, getValueFromEvent, convertToBase64, getAuthorizedImage, isValidImage} from "../api/utils";
 import { UploadResult } from "../api/Results";
 
 import {ImageDataContainer} from "./vieworder_components/ImageDataContainer";
+import { GetIdentificationByURL } from "../api/UserInfo";
 
 function ViewOrder(){
     const roleType = useSelector(state => state.auth.role);
@@ -42,17 +43,19 @@ function ViewOrder(){
         await GetResults(orderId, setResults);
     }, []);
 
+    const [load, setLoad] = useState(true);
     useEffect(() => {
-        fetchData().then(setCount(count +1));
+        if(load){
+            fetchData().then(setCount(count +1));
+            setLoad(false);
+        }
     }, []);
 
     const [image, setImage] = useState(undefined);
 
     const fetchIdentification = useCallback(async () => {
         if(orderInfo.identification !== undefined){
-            console.log("identification", orderInfo.identification);
-            setImage(await getAuthorizedImage(orderInfo.identification));
-            console.log("IMAGE", image);
+            GetIdentificationByURL(orderInfo.identification).then((r) => {setImage(r)});
         }
      }, []);
 
@@ -70,59 +73,101 @@ function ViewOrder(){
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadValidated, setUploadValidated] = useState(false);
 
-    /*
-    *!TODO: form validation before doing anything!!!!
-    */
+    const defaultUploadErrors = {
+        responsibleMedicName: false,
+        responsibleMedicLicenceNumber: false,
+        signatureUpload: false,
+        fileUpload: false
+    }
+    const [uploadErrors, setUploadErrors] = useState(defaultUploadErrors);
+
     const handleUploadResults = (event) => {
         event.preventDefault();
-        console.log(event);
+
+        const form = event.currentTarget;
+
         let files = getFilesFrom("fileUpload",event);
-        console.log("AH",files);
-        let aux = {responsibleName:'', responsibleLicenceNumber: '', responsibleIdentification:''};
+
+        let aux = {
+            responsibleName:'',
+            responsibleLicenceNumber: '',
+            responsibleIdentification:''
+        };
         aux.responsibleName = getValueFromEvent("responsibleMedicName", event);
         aux.responsibleLicenceNumber = getValueFromEvent("responsibleMedicLicenceNumber", event);
         aux.responsibleIdentification  = getFilesFrom("signatureUpload", event)[0];
 
-        for(let idx in files){
-            let out = {
-                responsibleName:'',
-                responsibleLicenceNumber: '',
-                responsibleIdentification:
-                    {image:'', contentType:''},
-                responseFile:
-                    {image:'', contentType:''},
-                id: orderId
-            };
-            out.responsibleName = aux.responsibleName;
-            out.responsibleLicenceNumber = aux.responsibleLicenceNumber;
+        let validFiles = true;
+        for(var f of files){
+            if(isValidImage(f.type) === false){
+                validFiles = false;
+            }
+        }
+
+        if(form.checkValidity() === false){
+            let e = defaultUploadErrors;
+
+            if(aux.responsibleName === ""){
+                e.responsibleMedicName = true;
+            }
+            if(aux.responsibleLicenceNumber === ""){
+                e.responsibleMedicLicenceNumber = true;
+            }
+            if(!validFiles){
+                e.fileUpload = true;
+            }
+            if(!isValidImage(aux.responsibleIdentification)){
+                e.signatureUpload = true;
+            }
+            setUploadErrors(e);
+
+            setUploadValidated(true);
+
+            event.stopPropagation();
+
+        }else{
+            for(let idx in files){
+                let out = {
+                    responsibleName:'',
+                    responsibleLicenceNumber: '',
+                    responsibleIdentification:
+                        {image:'', contentType:''},
+                    responseFile:
+                        {image:'', contentType:''},
+                    id: orderId
+                };
+                out.responsibleName = aux.responsibleName;
+                out.responsibleLicenceNumber = aux.responsibleLicenceNumber;
 
 
-            let promises = [];
+                let promises = [];
 
-            promises.push(
-                convertToBase64(aux.responsibleIdentification)
-                .then((data) => {
-                    out.responsibleIdentification.image = data;
-                })
-            );
-            promises.push(
-                convertToBase64(files[idx])
-                .then((data) => {
-                    out.responseFile.image = data;
-                })
-            );
+                promises.push(
+                    convertToBase64(aux.responsibleIdentification)
+                    .then((data) => {
+                        out.responsibleIdentification.image = data;
+                    })
+                );
+                promises.push(
+                    convertToBase64(files[idx])
+                    .then((data) => {
+                        out.responseFile.image = data;
+                    })
+                );
 
-            Promise.all(promises)
-            .then((results) => {
-                console.log("All conversions done...", results);
-                let auxExtension = aux.responsibleIdentification.name.split('.');
-                out.responsibleIdentification.contentType="image/"+auxExtension[auxExtension.length - 1];
+                Promise.all(promises)
+                .then((results) => {
+                    console.log("All conversions done...", results);
+                    let auxExtension = aux.responsibleIdentification.name.split('.');
+                    out.responsibleIdentification.contentType="image/"+auxExtension[auxExtension.length - 1];
 
-                auxExtension = files[idx].name.split('.');
-                out.responseFile.contentType = "image/"+auxExtension[auxExtension.length - 1];
+                    auxExtension = files[idx].name.split('.');
+                    out.responseFile.contentType = "image/"+auxExtension[auxExtension.length - 1];
 
-                UploadResult(out, setStatusCode);
-            });
+                    UploadResult(out, setStatusCode);
+                    setLoad(true);
+                });
+            }
         }
     }
 
@@ -191,7 +236,7 @@ function ViewOrder(){
                 <Button
                     className="nav-link" id={"res-"+props.index+"-tab"}
                     data-toggle="tab" role="tab" style={{cursor:"pointer"}}
-                    onClick={(e)=>{e.preventDefault(); setSelectedResult(props.result); setResultViewCount(resultViewCount+1);}}
+                    onClick={(e)=>{e.preventDefault(); setSelectedResult(props.result); setResultViewCount(resultViewCount+1);e.stopPropagation();}}
                     type="button"
                 >
                     <div className="d-flex w-100 justify-content-between">
@@ -235,11 +280,8 @@ function ViewOrder(){
                 <div className="align-items-end result-not">
                     <h1 className="text-center mt-5 py-5">No Results Found For This Medical Order</h1>
                 </div>
-                {userInfo.role === 'PATIENT' ?
-                    <div className="content-align-center">
-                        <h4 className="text-center mt-5 pt-5">
-                            Change Clinic
-                        </h4>
+                {roleType === Roles.PATIENT ?
+                    <div className="row justify-content-center">
                         <a
                             href={changeClinicPath} role="button"
                             className="btn upload-btn" type="button"
@@ -261,7 +303,7 @@ function ViewOrder(){
                     <div className="col">
                         <p className="card-title ml-3 h4">Order Number: {orderInfo.id}</p>
                     </div>
-                    {userInfo.role === 'PATIENT' ?
+                    {roleType === Roles.PATIENT ?
                         <div className="col">
                             <div className="row justify-content-end">
                                 <a href={shareOrderPath}
@@ -337,7 +379,7 @@ function ViewOrder(){
                                     <Button
                                         role="button" type="button"
                                         className="btn upload-btn mt-0 mb-3 mr-4"
-                                        onClick={(e) => {e.preventDefault();setShowUploadModal(true);}}
+                                        onClick={(e) => {e.preventDefault();setShowUploadModal(true);e.stopPropagation();}}
                                     >
                                         Upload Results
                                     </Button>
@@ -368,6 +410,7 @@ function ViewOrder(){
                 handleUploadResults={handleUploadResults}
                 uploadValidated={uploadValidated}
                 orderInfo={orderInfo}
+                uploadErrors={uploadErrors}
             />
         </>
     )
