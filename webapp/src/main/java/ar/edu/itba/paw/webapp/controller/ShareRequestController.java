@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Medic;
-import ar.edu.itba.paw.models.ShareRequest;
-import ar.edu.itba.paw.models.StudyType;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.MedicService;
-import ar.edu.itba.paw.services.ShareRequestService;
-import ar.edu.itba.paw.services.StudyTypeService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.dto.ShareRequestGetDto;
 import ar.edu.itba.paw.webapp.dto.ShareRequestPostDto;
 import ar.edu.itba.paw.webapp.dto.StudyTypeDto;
@@ -46,6 +40,9 @@ public class ShareRequestController {
     private MedicService medicService;
 
     @Autowired
+    private PatientService patientService;
+
+    @Autowired
     private StudyTypeService studyTypeService;
 
     @Context
@@ -63,7 +60,7 @@ public class ShareRequestController {
     ){
         String patientEmail = getLoggedUserEmail();
         if(patientEmail == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         long lastPage = shareRequestService.getAllPatientRequestsLastPage(patientEmail,perPage);
 
@@ -100,11 +97,9 @@ public class ShareRequestController {
             @PathParam("medicId") final int medicId,
             @PathParam("studyTypeId") final int studyTypeId
     ){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getName()==null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        String patientEmail = authentication.getName();
+        String patientEmail = getLoggedUserEmail();
+        if (patientEmail == null)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
@@ -118,7 +113,7 @@ public class ShareRequestController {
 
         Optional<ShareRequest> shareRequestOptional = shareRequestService.getShareRequest(medic,patientEmail,studyType);
         if(!shareRequestOptional.isPresent())
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         ShareRequest shareRequest = shareRequestOptional.get();
 
         ShareRequestGetDto shareRequestGetDto = new ShareRequestGetDto(shareRequest, uriInfo);
@@ -137,31 +132,27 @@ public class ShareRequestController {
 
         User user = getLoggedUser();
         if(user == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         Optional<Medic> medicOptional = medicService.findByUserId(user.getId());
         if(!medicOptional.isPresent())
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         Optional<StudyType> studyTypeOptional = studyTypeService.findById(shareRequestPostDto.getStudyTypeId());
         if(!studyTypeOptional.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).build();
 
+        Optional<Patient> patientOptional = patientService.findByEmail(shareRequestPostDto.getPatientEmail());
+        if(!patientOptional.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
         Medic medic = medicOptional.get();
-        String patientEmail = shareRequestPostDto.getPatientEmail();
+        String patientEmail = patientOptional.get().getUser().getEmail();
         StudyType studyType = studyTypeOptional.get();
 
         if(shareRequestService.getShareRequest(medic,patientEmail,studyType).isPresent())
-            return Response.status(422).build();
+            return Response.status(Response.Status.NOT_MODIFIED).build();
 
-        ShareRequest shareRequest = shareRequestService.requestShare(medic,patientEmail,studyType);
-
-        // The medic doesn't have access to this resource (only the patient can access, therefore no resource is returned)
-        /*
-        final URI uri = uriInfo.getBaseUriBuilder().path("share-requests")
-                .path(String.valueOf(shareRequest.getMedic().getUser().getId()))
-                .path(String.valueOf(shareRequest.getStudyType().getId()))
-                .build();
-        */
+        shareRequestService.requestShare(medic,patientEmail,studyType);
 
         return Response.status(Response.Status.CREATED).build();
     }
@@ -191,7 +182,7 @@ public class ShareRequestController {
 
         String patientEmail = getLoggedUserEmail();
         if(patientEmail == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         Optional<Medic> medicOptional = medicService.findByUserId(medicId);
         if(!medicOptional.isPresent() || !medicOptional.get().isVerified())
