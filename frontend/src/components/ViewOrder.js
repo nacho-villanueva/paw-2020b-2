@@ -339,18 +339,6 @@ function ViewOrder(){
                             <Trans t={t} i18nKey="view-order.order.order-number" values={{number: orderInfo.id}} />
                         </p>
                     </div>
-                    { /*roleType === Roles.PATIENT ?
-                        <div className="col">
-                            <div className="row justify-content-end">
-                                <a href={shareOrderPath}
-                                    className="btn upload-btn mt-0 mb-3 mr-4"
-                                    role="button" type="button"
-                                >
-                                    {t("view-order.actions.share-w-medic")}
-                                </a>
-                            </div>
-                        </div> : <></>
-                    */}
                 </div>
                 <div className="row">
                     <div className="col">
@@ -378,13 +366,13 @@ function ViewOrder(){
                         <p className="type-title">
                             <Trans t={t} i18nKey="view-order.order.insurance-plan"/>
                         </p>
-                        {orderInfo.medicPlan}
+                        {/*orderInfo.medicPlan*/}
                     </div>
                     <div className="col type">
                         <p className="type-title">
                             <Trans t={t} i18nKey="view-order.order.insurance-number"/>
                         </p>
-                        {orderInfo.medicPlanNumber}
+                        {/*orderInfo.medicPlanNumber*/}
                     </div>
                 </div>
                 <hr className="mt-3 mb-5"/>
