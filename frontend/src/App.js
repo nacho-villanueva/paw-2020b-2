@@ -17,7 +17,7 @@ function App() {
   const role = useSelector(state => state.auth.role);
 
   return (
-    <Router>
+    <Router basename={"paw-2020b-2"}>
       <div className="main-container">
         <div className="wrapper">
           <Switch>
