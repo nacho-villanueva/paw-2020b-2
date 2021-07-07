@@ -60,6 +60,12 @@ function NavBar() {
                 Logout
               </li>
             </Link>}
+            {status !== StatusType.AUTHENTICATED && <Link className="navbar-options" to={"/search-clinics"}>
+              <li className="nav-item">
+                  <i className="fas fa-lg fa-search icons"/>
+                  <Trans t={t} i18nKey="fragments.sidebar.search-clinic"/>
+              </li>
+            </Link>}
           </ul>
       </div>
     </Navbar>
