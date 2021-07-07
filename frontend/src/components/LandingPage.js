@@ -25,8 +25,7 @@ function LandingPage(props) {
         let checkedToken = false
         if(props.tokenValidation === true && !checkedToken) {
             let token = query.get("token")
-            console.log(token)
-            validateToken(token).then((r) => {console.log(r); setTokenValidated(r)})
+            validateToken(token).then((r) => {setTokenValidated(r)})
             return () => {checkedToken = true}
         }
     }, [])

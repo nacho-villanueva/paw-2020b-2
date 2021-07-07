@@ -188,6 +188,18 @@
       }
     }
   },
+  "dashboard": {
+    "home": {
+      "order": {
+        "clinic": "Clinic",
+        "date": "Date",
+        "medic": "Medic",
+        "patient": "Patient",
+        "study": "Study Type"
+      },
+      "title": "My Orders"
+    }
+  },
   "days": {
     "day-0": "Sunday",
     "day-1": "Monday",
