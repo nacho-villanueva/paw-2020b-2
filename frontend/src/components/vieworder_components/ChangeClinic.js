@@ -10,6 +10,7 @@ import { getAllInsurancePlans } from "../../api/CustomFields";
 import { SearchClinics } from "../../api/Clinics";
 
 import { Trans, useTranslation } from 'react-i18next'
+import { UpdateOrderClinic } from "../../api/Orders";
 
 
 export function ChangeClinic(props){
@@ -18,6 +19,8 @@ export function ChangeClinic(props){
     const show = props.show;
     const setShow = props.setShow;
     const orderInfo = props.orderInfo;
+    const orderId = props.orderId;
+    const showUpdateToast = props.showUpdateToast;
 
     const [selectedClinic, setSelectedClinic] = useState(null);
 
@@ -142,6 +145,20 @@ export function ChangeClinic(props){
 
     }
 
+    const [changing, setChanging] = useState(false);
+    const handleSubmitChange = () => {
+        setChanging(true);
+    }
+    const putClinic = useCallback(() => {
+        if(changing){
+            UpdateOrderClinic(orderId, selectedClinic.userId, setStatusCode, setErrors).then((r) => {showUpdateToast();});
+            setChanging(false);
+        }
+    });
+    useEffect(() => {
+        putClinic().then((r) => {setUpdate(update +1)});
+    }, [changing]);
+
     return(
         <Modal className="cl-modal" show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -173,8 +190,8 @@ export function ChangeClinic(props){
                 <Button variant="secondary" onClick={handleClose}>
                 <Trans t={t} i18nKey="advanced-search-clinics.form.change.cancel" />
                 </Button>
-                <Button variant="primary" type="submit">
-                <Trans t={t} i18nKey="advanced-search-clinics.form.change.submit" />
+                <Button variant="primary" onClick={(e) => {handleSubmitChange(); e.stopPropagation();}}>
+                    <Trans t={t} i18nKey="advanced-search-clinics.form.change.submit" />
                 </Button>
             </Modal.Footer>
         </Modal>
