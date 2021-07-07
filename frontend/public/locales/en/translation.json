@@ -24,11 +24,59 @@
   },
   "advanced-search-clinics": {
     "form": {
+      "available-hours": {
+        "buttons": {
+          "show": "Schedule availability "
+        },
+        "columns": {
+          "available": "Available",
+          "day": "Day",
+          "from-time": "From",
+          "to-time": "To"
+        }
+      },
       "clinic-name": {
-        "label": "Clinic Name"
+        "label": "Search by clinic name"
+      },
+      "insurance-plan": {
+        "label": "Search by insurance plan",
+        "any" : "Any insurance plan"
+      },
+      "study-type": {
+        "label": "Search by study type",
+        "any" : "Any study type"
+      },
+      "errors": {
+        "close-alert": "Close",
+        "missing": "Specified Clinic doesn\u0027t exist",
+        "missing-field": "Please select a Clinic"
+      },
+
+      "results": {
+        "no-results": "No clinics found based on search filters",
+        "no-selected": "No clinic selected",
+        "selected": "Selected Clinic",
+        "title": "Results"
+      },
+      "clinic-info": {
+        "email": "Email",
+        "insurance": "Accepted Insurance",
+        "open-hours": "Open Hours",
+        "studies": "Available Studies",
+        "telephone": "Telephone"
+      },
+      "submit": {
+        "value": "Search"
+      },
+      "change": {
+        "submit": "Change Clinic",
+        "cancel": "Cancel"
       }
     },
-    "title": "Advanced Search | Clinic"
+    "title": "Advanced Search | Clinic",
+    "title-filters" : "Filters",
+    "title-results" : "Results",
+    "title-change" : "Change Clinic"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -167,6 +215,15 @@
     "day-short-4": "Thu",
     "day-short-5": "Fri",
     "day-short-6": "Sat"
+  },
+  "display-requests": {
+    "accept": "Accept",
+    "deny": "Deny",
+    "empty": "There are no requests",
+    "medic": "Medic: ",
+    "pages": "Pages:",
+    "study": "Study Type: ",
+    "title": "Access Requests to your Orders"
   },
   "edit-profile": {
     "edit": "Edit",
@@ -462,10 +519,80 @@
     "tabs": "Choose to register as a: ",
     "title": "Before you continue..."
   },
+  "request-order": {
+    "alerts": {
+      "exists": "Request already exists, and is waiting for patient\u0027s approval.",
+      "success": "Request has been sent successfully."
+    },
+    "email": {
+      "error": {
+        "invalid": "Please insert a valid email",
+        "non-exists": "Email does not exist in our database."
+      },
+      "label": "Pacient\u0027s Email"
+    },
+    "send-button": "Send",
+    "study": {
+      "error": "Please insert a valid study type",
+      "label": "Study Type"
+    },
+    "title": "Send a request to access a patient\u0027s studies"
+  },
   "role": {
     "clinic": "Clinic",
     "medic": "Medic",
     "patient": "Patient",
     "user": "User"
+  },
+  "view-order": {
+    "order" : {
+      "order-number" : "Order number: {{number}}",
+      "date":"Date: {{today}}",
+      "patient": "Patient",
+      "clinic": "Clinic",
+      "insurance-plan": "Insurance plan",
+      "insurance-number": "Insurance plan number",
+      "study-type":"Study Type: {{studyType}}"
+    },
+    "results":{
+      "date":"Date: {{today}}",
+      "upload-results": "Upload Results",
+      "title": "Results",
+      "no-results":"No study results have been found",
+      "select-result": "Select a result"
+    },
+    "actions":{
+      "change-clinic": "Change Clinic",
+      "share-w-medic": "Share with medic"
+    },
+    "upload":{
+      "title": "Upload Results",
+      "order-number" : "Order number",
+      "patient": "Patient",
+      "insurance-plan": "Patient insurance plan",
+      "insurance-number": "Patient insurance plan number",
+      "file-upload":{
+        "label": "Choose the files to upload",
+        "text": "Only pick results in an image format (jpeg, png, etc.)",
+        "error": "Results are required."
+      },
+      "responsible-name":{
+        "label" : "Responsible Medic",
+        "error": "The responsible medic's name is required."
+      },
+      "responsible-number":{
+        "label" : "Responsible Medic's Licence Number",
+        "error": "The responsible medic's licence number must be valid."
+      },
+      "responsible-id":{
+        "label" : "Upload signature",
+        "text" : "Upload a picture of the responsible's signature",
+        "error": "Identification is required."
+      },
+      "actions":{
+        "cancel": "Cancel",
+        "submit": "Upload Results"
+      }
+    }
   }
 }

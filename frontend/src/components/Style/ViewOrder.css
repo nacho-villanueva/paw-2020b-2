@@ -1,0 +1,122 @@
+.row-custom {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.result-item {
+    float: left;
+    width: 90%;
+    list-style: none;
+    margin: 0.5rem 1rem;
+    justify-content: left;
+}
+.ul-results {
+    height: 90%;
+    flex-wrap: nowrap;
+}
+
+.result-card-view {
+    height: 90%;
+}
+
+.order-card {
+    width: 30%;
+    margin: 1.25rem;
+    max-width: 30rem;
+
+
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
+}
+.results-info-card {
+    width: 60%;
+    margin: 1.25rem;
+    max-width: 60rem;
+
+
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
+}
+
+@media screen and (max-width: 1024px) {
+    .order-card, .results-info-card{
+        width: 90%;
+        margin: 1.25rem;
+        max-width: none;
+    }
+}
+
+.type-title {
+    font-weight: bolder;
+    margin-bottom: 0%;
+}
+.type {
+    margin-bottom: 0.75rem;
+}
+
+.type-title.active {
+    color: var(--primary);
+}
+
+
+.upload-btn{
+    background: var(--primary) !important;
+    color: white !important;
+
+
+    /*animation: 0.75s ease-out 0s 1 slideInFromDown;*/
+}
+.upload-btn:hover{
+    background: white !important;
+    color: var(--primary) !important;
+}
+
+.result-not {
+    margin-top: 6rem;
+}
+.result-card{
+    max-height: 30em;
+    width: 26em;
+}
+.result-list{
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.result-image{
+    max-height: 12em;
+    max-width: 20em;
+}
+
+
+.tab{
+    float: left;
+    width: 30%;
+}
+.tab button{
+    display: block;
+    background: #f1f1f1;
+    color: black;
+}
+.tab button:hover{
+    background: rgba(25, 176, 200, 0.3);
+    color: white;
+
+}
+.tab button.active{
+    background: var(--primary);
+    color: white;
+
+}
+
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    width: 70%;
+    border-left: none;
+    height: 300px;
+}
+.tab-result{
+    max-height: 30em;
+}

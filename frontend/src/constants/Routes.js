@@ -5,6 +5,9 @@ import DashboardPage from "../components/DashboardPage";
 import MyOrders from "../components/MyOrders";
 import CreateOrder from "../components/CreateOrder";
 import EditProfilePage from "../components/editProfile/EditProfilePage";
+import RequestAccessPage from "../components/requestStudies/RequestAccessPage";
+import DisplayAccessRequestsPage from "../components/requestStudies/DisplayAccessRequestsPage";
+import ViewOrder from "../components/ViewOrder";
 
 export const Routes = {
     LANDING_PAGE: {
@@ -41,13 +44,35 @@ export const Routes = {
         component: MyOrders, //TODO: CHANGE
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
     },
+    VIEW_ORDER: {
+        name: "View Study",
+        path: "/dashboard/view-study",
+        component: ViewOrder,
+        role: [Roles.ANY]
+    },
 
     EDIT_PROFILE: {
         name: "Edit Profile",
         path: "/dashboard/edit-profile",
         component: EditProfilePage,
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
-    }
+    },
+
+    REQUEST_ORDER: {
+        name: "Request Access to Order",
+        path: "/dashboard/request-orders",
+        component: RequestAccessPage,
+        role: [Roles.MEDIC]
+    },
+
+    ACCESS_REQUESTS: {
+        name: "Access Requests",
+        path: "/dashboard/access-requests",
+        component: DisplayAccessRequestsPage,
+        role: [Roles.PATIENT]
+    },
+
+
 }
 
 export function getAllRoutes(role){

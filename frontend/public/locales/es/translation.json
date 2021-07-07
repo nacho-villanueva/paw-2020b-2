@@ -24,11 +24,50 @@
   },
   "advanced-search-clinics": {
     "form": {
+      "available-hours": {
+        "buttons": {
+          "show": "Buscar por disponibilidad"
+        },
+        "columns": {
+          "available": "Disponible",
+          "day": "Día",
+          "from-time": "Desde",
+          "to-time": "Hasta"
+        }
+      },
       "clinic-name": {
-        "label": "Nombre de la clínica"
+        "label": "Buscar por nombre de la clínica"
+      },
+      "study-type": {
+        "label": "Buscar por tipo de estudio",
+        "any" : "Cualquier tipo de estudio"
+      },
+      "errors": {
+        "missing": "Clínica seleccionada no existe",
+        "missing-field": "Por favor seleccione una clínica"
+      },
+      "insurance-plan": {
+        "label": "Buscar por Plan médico",
+        "any" : "Cualquier plan médico"
+      },
+      "results": {
+        "no-results": "No se encontraron clínicas según los filtros de búsqueda",
+        "no-selected": "Ninguna clínica seleccionada",
+        "selected": "Clínica seleccionada",
+        "title": "Resultados"
+      },
+      "submit": {
+        "value": "Buscar"
+      },
+      "change": {
+        "submit": "Cambiar Clínica",
+        "cancel": "Cancelar"
       }
     },
-    "title": "Búsqueda avanzada | Clínica"
+    "title": "Búsqueda avanzada | Clínica",
+    "title-filters" : "Filtros",
+    "title-results" : "Resultados",
+    "title-change" : "Cambiar Clínica"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -166,6 +205,15 @@
     "day-short-4": "Ju",
     "day-short-5": "Vi",
     "day-short-6": "Sa"
+  },
+  "display-requests": {
+    "accept": "Aceptar",
+    "deny": "Rechazar",
+    "empty": "No hay pedidos",
+    "medic": "Medico: ",
+    "pages": "Paginas:",
+    "study": "Tipo de Estudio: ",
+    "title": "Pedidos de Acceso a Tus Ordenes"
   },
   "edit-profile": {
     "edit": "Editar",
@@ -461,10 +509,80 @@
     "tabs": "Eligí entrar como: ",
     "title": "Antes de continuar..."
   },
+  "request-order": {
+    "alerts": {
+      "exists": "La solicitud ya existe, y esta esperando la aprobacio del paciente.",
+      "success": "La solicitud fue enviada con exito."
+    },
+    "email": {
+      "error": {
+        "invalid": "Por favor inserte un mail valido",
+        "non-exists": "El email ingresado no existe en nuestra base de datos."
+      },
+      "label": "Email del Paciente"
+    },
+    "send-button": "Enviar",
+    "study": {
+      "error": "Por favor inserte un estudio medico valido",
+      "label": "Tipo de Estudio"
+    },
+    "title": "Enviar un pedido para acceder a los estudios del paciente"
+  },
   "role": {
     "clinic": "Clínica",
     "medic": "Médico",
     "patient": "Paciente",
     "user": "Usuario"
+  },
+  "view-order": {
+    "order" : {
+      "order-number" : "Número de orden: {{number}}",
+      "date":"Fecha: {{today}}",
+      "patient": "Paciente",
+      "clinic": "Clínica",
+      "insurance-plan": "Plan médico",
+      "insurance-number": "Número del plan médico",
+      "study-type":"Tipo de estudio: {{studyType}}"
+    },
+    "results":{
+      "date":"Fecha: {{today}}",
+      "upload-results": "Subir Resultados",
+      "title": "Resultados",
+      "no-results":"No se han encontrado resultados para este estudio",
+      "select-result": "Seleccione un resultado"
+    },
+    "actions":{
+      "change-clinic": "Cambiar Clínica",
+      "share-w-medic": "Compartir con médico"
+    },
+    "upload":{
+      "title": "Subir Resultados",
+      "order-number" : "Número de orden",
+      "patient": "Paciente",
+      "insurance-plan": "Plan médico del paciente",
+      "insurance-number": "Número del plan médico del paciente",
+      "file-upload":{
+        "label": "Elegir archivos a subir",
+        "text": "Solo seleccione resultados en formato de imagen (jpeg, png, etc.)",
+        "error": "Los resultados son requeridos."
+      },
+      "responsible-name":{
+        "label" : "Médico responsable",
+        "error": "El nombre del médico responsable es requerido."
+      },
+      "responsible-number":{
+        "label" : "Licencia del médico responsable",
+        "error": "La licencia debe ser valida."
+      },
+      "responsible-id":{
+        "label" : "Subir firma",
+        "text" : "Suba una imagen de la firma del médico responsable",
+        "error": "La identificacion es requerida."
+      },
+      "actions":{
+        "cancel": "Cancelar",
+        "submit": "Subir Resultados"
+      }
+    }
   }
 }

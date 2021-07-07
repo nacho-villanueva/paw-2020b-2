@@ -1,6 +1,10 @@
 import apiInstance, {apiRedirects} from "./index";
 import {GetInsurancePlanByURL} from "./CustomFields";
 
+export function GetUserByURL(url){
+    return apiRedirects.get(url).then((r) => {return r.data} );
+}
+
 export function GetUserInfo(id) {
     return apiInstance.get("/users/" + id)
         .then((r) => {return {
