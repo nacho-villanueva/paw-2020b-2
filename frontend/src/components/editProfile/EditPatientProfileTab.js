@@ -154,6 +154,7 @@ const EditPatientProfileTab = () => {
                         <ErrorFeedback isInvalid={errors.insuranceNumber === ERROR_CODES.INVALID}><Trans t={t} i18nKey="edit-profile.tabs.patient.insuranceNumber.error"/></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
+
                 </tbody>
             </table>
             <hr className={"divider"}/>

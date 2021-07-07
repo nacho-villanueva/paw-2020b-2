@@ -25,6 +25,10 @@
     text-transform: uppercase;
 }
 
+.sidebarItem span {
+    text-align: left;
+}
+
 .sidebarItem.active {
     color: white;
     font-weight: 700;

@@ -1,8 +1,7 @@
 import {Routes} from "../constants/Routes";
 import "./Style/Sidebar.css"
-import {NavLink, Route, useHistory, useLocation} from "react-router-dom"
+import {NavLink, useHistory, useLocation} from "react-router-dom"
 import {useSelector} from "react-redux";
-import {logout} from "../api/Auth";
 import {deAuthenticate} from "../redux/actions";
 import {store} from "../redux";
 import { useTranslation } from 'react-i18next'
@@ -32,6 +31,8 @@ const navigations = [
     {route: Routes.MY_ORDERS, label: "fragments.sidebar.my-orders", icon: "fas fa-fw fa-table"},
     {route: Routes.CREATE_ORDER, label: "fragments.sidebar.create-order", icon: "fas fa-fw fa-plus"},
     {route: Routes.SEARCH_CLINIC, label: "fragments.sidebar.search-clinic", icon: "fas fa-fw fa-search"},
+    {route: Routes.REQUEST_ORDER, label: "fragments.sidebar.request-order", icon: "fas fa-fw fa-clipboard-check"},
+    {route: Routes.ACCESS_REQUESTS, label: "fragments.sidebar.access-requests", icon: "fas fa-fw fa-comment-medical"},
     {route: {path: "divider2"}, divider:true},
     {route: {name: "Logout", path: "/"}, label: "fragments.sidebar.logout", icon: "fas fa-fw fa-sign-out-alt", onClick: () => {store.dispatch(deAuthenticate()); }},
     {route: {path: "divider3"}, divider:true},
