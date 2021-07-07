@@ -1,10 +1,13 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {useState} from "react";
 import {createInsurancePlan} from "../../api/CustomFields";
+import {Trans, useTranslation} from "react-i18next";
 
 const InsurancePlanModal = (props) => {
 
     const [field, setField] = useState("");
+
+    const {t} = useTranslation()
 
     const onSuccess = () => {
         setField("");
@@ -24,15 +27,15 @@ const InsurancePlanModal = (props) => {
 
     return <Modal show={props.show} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Add Insurance Plan</Modal.Title>
+            <Modal.Title><Trans t={t} i18nKey={"registration.modals.insurance-plan.title"}/></Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form onSubmit={(e)=> {e.preventDefault(); e.stopPropagation(); handleSubmit(); }}>
                 <Form.Group className="form-group col mt-1" controlId="medicalField">
-                    <Form.Label className="bmd-label-static">Insurance Plan</Form.Label>
+                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey={"registration.modals.insurance-plan.label"}/></Form.Label>
                     <Form.Control
                         type="text" className={"registrationInput"}
-                        name="medicalField" placeholder={"Insert Insurance Plan"}
+                        name="medicalField" placeholder={t("registration.modals.insurance-plan.placeholder")}
                         value={field} onChange={(e)=> {setField(e.target.value)}}
                     />
                 </Form.Group>
@@ -40,10 +43,10 @@ const InsurancePlanModal = (props) => {
         </Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-                Return
+                <Trans t={t} i18nKey={"registration.modals.return-button"}/>
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-                Create
+                <Trans t={t} i18nKey={"registration.modals.submit-button"}/>
             </Button>
         </Modal.Footer>
     </Modal>

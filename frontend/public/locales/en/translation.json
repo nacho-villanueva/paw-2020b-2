@@ -216,6 +216,15 @@
     "day-short-5": "Fri",
     "day-short-6": "Sat"
   },
+  "display-requests": {
+    "accept": "Accept",
+    "deny": "Deny",
+    "empty": "There are no requests",
+    "medic": "Medic: ",
+    "pages": "Pages:",
+    "study": "Study Type: ",
+    "title": "Access Requests to your Orders"
+  },
   "edit-profile": {
     "edit": "Edit",
     "save": {
@@ -466,6 +475,25 @@
         "label": "Phone Number"
       }
     },
+    "modals": {
+      "insurance-plan": {
+        "label": "Insurance Plan",
+        "placeholder": "Insert Insurance Plan",
+        "title": "Add Insurance Plan"
+      },
+      "medical-fields": {
+        "label": "Medical Field",
+        "placeholder": "Insert Medical Field",
+        "title": "Create Medical Field"
+      },
+      "return-button": "Return",
+      "study-types": {
+        "label": "Study Type",
+        "placeholder": "Insert Study Type",
+        "title": "Create Medical Study Type"
+      },
+      "submit-button": "Create"
+    },
     "patient": {
       "continue": "Continue",
       "firstname": {
@@ -490,6 +518,25 @@
     "subtitle": "We need a couple more details.",
     "tabs": "Choose to register as a: ",
     "title": "Before you continue..."
+  },
+  "request-order": {
+    "alerts": {
+      "exists": "Request already exists, and is waiting for patient\u0027s approval.",
+      "success": "Request has been sent successfully."
+    },
+    "email": {
+      "error": {
+        "invalid": "Please insert a valid email",
+        "non-exists": "Email does not exist in our database."
+      },
+      "label": "Pacient\u0027s Email"
+    },
+    "send-button": "Send",
+    "study": {
+      "error": "Please insert a valid study type",
+      "label": "Study Type"
+    },
+    "title": "Send a request to access a patient\u0027s studies"
   },
   "role": {
     "clinic": "Clinic",
