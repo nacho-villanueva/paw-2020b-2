@@ -7,6 +7,7 @@ import CreateOrder from "../components/CreateOrder";
 import EditProfilePage from "../components/editProfile/EditProfilePage";
 import RequestAccessPage from "../components/requestStudies/RequestAccessPage";
 import DisplayAccessRequestsPage from "../components/requestStudies/DisplayAccessRequestsPage";
+import ViewOrder from "../components/ViewOrder";
 
 export const Routes = {
     LANDING_PAGE: {
@@ -42,6 +43,12 @@ export const Routes = {
         path: "/dashboard/search-clinics",
         component: MyOrders, //TODO: CHANGE
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
+    },
+    VIEW_ORDER: {
+        name: "View Study",
+        path: "/dashboard/view-study",
+        component: ViewOrder,
+        role: [Roles.ANY]
     },
 
     EDIT_PROFILE: {

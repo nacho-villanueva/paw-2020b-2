@@ -9,6 +9,8 @@ import CreateOrder from "./CreateOrder";
 import EditProfilePage from "./editProfile/EditProfilePage";
 import RequestAccessPage from "./requestStudies/RequestAccessPage";
 import {Routes} from "../constants/Routes";
+import ViewOrder from "./ViewOrder";
+import MyOrders from "./MyOrders";
 
 
 const DashboardPage = () => {
@@ -31,6 +33,9 @@ const DashboardPage = () => {
                     <Route path={Routes.EDIT_PROFILE.path} component={Routes.EDIT_PROFILE.component}/>
                     <Route path={Routes.REQUEST_ORDER.path} component={Routes.REQUEST_ORDER.component}/>
                     <Route path={Routes.ACCESS_REQUESTS.path} component={Routes.ACCESS_REQUESTS.component}/>
+                    <Route path="/dashboard/view-study" component={ViewOrder}/>
+                    <Route path="/dashboard/my-orders"
+                    component={MyOrders}/>
                 </div>
             </div>
         </div>

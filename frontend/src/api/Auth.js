@@ -3,6 +3,7 @@ import {store} from "../redux";
 import {authenticate, deAuthenticate, updateRole} from "../redux/actions";
 import {Roles} from "../constants/Roles";
 import {ERROR_CODES} from "../constants/ErrorCodes";
+import { parseHeadersLinks, prepareViewStudyUrl } from "./utils";
 
 export function login(user, pass, rememberMe, onSuccess, onFail){
 
@@ -172,7 +173,7 @@ export function FindPatient(patientEmail, count, setCount, patientInfo, setPatie
         out.error = false;
         out.loading = false;
         setPatientInfo(out);
-        setCount(count+4);
+        setCount(count+3);
 
     })
     .catch((e) => {
@@ -191,15 +192,15 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
-            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id};
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
         setStudyTypesList(stl);
-        setCount(count+1);
+        setCount(count+5);
     })
     .catch((error) => {console.log("bruh", error)});
 }
 
-async function InternalQuery(request){
+export async function InternalQuery(request){
     return apiInstance.get(request)
     .then((r) => {
         return r.data;
@@ -316,18 +317,22 @@ export function QueryClinics(filters, setClinicsList, count, setCount, page, set
     });
 }
 
-export function CreateMedicalOrder(order, setStatusCode, setErrors){
+export function CreateMedicalOrder(order, setStatusCode, setErrors, setOrderStatus){
     apiInstance.post("/orders",{
         clinicId: order.clinicId,
         patientEmail: order.patientEmail,
         patientName: order.patientName,
         studyTypeId: order.studyTypeId,
         description: order.orderDescription,
-        medicPlan : {
-            plan: order.patientInsurancePlan,
-            number: order.patientInsuranceNumber
-        }
-    }).then( (r) => {setStatusCode(r.status);})
+        patientMedicPlan : order.patientInsurancePlan,
+        patientMedicPlanNumber : order.patientInsuranceNumber
+    }).then( (r) => {
+        setStatusCode(r.status);
+        //uh
+        let location = r.headers.location.split('/');
+        let aux = {code: r.status, id:location[location.length -1 ] };
+        setOrderStatus(aux);
+    })
     .catch((e)  => {
         if(e.response){
             // error in response
@@ -343,4 +348,73 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors){
             console.log('Error in request: ', e.message);
         }
     });
+}
+
+export function GetLogguedUser(userInfo, setUserInfo, count, setCount){
+
+}
+export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
+    apiInstance.get("/orders/"+orderId)
+    .then((r) => {
+        console.log("nice order info", r);
+        let data = r.data;
+
+        let aux = orderInfo;
+
+        aux.date = data.date;
+        aux.description = data.description;
+        aux.identification = data.identification;
+        aux.medicPlan = data.medicPlan;
+        aux.patientEmail = data.patientEmail;
+        aux.patientName = data.patientName;
+        aux.id = data.id;
+
+        InternalQuery(data.clinic).then((res) => {
+            aux["clinic"] = res.name;
+            setCount(count+1);
+        });
+        InternalQuery(data.medic).then((res) => {
+            aux["medicName"] = res.name;
+            aux["medicLicenceNumber"] = res.licenceNumber;
+            setCount(count+5);
+        });
+        InternalQuery(data.studyType).then((res) => {
+            aux["studyType"] = res.name;
+            setCount(count+11);
+        });
+
+
+        setOrderInfo(aux);
+
+    }).catch((e) => {
+        console.log("getting results for order error", e)
+    });
+}
+
+export function GetResults(orderId,setResults){
+    const request = "/orders/"+orderId+"/results/";
+    console.log("req", request);
+
+    apiInstance.get(request)
+    .then((r) => {
+        console.log("results", r);
+        let data = r.data;
+
+        setResults(data);
+
+    }).catch((e) => {
+        console.log("getting results for order error", e)
+    });
+}
+
+export function RegisterPatient(patient){
+
+}
+
+export function RegisterMedic(medic){
+
+}
+
+export function RegisterClinic(clinic){
+
 }
