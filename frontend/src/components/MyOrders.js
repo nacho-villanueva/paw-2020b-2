@@ -183,7 +183,7 @@ function MyOrders(){
 
     //calling on mount...
     useLayoutEffect( () => {
-        if(searching && !loading){
+        if(searching){
             fetchAndChangePage(searchFilters.page);
             setSearching(false);
         }
