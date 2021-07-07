@@ -18,7 +18,7 @@ export async function GetPatientInfo(id) {
 
     const patientInfo = await apiInstance.get("/patients/" + id).then((r) => {return r.data})
 
-    let insurancePlan = {name:""};
+    let insurancePlan = null;
 
     if(patientInfo.medicPlan !== undefined)
         insurancePlan = await GetInsurancePlanByURL(patientInfo.medicPlan).then((r) => {return r.data})

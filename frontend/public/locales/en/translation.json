@@ -289,11 +289,11 @@
       },
       "patient": {
         "insuranceNumber": {
-          "error": "Please insert a valid Insurance Number (Only alphanumeric)",
+          "error": "You must provide a medic plan alongside the plan number",
           "label": "Medical Insurance Number"
         },
         "insurancePlan": {
-          "error": "Please insert a valid medical insurance",
+          "error": "Please insert a valid medical insurance or dont provide a plan number",
           "label": "Medical Insurance"
         },
         "name": {

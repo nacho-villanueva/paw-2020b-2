@@ -72,10 +72,8 @@ export function UpdatePatient(info) {
                         case "name":
                             errors.name = e.code;
                             break;
-                        case "patientPlanInfo.plan":
+                        case "patientPlanInfo":
                             errors.insurancePlan = e.code;
-                            break;
-                        case "patientPlanInfo.number":
                             errors.insuranceNumber = e.code;
                             break;
                     }

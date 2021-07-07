@@ -279,11 +279,11 @@
       },
       "patient": {
         "insuranceNumber": {
-          "error": "Por favor insert un numero de seguro medico valido (Solo alfanumerico)",
+          "error": "Por favor seleccione un seguro medico si provee un numero de plan",
           "label": "Número de Seguro Medico"
         },
         "insurancePlan": {
-          "error": "Por favor insertar un seguro medico valido",
+          "error": "Por favor insertar un seguro medico valido o no inserte numero de plan",
           "label": "Seguro Medico"
         },
         "name": {
