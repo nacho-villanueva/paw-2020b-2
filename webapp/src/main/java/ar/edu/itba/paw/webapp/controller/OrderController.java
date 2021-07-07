@@ -373,11 +373,11 @@ public class OrderController {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("/{id}/clinic")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    public Response updateOrder(
+    public Response changeClinic(
             @PathParam("id") final String encodedId,
-            @Valid @NotNull OrderPutDto orderPutDto
+            @Valid @NotNull OrderChangeClinicDto changeClinicDto
     ) {
         long orderId;
         try {
@@ -386,29 +386,22 @@ public class OrderController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        // only affected members should be able to change
-        String userEmail = getLoggedUserEmail();
-        if (userEmail == null)
-            return Response.status(Response.Status.FORBIDDEN).build();
-
         final Optional<Order> orderOptional = orderService.findById(orderId);
         if (!orderOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
         Order order = orderOptional.get();
+
+        // only affected members should be able to change
+        String userEmail = getLoggedUserEmail();
+        if (userEmail == null)
+            return Response.status(Response.Status.FORBIDDEN).build();
 
         if (!order.getPatientEmail().equals(userEmail) ||
                 !order.getClinic().getUser().getEmail().equals(userEmail) ||
                 !order.getMedic().getUser().getEmail().equals(userEmail))
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        Integer clinicId = orderPutDto.getClinicId();
-
-
-        if (clinicId == null) {
-            return Response.noContent().build();
-        }
-
-        final Optional<Clinic> clinicOptional = clinicService.findByUserId(orderPutDto.getClinicId());
+        final Optional<Clinic> clinicOptional = clinicService.findByUserId(changeClinicDto.getClinicId());
         if (!clinicOptional.isPresent() || !clinicOptional.get().isVerified())
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
@@ -419,7 +412,6 @@ public class OrderController {
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-
 
         return Response.noContent().build();
     }
