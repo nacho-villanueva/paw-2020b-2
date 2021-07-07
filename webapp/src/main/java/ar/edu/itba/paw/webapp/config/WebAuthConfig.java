@@ -52,56 +52,57 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                     //Rules for /users
-                    .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/users/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/users").anonymous()
-                    .antMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC", "UNDEFINED")
+                    .antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/users").anonymous()
+                    .antMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC", "UNDEFINED")
                     //Rules for /clinics
-                    .antMatchers(HttpMethod.PUT, "/clinics/**/verify").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/clinics").permitAll()    //Can be deleted, but stated for clarity
-                    .antMatchers(HttpMethod.GET, "/clinics/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/clinics").hasRole("UNDEFINED")
-                    .antMatchers(HttpMethod.PUT, "/clinics/**").hasRole("CLINIC")
+                    .antMatchers(HttpMethod.PUT, "/api/clinics/**/verify").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/api/clinics").permitAll()    //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/api/clinics/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/clinics").hasRole("UNDEFINED")
+                    .antMatchers(HttpMethod.PUT, "/api/clinics/**").hasRole("CLINIC")
                     //Rules for /study-types
-                    .antMatchers(HttpMethod.GET, "/study-types").permitAll()    //Can be deleted, but stated for clarity
-                    .antMatchers(HttpMethod.GET, "/study-types/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/study-types").authenticated()
+                    .antMatchers(HttpMethod.GET, "/api/study-types").permitAll()    //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/api/study-types/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/study-types").authenticated()
                     //Rules for /medic-plans
-                    .antMatchers(HttpMethod.GET, "/medic-plans").permitAll()    //Can be deleted, but stated for clarity
-                    .antMatchers(HttpMethod.GET, "/medic-plans/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/medic-plans").authenticated()
+                    .antMatchers(HttpMethod.GET, "/api/medic-plans").permitAll()    //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/api/medic-plans/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/medic-plans").authenticated()
                     //Rules for /medics
-                    .antMatchers(HttpMethod.PUT, "/medics/**/verify").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/medics").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")     //Can be deleted, but stated for clarity
-                    .antMatchers(HttpMethod.GET, "/medics/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
-                    .antMatchers(HttpMethod.POST, "/medics").hasRole("UNDEFINED")
-                    .antMatchers(HttpMethod.PUT, "/medics/**").hasRole("MEDIC")
+                    .antMatchers(HttpMethod.PUT, "/api/medics/**/verify").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/api/medics").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")     //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/api/medics/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.POST, "/api/medics").hasRole("UNDEFINED")
+                    .antMatchers(HttpMethod.PUT, "/api/medics/**").hasRole("MEDIC")
                     //Rules for /medical-fields
-                    .antMatchers(HttpMethod.GET, "/medical-fields").authenticated()     //Can be deleted, but stated for clarity
-                    .antMatchers(HttpMethod.GET, "/medical-fields/**").authenticated()
-                    .antMatchers(HttpMethod.POST, "/medical-fields").authenticated()
+                    .antMatchers(HttpMethod.GET, "/api/medical-fields").authenticated()     //Can be deleted, but stated for clarity
+                    .antMatchers(HttpMethod.GET, "/api/medical-fields/**").authenticated()
+                    .antMatchers(HttpMethod.POST, "/api/medical-fields").authenticated()
                     //Rules for /orders
-                    .antMatchers(HttpMethod.GET, "/orders").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
-                    .antMatchers(HttpMethod.GET, "/orders/filters/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
-                    .antMatchers(HttpMethod.GET, "/orders/**/shared-with").hasRole("PATIENT")
-                    .antMatchers(HttpMethod.GET, "/orders/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/orders").hasRole("MEDIC")
-                    .antMatchers(HttpMethod.POST, "/orders/**/shared-with").hasRole("PATIENT")
-                    .antMatchers(HttpMethod.POST, "/orders/**/results").hasAnyRole("CLINIC","PATIENT")
-                    .antMatchers(HttpMethod.PUT, "/orders/**").hasAnyRole("PATIENT","MEDIC")
+                    .antMatchers(HttpMethod.GET, "/api/orders").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.GET, "/api/orders/filters/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.GET, "/api/orders/**/shared-with").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.GET, "/api/orders/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/orders").hasRole("MEDIC")
+                    .antMatchers(HttpMethod.POST, "/api/orders/**/shared-with").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.POST, "/api/orders/**/results").hasAnyRole("CLINIC","PATIENT")
+                    .antMatchers(HttpMethod.PUT, "/api/orders/**").hasAnyRole("PATIENT","MEDIC")
                     //Rules for /patients
-                    .antMatchers(HttpMethod.GET, "/patients").hasAnyRole("MEDIC","ADMIN")
-                    .antMatchers(HttpMethod.GET, "/patients/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
-                    .antMatchers(HttpMethod.POST, "/patients").hasRole("UNDEFINED")
-                    .antMatchers(HttpMethod.PUT, "/patients/**").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.GET, "/api/patients").hasAnyRole("MEDIC","ADMIN")
+                    .antMatchers(HttpMethod.GET, "/api/patients/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.POST, "/api/patients").hasRole("UNDEFINED")
+                    .antMatchers(HttpMethod.PUT, "/api/patients/**").hasRole("PATIENT")
                     //Rules for /share-requests
-                    .antMatchers(HttpMethod.GET, "/share-requests/**").hasRole("PATIENT")
-                    .antMatchers(HttpMethod.POST, "/share-requests").hasRole("MEDIC")
-                    .antMatchers(HttpMethod.POST, "/share-requests/**").hasRole("PATIENT")
-                    .antMatchers(HttpMethod.DELETE, "/share-requests/**").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.GET, "/api/share-requests/**").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.POST, "/api/share-requests").hasRole("MEDIC")
+                    .antMatchers(HttpMethod.POST, "/api/share-requests/**").hasRole("PATIENT")
+                    .antMatchers(HttpMethod.DELETE, "/api/share-requests/**").hasRole("PATIENT")
                     //Rules for login
-                    .antMatchers(HttpMethod.POST, "/").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/").permitAll()
                     //Default rules
+                    .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .and().exceptionHandling()
                     .authenticationEntryPoint((request, response, ex) -> {
