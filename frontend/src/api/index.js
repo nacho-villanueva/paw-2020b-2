@@ -3,7 +3,7 @@ import {store} from "../redux"
 import {logout} from "./Auth";
 
 const settings = {
-    baseURL: 'http://127.0.0.1:8080/',
+    baseURL: 'http://127.0.0.1:8080/api/',
     timeout: 30000,
 };
 

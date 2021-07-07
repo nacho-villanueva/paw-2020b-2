@@ -61,11 +61,7 @@ export function registerPatient(name, insurancePlan, insuranceNumber, onSuccess,
         {
             "name": name,
             "patientPlanInfo": {
-                "plan": {
-                    "id": insurancePlan.id,
-                    "name": insurancePlan.name,
-                    "url": insurancePlan.url
-                },
+                "plan": insurancePlan,
                 "number": insuranceNumber
             }
         })
@@ -406,15 +402,6 @@ export function GetResults(orderId,setResults){
         console.log("getting results for order error", e)
     });
 }
-
-export function RegisterPatient(patient){
-
-}
-
-export function RegisterMedic(medic){
-
-}
-
-export function RegisterClinic(clinic){
-
+export function validateToken(token){
+    return apiInstance.get("/" + token).then((r) => {return r.status}).catch((err) => {return err.response.status})
 }

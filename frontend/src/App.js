@@ -9,6 +9,7 @@ import {store} from "./redux";
 import {StatusType} from "./redux/actions/actions";
 import {Roles} from "./constants/Roles";
 import RegisterPage from "./components/registration/RegisterPage";
+import TokenVerificationPage from "./components/TokenVerificationPage";
 
 function App() {
   const status = useSelector(state => state.auth.status);
@@ -19,6 +20,10 @@ function App() {
       <div className="main-container">
         <div className="wrapper">
           <Switch>
+
+            <Route path="/user-verification">
+              <LandingPage tokenValidation={true}/>
+            </Route>
 
             <Route path="/" exact>
               {status === StatusType.AUTHENTICATED ? (role === Roles.UNREGISTERED ? <Redirect to={"/register"}/> : <Redirect to="/dashboard" />) : <LandingPage />}

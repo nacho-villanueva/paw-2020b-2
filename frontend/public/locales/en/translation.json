@@ -24,59 +24,11 @@
   },
   "advanced-search-clinics": {
     "form": {
-      "available-hours": {
-        "buttons": {
-          "show": "Schedule availability "
-        },
-        "columns": {
-          "available": "Available",
-          "day": "Day",
-          "from-time": "From",
-          "to-time": "To"
-        }
-      },
       "clinic-name": {
-        "label": "Search by clinic name"
-      },
-      "insurance-plan": {
-        "label": "Search by insurance plan",
-        "any" : "Any insurance plan"
-      },
-      "study-type": {
-        "label": "Search by study type",
-        "any" : "Any study type"
-      },
-      "errors": {
-        "close-alert": "Close",
-        "missing": "Specified Clinic doesn\u0027t exist",
-        "missing-field": "Please select a Clinic"
-      },
-
-      "results": {
-        "no-results": "No clinics found based on search filters",
-        "no-selected": "No clinic selected",
-        "selected": "Selected Clinic",
-        "title": "Results"
-      },
-      "clinic-info": {
-        "email": "Email",
-        "insurance": "Accepted Insurance",
-        "open-hours": "Open Hours",
-        "studies": "Available Studies",
-        "telephone": "Telephone"
-      },
-      "submit": {
-        "value": "Search"
-      },
-      "change": {
-        "submit": "Change Clinic",
-        "cancel": "Cancel"
+        "label": "Clinic Name"
       }
     },
-    "title": "Advanced Search | Clinic",
-    "title-filters" : "Filters",
-    "title-results" : "Results",
-    "title-change" : "Change Clinic"
+    "title": "Advanced Search | Clinic"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -372,7 +324,11 @@
             "value": "Log In"
           }
         },
-        "title": "Login"
+        "title": "Login",
+        "validation": {
+          "error": "The account you are trying to validate is invalid or has already been validated. Please try again.",
+          "success": "Your account has been validated. You may login to your account now."
+        }
       },
       "register": {
         "form": {

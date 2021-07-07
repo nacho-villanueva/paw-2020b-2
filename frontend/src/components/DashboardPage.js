@@ -36,6 +36,7 @@ const DashboardPage = () => {
                     <Route path="/dashboard/view-study" component={ViewOrder}/>
                     <Route path="/dashboard/my-orders"
                     component={MyOrders}/>
+                    <Route path={Routes.SEARCH_CLINIC.path} component={Routes.SEARCH_CLINIC.component}/>
                 </div>
             </div>
         </div>

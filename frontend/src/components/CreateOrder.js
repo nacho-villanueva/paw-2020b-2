@@ -1,5 +1,5 @@
 import {Form, Button, Table, Collapse, Pagination, Spinner, Alert} from "react-bootstrap";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import {useHistory} from "react-router-dom";
 import { Trans, useTranslation } from 'react-i18next'
 import {GetLoggedMedic, GetStudyTypes, QueryClinics, CreateMedicalOrder, FindPatient} from "../api/Auth";
@@ -10,6 +10,7 @@ import { ERROR_CODES } from "../constants/ErrorCodes"
 import InvalidFeedback from "./InvalidFeedback.js";
 import { getAuthorizedImage, getValueFromEvent } from "../api/utils";
 import { getAllInsurancePlans } from "../api/CustomFields";
+import { GetIdentificationByURL } from "../api/UserInfo";
 
 function CreateOrder(){
 
@@ -310,11 +311,16 @@ function CreateOrder(){
         fetchData();
     }, [, query]);
 
+    const fetchIdentification = useCallback(async () => {
+        if(orderInfo.identificationSrc !== undefined){
+            GetIdentificationByURL(orderInfo.identificationSrc).then((r) => {setImage(r)});
+        }
+    })
+
+    //getting identification....
     useEffect(() => {
         if(orderInfo !== undefined){
-            setImage(getAuthorizedImage(orderInfo.identificationSrc));
-            //console.log("getting image...");
-            setCount(count+1);
+            fetchIdentification().then((r) => {setCount(count+1)});
         }
     }, [orderInfo]);
 

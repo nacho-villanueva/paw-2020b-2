@@ -23,10 +23,30 @@ public class ResultJpaDao implements ResultDao {
     }
 
     @Override
-    public Collection<Result> findByOrderId(long id) {
-        final TypedQuery<Result> query = em.createQuery("SELECT r FROM Result r WHERE r.order.orderId = :id", Result.class);
+    public Collection<Result> findByOrderId(long id, int page, int pageSize) {
+
+        String queryString = "SELECT r FROM Result r " +
+                "WHERE r.order.orderId = :id " +
+                "ORDER BY r.id";
+
+        final TypedQuery<Result> query = em.createQuery(queryString, Result.class);
         query.setParameter("id", id);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
+    }
+
+    @Override
+    public long findByOrderIdCount(long id) {
+
+        String queryString = "SELECT COUNT(r) FROM Result r " +
+                "WHERE r.order.orderId = :id";
+
+        final TypedQuery<Long> query = em.createQuery(queryString, Long.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
     }
 
     @Override

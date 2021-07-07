@@ -6,11 +6,14 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface StudyTypeDao {
-    public Optional<StudyType> findById(int id);
 
-    public Optional<StudyType> findByName(String name);
+    Optional<StudyType> findById(int id);
 
-    public Collection<StudyType> getAll();
+    Optional<StudyType> findByName(String name);
 
-    public StudyType findOrRegister(String name);
+    Collection<StudyType> getAll();
+
+    StudyType register(String name);
+
+    StudyType findOrRegister(String name);
 }

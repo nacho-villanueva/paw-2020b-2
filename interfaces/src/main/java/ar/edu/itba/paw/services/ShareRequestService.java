@@ -15,5 +15,9 @@ public interface ShareRequestService {
 
     void acceptOrDenyShare(ShareRequest request, boolean accepted);
 
-    Collection<ShareRequest> getAllPatientRequest(String patientEmail);
+    Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page, int pageSize);
+
+    long getAllPatientRequestsCount(String patientEmail);
+
+    long getAllPatientRequestsLastPage(String patientEmail, int pageSize);
 }

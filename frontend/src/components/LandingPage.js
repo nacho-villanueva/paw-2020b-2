@@ -1,18 +1,37 @@
 import NavBar from "./NavBar.js";
 import {Alert, Button, Form} from "react-bootstrap";
 import "./Style/LandingPage.css";
-import {useState} from "react";
-import {useHistory} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useHistory, useLocation} from "react-router-dom";
 import { Trans, useTranslation } from 'react-i18next'
 
 import {useDispatch} from "react-redux";
-import {registerUser, login} from "../api/Auth";
-import { ERROR_CODES } from "../constants/ErrorCodes"
+import {registerUser, login, validateToken} from "../api/Auth";
+import {ERROR_CODES, HTTP_CODES} from "../constants/ErrorCodes"
 import InvalidFeedback from "./InvalidFeedback";
 import Loader from "react-loader-spinner";
 import ErrorFeedback from "./inputs/ErrorFeedback";
 
-function LandingPage() {
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
+function LandingPage(props) {
+
+    const [tokenValidated, setTokenValidated] = useState(0)
+    const query = useQuery();
+
+    useEffect(() => {
+        let checkedToken = false
+        if(props.tokenValidation === true && !checkedToken) {
+            let token = query.get("token")
+            console.log(token)
+            validateToken(token).then((r) => {console.log(r); setTokenValidated(r)})
+            return () => {checkedToken = true}
+        }
+    }, [])
+
+
 
     // password length values
     const passwordMin = 8;
@@ -165,6 +184,8 @@ function LandingPage() {
                         <div id="login" className={loginTab}>
                             <Alert show={invalidLogin} variant={'danger'}><Trans t={t} i18nKey="home.tabs.login.form.errors.unauthorized.message" /></Alert> {/*TODO*/}
                             <Alert show={isRegistered} variant={'success'}><Trans t={t} i18nKey="home.tabs.register.form.success" /></Alert>
+                            <Alert show={tokenValidated === HTTP_CODES.ACCEPTED} variant={'success'}><Trans t={t} i18nKey="home.tabs.login.validation.success" /></Alert>
+                            <Alert show={tokenValidated === HTTP_CODES.NOT_FOUND} variant={'warning'}><Trans t={t} i18nKey="home.tabs.login.validation.error" /></Alert>
                             <Form className="form-signin" noValidate validated={loginValidated} onSubmit={handleLoginSubmit}>
                                 <Form.Group controlId="loginEmail">
                                     <Form.Label className="bmd-label-static"><Trans t={t} i18nKey="home.tabs.login.form.email.label"/></Form.Label>

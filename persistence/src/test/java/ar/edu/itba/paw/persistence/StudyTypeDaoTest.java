@@ -129,7 +129,7 @@ public class StudyTypeDaoTest {
 
         Assert.assertNotNull(maybeType);
         Assert.assertEquals(studyTypeZero.getId().intValue(),maybeType.getId().intValue());
-        Assert.assertEquals(studyTypeZero.getName(),maybeType.getName());
+        Assert.assertEquals(studyTypeZero.getName().toLowerCase(),maybeType.getName().toLowerCase());
         Assert.assertEquals(STUDY_TYPES_COUNT,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
     }
 
@@ -140,7 +140,7 @@ public class StudyTypeDaoTest {
         final StudyType maybeType = dao.findOrRegister(STUDY_NAME);
 
         Assert.assertNotNull(maybeType);
-        Assert.assertEquals(STUDY_NAME,maybeType.getName());
+        Assert.assertEquals(STUDY_NAME.toLowerCase(),maybeType.getName().toLowerCase());
         Assert.assertEquals(1+STUDY_TYPES_COUNT,JdbcTestUtils.countRowsInTable(jdbcTemplate,STUDIES_TABLE_NAME));
     }
 

@@ -24,50 +24,11 @@
   },
   "advanced-search-clinics": {
     "form": {
-      "available-hours": {
-        "buttons": {
-          "show": "Buscar por disponibilidad"
-        },
-        "columns": {
-          "available": "Disponible",
-          "day": "Día",
-          "from-time": "Desde",
-          "to-time": "Hasta"
-        }
-      },
       "clinic-name": {
-        "label": "Buscar por nombre de la clínica"
-      },
-      "study-type": {
-        "label": "Buscar por tipo de estudio",
-        "any" : "Cualquier tipo de estudio"
-      },
-      "errors": {
-        "missing": "Clínica seleccionada no existe",
-        "missing-field": "Por favor seleccione una clínica"
-      },
-      "insurance-plan": {
-        "label": "Buscar por Plan médico",
-        "any" : "Cualquier plan médico"
-      },
-      "results": {
-        "no-results": "No se encontraron clínicas según los filtros de búsqueda",
-        "no-selected": "Ninguna clínica seleccionada",
-        "selected": "Clínica seleccionada",
-        "title": "Resultados"
-      },
-      "submit": {
-        "value": "Buscar"
-      },
-      "change": {
-        "submit": "Cambiar Clínica",
-        "cancel": "Cancelar"
+        "label": "Nombre de la clínica"
       }
     },
-    "title": "Búsqueda avanzada | Clínica",
-    "title-filters" : "Filtros",
-    "title-results" : "Resultados",
-    "title-change" : "Cambiar Clínica"
+    "title": "Búsqueda avanzada | Clínica"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -362,7 +323,11 @@
             "value": "Iniciar Sesión"
           }
         },
-        "title": "Iniciar Sesión"
+        "title": "Iniciar Sesión",
+        "validation": {
+          "error": "La cuenta que intenta validar no es valida o ya fue validada. Por favor intentelo de nuevo.",
+          "success": "Su cuenta fue validada. Puede entrar a su cuenta ahora."
+        }
       },
       "register": {
         "form": {

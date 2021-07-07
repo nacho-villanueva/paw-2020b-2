@@ -21,17 +21,34 @@ public class MedicServiceImpl implements MedicService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private MedicalFieldService medicalFieldService;
-
     @Override
-    public Collection<Medic> getAll() {
-        return medicDao.getAll();
+    public Collection<Medic> getAll(int page, int pageSize) {
+        return medicDao.getAll(page,pageSize);
     }
 
     @Override
-    public Collection<Medic> getAllUnverified() {
-        return medicDao.getAllUnverified();
+    public long getAllCount() {
+        return medicDao.getAllCount();
+    }
+
+    @Override
+    public int getAllLastPage(int pageSize) {
+        return getLastPage(getAllCount(),pageSize);
+    }
+
+    @Override
+    public Collection<Medic> getAllUnverified(int page, int pageSize) {
+        return medicDao.getAllUnverified(page,pageSize);
+    }
+
+    @Override
+    public long getAllUnverifiedCount() {
+        return medicDao.getAllUnverifiedCount();
+    }
+
+    @Override
+    public int getAllUnverifiedLastPage(int pageSize) {
+        return getLastPage(getAllUnverifiedCount(),pageSize);
     }
 
     @Override
@@ -52,12 +69,22 @@ public class MedicServiceImpl implements MedicService {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified) {
-        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields,verified);
+    public Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields) {
+        return medicDao.updateMedicInfo(user,name,telephone,identificationType,identification,licenceNumber,knownFields);
+    }
+
+    @Override
+    public void verifyMedic(int medicId) {
+        medicDao.verifyMedic(medicId);
     }
 
     @Override
     public boolean knowsField(int medicId, int fieldId) {
         return medicDao.knowsField(medicId,fieldId);
+    }
+
+    // auxiliar functions
+    private int getLastPage(final long count, final int pageSize){
+        return (int) Math.ceil((double)count / pageSize);
     }
 }
