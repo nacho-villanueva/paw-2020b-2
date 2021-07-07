@@ -103,3 +103,25 @@ export async function UpdateOrderClinic(orderId, clinic, setStatusCode, setError
         }
     });
 }
+
+export function ShareOrderWithMedic(orderId, medicId){
+    return apiInstance.post('/orders/'+ orderId + '/shared-with', {id: medicId})
+        .then((r) => {return true})
+        .catch((e)  => {
+            let errors;
+            if(e.response){
+                // error in response'
+                errors.status = e.response.status;
+                if(e.response.status === 400 && e.response.data !== undefined){
+                    errors.data = e.response.data;
+                }
+            }else if(e.request){
+                // no response received
+                console.log('Error in request: ',e.request);
+            }else{
+                // error in the request building, which shouldn't happen
+                console.log('Error in request: ', e.message);
+            }
+            return errors;
+        });
+}
