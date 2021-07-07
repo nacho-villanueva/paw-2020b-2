@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,16 +55,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<Order> getAllAsClinic(User user) {
-        return getAllAsClinic(user, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> getAllAsClinic(User user, int page) {
-        return getAllAsClinic(user, page, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public Collection<Order> getAllAsClinic(User user, int page, int pageSize) {
         return orderDao.getAllAsClinic(user, page, pageSize);
     }
@@ -77,33 +65,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsClinicLastPage(User user) {
-        return getAllAsClinicLastPage(user, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsClinicLastPage(User user, int pageSize) {
         return getLastPage(getAllAsClinicCount(user), pageSize);
     }
 
     @Override
-    public Collection<Order> getAllAsMedic(User user) {
-        return getAllAsMedic(user, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> getAllAsMedic(User user, int page) {
-        return getAllAsMedic(user, page, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public Collection<Order> getAllAsMedic(User user, int page, int pageSize) {
         return getAllAsMedic(user, false, page, pageSize);
-    }
-
-    @Override
-    public Collection<Order> getAllAsMedic(User user, boolean includeShared, int page) {
-        return getAllAsMedic(user, includeShared, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -120,11 +88,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsMedicLastPage(User user) {
-        return getAllAsMedicLastPage(user, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsMedicLastPage(User user, int pageSize) {
         return getAllAsMedicLastPage(user, false, pageSize);
     }
@@ -138,23 +101,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsMedicLastPage(User user, boolean includeShared) {
-        return getAllAsMedicLastPage(user, includeShared, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsMedicLastPage(User user, boolean includeShared, int pageSize) {
         return getLastPage(getAllAsMedicCount(user, includeShared), pageSize);
-    }
-
-    @Override
-    public Collection<Order> getAllAsPatient(User user) {
-        return getAllAsPatient(user, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> getAllAsPatient(User user, int page) {
-        return getAllAsPatient(user, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -168,23 +116,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsPatientLastPage(User user) {
-        return getAllAsPatientLastPage(user, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsPatientLastPage(User user, int pageSize) {
         return getLastPage(getAllAsPatientCount(user), pageSize);
-    }
-
-    @Override
-    public Collection<Order> getAllAsPatientOfType(String email, StudyType type) {
-        return getAllAsPatientOfType(email, type, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> getAllAsPatientOfType(String email, StudyType type, int page) {
-        return getAllAsPatientOfType(email, type, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -198,33 +131,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsPatientOfTypeLastPage(String email, StudyType type) {
-        return getAllAsPatientOfTypeLastPage(email, type, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsPatientOfTypeLastPage(String email, StudyType type, int pageSize) {
         return getLastPage(getAllAsPatientOfTypeCount(email, type), pageSize);
     }
 
     @Override
-    public Collection<Order> getAllAsUser(User user) {
-        return getAllAsUser(user, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> getAllAsUser(User user, int page) {
-        return getAllAsUser(user, page, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public Collection<Order> getAllAsUser(User user, int page, int pageSize) {
         return getAllAsUser(user, false, page, pageSize);
-    }
-
-    @Override
-    public Collection<Order> getAllAsUser(User user, boolean includeShared, int page) {
-        return getAllAsUser(user, includeShared, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -238,11 +151,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsUserLastPage(User user) {
-        return getAllAsUserLastPage(user, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsUserLastPage(User user, int pageSize) {
         return getAllAsUserLastPage(user, false, pageSize);
     }
@@ -253,83 +161,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long getAllAsUserLastPage(User user, boolean includeShared) {
-        return getAllAsUserLastPage(user, includeShared, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long getAllAsUserLastPage(User user, boolean includeShared, int pageSize) {
         return getLastPage(getAllAsUserCount(user, includeShared), pageSize);
     }
 
     @Override
-    public Collection<Order> filterOrders(User user, Map<Parameters, String> parameters) {
+    public Collection<Order> filterOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize) {
 
-        Collection<User> clinics = new ArrayList<>();
-        Collection<User> medics = new ArrayList<>();
-        Collection<String> patients = new ArrayList<>();
-        Collection<StudyType> studyTypes = new ArrayList<>();
-        LocalDate date = null;
-        boolean includeSharedIfMedic = true;
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
 
-        if (parameters.containsKey(Parameters.CLINIC)) {
-            int aux = Integer.parseInt(parameters.get(Parameters.CLINIC));
-            Optional<Clinic> clinicOptional = clinicService.findByUserId(aux);
-            clinicOptional.ifPresent(clinic -> clinics.add(clinic.getUser()));
-        }
-        if (parameters.containsKey(Parameters.MEDIC)) {
-            int aux = Integer.parseInt(parameters.get(Parameters.MEDIC));
-            Optional<Medic> medicOptional = medicService.findByUserId(aux);
-            medicOptional.ifPresent(medic -> medics.add(medic.getUser()));
-        }
-        if (parameters.containsKey(Parameters.PATIENT)) {
-            patients.add(parameters.get(Parameters.PATIENT));
-        }
-        if (parameters.containsKey(Parameters.DATE)) {
-            boolean wrongFormatting = false;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            try {
-                dateFormat.parse(parameters.get(Parameters.DATE).trim());
-            } catch (ParseException pe) {
-                wrongFormatting = true;
-            }
-            if (!wrongFormatting) {
-                date = LocalDate.parse(parameters.get(Parameters.DATE));
-            }
-        }
-        if (parameters.containsKey(Parameters.STUDYTYPE)) {
-            int aux = Integer.parseInt(parameters.get(Parameters.STUDYTYPE));
-            Optional<StudyType> studyTypeOptional = studyService.findById(aux);
-            studyTypeOptional.ifPresent(studyTypes::add);
-        }
-
-        return filterOrders(user, clinics, medics, patients, date, date, studyTypes, includeSharedIfMedic, DEFAULT_PAGE);
-    }
-
-    @Override
-    public Collection<Order> filterOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page) {
-        return filterOrders(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public Collection<Order> filterOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
         return orderDao.getFiltered(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
 
     @Override
-    public long filterOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
+    public long filterOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getFilteredCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
     }
 
     @Override
-    public long filterOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
-        return filterOrdersLastPage(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
-    public long filterOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
-        return getLastPage(filterOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
+    public long filterOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(filterOrdersCount(user, clinicUsersId, medicUsersId, patientEmails, fromDate, toDate, studyTypesId, includeSharedIfMedic), pageSize);
     }
 
     @Override
@@ -462,7 +320,7 @@ public class OrderServiceImpl implements OrderService {
         return collection == null || collection.isEmpty();
     }
 
-    private Collection<User> getClinicUsersFromId(Collection<Integer> clinicUsersId){
+    private Collection<User> getClinicUsersFromId(Collection<Integer> clinicUsersId) {
         Collection<User> clinicUsers = new ArrayList<>();
 
         if (!isEmpty(clinicUsersId)) {
@@ -475,7 +333,7 @@ public class OrderServiceImpl implements OrderService {
         return clinicUsers;
     }
 
-    private Collection<User> getMedicUsersFromId(Collection<Integer> medicUsersId){
+    private Collection<User> getMedicUsersFromId(Collection<Integer> medicUsersId) {
         Collection<User> medicUsers = new ArrayList<>();
 
         if (!isEmpty(medicUsersId)) {
@@ -488,7 +346,7 @@ public class OrderServiceImpl implements OrderService {
         return medicUsers;
     }
 
-    private Collection<StudyType> getStudyTypesFromId(Collection<Integer> studyTypesId){
+    private Collection<StudyType> getStudyTypesFromId(Collection<Integer> studyTypesId) {
         Collection<StudyType> studyTypes = new ArrayList<>();
 
         if (!isEmpty(studyTypesId)) {

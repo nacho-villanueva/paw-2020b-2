@@ -46,12 +46,19 @@ public class ShareRequestServiceImpl implements ShareRequestService{
     @Transactional
     @Override
     public void acceptOrDenyShare(ShareRequest request, boolean accepted) {
+
+        int PAGE_SIZE = 20;
+
         if(accepted){
-            final Collection<Order> orders = os.getAllAsPatientOfType(request.getPatientEmail(), request.getStudyType());
+            Collection<Order> orders;
+            int ordersLastPage = (int) os.getAllAsPatientOfTypeLastPage(request.getPatientEmail(), request.getStudyType(), PAGE_SIZE);
             Optional<Medic> maybeMedic = ms.findByUserId(request.getMedic().getUser().getId());
             if(maybeMedic.isPresent()) {
-                for (Order o : orders) {
-                    os.shareWithMedic(o, maybeMedic.get().getUser());
+                for (int page=1; page<=ordersLastPage; page++){
+                    orders = os.getAllAsPatientOfType(request.getPatientEmail(), request.getStudyType(), page, PAGE_SIZE);
+                    for (Order o : orders) {
+                        os.shareWithMedic(o, maybeMedic.get().getUser());
+                    }
                 }
             }
             mns.sendAcceptRequestMail(request);

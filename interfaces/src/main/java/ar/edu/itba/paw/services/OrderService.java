@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 public interface OrderService {
@@ -12,52 +11,27 @@ public interface OrderService {
 
     Order register(Medic medic, LocalDate date, Clinic clinic, String patientName, String patientEmail, StudyType studyType, String description, String identificationType, byte[] identification, String medicPlan, String medicPlanNumber);
 
-    //TODO: deprecated, remove usages when possible
-    Collection<Order> getAllAsClinic(User user);
-
-    Collection<Order> getAllAsClinic(User user, int page);
-
     Collection<Order> getAllAsClinic(User user, int page, int pageSize);
 
     long getAllAsClinicCount(User user);
 
-    long getAllAsClinicLastPage(User user);
-
     long getAllAsClinicLastPage(User user, int pageSize);
 
-    //TODO: deprecated, remove usages when possible
-    Collection<Order> getAllAsMedic(User user);
-
-    Collection<Order> getAllAsMedic(User user, int page);
-
     Collection<Order> getAllAsMedic(User user, int page, int pageSize);
-
-    Collection<Order> getAllAsMedic(User user, boolean includeShared, int page);
 
     Collection<Order> getAllAsMedic(User user, boolean includeShared, int page, int pageSize);
 
     long getAllAsMedicCount(User user);
 
-    long getAllAsMedicLastPage(User user);
-
     long getAllAsMedicLastPage(User user, int pageSize);
 
     long getAllAsMedicCount(User user, boolean includeShared);
 
-    long getAllAsMedicLastPage(User user, boolean includeShared);
-
     long getAllAsMedicLastPage(User user, boolean includeShared, int pageSize);
-
-    //TODO: deprecated, remove usages when possible
-    Collection<Order> getAllAsPatient(User user);
-
-    Collection<Order> getAllAsPatient(User user, int page);
 
     Collection<Order> getAllAsPatient(User user, int page, int pageSize);
 
     long getAllAsPatientCount(User user);
-
-    long getAllAsPatientLastPage(User user);
 
     long getAllAsPatientLastPage(User user, int pageSize);
 
@@ -65,27 +39,11 @@ public interface OrderService {
 
     Order changeOrderClinic(Order order, Clinic clinic);
 
-    //TODO: DEPRECATED, remove after removing deprecated filterOrders
-    enum Parameters{
-        DATE,
-        CLINIC,
-        MEDIC,
-        PATIENT,
-        STUDYTYPE;
-    }
+    Collection<Order> filterOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize);
 
-    //TODO: SHOULD BE DEPRECATED AFTER REFACTOR
-    Collection<Order> filterOrders(User user, Map<Parameters, String> parameters);
+    long filterOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic);
 
-    Collection<Order> filterOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page);
-
-    Collection<Order> filterOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize);
-
-    long filterOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
-
-    long filterOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
-
-    long filterOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
+    long filterOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize);
 
     Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize);
 
@@ -111,39 +69,21 @@ public interface OrderService {
 
     long patientEmailsFromFilteredOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize);
 
-    //TODO: deprecated, remove usages when possible
-    Collection<Order> getAllAsPatientOfType(String email, StudyType type);
-
-    Collection<Order> getAllAsPatientOfType(String email, StudyType type, int page);
-
     Collection<Order> getAllAsPatientOfType(String email, StudyType type, int page, int pageSize);
 
     long getAllAsPatientOfTypeCount(String email, StudyType type);
 
-    long getAllAsPatientOfTypeLastPage(String email, StudyType type);
-
     long getAllAsPatientOfTypeLastPage(String email, StudyType type, int pageSize);
 
-    //TODO: deprecated, remove usages when possible
-    Collection<Order> getAllAsUser(User user);
-
-    Collection<Order> getAllAsUser(User user, int page);
-
     Collection<Order> getAllAsUser(User user, int page, int pageSize);
-
-    Collection<Order> getAllAsUser(User user, boolean includeShared, int page);
 
     Collection<Order> getAllAsUser(User user, boolean includeShared, int page, int pageSize);
 
     long getAllAsUserCount(User user);
 
-    long getAllAsUserLastPage(User user);
-
     long getAllAsUserLastPage(User user, int pageSize);
 
     long getAllAsUserCount(User user, boolean includeShared);
-
-    long getAllAsUserLastPage(User user, boolean includeShared);
 
     long getAllAsUserLastPage(User user, boolean includeShared, int pageSize);
 }
