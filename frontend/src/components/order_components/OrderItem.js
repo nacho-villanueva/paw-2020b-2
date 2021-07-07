@@ -26,9 +26,6 @@ export function OrderItem(props) {
                             <p className="mb-1">
                             <Trans t={t} i18nKey="my-orders.orders.order.patient" values={{patient: order.patientName}} />
                             </p>
-                            <small>
-                            <Trans t={t} i18nKey="my-orders.orders.order.medic" values={{medic: order.medic}} />
-                            </small>
                         </div>
                     </Button>
 
