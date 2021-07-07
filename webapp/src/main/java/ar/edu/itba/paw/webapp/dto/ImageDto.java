@@ -18,7 +18,7 @@ public class ImageDto {
     @Pattern(regexp="^image\\/[a-zA-Z+]*", message="Content type must match " + CONTENT_TYPE + ".")
     String contentType;
 
-    @NotEmpty(message="Please provide an image.")
+    @NotBlank(message="Please provide an image.")
     @ByteArray(max=32000000, message="Please provide a valid byte array for the image.") // 30mb aprox, based on limit set on Model/Database
     String image;
 
