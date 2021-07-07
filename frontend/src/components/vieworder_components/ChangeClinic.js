@@ -34,7 +34,7 @@ export function ChangeClinic(props){
     //what we have to send out
     const sendableFilters = {
         clinicName: '',
-        insurancePlan: '',
+        plan: '',
         studyType: '',
         days: new Array(7),
         fromTime: new Array(7),
@@ -113,14 +113,14 @@ export function ChangeClinic(props){
             let auxFilters = searchFilters;
             auxFilters.studyType = auxInputs.studyType !== '-1' ?  auxInputs.studyType : '';
             auxFilters.clinicName = auxInputs.clinicName !== -1 ?  auxInputs.clinicName : '';
-            auxFilters.insurancePlan = auxInputs.insurancePlan !== -1 ?  auxInputs.insurancePlan : '';
+            auxFilters.plan = auxInputs.insurancePlan !== -1 ?  auxInputs.insurancePlan : '';
             auxFilters.days.fill(0);
             auxFilters.fromTime.fill(0);
             auxFilters.toTime.fill(0);
 
 
             for(let idx = 1; idx <= 7; idx++){
-                //console.log("checking days", idx)
+                console.log("checking days", idx)
                 auxInputs.schedule[idx - 1] = getDaySchedule(event, idx - 1);
                 if(auxInputs.schedule[idx - 1].checked === true){
                     auxFilters.days[idx - 1] = 1;
