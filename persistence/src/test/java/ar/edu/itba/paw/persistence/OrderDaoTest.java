@@ -56,6 +56,11 @@ public class OrderDaoTest {
     private static final List<String> descriptionListSharedToSharedMedic = new ArrayList<>(Arrays.asList("Description 2"));
     private static final List<String> descriptionListParticipatedByMedic = new ArrayList<>(Arrays.asList("Description 1","Description 2","Description 3"));
 
+    private static final List<Integer> studyIdListWithOrders = new ArrayList<>(Arrays.asList(1));
+    private static final List<String> patientEmailsAssingedToMedic = new ArrayList<>(Arrays.asList("patient1@patient.com", "patient2@patient.com"));
+    private static final List<Integer> clinicIdListWithOrders = new ArrayList<>(Arrays.asList(3));
+    private static final List<Integer> medicIdListWithOrders = new ArrayList<>(Arrays.asList(2, 22));
+
     private static final User sharedUserMedic = new User(22,"twentyone@twentyone.com","twentyonePass",User.MEDIC_ROLE_ID);
     private static final Medic sharedMedic = new Medic(sharedUserMedic, "Medic twentyone", null, "image/png", new byte[0], "1234567", true);
 
@@ -282,5 +287,191 @@ public class OrderDaoTest {
         Assert.assertNotNull(orders);
         Assert.assertEquals(expectedCount,orders.size());
         Assert.assertTrue(descriptionListOwnedByMedic.contains(orders.stream().findAny().get().getDescription()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantStudyTypesNoParams(){
+        // should return the same as getting all orders of the user
+
+        long expectedCount = clinicIdListWithOrders.size();
+
+        final Collection<StudyType> studyTypes = dao.getRelevantStudyTypes(userMedic,null, null, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(studyTypes);
+        Assert.assertEquals(expectedCount,studyTypes.size());
+        Assert.assertTrue(studyIdListWithOrders.contains(studyTypes.stream().findAny().get().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantStudyTypesNoSuchPatientEmail(){
+
+        String patientEmail = invalidUserClinic.getEmail();
+        Collection<String> patientEmails = new ArrayList<>(Arrays.asList(patientEmail));
+
+        long expectedCount = 0;
+
+        final Collection<StudyType> studyTypes = dao.getRelevantStudyTypes(userMedic,null, null, patientEmails, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(studyTypes);
+        Assert.assertEquals(expectedCount,studyTypes.size());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantStudyTypesOnlyPatientEmail(){
+
+        String patientEmail = patientEmailsAssingedToMedic.get(0);
+        Collection<String> patientEmails = new ArrayList<>(Arrays.asList(patientEmail));
+
+        long expectedCount = studyIdListWithOrders.size();
+
+        final Collection<StudyType> studyTypes = dao.getRelevantStudyTypes(userMedic,null, null, patientEmails, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(studyTypes);
+        Assert.assertEquals(expectedCount,studyTypes.size());
+        Assert.assertTrue(studyIdListWithOrders.contains(studyTypes.stream().findAny().get().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantClinicsNoParams(){
+        // should return the same as getting all orders of the user
+
+        long expectedCount = studyIdListWithOrders.size();
+
+        final Collection<Clinic> clinics = dao.getRelevantClinics(userMedic,null, null, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(clinics);
+        Assert.assertEquals(expectedCount, clinics.size());
+        Assert.assertTrue(clinicIdListWithOrders.contains(clinics.stream().findAny().get().getUser().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantClinicsStudyTypeOnly(){
+
+        List<StudyType> studyTypeList = new ArrayList<>(Arrays.asList(studyType));
+
+        long expectedCount = clinicIdListWithOrders.size();
+
+        final Collection<Clinic> clinics = dao.getRelevantClinics(userMedic,null, null, null, null, null, studyTypeList,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(clinics);
+        Assert.assertEquals(expectedCount, clinics.size());
+        Assert.assertTrue(clinicIdListWithOrders.contains(clinics.stream().findAny().get().getUser().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantClinicsNoSuchStudyType(){
+
+        List<User> clinicList = new ArrayList<>(Arrays.asList(invalidUserClinic));
+
+        long expectedCount = 0;
+
+        final Collection<Clinic> clinics = dao.getRelevantClinics(userMedic, clinicList, null, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(clinics);
+        Assert.assertEquals(expectedCount, clinics.size());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantMedicsNoParams(){
+        // should return the same as getting all orders of the user
+
+        long expectedCount = medicIdListWithOrders.size();
+
+        final Collection<Medic> medics = dao.getRelevantMedics(userMedic,null, null, null, null, null, null,true,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(medics);
+        Assert.assertEquals(expectedCount, medics.size());
+        Assert.assertTrue(medicIdListWithOrders.contains(medics.stream().findAny().get().getUser().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantMedicsClinicOnly(){
+
+        List<User> clinicList = new ArrayList<>(Arrays.asList(userClinic));
+
+        long expectedCount = medicIdListWithOrders.size();
+
+        final Collection<Medic> medics = dao.getRelevantMedics(userMedic,clinicList, null, null, null, null, null,true,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(medics);
+        Assert.assertEquals(expectedCount, medics.size());
+        Assert.assertTrue(medicIdListWithOrders.contains(medics.stream().findAny().get().getUser().getId()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantMedicsNoSuchClinic(){
+
+        List<User> clinicList = new ArrayList<>(Arrays.asList(invalidUserClinic));
+
+        long expectedCount = 0;
+
+        final Collection<Medic> medics = dao.getRelevantMedics(userMedic, clinicList, null, null, null, null, null,true,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(medics);
+        Assert.assertEquals(expectedCount, medics.size());
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantPatientEmailsNoParams(){
+        // should return the same as getting all orders of the user
+
+        long expectedCount = patientEmailsAssingedToMedic.size();
+
+        final Collection<String> patientEmails = dao.getRelevantPatientEmails(userMedic,null, null, null, null, null, null,true,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(patientEmails);
+        Assert.assertEquals(expectedCount, patientEmails.size());
+        Assert.assertTrue(patientEmailsAssingedToMedic.contains(patientEmails.stream().findAny().get()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantPatientEmailsMedicOnly(){
+
+        List<User> medicList = new ArrayList<>(Arrays.asList(userMedic));
+
+        long expectedCount = patientEmailsAssingedToMedic.size();
+
+        final Collection<String> patientEmails = dao.getRelevantPatientEmails(userMedic, null, medicList, null, null, null, null,false, DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(patientEmails);
+        Assert.assertEquals(expectedCount, patientEmails.size());
+        Assert.assertTrue(patientEmailsAssingedToMedic.contains(patientEmails.stream().findAny().get()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    public void testGetRelevantPatientEmailsNoSuchMedic(){
+
+        List<User> medicList = new ArrayList<>(Arrays.asList(invalidUserMedic));
+
+        long expectedCount = 0;
+
+        final Collection<String> patientEmails = dao.getRelevantPatientEmails(userMedic, null, medicList, null, null, null, null,false,DEFAULT_PAGE, PAGE_SIZE_WITH_ALL_ORDERS);
+
+        Assert.assertNotNull(patientEmails);
+        Assert.assertEquals(expectedCount, patientEmails.size());
     }
 }

@@ -76,33 +76,13 @@ public class OrderController {
         if (user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Collection<User> clinicUsers = new ArrayList<>();
-        Collection<User> medicUsers = new ArrayList<>();
+        Collection<Integer> clinicUsers = orderFilterDto.getClinics();
+        Collection<Integer> medicUsers = orderFilterDto.getMedics();
         Collection<String> patientEmails = orderFilterDto.getPatientEmails();
         LocalDate fromDate = orderFilterDto.getFromDate();
         LocalDate toDate = orderFilterDto.getToDate();
-        Collection<StudyType> studyTypes = new ArrayList<>();
+        Collection<Integer> studyTypes = orderFilterDto.getStudyTypes();
         boolean includeShared = orderFilterDto.isIncludeShared();
-        if (!isGetAllQuery) {
-            if (!isEmpty(orderFilterDto.getClinics())) {
-                for (Integer id : orderFilterDto.getClinics()) {
-                    if (id != null)
-                        clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
-                }
-            }
-
-            if (!isEmpty(orderFilterDto.getMedics())) {
-                for (Integer id : orderFilterDto.getMedics()) {
-                    if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
-                }
-            }
-
-            if (!isEmpty(orderFilterDto.getStudyTypes())) {
-                for (Integer id : orderFilterDto.getStudyTypes()) {
-                    if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
-                }
-            }
-        }
 
         long lastPage;
         if (isGetAllQuery) {
@@ -154,7 +134,6 @@ public class OrderController {
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if (page > MIN_PAGE) {
-
             response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
         }
 
@@ -464,31 +443,13 @@ public class OrderController {
         if (user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Collection<User> clinicUsers = new ArrayList<>();
-        Collection<User> medicUsers = new ArrayList<>();
+        Collection<Integer> clinicUsers = orderFilterDto.getClinics();
+        Collection<Integer> medicUsers = orderFilterDto.getMedics();
         Collection<String> patientEmails = orderFilterDto.getPatientEmails();
         LocalDate fromDate = orderFilterDto.getFromDate();
         LocalDate toDate = orderFilterDto.getToDate();
-        Collection<StudyType> studyTypes = new ArrayList<>();
+        Collection<Integer> studyTypes = orderFilterDto.getStudyTypes();
         boolean includeShared = orderFilterDto.isIncludeShared();
-        if (!isEmpty(orderFilterDto.getClinics())) {
-            for (Integer id : orderFilterDto.getClinics()) {
-                if (id != null)
-                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getMedics())) {
-            for (Integer id : orderFilterDto.getMedics()) {
-                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getStudyTypes())) {
-            for (Integer id : orderFilterDto.getStudyTypes()) {
-                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
-            }
-        }
 
         long lastPage = orderService.studyTypesFromFilteredOrdersLastPage(
                 user,
@@ -561,31 +522,13 @@ public class OrderController {
         if (user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Collection<User> clinicUsers = new ArrayList<>();
-        Collection<User> medicUsers = new ArrayList<>();
+        Collection<Integer> clinicUsers = orderFilterDto.getClinics();
+        Collection<Integer> medicUsers = orderFilterDto.getMedics();
         Collection<String> patientEmails = orderFilterDto.getPatientEmails();
         LocalDate fromDate = orderFilterDto.getFromDate();
         LocalDate toDate = orderFilterDto.getToDate();
-        Collection<StudyType> studyTypes = new ArrayList<>();
+        Collection<Integer> studyTypes = orderFilterDto.getStudyTypes();
         boolean includeShared = orderFilterDto.isIncludeShared();
-        if (!isEmpty(orderFilterDto.getClinics())) {
-            for (Integer id : orderFilterDto.getClinics()) {
-                if (id != null)
-                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getMedics())) {
-            for (Integer id : orderFilterDto.getMedics()) {
-                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getStudyTypes())) {
-            for (Integer id : orderFilterDto.getStudyTypes()) {
-                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
-            }
-        }
 
         long lastPage = orderService.clinicsFromFilteredOrdersLastPage(
                 user,
@@ -657,31 +600,13 @@ public class OrderController {
         if (user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Collection<User> clinicUsers = new ArrayList<>();
-        Collection<User> medicUsers = new ArrayList<>();
+        Collection<Integer> clinicUsers = orderFilterDto.getClinics();
+        Collection<Integer> medicUsers = orderFilterDto.getMedics();
         Collection<String> patientEmails = orderFilterDto.getPatientEmails();
         LocalDate fromDate = orderFilterDto.getFromDate();
         LocalDate toDate = orderFilterDto.getToDate();
-        Collection<StudyType> studyTypes = new ArrayList<>();
+        Collection<Integer> studyTypes = orderFilterDto.getStudyTypes();
         boolean includeShared = orderFilterDto.isIncludeShared();
-        if (!isEmpty(orderFilterDto.getClinics())) {
-            for (Integer id : orderFilterDto.getClinics()) {
-                if (id != null)
-                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getMedics())) {
-            for (Integer id : orderFilterDto.getMedics()) {
-                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getStudyTypes())) {
-            for (Integer id : orderFilterDto.getStudyTypes()) {
-                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
-            }
-        }
 
         long lastPage = orderService.medicsFromFilteredOrdersLastPage(
                 user,
@@ -754,31 +679,13 @@ public class OrderController {
         if (user == null)
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        Collection<User> clinicUsers = new ArrayList<>();
-        Collection<User> medicUsers = new ArrayList<>();
+        Collection<Integer> clinicUsers = orderFilterDto.getClinics();
+        Collection<Integer> medicUsers = orderFilterDto.getMedics();
         Collection<String> patientEmails = orderFilterDto.getPatientEmails();
         LocalDate fromDate = orderFilterDto.getFromDate();
         LocalDate toDate = orderFilterDto.getToDate();
-        Collection<StudyType> studyTypes = new ArrayList<>();
+        Collection<Integer> studyTypes = orderFilterDto.getStudyTypes();
         boolean includeShared = orderFilterDto.isIncludeShared();
-        if (!isEmpty(orderFilterDto.getClinics())) {
-            for (Integer id : orderFilterDto.getClinics()) {
-                if (id != null)
-                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getMedics())) {
-            for (Integer id : orderFilterDto.getMedics()) {
-                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
-            }
-        }
-
-        if (!isEmpty(orderFilterDto.getStudyTypes())) {
-            for (Integer id : orderFilterDto.getStudyTypes()) {
-                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
-            }
-        }
 
         long lastPage = orderService.patientEmailsFromFilteredOrdersLastPage(
                 user,
