@@ -16,11 +16,14 @@ export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
         //eww...
         aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
     });
-    setOrders(aux);
+    setOrders((prevState) => {
+        let next = aux;
+        return {...prevState, ...next};
+    });
 }
 
 export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList){
-    apiInstance.get("/study-types")
+    apiInstance.get("/orders/filters/study-type")
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
@@ -79,7 +82,37 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
 }
 
 export async function GetMedics(setMedicsList, update, setUpdate){
+    apiInstance.get("/orders/filters/medic")
+    .then((r) => {
+        let stl = [];
+        for(var idx in r.data){
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
+        }
+        setMedicsList(stl);
+        setUpdate((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
+        return r.status;
+    })
+    .catch((error) => {return -1;} );
+}
 
+export async function GetClinics(setClinicsList, update, setUpdate){
+    apiInstance.get("/orders/filters/clinic")
+    .then((r) => {
+        let stl = [];
+        for(var idx in r.data){
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
+        }
+        setClinicsList(stl);
+        setUpdate((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
+        return r.status;
+    })
+    .catch((error) => {return -1;} );
 }
 
 export async function UpdateOrderClinic(orderId, clinic, setStatusCode, setErrors){

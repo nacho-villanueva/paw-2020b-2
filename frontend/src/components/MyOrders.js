@@ -1,5 +1,5 @@
 import {useState, useLayoutEffect, useEffect} from "react";
-import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink } from "../api/Orders";
+import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink, GetMedics, GetClinics } from "../api/Orders";
 import {useSelector} from "react-redux";
 import { Form, Button} from "react-bootstrap";
 import { Trans, useTranslation } from 'react-i18next'
@@ -49,8 +49,14 @@ function MyOrders(){
             let aux = orders;
             Promise.all(orders.map(async (order, index) => {
                 if(order["clinic"].includes("http")){
-                    await InternalQuery(order["clinic"]).then((res) => {aux[index]["clinic"] = res.name;});
-                    setOrders(aux);
+                    await InternalQuery(order["clinic"]).then((res) => {
+                        aux[index]["clinic"] = res.name;
+                        setOrders((prevState) => {
+                            let next = aux;
+                            return {...prevState, ...next};
+                        });
+                    })
+                    //setOrders(aux);
                     setCount((prevState) => {
                         let next = prevState + 1;
                         return {...prevState, ...next};
@@ -61,8 +67,14 @@ function MyOrders(){
                     })
                 }
                 if(order["medic"].includes("http")){
-                    await InternalQuery(order["medic"]).then((res) => {aux[index]["medic"] = res.name;});
-                    setOrders(aux);
+                    await InternalQuery(order["medic"]).then((res) => {
+                        aux[index]["medic"] = res.name;
+                        setOrders((prevState) => {
+                            let next = aux;
+                            return {...prevState, ...next};
+                        });
+                    });
+                    //setOrders(aux);
                     setCount((prevState) => {
                         let next = prevState + 1;
                         return {...prevState, ...next};
@@ -167,15 +179,17 @@ function MyOrders(){
     useLayoutEffect( () => {
         if(searching){
             fetchAndChangePage(searchFilters.page);
-            GetStudyTypes(setStudyTypesList, update, setUpdate);
             setSearching(false);
         }
     }, [searching]);
+
+
     //calling on mount...
     useEffect( () => {
         if(load){
             fetchAndChangePage(searchFilters.page);
-            GetStudyTypes(setStudyTypesList, update, setUpdate);
+            GetMedics(setMedicsList, update, setUpdate);
+            GetClinics(setClinicsList, update, setUpdate);
             setLoad(false);
         }
     }, []);
