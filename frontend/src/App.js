@@ -9,7 +9,8 @@ import {store} from "./redux";
 import {StatusType} from "./redux/actions/actions";
 import {Roles} from "./constants/Roles";
 import RegisterPage from "./components/registration/RegisterPage";
-import TokenVerificationPage from "./components/TokenVerificationPage";
+
+import ClinicSearch from "./components/ClinicSearch.js";
 
 function App() {
   const status = useSelector(state => state.auth.status);
@@ -23,6 +24,10 @@ function App() {
 
             <Route path="/user-verification">
               <LandingPage tokenValidation={true}/>
+            </Route>
+
+            <Route path ="/search-clinics">
+              <ClinicSearch />
             </Route>
 
             <Route path="/" exact>
