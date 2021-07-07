@@ -87,6 +87,46 @@ public interface OrderService {
 
     long filterOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
 
+    Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page);
+
+    Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize);
+
+    long studyTypesFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long studyTypesFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long studyTypesFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
+
+    Collection<Clinic> clinicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page);
+
+    Collection<Clinic> clinicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize);
+
+    long clinicsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long clinicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long clinicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
+
+    Collection<Medic> medicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page);
+
+    Collection<Medic> medicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize);
+
+    long medicsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long medicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long medicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
+
+    Collection<String> patientEmailsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page);
+
+    Collection<String> patientEmailsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize);
+
+    long patientEmailsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long patientEmailsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic);
+
+    long patientEmailsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize);
+
     //TODO: deprecated, remove usages when possible
     Collection<Order> getAllAsPatientOfType(String email, StudyType type);
 

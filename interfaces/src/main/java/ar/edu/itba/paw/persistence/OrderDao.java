@@ -42,6 +42,22 @@ public interface OrderDao {
 
     Collection<Order> getFiltered(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
 
+    Collection<StudyType> getRelevantStudyTypes(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
+
+    Collection<Clinic> getRelevantClinics(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
+
+    Collection<Medic> getRelevantMedics(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
+
+    Collection<String> getRelevantPatientEmails(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic, int page, int pageSize);
+
+    long getRelevantStudyTypesCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
+
+    long getRelevantClinicsCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
+
+    long getRelevantMedicsCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
+
+    long getRelevantPatientEmailsCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
+
     long getFilteredCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> types, boolean includeSharedIfMedic);
 
     Collection<Order> getAllAsUser(User user, boolean includeSharedIfMedic, int page, int pageSize);

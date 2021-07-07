@@ -82,6 +82,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, "/medical-fields").authenticated()
                     //Rules for /orders
                     .antMatchers(HttpMethod.GET, "/orders").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
+                    .antMatchers(HttpMethod.GET, "/orders/filters/**").hasAnyRole("PATIENT","MEDIC","ADMIN","CLINIC")
                     .antMatchers(HttpMethod.GET, "/orders/**/shared-with").hasRole("PATIENT")
                     .antMatchers(HttpMethod.GET, "/orders/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/orders").hasRole("MEDIC")

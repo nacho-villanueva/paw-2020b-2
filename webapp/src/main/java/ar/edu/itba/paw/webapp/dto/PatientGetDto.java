@@ -11,7 +11,7 @@ import java.util.Objects;
 public class PatientGetDto {
 
     // Constants
-    public static final String CONTENT_TYPE = "application/vnd.study-type.v1";
+    public static final String CONTENT_TYPE = "application/vnd.patient.v1";
     public static final String REQUEST_PATH = "patients";
 
     // Variables
@@ -30,7 +30,11 @@ public class PatientGetDto {
         // Use factory methods
     }
 
-    public PatientGetDto(Patient patient, UriInfo uriInfo){
+    public PatientGetDto(String user) {
+        this.user = user;
+    }
+
+    public PatientGetDto(Patient patient, UriInfo uriInfo) {
         UriBuilder userUrl = uriInfo.getBaseUriBuilder().path(UserGetDto.REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
         this.user = userUrl.build().toString();
         this.name = patient.getName();

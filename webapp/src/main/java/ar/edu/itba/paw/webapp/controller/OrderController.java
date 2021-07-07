@@ -445,7 +445,394 @@ public class OrderController {
         return Response.noContent().build();
     }
 
-    // auxiliar functions
+    @GET
+    @Path("/filters/study-type")
+    @Produces(value = {MediaType.APPLICATION_JSON, StudyTypeDto.CONTENT_TYPE + "+json"})
+    public Response getRelevantStudyTypes(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @Valid @BeanParam OrderFilterDto orderFilterDto
+    ) {
+        Response.ResponseBuilder response;
+
+        // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
+        User user = getLoggedUser();
+        if (user == null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+        Collection<User> clinicUsers = new ArrayList<>();
+        Collection<User> medicUsers = new ArrayList<>();
+        Collection<String> patientEmails = orderFilterDto.getPatientEmails();
+        LocalDate fromDate = orderFilterDto.getFromDate();
+        LocalDate toDate = orderFilterDto.getToDate();
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        boolean includeShared = orderFilterDto.isIncludeShared();
+        if (!isEmpty(orderFilterDto.getClinics())) {
+            for (Integer id : orderFilterDto.getClinics()) {
+                if (id != null)
+                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getMedics())) {
+            for (Integer id : orderFilterDto.getMedics()) {
+                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getStudyTypes())) {
+            for (Integer id : orderFilterDto.getStudyTypes()) {
+                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
+            }
+        }
+
+        long lastPage = orderService.studyTypesFromFilteredOrdersLastPage(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                perPage
+        );
+
+        if (lastPage <= 0 || page > lastPage)
+            return Response.noContent().build();
+
+        Collection<StudyType> studyTypeCollection = orderService.studyTypesFromFilteredOrders(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                page,
+                perPage
+        );
+
+        Collection<StudyTypeDto> studyTypeDtos =
+                (studyTypeCollection.stream().map(st -> (new StudyTypeDto(st, uriInfo))).collect(Collectors.toList()));
+        EntityTag entityTag = new EntityTag(Integer.toHexString(studyTypeDtos.hashCode()));
+        response = Response.ok(new GenericEntity<Collection<StudyTypeDto>>(studyTypeDtos) {
+        })
+                .type(StudyTypeDto.CONTENT_TYPE + "+json")
+                .tag(entityTag);
+
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+        if (page > MIN_PAGE) {
+            response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
+        }
+
+        if (page < lastPage) {
+            response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
+        }
+
+        // Links that always apply
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(), "first");
+        response.link(uriBuilder.replaceQueryParam("page", lastPage).build(), "last");
+
+        return response.build();
+    }
+
+    @GET
+    @Path("/filters/clinic")
+    @Produces(value = {MediaType.APPLICATION_JSON, ClinicGetDto.CONTENT_TYPE + "+json"})
+    public Response getRelevantClinics(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @Valid @BeanParam OrderFilterDto orderFilterDto
+    ) {
+        Response.ResponseBuilder response;
+
+        // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
+        User user = getLoggedUser();
+        if (user == null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+        Collection<User> clinicUsers = new ArrayList<>();
+        Collection<User> medicUsers = new ArrayList<>();
+        Collection<String> patientEmails = orderFilterDto.getPatientEmails();
+        LocalDate fromDate = orderFilterDto.getFromDate();
+        LocalDate toDate = orderFilterDto.getToDate();
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        boolean includeShared = orderFilterDto.isIncludeShared();
+        if (!isEmpty(orderFilterDto.getClinics())) {
+            for (Integer id : orderFilterDto.getClinics()) {
+                if (id != null)
+                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getMedics())) {
+            for (Integer id : orderFilterDto.getMedics()) {
+                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getStudyTypes())) {
+            for (Integer id : orderFilterDto.getStudyTypes()) {
+                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
+            }
+        }
+
+        long lastPage = orderService.clinicsFromFilteredOrdersLastPage(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                perPage
+        );
+
+        if (lastPage <= 0 || page > lastPage)
+            return Response.noContent().build();
+
+        Collection<Clinic> clinicCollection = orderService.clinicsFromFilteredOrders(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                page,
+                perPage
+        );
+
+        Collection<ClinicGetDto> clinicDtos = (clinicCollection.stream().map(c -> (new ClinicGetDto(c, uriInfo))).collect(Collectors.toList()));
+        EntityTag entityTag = new EntityTag(Integer.toHexString(clinicDtos.hashCode()));
+        response = Response.ok(new GenericEntity<Collection<ClinicGetDto>>(clinicDtos) {
+        })
+                .type(ClinicGetDto.CONTENT_TYPE + "+json")
+                .tag(entityTag);
+
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+        if (page > MIN_PAGE) {
+            response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
+        }
+
+        if (page < lastPage) {
+            response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
+        }
+
+        // Links that always apply
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(), "first");
+        response.link(uriBuilder.replaceQueryParam("page", lastPage).build(), "last");
+
+        return response.build();
+    }
+
+    @GET
+    @Path("/filters/medic")
+    @Produces(value = {MediaType.APPLICATION_JSON, MedicGetDto.CONTENT_TYPE + "+json"})
+    public Response getRelevantMedics(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @Valid @BeanParam OrderFilterDto orderFilterDto
+    ) {
+        Response.ResponseBuilder response;
+
+        // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
+        User user = getLoggedUser();
+        if (user == null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+        Collection<User> clinicUsers = new ArrayList<>();
+        Collection<User> medicUsers = new ArrayList<>();
+        Collection<String> patientEmails = orderFilterDto.getPatientEmails();
+        LocalDate fromDate = orderFilterDto.getFromDate();
+        LocalDate toDate = orderFilterDto.getToDate();
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        boolean includeShared = orderFilterDto.isIncludeShared();
+        if (!isEmpty(orderFilterDto.getClinics())) {
+            for (Integer id : orderFilterDto.getClinics()) {
+                if (id != null)
+                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getMedics())) {
+            for (Integer id : orderFilterDto.getMedics()) {
+                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getStudyTypes())) {
+            for (Integer id : orderFilterDto.getStudyTypes()) {
+                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
+            }
+        }
+
+        long lastPage = orderService.medicsFromFilteredOrdersLastPage(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                perPage
+        );
+
+        if (lastPage <= 0 || page > lastPage)
+            return Response.noContent().build();
+
+        Collection<Medic> medicCollection = orderService.medicsFromFilteredOrders(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                page,
+                perPage
+        );
+
+        Collection<MedicGetDto> medicDtos =
+                medicCollection.stream().map(m -> new MedicGetDto(m, uriInfo)).collect(Collectors.toList());
+        EntityTag entityTag = new EntityTag(Integer.toHexString(medicDtos.hashCode()));
+        response = Response.ok(new GenericEntity<Collection<MedicGetDto>>(medicDtos) {
+        })
+                .type(MedicGetDto.CONTENT_TYPE + "+json")
+                .tag(entityTag);
+
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+        if (page > MIN_PAGE) {
+            response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
+        }
+
+        if (page < lastPage) {
+            response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
+        }
+
+        // Links that always apply
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(), "first");
+        response.link(uriBuilder.replaceQueryParam("page", lastPage).build(), "last");
+
+        return response.build();
+    }
+
+    @GET
+    @Path("/filters/patient-email")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getRelevantPatientEmails(
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)
+            @IntegerSize(min = MIN_PAGE, message = "Page number must be at least {min}")
+                    Integer page,
+            @QueryParam("per_page") @DefaultValue(DEFAULT_PAGE_SIZE)
+            @IntegerSize(min = MIN_PAGE_SIZE, max = MAX_PAGE_SIZE, message = "Number of entries per page must be between {min} and {max}")
+                    Integer perPage,
+            @Valid @BeanParam OrderFilterDto orderFilterDto
+    ) {
+        Response.ResponseBuilder response;
+
+        // we only want to fetch the orders that belong to the requesting user, or the ones they have access to (through sharing if medic)
+        User user = getLoggedUser();
+        if (user == null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+        Collection<User> clinicUsers = new ArrayList<>();
+        Collection<User> medicUsers = new ArrayList<>();
+        Collection<String> patientEmails = orderFilterDto.getPatientEmails();
+        LocalDate fromDate = orderFilterDto.getFromDate();
+        LocalDate toDate = orderFilterDto.getToDate();
+        Collection<StudyType> studyTypes = new ArrayList<>();
+        boolean includeShared = orderFilterDto.isIncludeShared();
+        if (!isEmpty(orderFilterDto.getClinics())) {
+            for (Integer id : orderFilterDto.getClinics()) {
+                if (id != null)
+                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getMedics())) {
+            for (Integer id : orderFilterDto.getMedics()) {
+                if (id != null) medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
+            }
+        }
+
+        if (!isEmpty(orderFilterDto.getStudyTypes())) {
+            for (Integer id : orderFilterDto.getStudyTypes()) {
+                if (id != null) studyTypeService.findById(id).ifPresent(studyTypes::add);
+            }
+        }
+
+        long lastPage = orderService.patientEmailsFromFilteredOrdersLastPage(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                perPage
+        );
+
+        if (lastPage <= 0 || page > lastPage)
+            return Response.noContent().build();
+
+        Collection<String> patientEmailCollection = orderService.patientEmailsFromFilteredOrders(
+                user,
+                clinicUsers,
+                medicUsers,
+                patientEmails,
+                fromDate,
+                toDate,
+                studyTypes,
+                includeShared,
+                page,
+                perPage
+        );
+
+        EntityTag entityTag = new EntityTag(Integer.toHexString(patientEmailCollection.hashCode()));
+        Collection<PatientGetDto> patientDtos =
+                patientEmailCollection.stream().map(p -> new PatientGetDto(p)).collect(Collectors.toList());
+        response = Response.ok(new GenericEntity<Collection<PatientGetDto>>(patientDtos) {
+        })
+                .type(PatientGetDto.CONTENT_TYPE + "+json")
+                .tag(entityTag);
+
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+        if (page > MIN_PAGE) {
+            response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
+        }
+
+        if (page < lastPage) {
+            response.link(uriBuilder.replaceQueryParam("page", page + 1).build(), "next");
+        }
+
+        // Links that always apply
+        response.link(uriBuilder.replaceQueryParam("page", MIN_PAGE).build(), "first");
+        response.link(uriBuilder.replaceQueryParam("page", lastPage).build(), "last");
+
+        return response.build();
+    }
+
+    // auxiliary functions
     private boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
