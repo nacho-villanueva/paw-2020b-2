@@ -1065,7 +1065,7 @@ function CreateOrder(){
                                         </div>
                                         <img
                                             className="align-self-end ml-3 signature"
-                                            alt="medic's signature"
+                                            alt={t("create-order.steps.step-3.form.medic-sign-alt")}
                                             src={image}
                                             key={"img-"+count}
                                         />

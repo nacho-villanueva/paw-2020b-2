@@ -105,7 +105,7 @@
               },
               "missing-field": "Por favor ingrese el correo electrónico del $t(role.patient)"
             },
-            "label": "Dirección de Correo del $t(role.patient)"
+            "label": "Correo electrónico del $t(role.patient)"
           },
           "patient-insurance-number": {
             "errors": {
@@ -486,6 +486,47 @@
     "medic": "Médico",
     "patient": "Paciente",
     "user": "Usuario"
+  },
+  "my-orders":{
+    "orders":{
+      "title": "Órdenes",
+      "no-orders": "No se han encontrado órdenes.",
+      "order":{
+        "clinic": "Clínica: {{clinic}}",
+        "patient": "Paciente: {{patient}}",
+        "Medic": "Médico: {{medic}}",
+        "study-type": "Tipo de estudio: {{studyType}}",
+        "date": "Fecha: {{date}}"
+      }
+    },
+    "filters":{
+      "title": "Filtros ",
+      "study-type": {
+        "label": "Tipo de estudio",
+        "placeholder": "Cualquier Tipo de estudio "
+      },
+      "clinic": {
+        "label": "Clinic",
+        "placeholder": "Cualquier clínica "
+      },
+      "medic": {
+        "label": "Médico",
+        "placeholder": "Cualquier médico "
+      },
+      "patient-email": {
+        "label": "Correo electrónico del paciente "
+      },
+      "from-time": {
+        "label": "Desde"
+      },
+      "to-time": {
+        "label": "Hasta"
+      },
+      "buttons": {
+        "search": "Buscar",
+        "reset": "Restablecer filtros "
+      }
+    }
   },
   "view-order": {
     "order" : {

@@ -2,6 +2,7 @@ import {useState, useLayoutEffect, useEffect} from "react";
 import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink } from "../api/Orders";
 import {useSelector} from "react-redux";
 import { Form, Button} from "react-bootstrap";
+import { Trans, useTranslation } from 'react-i18next'
 
 import "./Style/MyOrders.css";
 import { GetStudyTypes, InternalQuery } from "../api/Auth";
@@ -12,6 +13,9 @@ import { PaginationComponent } from "./order_components/PaginationComponent";
 import { getValueFromEvent } from "../api/utils";
 
 function MyOrders(){
+
+    const { t } = useTranslation();
+
     const roleType = useSelector(state => state.auth.role);
     const status = useSelector(state => state.auth.status);
     const auth = useSelector(state => state.auth);
@@ -189,7 +193,7 @@ function MyOrders(){
     const NoOrdersFound = () => {
         return(
             <section>
-                <h1 className="text-center mt-5 py-5">It seems there are no orders to be shown.</h1>
+                <h1 className="text-center mt-5 py-5"><Trans t={t} i18nKey="my-orders.orders.no-orders"/></h1>
             </section>
         );
     }
@@ -221,7 +225,7 @@ function MyOrders(){
         <div className="custom-row justify-content-center mt-5" key={"my-orders_" + update}>
             <div className="card bg-light float-left filters-card reorder">
                 <div className="card-body">
-                    <p className="card-title h4">Filters</p>
+                    <p className="card-title h4"><Trans t={t} i18nKey="my-orders.filters.title"/></p>
                     <hr/>
                     <MyOrdersFilters
                         filtersValidated={filtersValidated}
@@ -243,7 +247,7 @@ function MyOrders(){
             </div>
             <div className="card bg-light float-right orders-card">
                 <div className="card-body">
-                    <p className="card-title h4">Orders</p>
+                    <p className="card-title h4"><Trans t={t} i18nKey="my-orders.orders.title"/></p>
                     <hr className="mt-3 mb-4"/>
                     {orders.length === 0 ?
                         <NoOrdersFound/> :

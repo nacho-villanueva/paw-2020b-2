@@ -497,6 +497,47 @@
     "patient": "Patient",
     "user": "User"
   },
+  "my-orders":{
+    "orders":{
+      "title": "Orders",
+      "no-orders": "It seems there are no orders to be shown.",
+      "order":{
+        "clinic": "Clinic: {{clinic}}",
+        "patient": "Patient: {{patient}}",
+        "Medic": "Medic: {{medic}}",
+        "study-type": "Study Type: {{studyType}}",
+        "date": "Date: {{date}}"
+      }
+    },
+    "filters":{
+      "title": "Filters",
+      "study-type": {
+        "label": "Study Type",
+        "placeholder": "Any Study Type"
+      },
+      "clinic": {
+        "label": "Clinic",
+        "placeholder": "Any Clinic"
+      },
+      "medic": {
+        "label": "Medic",
+        "placeholder": "Any Medic"
+      },
+      "patient-email": {
+        "label": "Patient's Email"
+      },
+      "from-time": {
+        "label": "From"
+      },
+      "to-time": {
+        "label": "To"
+      },
+      "buttons": {
+        "search": "Search",
+        "reset": "Reset Filters"
+      }
+    }
+  },
   "view-order": {
     "order" : {
       "order-number" : "Order number: {{number}}",
