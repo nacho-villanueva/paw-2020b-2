@@ -407,8 +407,12 @@ public class OrderController {
 
         Clinic clinic = clinicOptional.get();
 
+        if (!clinic.getMedicalStudies().stream().map(StudyType::getId).collect(Collectors.toList()).contains(order.getStudy().getId()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
         try {
-            orderService.changeOrderClinic(order, clinic);
+            if(orderService.changeOrderClinic(order, clinic) == null)
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
