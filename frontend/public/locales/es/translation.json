@@ -24,50 +24,11 @@
   },
   "advanced-search-clinics": {
     "form": {
-      "available-hours": {
-        "buttons": {
-          "show": "Buscar por disponibilidad"
-        },
-        "columns": {
-          "available": "Disponible",
-          "day": "Día",
-          "from-time": "Desde",
-          "to-time": "Hasta"
-        }
-      },
       "clinic-name": {
-        "label": "Buscar por nombre de la clínica"
-      },
-      "study-type": {
-        "label": "Buscar por tipo de estudio",
-        "any" : "Cualquier tipo de estudio"
-      },
-      "errors": {
-        "missing": "Clínica seleccionada no existe",
-        "missing-field": "Por favor seleccione una clínica"
-      },
-      "insurance-plan": {
-        "label": "Buscar por Plan médico",
-        "any" : "Cualquier plan médico"
-      },
-      "results": {
-        "no-results": "No se encontraron clínicas según los filtros de búsqueda",
-        "no-selected": "Ninguna clínica seleccionada",
-        "selected": "Clínica seleccionada",
-        "title": "Resultados"
-      },
-      "submit": {
-        "value": "Buscar"
-      },
-      "change": {
-        "submit": "Cambiar Clínica",
-        "cancel": "Cancelar"
+        "label": "Nombre de la clínica"
       }
     },
-    "title": "Búsqueda avanzada | Clínica",
-    "title-filters" : "Filtros",
-    "title-results" : "Resultados",
-    "title-change" : "Cambiar Clínica"
+    "title": "Búsqueda avanzada | Clínica"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -279,11 +240,11 @@
       },
       "patient": {
         "insuranceNumber": {
-          "error": "Por favor seleccione un seguro medico si provee un numero de plan",
+          "error": "Por favor insert un numero de seguro medico valido (Solo alfanumerico)",
           "label": "Número de Seguro Medico"
         },
         "insurancePlan": {
-          "error": "Por favor insertar un seguro medico valido o no inserte numero de plan",
+          "error": "Por favor insertar un seguro medico valido",
           "label": "Seguro Medico"
         },
         "name": {
@@ -362,7 +323,11 @@
             "value": "Iniciar Sesión"
           }
         },
-        "title": "Iniciar Sesión"
+        "title": "Iniciar Sesión",
+        "validation": {
+          "error": "La cuenta que intenta validar no es valida o ya fue validada. Por favor intentelo de nuevo.",
+          "success": "Su cuenta fue validada. Puede entrar a su cuenta ahora."
+        }
       },
       "register": {
         "form": {
@@ -533,60 +498,5 @@
     "medic": "Médico",
     "patient": "Paciente",
     "user": "Usuario"
-  },
-  "view-order": {
-    "order" : {
-      "order-number" : "Número de orden: {{number}}",
-      "date":"Fecha: {{today}}",
-      "patient": "Paciente",
-      "clinic": "Clínica",
-      "insurance-plan": "Plan médico",
-      "insurance-number": "Número del plan médico",
-      "study-type":"Tipo de estudio: {{studyType}}"
-    },
-    "results":{
-      "date":"Fecha: {{today}}",
-      "upload-results": "Subir Resultados",
-      "title": "Resultados",
-      "no-results":"No se han encontrado resultados para este estudio",
-      "select-result": "Seleccione un resultado"
-    },
-    "actions":{
-      "change-clinic": "Cambiar Clínica",
-      "share-w-medic": "Compartir con médico"
-    },
-    "upload":{
-      "title": "Subir Resultados",
-      "order-number" : "Número de orden",
-      "patient": "Paciente",
-      "insurance-plan": "Plan médico del paciente",
-      "insurance-number": "Número del plan médico del paciente",
-      "file-upload":{
-        "label": "Elegir archivos a subir",
-        "text": "Solo seleccione resultados en formato de imagen (jpeg, png, etc.)",
-        "error": "Los resultados son requeridos."
-      },
-      "responsible-name":{
-        "label" : "Médico responsable",
-        "error": "El nombre del médico responsable es requerido."
-      },
-      "responsible-number":{
-        "label" : "Licencia del médico responsable",
-        "error": "La licencia debe ser valida."
-      },
-      "responsible-id":{
-        "label" : "Subir firma",
-        "text" : "Suba una imagen de la firma del médico responsable",
-        "error": "La identificacion es requerida."
-      },
-      "actions":{
-        "cancel": "Cancelar",
-        "submit": "Subir Resultados"
-      }
-    },
-    "toast-change":{
-      "title": "MedTransfer",
-      "body": "La clínica de esta orden ha sido cambiada."
-    }
   }
 }

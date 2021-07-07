@@ -24,59 +24,11 @@
   },
   "advanced-search-clinics": {
     "form": {
-      "available-hours": {
-        "buttons": {
-          "show": "Schedule availability "
-        },
-        "columns": {
-          "available": "Available",
-          "day": "Day",
-          "from-time": "From",
-          "to-time": "To"
-        }
-      },
       "clinic-name": {
-        "label": "Search by clinic name"
-      },
-      "insurance-plan": {
-        "label": "Search by insurance plan",
-        "any" : "Any insurance plan"
-      },
-      "study-type": {
-        "label": "Search by study type",
-        "any" : "Any study type"
-      },
-      "errors": {
-        "close-alert": "Close",
-        "missing": "Specified Clinic doesn\u0027t exist",
-        "missing-field": "Please select a Clinic"
-      },
-
-      "results": {
-        "no-results": "No clinics found based on search filters",
-        "no-selected": "No clinic selected",
-        "selected": "Selected Clinic",
-        "title": "Results"
-      },
-      "clinic-info": {
-        "email": "Email",
-        "insurance": "Accepted Insurance",
-        "open-hours": "Open Hours",
-        "studies": "Available Studies",
-        "telephone": "Telephone"
-      },
-      "submit": {
-        "value": "Search"
-      },
-      "change": {
-        "submit": "Change Clinic",
-        "cancel": "Cancel"
+        "label": "Clinic Name"
       }
     },
-    "title": "Advanced Search | Clinic",
-    "title-filters" : "Filters",
-    "title-results" : "Results",
-    "title-change" : "Change Clinic"
+    "title": "Advanced Search | Clinic"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -289,11 +241,11 @@
       },
       "patient": {
         "insuranceNumber": {
-          "error": "You must provide a medic plan alongside the plan number",
+          "error": "Please insert a valid Insurance Number (Only alphanumeric)",
           "label": "Medical Insurance Number"
         },
         "insurancePlan": {
-          "error": "Please insert a valid medical insurance or dont provide a plan number",
+          "error": "Please insert a valid medical insurance",
           "label": "Medical Insurance"
         },
         "name": {
@@ -372,7 +324,11 @@
             "value": "Log In"
           }
         },
-        "title": "Login"
+        "title": "Login",
+        "validation": {
+          "error": "The account you are trying to validate is invalid or has already been validated. Please try again.",
+          "success": "Your account has been validated. You may login to your account now."
+        }
       },
       "register": {
         "form": {
@@ -529,7 +485,7 @@
         "invalid": "Please insert a valid email",
         "non-exists": "Email does not exist in our database."
       },
-      "label": "Patient\u0027s Email"
+      "label": "Pacient\u0027s Email"
     },
     "send-button": "Send",
     "study": {
@@ -543,60 +499,5 @@
     "medic": "Medic",
     "patient": "Patient",
     "user": "User"
-  },
-  "view-order": {
-    "order" : {
-      "order-number" : "Order number: {{number}}",
-      "date":"Date: {{today}}",
-      "patient": "Patient",
-      "clinic": "Clinic",
-      "insurance-plan": "Insurance plan",
-      "insurance-number": "Insurance plan number",
-      "study-type":"Study Type: {{studyType}}"
-    },
-    "results":{
-      "date":"Date: {{today}}",
-      "upload-results": "Upload Results",
-      "title": "Results",
-      "no-results":"No study results have been found",
-      "select-result": "Select a result"
-    },
-    "actions":{
-      "change-clinic": "Change Clinic",
-      "share-w-medic": "Share with medic"
-    },
-    "upload":{
-      "title": "Upload Results",
-      "order-number" : "Order number",
-      "patient": "Patient",
-      "insurance-plan": "Patient insurance plan",
-      "insurance-number": "Patient insurance plan number",
-      "file-upload":{
-        "label": "Choose the files to upload",
-        "text": "Only pick results in an image format (jpeg, png, etc.)",
-        "error": "Results are required."
-      },
-      "responsible-name":{
-        "label" : "Responsible Medic",
-        "error": "The responsible medic's name is required."
-      },
-      "responsible-number":{
-        "label" : "Responsible Medic's Licence Number",
-        "error": "The responsible medic's licence number must be valid."
-      },
-      "responsible-id":{
-        "label" : "Upload signature",
-        "text" : "Upload a picture of the responsible's signature",
-        "error": "Identification is required."
-      },
-      "actions":{
-        "cancel": "Cancel",
-        "submit": "Upload Results"
-      }
-    },
-    "toast-change":{
-      "title": "MedTransfer",
-      "body": "This order's clinic has been changed."
-    }
   }
 }
