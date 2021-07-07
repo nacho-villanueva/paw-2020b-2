@@ -35,7 +35,6 @@ public class ClinicPostDto {
     private Collection<StudyTypeDto> availableStudies;
 
     @Valid
-    @NotNull(message="ClinicPostAndPutDto.acceptedPlans.NotNull")
     private Collection<MedicPlanDto> acceptedPlans;
 
     @Valid
