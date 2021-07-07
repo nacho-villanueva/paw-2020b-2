@@ -32,12 +32,28 @@ export async function GetPatientInfo(id) {
 }
 
 export function GetIdentificationByURL(url){
+
+    if(url === "")
+        return new Promise(resolve => {})
+
     return apiRedirects.get(url, {headers: {'Accept': 'image/*;encoding=base64'}}).then((r) =>{
         return "data:" + r.headers["content-type"].split(";")[0] + ";base64," + r.data;
     })
 }
 
 export function GetMedicalFieldsByURL(url){
+    return apiRedirects.get(url).then((r) => {return r.data});
+}
+
+export function GetMedicByURL(url){
+    return apiRedirects.get(url).then((r) => {return r.data});
+}
+
+export function GetClinicByURL(url){
+    return apiRedirects.get(url).then((r) => {return r.data});
+}
+
+export function GetPatientByURL(url){
     return apiRedirects.get(url).then((r) => {return r.data});
 }
 

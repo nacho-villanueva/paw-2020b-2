@@ -3,7 +3,7 @@ import DashboardPage from "./components/DashboardPage";
 import "./App.css";
 
 import "./css/bootstrap-related.css";
-import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {store} from "./redux";
 import {StatusType} from "./redux/actions/actions";
@@ -36,8 +36,7 @@ function App() {
             {status === StatusType.DE_AUTHENTICATED && <Redirect to={"/"} />}
 
             {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Route path="/dashboard" component={DashboardPage}/>}
-            {/*{status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Route path="/register" component={RegisterPage}/>}*/}
-            <Route path="/register" component={RegisterPage}/>
+            {status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Route path="/register" component={RegisterPage}/>}
             <Redirect from={"*"} to={"/"}/>
           </Switch>
         </div>

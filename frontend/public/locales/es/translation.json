@@ -187,6 +187,18 @@
       }
     }
   },
+  "dashboard": {
+    "home": {
+      "order": {
+        "clinic": "Clinica",
+        "date": "Fecha",
+        "medic": "Medico",
+        "patient": "Paciente",
+        "study": "Estudio Medico"
+      },
+      "title": "Mis Ordenes"
+    }
+  },
   "days": {
     "day-0": "Domingo",
     "day-1": "Lunes",

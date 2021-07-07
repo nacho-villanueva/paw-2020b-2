@@ -2,6 +2,7 @@ import {store} from "../redux";
 import apiInstance from ".";
 import { parameterSerializer, parseHeadersLinks, findLastPageNumber, prepareViewStudyUrl } from "./utils";
 import {InternalQuery} from "./Auth";
+import {GetClinicByURL, GetMedicByURL, GetPatientByURL, GetStudyTypesByURL} from "./UserInfo";
 
 export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
     let aux = orders;
@@ -76,6 +77,35 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
         setTotalOrderPages(0);
         return -1;
     })
+}
+
+export async function GetAllOrders(page, per_page){
+    let orders = await apiInstance.get("/orders?page="+page+"&per_page="+per_page).then((r) => r.data);
+
+    let newOrders = []
+
+    for(let o of orders){
+        let newOrder = {...o}
+
+        console.log(newOrder)
+
+        await Promise.allSettled([
+            GetStudyTypesByURL(newOrder.studyType).then((r) => r),
+            GetMedicByURL(newOrder.medic).then((r) => r),
+            GetClinicByURL(newOrder.clinic).then((r) => r),
+
+        ]).then((r) => {
+            newOrder.studyType = r[0].value;
+            newOrder.medic = r[1].value;
+            newOrder.clinic = r[2].value;
+            newOrders.push(newOrder)
+
+        })
+
+
+    }
+
+    return newOrders;
 }
 
 export async function GetMedics(setMedicsList, update, setUpdate){

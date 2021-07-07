@@ -45,11 +45,12 @@ export const Routes = {
         component: ClinicSearch,
         role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
     },
+
     VIEW_ORDER: {
         name: "View Study",
         path: "/dashboard/view-study",
         component: ViewOrder,
-        role: [Roles.ANY]
+        role: [Roles.CLINIC, Roles.MEDIC, Roles.PATIENT]
     },
 
     EDIT_PROFILE: {
@@ -72,8 +73,6 @@ export const Routes = {
         component: DisplayAccessRequestsPage,
         role: [Roles.PATIENT]
     },
-
-
 }
 
 export function getAllRoutes(role){
