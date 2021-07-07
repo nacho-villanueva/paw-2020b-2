@@ -1,8 +1,11 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {useState} from "react";
 import {createStudyType} from "../../api/CustomFields";
+import {Trans, useTranslation} from "react-i18next";
 
 const StudyTypesModal = (props) => {
+
+    const {t} = useTranslation()
 
     const [field, setField] = useState("");
 
@@ -25,15 +28,15 @@ const StudyTypesModal = (props) => {
 
     return <Modal show={props.show} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Create Study Type</Modal.Title>
+            <Modal.Title><Trans t={t} i18nKey={"registration.modals.study-types.title"}/></Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form onSubmit={(e)=> {e.preventDefault(); e.stopPropagation(); handleSubmit(); }}>
                 <Form.Group className="form-group col mt-1" controlId="medicalField">
-                    <Form.Label className="bmd-label-static">Study Type</Form.Label>
+                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey={"registration.modals.study-types.label"}/></Form.Label>
                     <Form.Control
                         type="text" className={"registrationInput"}
-                        name="medicalField" placeholder={"Insert Study Type"}
+                        name="medicalField" placeholder={t("registration.modals.study-types.placeholder")}
                         value={field} onChange={(e)=> {setField(e.target.value)}}
                     />
                 </Form.Group>
@@ -41,10 +44,10 @@ const StudyTypesModal = (props) => {
         </Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-                Return
+                <Trans t={t} i18nKey={"registration.modals.return-button"}/>
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-                Create
+                <Trans t={t} i18nKey={"registration.modals.submit-button"}/>
             </Button>
         </Modal.Footer>
     </Modal>

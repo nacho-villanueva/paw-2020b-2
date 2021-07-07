@@ -1,8 +1,11 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {useState} from "react";
 import {createMedicalField} from "../../api/CustomFields";
+import {Trans, useTranslation} from "react-i18next";
 
 const MedicalFieldModal = (props) => {
+
+    const {t} = useTranslation()
 
     const [field, setField] = useState("");
 
@@ -24,15 +27,15 @@ const MedicalFieldModal = (props) => {
 
     return <Modal show={props.show} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Create Medical Field</Modal.Title>
+            <Modal.Title><Trans t={t} i18nKey={"registration.modals.medical-fields.title"}/></Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form onSubmit={(e)=> {e.preventDefault(); e.stopPropagation(); handleSubmit(); }}>
                 <Form.Group className="form-group col mt-1" controlId="medicalField">
-                    <Form.Label className="bmd-label-static">Medical Field</Form.Label>
+                    <Form.Label className="bmd-label-static"><Trans t={t} i18nKey={"registration.modals.medical-fields.label"}/></Form.Label>
                     <Form.Control
                         type="text" className={"registrationInput"}
-                        name="medicalField" placeholder={"Insert Your Medical Field"}
+                        name="medicalField" placeholder={t("registration.modals.medical-fields.placeholder")}
                         value={field} onChange={(e)=> {setField(e.target.value)}}
                     />
                 </Form.Group>
@@ -40,10 +43,10 @@ const MedicalFieldModal = (props) => {
         </Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-                Return
+                <Trans t={t} i18nKey={"registration.modals.return-button"}/>
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-                Create
+                <Trans t={t} i18nKey={"registration.modals.submit-button"}/>
             </Button>
         </Modal.Footer>
     </Modal>
