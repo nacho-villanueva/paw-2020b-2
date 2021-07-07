@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.MedicPlan;
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.PatientService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.dto.PatientGetDto;
 import ar.edu.itba.paw.webapp.dto.PatientPostDto;
-import ar.edu.itba.paw.webapp.dto.PatientPutDto;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -113,13 +111,13 @@ public class PatientController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updatePatient(
             @PathParam("id") final int patientId,
-            @Valid @NotNull PatientPutDto patientDto
+            @Valid @NotNull PatientPostDto patientDto
     ){
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
 
         if(loggedUser == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         //We search for patient based on input
@@ -142,6 +140,8 @@ public class PatientController {
         //Location is same as request url
         return Response.noContent().build();
     }
+
+
 
     private User getLoggedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -51,7 +51,7 @@ public class UserJpaDao implements UserDao {
     public User updateUser(User user, String email, String password, String locale) {
         Optional<User> userDB = findById(user.getId());
         userDB.ifPresent(user1 -> {
-            if (!isEmpty(email))
+            if (!user1.getEmail().equals(email))
                 user1.setEmail(email);
             if (!isEmpty(password))
                 user1.setPassword(password);

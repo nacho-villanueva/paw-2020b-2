@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 public class PatientPlanDto {
@@ -8,6 +9,7 @@ public class PatientPlanDto {
     public static final String CONTENT_TYPE = "application/vnd.medic-plan.v1";
 
     // Variables
+    @Valid
     public MedicPlanDto plan;
 
     public String number;

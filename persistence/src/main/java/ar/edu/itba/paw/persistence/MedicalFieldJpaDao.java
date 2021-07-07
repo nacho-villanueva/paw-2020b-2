@@ -44,7 +44,7 @@ public class MedicalFieldJpaDao implements MedicalFieldDao{
 
     @Override
     public MedicalField register(String name){
-        String cleanName = StringUtils.capitalize(name);
+        String cleanName = StringUtils.capitalize(name.toLowerCase());
         MedicalField mf = new MedicalField(cleanName);
         em.persist(mf);
         em.flush();

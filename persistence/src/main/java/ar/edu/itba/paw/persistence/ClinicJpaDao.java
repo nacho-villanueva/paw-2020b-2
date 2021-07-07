@@ -162,22 +162,21 @@ public class ClinicJpaDao implements ClinicDao {
         clinicDB.ifPresent(clinic -> {
             if(!isEmpty(name))
                 clinic.setName(name);
-            if(!isEmpty(telephone))
-                clinic.setTelephone(telephone);
+            clinic.setTelephone(telephone);
+            Collection<MedicPlan> plansRef = new HashSet<>();
             if(medicPlans != null) {
-                Collection<MedicPlan> plansRef = new HashSet<>();
                 medicPlans.forEach(plan -> {
                     plansRef.add(getPlanRef(plan));
                 });
-                clinic.setAcceptedPlans(plansRef);
             }
+            clinic.setAcceptedPlans(plansRef);
+            Collection<StudyType> studiesRef = new HashSet<>();
             if(availableStudies != null) {
-                Collection<StudyType> studiesRef = new HashSet<>();
                 availableStudies.forEach(study -> {
                     studiesRef.add(getStudyRef(study));
                 });
-                clinic.setMedicalStudies(studiesRef);
             }
+            clinic.setMedicalStudies(studiesRef);
             //Updating hours
             if(hours != null)
                 clinic.setHours(hours);

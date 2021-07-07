@@ -127,8 +127,7 @@ public class MedicJpaDao implements MedicDao {
         medicDB.ifPresent(medic -> {
             if(!isEmpty(name))
                 medic.setName(name);
-            if(!isEmpty(telephone))
-                medic.setTelephone(telephone);
+            medic.setTelephone(telephone);
             if(!isEmpty(identificationType))
                 medic.setIdentificationType(identificationType);
             if(identification != null)

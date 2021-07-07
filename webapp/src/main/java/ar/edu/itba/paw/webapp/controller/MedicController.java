@@ -111,7 +111,7 @@ public class MedicController {
         String licenceNumber = medicDto.getLicenceNumber();
 
         if (image == null || image.length == 0)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         Medic medic = medicService.register(
                 loggedUser,
@@ -150,7 +150,7 @@ public class MedicController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response updateMedic(
             @PathParam("id") final int id,
-            @Valid @NotNull MedicPutDto medicDto
+            @Valid @NotNull MedicPostDto medicDto
     ) {
         //We extract user info from authentication
         User loggedUser = getLoggedUser();
