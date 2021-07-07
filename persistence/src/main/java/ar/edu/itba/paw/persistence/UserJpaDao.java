@@ -3,13 +3,17 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Repository
 public class UserJpaDao implements UserDao {
@@ -41,6 +45,56 @@ public class UserJpaDao implements UserDao {
         Query query = em.createQuery("DELETE FROM VerificationToken as t WHERE t.user.id = :userid");
         query.setParameter("userid", user.getId());
         query.executeUpdate();
+    }
+
+    @Override
+    public User updateUser(User user, String email, String password, String locale) {
+        Optional<User> userDB = findById(user.getId());
+        userDB.ifPresent(user1 -> {
+            if (!isEmpty(email))
+                user1.setEmail(email);
+            if (!isEmpty(password))
+                user1.setPassword(password);
+            if (!isEmpty(locale))
+                user1.setLocale(locale);
+        });
+        em.flush();
+        return userDB.orElse(null);
+    }
+
+    @Override
+    public Collection<User> getAll(final int page, final int pageSize) {
+        if(pageSize <= 0 || page <= 0)
+            return new ArrayList<>();
+
+        String queryString = "SELECT u FROM User u " +
+                "ORDER BY u.id ASC";
+
+        final TypedQuery<User> query = em.createQuery(queryString,User.class);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public long userCount() {
+        final String queryString = "SELECT COUNT(u) FROM User u";
+
+        final TypedQuery<Long> countQuery = em.createQuery(queryString,Long.class);
+
+        return countQuery.getSingleResult();
+    }
+
+    @Override
+    public User updateLocale(User user, String locale) {
+        Optional<User> userDB = findById(user.getId());
+        userDB.ifPresent(user1 -> {
+            user1.setLocale(locale);
+        });
+        em.flush();
+        return userDB.orElse(null);
     }
 
     @Override

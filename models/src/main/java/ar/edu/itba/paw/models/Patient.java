@@ -16,10 +16,13 @@ public class Patient {
 
     @Column(nullable = false)
     private String name;
-    @Column(name = "medic_plan")
-    private String medicPlan;
+
     @Column(name = "medic_plan_number")
     private String medicPlanNumber;
+
+    @OneToOne
+    @JoinColumn(name = "plan_id")
+    private MedicPlan medicPlan;
 
     protected Patient() {
         //Just for hibernate
@@ -30,7 +33,7 @@ public class Patient {
         this.name = name;
     }
 
-    public Patient(final User user, final String name, final String medicPlan, final String medicPlanNumber) {
+    public Patient(final User user, final String name, final MedicPlan medicPlan, final String medicPlanNumber) {
         this(user,name);
         this.medicPlan = medicPlan;
         this.medicPlanNumber = medicPlanNumber;
@@ -42,11 +45,13 @@ public class Patient {
         this.name = name;
     }
 
-    public String getMedicPlan() {
+    public String getMedicPlanName() { return medicPlan.getName();}
+
+    public MedicPlan getMedicPlan() {
         return medicPlan;
     }
 
-    public void setMedicPlan(String medicPlan) {
+    public void setMedicPlan(MedicPlan medicPlan) {
         this.medicPlan = medicPlan;
     }
 

@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MedicalFieldJpaDao implements MedicalFieldDao{
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<MedicalField> findById(int id) {
@@ -42,7 +42,8 @@ public class MedicalFieldJpaDao implements MedicalFieldDao{
         return maybeField.orElseGet(() -> register(name));
     }
 
-    private MedicalField register(String name){
+    @Override
+    public MedicalField register(String name){
         String cleanName = StringUtils.capitalize(name);
         MedicalField mf = new MedicalField(cleanName);
         em.persist(mf);

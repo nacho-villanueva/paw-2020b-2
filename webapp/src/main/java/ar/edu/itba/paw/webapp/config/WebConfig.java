@@ -1,14 +1,15 @@
 package ar.edu.itba.paw.webapp.config;
 
-
-import org.springframework.beans.factory.annotation.Value;
+import ar.edu.itba.paw.webapp.dto.annotations.*;
+import ar.edu.itba.paw.webapp.dto.annotations.Number;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -19,6 +20,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -29,10 +31,16 @@ import org.springframework.web.servlet.view.JstlView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.*;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -43,13 +51,6 @@ import javax.sql.DataSource;
 })
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
-
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
-
-    @Value("classpath:initialPopulator.sql")
-    private Resource initialPopulatorSql;
-
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -75,26 +76,25 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return ds;
     }
 
-    @Bean(name="messageSource")
+    @Bean(name = "messageSource")
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:i18n/messages");
-        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-        messageSource.setCacheSeconds(5);
+        messageSource.setDefaultEncoding(Charset.defaultCharset().displayName());
+        messageSource.setCacheSeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
 
         return messageSource;
     }
 
     @Bean
     public URL getURL() throws MalformedURLException {
-        final URL url = new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
-        return url;
+        return new URL("http://pawserver.it.itba.edu.ar/paw-2020b-2");
     }
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(70*1024*1000000L);
+        multipartResolver.setMaxUploadSize(70 * 1024 * 1000000L);
         return multipartResolver;
     }
 
@@ -108,19 +108,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return dsi;
     }
 
+    // Use addScript(Resource) to include .sql files
     private DatabasePopulator databasePopulator() {
-        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-
-        //Commented for the introduction of hibernate
-        //dbp.addScript(schemaSql);
-        //dbp.addScript(initialPopulatorSql);
-
-        return dbp;
+        return new ResourceDatabasePopulator();
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "file:/resources/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "file:/resources/")
+                .setCachePeriod(Math.toIntExact(TimeUnit.DAYS.toSeconds(365)));
     }
 
     @Bean
@@ -142,4 +138,64 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+
+    @Bean
+    public ValidatorFactory getValidatorFactory(final MessageSource messageSource) {
+        LocalValidatorFactoryBean validatorFactory = new LocalValidatorFactoryBean();
+        validatorFactory.setValidationMessageSource(messageSource);
+        return validatorFactory;
+    }
+
+    @Bean
+    public Validator validator(final ValidatorFactory getValidatorFactory) {
+        return getValidatorFactory.getValidator();
+    }
+
+    @Bean(name = "annotationCodes")
+    public Map<String, String> configMap() {
+
+        // possible error codes
+        final String ALREADY_EXISTS = "already_exists";
+        final String INVALID = "invalid";
+        final String MISSING = "missing";
+        final String MISSING_FIELD = "missing_field";
+        final String UNPROCESSABLE = "unprocessable";
+        final String OTHER = "other";
+
+        Map<String, String> map = new HashMap<>();
+
+        // from javax validation
+        map.put(Max.class.getName(), INVALID);
+        map.put(Min.class.getName(), INVALID);
+        map.put(NotNull.class.getName(), MISSING_FIELD);
+        map.put(Null.class.getName(), INVALID);
+        map.put(Pattern.class.getName(), INVALID);
+        map.put(Size.class.getName(), INVALID);
+
+        // from hibernate validation
+        map.put(NotBlank.class.getName(), MISSING_FIELD);
+        map.put(NotEmpty.class.getName(), MISSING_FIELD);
+        map.put(Email.class.getName(), INVALID);
+
+        // created
+        map.put(ArrayAsString.class.getName(), INVALID);
+        map.put(BooleanArrayAsString.class.getName(), INVALID);
+        map.put(ByteArray.class.getName(), INVALID);
+        map.put(ClinicId.class.getName(), INVALID);
+        map.put(Days.class.getName(), INVALID);
+        map.put(EmailCollection.class.getName(), INVALID);
+        map.put(IntegerSize.class.getName(), INVALID);
+        map.put(Locale.class.getName(), INVALID);
+        map.put(MedicId.class.getName(), INVALID);
+        map.put(PatientPlan.class.getName(), INVALID);
+        map.put(NotRegistered.class.getName(), ALREADY_EXISTS);
+        map.put(Number.class.getName(), INVALID);
+        map.put(Password.class.getName(), INVALID);
+        map.put(StudyTypeId.class.getName(), INVALID);
+        map.put(TimeArrayAsString.class.getName(), INVALID);
+        map.put(TimeIntervals.class.getName(), INVALID);
+
+        return map;
+    }
+
 }

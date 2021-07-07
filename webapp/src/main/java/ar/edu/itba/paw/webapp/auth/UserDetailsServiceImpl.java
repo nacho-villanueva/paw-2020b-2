@@ -20,8 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService us;
 
-    //private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
-
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final User user = us.findByEmail(email)
@@ -52,14 +50,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             default:
                 authorities.add(new SimpleGrantedAuthority("ROLE_UNDEFINED"));
         }
-
-//        final String password;
-//        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()) {
-//            User newUser = us.updatePassword(user, user.getPassword());
-//            password = newUser.getPassword();
-//        } else {
-//            password = user.getPassword();
-//        }
 
         return new org.springframework.security.core.userdetails.User(email, user.getPassword(), user.isEnabled(), true, true, true, authorities);
     }
