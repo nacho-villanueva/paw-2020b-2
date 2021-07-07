@@ -163,14 +163,14 @@ function LandingPage(props) {
                     <hr className="divider my-4"/>
                     <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
                         <li className="nav-item">
-                            <a className={"nav-item nav-link " + activeLoginTab} href={"/#"}
+                            <a className={"nav-item nav-link " + activeLoginTab}
                                id="login-tab" data-toggle="tab" role="tab" onClick={changeToLogin}
                                aria-controls="login" aria-selected={activeLoginTab === 'active' ? "true" : "false" }>
                                    <Trans t={t} i18nKey="home.tabs.login.title"/>
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className={"nav-item nav-link " + activeRegisterTab} href={"/#"}
+                            <a className={"nav-item nav-link " + activeRegisterTab} 
                                id="register-tab" data-toggle="tab" onClick={changeToRegister}
                                role="tab" aria-controls="register" aria-selected={activeRegisterTab === 'active'? "true" : "false"}>
                                    <Trans t={t} i18nKey="home.tabs.register.title"/>
