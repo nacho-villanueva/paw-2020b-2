@@ -132,10 +132,11 @@ function MyOrders(){
         setSearchFilters(aux);
     }
 
+    const [loading, setLoading] = useState(false);
     const fetchAndChangePage = (pageNumber) => {
 
         setCurrentPage(searchFilters.page);
-
+        setLoading(true);
         GetOrders(searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
@@ -160,8 +161,11 @@ function MyOrders(){
                         let next = prevState + 1;
                         return {...prevState, ...next};
                     });
+                    setLoading(false);
                 }
             });
+
+
         setCurrentPage(pageNumber);
     }
 
@@ -179,7 +183,7 @@ function MyOrders(){
 
     //calling on mount...
     useLayoutEffect( () => {
-        if(searching){
+        if(searching && !loading){
             fetchAndChangePage(searchFilters.page);
             setSearching(false);
         }
