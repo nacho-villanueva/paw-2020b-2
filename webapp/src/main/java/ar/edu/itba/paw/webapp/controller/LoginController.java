@@ -68,12 +68,12 @@ public class LoginController {
         Optional<VerificationToken> verificationToken = us.getVerificationToken(token);
 
         if(!verificationToken.isPresent()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         User user = verificationToken.get().getUser();
 
-        if(!user.isEnabled()) {
+        if(user != null && !user.isEnabled()) {
             us.verify(user);
             return Response.status(Response.Status.ACCEPTED).build();
         }
