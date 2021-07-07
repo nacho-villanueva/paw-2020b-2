@@ -23,12 +23,48 @@
     }
   },
   "advanced-search-clinics": {
+    "clinic-info": {
+      "email": "Email",
+      "insurance": "Seguros Medicos Aceptados",
+      "open-hours": "Hora Habilitado",
+      "studies": "Studios Medicos Aceptados",
+      "telephone": "Numero de Telefono"
+    },
     "form": {
+      "available-hours": {
+        "buttons": {
+          "show": "Mostrar Horas Habilitado"
+        },
+        "columns": {
+          "available": "Habilitado",
+          "day": "Dia",
+          "from-time": "Desde",
+          "to-time": "Hasta"
+        }
+      },
       "clinic-name": {
         "label": "Nombre de la clínica"
+      },
+      "insurance-plan": {
+        "any": "Cualquier Seguro Medico",
+        "label": "Seguro Medico"
+      },
+      "results": {
+        "no-results": "No hay Resultados",
+        "no-selected": "Ningun Resultado Seleccionado",
+        "selected": "Resultado Seleccionado"
+      },
+      "study-type": {
+        "any": "Cualquier Estudio Medico",
+        "label": "Tipo de Estudio Medico"
+      },
+      "submit": {
+        "value": "Buscar"
       }
     },
-    "title": "Búsqueda avanzada | Clínica"
+    "title": "Búsqueda avanzada | Clínica",
+    "title-filters": "Busqueda de Clinica Avanzada",
+    "title-results": "Resultados"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -371,6 +407,47 @@
       "openHour": "Hora de Apertura"
     }
   },
+  "my-orders": {
+    "filters": {
+      "buttons": {
+        "reset": "Restablecer filtros ",
+        "search": "Buscar"
+      },
+      "clinic": {
+        "label": "Clinic",
+        "placeholder": "Cualquier clínica "
+      },
+      "from-time": {
+        "label": "Desde"
+      },
+      "medic": {
+        "label": "Médico",
+        "placeholder": "Cualquier médico "
+      },
+      "patient-email": {
+        "label": "Correo electrónico del paciente "
+      },
+      "study-type": {
+        "label": "Tipo de estudio",
+        "placeholder": "Cualquier Tipo de estudio "
+      },
+      "title": "Filtros ",
+      "to-time": {
+        "label": "Hasta"
+      }
+    },
+    "orders": {
+      "no-orders": "No se han encontrado órdenes.",
+      "order": {
+        "Medic": "Médico: {{medic}}",
+        "clinic": "Clínica: {{clinic}}",
+        "date": "Fecha: {{date}}",
+        "patient": "Paciente: {{patient}}",
+        "study-type": "Tipo de estudio: {{studyType}}"
+      },
+      "title": "Órdenes"
+    }
+  },
   "registration": {
     "clinic": {
       "continue": "Continuar",
@@ -499,96 +576,55 @@
     "patient": "Paciente",
     "user": "Usuario"
   },
-  "my-orders":{
-    "orders":{
-      "title": "Órdenes",
-      "no-orders": "No se han encontrado órdenes.",
-      "order":{
-        "clinic": "Clínica: {{clinic}}",
-        "patient": "Paciente: {{patient}}",
-        "Medic": "Médico: {{medic}}",
-        "study-type": "Tipo de estudio: {{studyType}}",
-        "date": "Fecha: {{date}}"
-      }
-    },
-    "filters":{
-      "title": "Filtros ",
-      "study-type": {
-        "label": "Tipo de estudio",
-        "placeholder": "Cualquier Tipo de estudio "
-      },
-      "clinic": {
-        "label": "Clinic",
-        "placeholder": "Cualquier clínica "
-      },
-      "medic": {
-        "label": "Médico",
-        "placeholder": "Cualquier médico "
-      },
-      "patient-email": {
-        "label": "Correo electrónico del paciente "
-      },
-      "from-time": {
-        "label": "Desde"
-      },
-      "to-time": {
-        "label": "Hasta"
-      },
-      "buttons": {
-        "search": "Buscar",
-        "reset": "Restablecer filtros "
-      }
-    }
-  },
   "view-order": {
-    "order" : {
-      "order-number" : "Número de orden: {{number}}",
-      "date":"Fecha: {{today}}",
-      "patient": "Paciente",
-      "clinic": "Clínica",
-      "insurance-plan": "Plan médico",
-      "insurance-number": "Número del plan médico",
-      "study-type":"Tipo de estudio: {{studyType}}"
-    },
-    "results":{
-      "date":"Fecha: {{today}}",
-      "upload-results": "Subir Resultados",
-      "title": "Resultados",
-      "no-results":"No se han encontrado resultados para este estudio",
-      "select-result": "Seleccione un resultado"
-    },
-    "actions":{
+    "actions": {
       "change-clinic": "Cambiar Clínica",
       "share-w-medic": "Compartir con médico"
     },
-    "upload":{
-      "title": "Subir Resultados",
-      "order-number" : "Número de orden",
+    "order": {
+      "clinic": "Clínica",
+      "date": "Fecha: {{today}}",
+      "insurance-number": "Número del plan médico",
+      "insurance-plan": "Plan médico",
+      "order-number": "Número de orden: {{number}}",
       "patient": "Paciente",
-      "insurance-plan": "Plan médico del paciente",
-      "insurance-number": "Número del plan médico del paciente",
-      "file-upload":{
-        "label": "Elegir archivos a subir",
-        "text": "Solo seleccione resultados en formato de imagen (jpeg, png, etc.)",
-        "error": "Los resultados son requeridos."
-      },
-      "responsible-name":{
-        "label" : "Médico responsable",
-        "error": "El nombre del médico responsable es requerido."
-      },
-      "responsible-number":{
-        "label" : "Licencia del médico responsable",
-        "error": "La licencia debe ser valida."
-      },
-      "responsible-id":{
-        "label" : "Subir firma",
-        "text" : "Suba una imagen de la firma del médico responsable",
-        "error": "La identificacion es requerida."
-      },
-      "actions":{
+      "study-type": "Tipo de estudio: {{studyType}}"
+    },
+    "results": {
+      "date": "Fecha: {{today}}",
+      "no-results": "No se han encontrado resultados para este estudio",
+      "select-result": "Seleccione un resultado",
+      "title": "Resultados",
+      "upload-results": "Subir Resultados"
+    },
+    "upload": {
+      "actions": {
         "cancel": "Cancelar",
         "submit": "Subir Resultados"
-      }
+      },
+      "file-upload": {
+        "error": "Los resultados son requeridos.",
+        "label": "Elegir archivos a subir",
+        "text": "Solo seleccione resultados en formato de imagen (jpeg, png, etc.)"
+      },
+      "insurance-number": "Número del plan médico del paciente",
+      "insurance-plan": "Plan médico del paciente",
+      "order-number": "Número de orden",
+      "patient": "Paciente",
+      "responsible-id": {
+        "error": "La identificacion es requerida.",
+        "label": "Subir firma",
+        "text": "Suba una imagen de la firma del médico responsable"
+      },
+      "responsible-name": {
+        "error": "El nombre del médico responsable es requerido.",
+        "label": "Médico responsable"
+      },
+      "responsible-number": {
+        "error": "La licencia debe ser valida.",
+        "label": "Licencia del médico responsable"
+      },
+      "title": "Subir Resultados"
     }
   }
 }

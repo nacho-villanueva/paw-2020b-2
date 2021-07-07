@@ -23,12 +23,48 @@
     }
   },
   "advanced-search-clinics": {
+    "clinic-info": {
+      "email": "Email",
+      "insurance": "Accepted Insurances",
+      "open-hours": "Open Hours",
+      "studies": "Accepted Medical Studies",
+      "telephone": "Phone Number"
+    },
     "form": {
+      "available-hours": {
+        "buttons": {
+          "show": "Show Available Hours"
+        },
+        "columns": {
+          "available": "Available",
+          "day": "Day",
+          "from-time": "From",
+          "to-time": "To"
+        }
+      },
       "clinic-name": {
         "label": "Clinic Name"
+      },
+      "insurance-plan": {
+        "any": "Any Medical Insurance",
+        "label": "Medical Insurance Plan"
+      },
+      "results": {
+        "no-results": "No Results",
+        "no-selected": "No Result Selected",
+        "selected": "Selected Result"
+      },
+      "study-type": {
+        "any": "Any Study Type",
+        "label": "Medical Study Type"
+      },
+      "submit": {
+        "value": "Search"
       }
     },
-    "title": "Advanced Search | Clinic"
+    "title": "Advanced Search | Clinic",
+    "title-filters": "Advanced Clinic Search",
+    "title-results": "Results"
   },
   "appname": "MedTransfer",
   "create-order": {
@@ -372,6 +408,47 @@
       "openHour": "Opening Hour"
     }
   },
+  "my-orders": {
+    "filters": {
+      "buttons": {
+        "reset": "Reset Filters",
+        "search": "Search"
+      },
+      "clinic": {
+        "label": "Clinic",
+        "placeholder": "Any Clinic"
+      },
+      "from-time": {
+        "label": "From"
+      },
+      "medic": {
+        "label": "Medic",
+        "placeholder": "Any Medic"
+      },
+      "patient-email": {
+        "label": "Patient\u0027s Email"
+      },
+      "study-type": {
+        "label": "Study Type",
+        "placeholder": "Any Study Type"
+      },
+      "title": "Filters",
+      "to-time": {
+        "label": "To"
+      }
+    },
+    "orders": {
+      "no-orders": "It seems there are no orders to be shown.",
+      "order": {
+        "Medic": "Medic: {{medic}}",
+        "clinic": "Clinic: {{clinic}}",
+        "date": "Date: {{date}}",
+        "patient": "Patient: {{patient}}",
+        "study-type": "Study Type: {{studyType}}"
+      },
+      "title": "Orders"
+    }
+  },
   "registration": {
     "clinic": {
       "continue": "Continue",
@@ -500,96 +577,55 @@
     "patient": "Patient",
     "user": "User"
   },
-  "my-orders":{
-    "orders":{
-      "title": "Orders",
-      "no-orders": "It seems there are no orders to be shown.",
-      "order":{
-        "clinic": "Clinic: {{clinic}}",
-        "patient": "Patient: {{patient}}",
-        "Medic": "Medic: {{medic}}",
-        "study-type": "Study Type: {{studyType}}",
-        "date": "Date: {{date}}"
-      }
-    },
-    "filters":{
-      "title": "Filters",
-      "study-type": {
-        "label": "Study Type",
-        "placeholder": "Any Study Type"
-      },
-      "clinic": {
-        "label": "Clinic",
-        "placeholder": "Any Clinic"
-      },
-      "medic": {
-        "label": "Medic",
-        "placeholder": "Any Medic"
-      },
-      "patient-email": {
-        "label": "Patient's Email"
-      },
-      "from-time": {
-        "label": "From"
-      },
-      "to-time": {
-        "label": "To"
-      },
-      "buttons": {
-        "search": "Search",
-        "reset": "Reset Filters"
-      }
-    }
-  },
   "view-order": {
-    "order" : {
-      "order-number" : "Order number: {{number}}",
-      "date":"Date: {{today}}",
-      "patient": "Patient",
-      "clinic": "Clinic",
-      "insurance-plan": "Insurance plan",
-      "insurance-number": "Insurance plan number",
-      "study-type":"Study Type: {{studyType}}"
-    },
-    "results":{
-      "date":"Date: {{today}}",
-      "upload-results": "Upload Results",
-      "title": "Results",
-      "no-results":"No study results have been found",
-      "select-result": "Select a result"
-    },
-    "actions":{
+    "actions": {
       "change-clinic": "Change Clinic",
       "share-w-medic": "Share with medic"
     },
-    "upload":{
-      "title": "Upload Results",
-      "order-number" : "Order number",
+    "order": {
+      "clinic": "Clinic",
+      "date": "Date: {{today}}",
+      "insurance-number": "Insurance plan number",
+      "insurance-plan": "Insurance plan",
+      "order-number": "Order number: {{number}}",
       "patient": "Patient",
-      "insurance-plan": "Patient insurance plan",
-      "insurance-number": "Patient insurance plan number",
-      "file-upload":{
-        "label": "Choose the files to upload",
-        "text": "Only pick results in an image format (jpeg, png, etc.)",
-        "error": "Results are required."
-      },
-      "responsible-name":{
-        "label" : "Responsible Medic",
-        "error": "The responsible medic's name is required."
-      },
-      "responsible-number":{
-        "label" : "Responsible Medic's Licence Number",
-        "error": "The responsible medic's licence number must be valid."
-      },
-      "responsible-id":{
-        "label" : "Upload signature",
-        "text" : "Upload a picture of the responsible's signature",
-        "error": "Identification is required."
-      },
-      "actions":{
+      "study-type": "Study Type: {{studyType}}"
+    },
+    "results": {
+      "date": "Date: {{today}}",
+      "no-results": "No study results have been found",
+      "select-result": "Select a result",
+      "title": "Results",
+      "upload-results": "Upload Results"
+    },
+    "upload": {
+      "actions": {
         "cancel": "Cancel",
         "submit": "Upload Results"
-      }
+      },
+      "file-upload": {
+        "error": "Results are required.",
+        "label": "Choose the files to upload",
+        "text": "Only pick results in an image format (jpeg, png, etc.)"
+      },
+      "insurance-number": "Patient insurance plan number",
+      "insurance-plan": "Patient insurance plan",
+      "order-number": "Order number",
+      "patient": "Patient",
+      "responsible-id": {
+        "error": "Identification is required.",
+        "label": "Upload signature",
+        "text": "Upload a picture of the responsible\u0027s signature"
+      },
+      "responsible-name": {
+        "error": "The responsible medic\u0027s name is required.",
+        "label": "Responsible Medic"
+      },
+      "responsible-number": {
+        "error": "The responsible medic\u0027s licence number must be valid.",
+        "label": "Responsible Medic\u0027s Licence Number"
+      },
+      "title": "Upload Results"
     }
   }
 }
