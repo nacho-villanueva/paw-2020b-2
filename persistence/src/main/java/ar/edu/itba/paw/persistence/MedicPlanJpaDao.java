@@ -36,7 +36,7 @@ public class MedicPlanJpaDao implements MedicPlanDao{
 
     @Override
     public MedicPlan register(String name) {
-        String cleanName = StringUtils.capitalize(name);
+        String cleanName = StringUtils.capitalize(name.toLowerCase());
         MedicPlan mp = new MedicPlan(cleanName);
         em.persist(mp);
         em.flush();
