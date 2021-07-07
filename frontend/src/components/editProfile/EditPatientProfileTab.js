@@ -47,12 +47,15 @@ const EditPatientProfileTab = () => {
     }
 
     const [accountValues, setAccountValues] = useState(defaultValues)
-
     const [modifiedValues, setModifiedValues] = useState(defaultValues)
 
     const resetModifiedValues = ()=>{
-        setModifiedValues(defaultValues)
+        let insuranceName = null;
+        if(accountValues.insurancePlan != null)
+            insuranceName = accountValues.insurancePlan.name;
+        setModifiedValues({...accountValues, insurancePlan: insuranceName})
         setModified(false)
+        setSuccess(false)
     }
 
     const onEdit = () => {

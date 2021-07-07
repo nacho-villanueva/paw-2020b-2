@@ -47,11 +47,13 @@ const EditClinicTab = () => {
         studyTypes: [],
         verified: false
     }
-    
+
+    const [accountValues, setAccountValues] = useState(defaultValues)
     const [modifiedValues, setModifiedValues] = useState(defaultValues)
 
     const resetModifiedStatus = ()=>{
         setModified(false)
+        setModifiedValues(accountValues)
         setSuccess(false)
     }
 
@@ -62,14 +64,17 @@ const EditClinicTab = () => {
             verified: data.verified,
             hours: data.hours
         }
+        setAccountValues(((prevState) => ({...prevState, ...newValues})));
         setModifiedValues((prevState) => ({...prevState, ...newValues}));
     }
 
     const updateStudyTypes = (st) => {
+        setAccountValues((prevState) => ({...prevState, studyTypes: st}))
         setModifiedValues((prevState) => ({...prevState, studyTypes: st}))
     }
 
     const updateMedicalPlans = (ip) => {
+        setAccountValues((prevState) => ({...prevState, insurancePlans: ip}))
         setModifiedValues((prevState) => ({...prevState, insurancePlans: ip}))
     }
 
