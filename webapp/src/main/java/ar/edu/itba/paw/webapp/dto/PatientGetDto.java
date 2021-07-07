@@ -38,8 +38,10 @@ public class PatientGetDto {
         UriBuilder userUrl = uriInfo.getBaseUriBuilder().path(UserGetDto.REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
         this.user = userUrl.build().toString();
         this.name = patient.getName();
-        this.medicPlan = uriInfo.getBaseUriBuilder().path(MedicPlanDto.REQUEST_PATH).path(String.valueOf(patient.getMedicPlan().getId())).build().toString();
-        this.medicPlanNumber = patient.getMedicPlanNumber();
+        if (patient.getMedicPlan() != null)
+            this.medicPlan = uriInfo.getBaseUriBuilder().path(MedicPlanDto.REQUEST_PATH).path(String.valueOf(patient.getMedicPlan().getId())).build().toString();
+        if (patient.getMedicPlanNumber() != null)
+            this.medicPlanNumber = patient.getMedicPlanNumber();
         UriBuilder patientUrl = uriInfo.getBaseUriBuilder().path(REQUEST_PATH).path(String.valueOf(patient.getUser().getId()));
         this.url = patientUrl.build().toString();
     }
