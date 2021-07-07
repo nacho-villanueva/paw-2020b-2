@@ -8,11 +8,13 @@ export function OrderItem(props) {
     const { t } = useTranslation();
 
     const order = props.order;
+    let url = order.url.split('/');
+    url = url[url.length -1];
     const roleType = props.role;
     return(
 
             <li className="nav-item order-item">
-                <Link to={"/dashboard/view-study/"+order.url }>
+                <Link to={"/dashboard/view-study/"+url }>
                     <Button className="nav-link w-100" id={"order-"+props.index+"-tab"}
                         data-toggle="tab" role="tab" style={{cursor:"pointer"}}
                     >

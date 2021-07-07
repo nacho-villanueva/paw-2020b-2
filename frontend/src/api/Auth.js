@@ -191,9 +191,12 @@ export function GetStudyTypes(setStudyTypesList, count, setCount){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
         setStudyTypesList(stl);
-        setCount(count+5);
+        setCount((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
     })
-    .catch((error) => {console.log("bruh", error)});
+    .catch((error) => {console.log("error in request.", error)});
 }
 
 export async function InternalQuery(request){
@@ -367,23 +370,32 @@ export function GetOrderInfo(orderId, orderInfo, setOrderInfo, count, setCount){
 
         InternalQuery(data.clinic).then((res) => {
             aux["clinic"] = res.name;
-            setCount(count+1);
+            setCount((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            })
         });
         InternalQuery(data.medic).then((res) => {
             aux["medicName"] = res.name;
             aux["medicLicenceNumber"] = res.licenceNumber;
-            setCount(count+5);
+            setCount((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            })
         });
         InternalQuery(data.studyType).then((res) => {
             aux["studyType"] = res.name;
-            setCount(count+11);
+            setCount((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            })
         });
 
 
         setOrderInfo(aux);
 
     }).catch((e) => {
-        console.log("getting results for order error", e)
+        console.log("error in orders request.", e)
     });
 }
 
@@ -399,7 +411,7 @@ export function GetResults(orderId,setResults){
         setResults(data);
 
     }).catch((e) => {
-        console.log("getting results for order error", e)
+        console.log("error in results request.", e)
     });
 }
 export function validateToken(token){

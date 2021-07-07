@@ -7,6 +7,8 @@ import {Day} from "./Day";
 
 export function ClinicsFilters(props){
     const inputs = props.inputs;
+    const setInputs = props.setInputs;
+
     const handleFiltersSubmit = props.handleFiltersSubmit;
     const insurancePlans = props.insurancePlans;
     const studyTypesList = props.studyTypesList;
@@ -37,6 +39,7 @@ export function ClinicsFilters(props){
                             type="text" className="select-input"
                             name="clinicName"
                             defaultValue={inputs.clinicName}
+                            onChange={(val) => {setInputs({...inputs, clinicName: val.target.value})}}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -48,6 +51,7 @@ export function ClinicsFilters(props){
                             as="select" name="insurancePlanSelect"
                             placeholder={t("advanced-search-clinics.form.insurance-plan.any")}
                             defaultValue={inputs.insurancePlan}
+                            onChange={(val) => {setInputs({...inputs, insurancePlan: val.target.value})}}
                         >
                             <option value={-1}>
                                 {t("advanced-search-clinics.form.insurance-plan.any")}
@@ -71,6 +75,7 @@ export function ClinicsFilters(props){
                             as="select" name="studyPlanSelect"
                             defaultValue={inputs.studyType}
                             placeholder={t("advanced-search-clinics.form.study-type.any")}
+                            onChange={(val) => {setInputs({...inputs, studyType: val.target.value})}}
                         >
                             <option value={-1}>
                                 {t("advanced-search-clinics.form.study-type.any")}
@@ -88,7 +93,10 @@ export function ClinicsFilters(props){
                     <div className="row justify-content-center mb-3">
                         <Button
                             className="cl-search-btn mx-auto"
-                            type="submit"
+                            onClick={(e)=> {
+                                e.preventDefault();
+                                handleFiltersSubmit();
+                            }}
                         >
                             <Trans t={t} i18nKey="advanced-search-clinics.form.submit.value" />
                         </Button>
@@ -123,7 +131,7 @@ export function ClinicsFilters(props){
                                 </thead>
                                 <tbody>
                                     {daysOfTheWeek.map((item,idx) => (
-                                        <Day item={item} filters={inputs} key={"di-"+idx}/>
+                                        <Day item={item} filters={inputs} key={"di-"+idx} setFilters={setInputs}/>
                                     ))}
                                 </tbody>
                             </Table>

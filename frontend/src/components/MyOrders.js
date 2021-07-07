@@ -51,20 +51,40 @@ function MyOrders(){
                 if(order["clinic"].includes("http")){
                     await InternalQuery(order["clinic"]).then((res) => {aux[index]["clinic"] = res.name;});
                     setOrders(aux);
-                    setCount(count +1)
-                    setUpdate(update+count);
+                    setCount((prevState) => {
+                        let next = prevState + 1;
+                        return {...prevState, ...next};
+                    })
+                    setUpdate((prevState) => {
+                        let next = prevState + 1;
+                        return {...prevState, ...next};
+                    })
                 }
                 if(order["medic"].includes("http")){
                     await InternalQuery(order["medic"]).then((res) => {aux[index]["medic"] = res.name;});
                     setOrders(aux);
-                    setCount(count +1)
-                    setUpdate(update+count);
+                    setCount((prevState) => {
+                        let next = prevState + 1;
+                        return {...prevState, ...next};
+                    })
+                    setUpdate((prevState) => {
+                        let next = prevState + 1;
+                        return {...prevState, ...next};
+                    })
                 }
                     /*
                     setCount(count +1)
                     setUpdate(update+count);
                     */
-            })).then((r) => { setCount(count +1); setUpdate(update+count);})
+            })).then((r) => {
+                setCount((prevState) => {
+                    let next = prevState + 1;
+                    return {...prevState, ...next};
+                });
+                setUpdate((prevState) => {
+                    let next = count + 1;
+                    return {...prevState, ...next};
+                })})
         }
     }
 
@@ -111,7 +131,10 @@ function MyOrders(){
                         .then((r) => {
                             //console.log("running on fetched studytypeslist");
                             SetUpClinicNames();
-                            setUpdate(update+1);
+                            setUpdate((prevState) => {
+                                let next = prevState + 1;
+                                return {...prevState, ...next};
+                            })
                            // console.log("FETCHING PAGE", orders)
 
                         });
@@ -119,7 +142,10 @@ function MyOrders(){
                     //console.log("running on saved studytypeslist", studyTypesList);
                     SetUpStudyTypesAndLink(studyTypesList, orders, setOrders);
                     SetUpClinicNames();
-                    setUpdate(update+1);
+                    setUpdate((prevState) => {
+                        let next = prevState + 1;
+                        return {...prevState, ...next};
+                    });
                 }
             });
         setCurrentPage(pageNumber);

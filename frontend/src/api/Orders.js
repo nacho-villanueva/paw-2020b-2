@@ -28,7 +28,10 @@ export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, se
         }
         setStudyTypesList(stl);
         SetUpStudyTypesAndLink(stl, orders, setOrders);
-        setUpdate(update+1);
+        setUpdate((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
         return r.status;
     })
     .catch((error) => {return -1;} );

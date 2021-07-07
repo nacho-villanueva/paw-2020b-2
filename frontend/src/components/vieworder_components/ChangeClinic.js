@@ -12,8 +12,12 @@ import { SearchClinics } from "../../api/Clinics";
 import { Trans, useTranslation } from 'react-i18next'
 import { UpdateOrderClinic } from "../../api/Orders";
 
+import { InputsSearch } from "../search_clinic/utils";
 
-export function ChangeClinic(props){
+import "../Style/SearchClinics.css";
+
+
+function ChangeClinic(props){
     const {t} = useTranslation();
 
     const show = props.show;
@@ -35,7 +39,7 @@ export function ChangeClinic(props){
     ];
 
     //what we have to send out
-    const sendableFilters = {
+    let sendableFilters = {
         clinicName: '',
         plan: '',
         studyType: '',
@@ -46,18 +50,18 @@ export function ChangeClinic(props){
     const [searchFilters, setSearchFilters] = useState(sendableFilters);
 
     //used in the FORM
-    const defaultInputs = {
+    let defaultInputs = {
         clinicName: '',
         insurancePlan: '',
         studyType: '',
         schedule: [
-            {day:0, checked: false, fromTime: '', toTime: ''},
-            {day:1, checked: false, fromTime: '', toTime: ''},
-            {day:2, checked: false, fromTime: '', toTime: ''},
-            {day:3, checked: false, fromTime: '', toTime: ''},
-            {day:4, checked: false, fromTime: '', toTime: ''},
-            {day:5, checked: false, fromTime: '', toTime: ''},
-            {day:6, checked: false, fromTime: '', toTime: ''}
+            {day:0, checked: true, fromTime: '', toTime: ''},
+            {day:1, checked: true, fromTime: '', toTime: ''},
+            {day:2, checked: true, fromTime: '', toTime: ''},
+            {day:3, checked: true, fromTime: '', toTime: ''},
+            {day:4, checked: true, fromTime: '', toTime: ''},
+            {day:5, checked: true, fromTime: '', toTime: ''},
+            {day:6, checked: true, fromTime: '', toTime: ''}
         ]
     };
     const [inputs, setInputs] = useState(defaultInputs);
@@ -80,7 +84,12 @@ export function ChangeClinic(props){
     }, []);
 
     useEffect(()=>{
-        fetchOptions().then((r) => {setUpdate(update + 1);})
+        fetchOptions().then((r) => {
+            setUpdate((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            });
+        });
     }, []);
 
     const changePageAndFetch = (pageNumber) => {
@@ -96,68 +105,12 @@ export function ChangeClinic(props){
     }
 
     const [filtersValidated, setFiltersValidated] = useState(false);
-    const handleFiltersSubmit = (event) => {
-        event.preventDefault();
-
-        const form = event.target;
-        if(form.checkValidity() === false){
-            event.stopPropagation();
-
-            setFiltersValidated(true);
-            //FILTERS FORM FEEDBACK CHECKS HERE
-        }else{
-            setSearchFilters(sendableFilters);
-
-            let auxInputs = inputs;
-            auxInputs.studyType = getValueFromEvent("studyPlanSelect", event);
-            auxInputs.clinicName = getValueFromEvent("clinicName", event);
-            auxInputs.insurancePlan = getValueFromEvent("insurancePlanSelect", event);
-
-            let auxFilters = searchFilters;
-            auxFilters.studyType = auxInputs.studyType !== '-1' ?  auxInputs.studyType : '';
-            auxFilters.clinicName = auxInputs.clinicName !== -1 ?  auxInputs.clinicName : '';
-            auxFilters.plan = auxInputs.insurancePlan !== -1 ?  auxInputs.insurancePlan : '';
-            auxFilters.days.fill(0);
-            auxFilters.fromTime.fill(0);
-            auxFilters.toTime.fill(0);
-
-
-            for(let idx = 1; idx <= 7; idx++){
-                console.log("checking days", idx)
-                auxInputs.schedule[idx - 1] = getDaySchedule(event, idx - 1);
-                if(auxInputs.schedule[idx - 1].checked === true){
-                    auxFilters.days[idx - 1] = 1;
-                    auxFilters.fromTime[idx - 1] = auxInputs.schedule[idx - 1].fromTime;
-                    auxFilters.toTime[idx - 1] = auxInputs.schedule[idx - 1].toTime;
-
-                }
-            }
-
-            setSearchFilters(auxFilters);
-            setInputs(auxInputs);
-
-            //console.log("event change clinic", event);
-
-            SearchClinics(searchFilters, setClinicsList, update, setUpdate, 1, setTotalClinicPages, setStatusCode, setErrors);
-
-        }
-
-
+    const handleFiltersSubmit = () => {
+        InputsSearch(searchFilters, setSearchFilters, inputs, setInputs, setClinicsList, update, setUpdate, setTotalClinicPages, setStatusCode, setErrors);
     }
-
-    const [changing, setChanging] = useState(false);
     const handleSubmitChange = () => {
-        setChanging(true);
+        UpdateOrderClinic(orderId, selectedClinic.userId, setStatusCode, setErrors).then((r) => {showUpdateToast(); handleClose();});
     }
-    const putClinic = useCallback(() => {
-        if(changing){
-            UpdateOrderClinic(orderId, selectedClinic.userId, setStatusCode, setErrors).then((r) => {showUpdateToast();});
-            setChanging(false);
-        }
-    });
-    useEffect(() => {
-        putClinic().then((r) => {setUpdate(update +1)});
-    }, [changing]);
 
     return(
         <Modal className="cl-modal" show={show} onHide={handleClose}>
@@ -171,6 +124,7 @@ export function ChangeClinic(props){
                     <ClinicsFilters
                         handleFiltersSubmit={handleFiltersSubmit}
                         inputs={inputs}
+                        setInputs={setInputs}
                         studyTypesList={studyTypesList}
                         insurancePlans={insurancePlans}
                         daysOfTheWeek={daysOfTheWeek}
@@ -197,3 +151,5 @@ export function ChangeClinic(props){
         </Modal>
     );
 }
+
+export default ChangeClinic;

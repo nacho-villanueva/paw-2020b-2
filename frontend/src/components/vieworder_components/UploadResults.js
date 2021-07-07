@@ -4,7 +4,7 @@ import ErrorFeedback from "../inputs/ErrorFeedback";
 import { Trans, useTranslation } from 'react-i18next'
 
 
-export function UploadResults(props){
+function UploadResults(props){
     const {t} = useTranslation();
 
     const show = props.show;
@@ -104,3 +104,5 @@ export function UploadResults(props){
         </Modal>
     );
 }
+
+export default UploadResults;
