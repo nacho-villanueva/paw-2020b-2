@@ -1,4 +1,4 @@
-import {useState, useLayoutEffect} from "react";
+import {useState, useLayoutEffect, useEffect} from "react";
 import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink } from "../api/Orders";
 import {useSelector} from "react-redux";
 import { Form, Button} from "react-bootstrap";
@@ -50,7 +50,17 @@ function MyOrders(){
                     setCount(count +1)
                     setUpdate(update+count);
                 }
-            }))
+                if(order["medic"].includes("http")){
+                    await InternalQuery(order["medic"]).then((res) => {aux[index]["medic"] = res.name;});
+                    setOrders(aux);
+                    setCount(count +1)
+                    setUpdate(update+count);
+                }
+                    /*
+                    setCount(count +1)
+                    setUpdate(update+count);
+                    */
+            })).then((r) => { setCount(count +1); setUpdate(update+count);})
         }
     }
 
@@ -121,16 +131,23 @@ function MyOrders(){
     }
 
     const [searching, setSearching] = useState(0);
+    const [load, setLoad] = useState(true);
 
     //calling on mount...
     useLayoutEffect( () => {
-        fetchAndChangePage(searchFilters.page);
-        GetStudyTypes(setStudyTypesList, update, setUpdate);
+        if(searching){
+            fetchAndChangePage(searchFilters.page);
+            GetStudyTypes(setStudyTypesList, update, setUpdate);
+            setSearching(false);
+        }
     }, [searching]);
     //calling on mount...
-    useLayoutEffect( () => {
-        fetchAndChangePage(searchFilters.page);
-        GetStudyTypes(setStudyTypesList, update, setUpdate);
+    useEffect( () => {
+        if(load){
+            fetchAndChangePage(searchFilters.page);
+            GetStudyTypes(setStudyTypesList, update, setUpdate);
+            setLoad(false);
+        }
     }, []);
 
 

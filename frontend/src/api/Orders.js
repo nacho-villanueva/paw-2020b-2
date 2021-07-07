@@ -74,3 +74,7 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
         return -1;
     })
 }
+
+export async function GetMedics(setMedicsList, update, setUpdate){
+
+}

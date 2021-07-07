@@ -9,6 +9,7 @@ import { store } from "../redux";
 import { ERROR_CODES } from "../constants/ErrorCodes"
 import InvalidFeedback from "./InvalidFeedback.js";
 import { getAuthorizedImage, getValueFromEvent } from "../api/utils";
+import { getAllInsurancePlans } from "../api/CustomFields";
 
 function CreateOrder(){
 
@@ -177,13 +178,13 @@ function CreateOrder(){
     /*
     *! NEED THAT END POINT!!!!
     */
-    const insurancePlans = [
+    const [insurancePlans, setInsurancePlans] = useState([
         {name:'None (insert SS number)'},
         {name:'Galeno Azul'},
         {name:'OSDE 4200'},
         {name:'Brook 9100'},
         {name:'OSDE'}
-    ];
+    ]);
 
 
 
@@ -303,6 +304,7 @@ function CreateOrder(){
         const fetchData = async () => {
             await GetLoggedMedic(orderInfo, setOrderInfo, count, setCount, setStatusCode, setErrors);
             await GetStudyTypes(setStudyTypes, count, setCount);
+            await getAllInsurancePlans(setInsurancePlans);
         };
 
         fetchData();
@@ -476,6 +478,11 @@ function CreateOrder(){
 
     const ClinicInfo = (props) => {
         const id = props.item.userId
+
+        const[showSchedule, setShowSchedule] = useState(false);
+        const[showPlans, setShowPlans] = useState(false);
+        const[showStudies, setShowStudies] = useState(false);
+
         return(
             <div
                 className="tab-pane tab-result"
@@ -493,35 +500,65 @@ function CreateOrder(){
                             <td className="output">{props.item.telephone}</td>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="create-order.clinic-info.open-hours"/></td>
                             <td>
-                                {props.item.hours.map((piano) => (
-                                    <div key={"oh_"+id+"_"+piano.day}>
-                                        <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
-                                        <span>{piano.openTime + " - " + piano.closeTime}</span>
-                                    </div>
-                                ))}
+                            <Button
+                                variant="secondary"
+                                onClick={() => {setShowSchedule(!showSchedule);}}
+                            >
+                                {t("create-order.clinic-info.open-hours")}
+                                {showSchedule===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                            </Button>
                             </td>
+                            <Collapse in={showSchedule}>
+                                <td>
+                                    {props.item.hours.map((piano) => (
+                                        <div key={"oh_"+id+"_"+piano.day}>
+                                            <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
+                                            <span>{piano.openTime + " - " + piano.closeTime}</span>
+                                        </div>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="create-order.clinic-info.insurance"/></td>
-                            <td className="output">
-                                {props.item.acceptedPlans.map((pico) => (
-                                    <span
-                                        key={"plan_"+ id +"_"+pico.id}
-                                        className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
-                                    >{pico.plan}</span>
+                            <td>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {setShowPlans(!showPlans);}}
+                                >
+                                    {t("create-order.clinic-info.insurance")}
+                                    {showPlans===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                </Button>
+                            </td>
+                            <Collapse in={showPlans}>
+                                <td className="output">
+                                    {props.item.acceptedPlans.map((pico) => (
+                                        <span
+                                            key={"plan_"+ id +"_"+pico.id}
+                                            className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
+                                        >{pico.plan}</span>
 
-                                ))}
-                            </td>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="create-order.clinic-info.studies"/></td>
-                            <td className="output">
-                                {props.item.medicalStudies.map((study) => (
-                                    <p key={"study_"+ id +"_"+study.name}>{study.name}</p>
-                                ))}
+                            <td>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {setShowStudies(!showStudies);}}
+                                >
+                                    {t("create-order.clinic-info.studies")}
+                                    {showStudies===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                </Button>
                             </td>
+                            <Collapse in={showStudies}>
+                                <td className="output">
+                                    {props.item.medicalStudies.map((study) => (
+                                        <p key={"study_"+ id +"_"+study.name}>{study.name}</p>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                     </tbody>
                 </Table>

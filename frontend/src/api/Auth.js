@@ -324,10 +324,8 @@ export function CreateMedicalOrder(order, setStatusCode, setErrors, setOrderStat
         patientName: order.patientName,
         studyTypeId: order.studyTypeId,
         description: order.orderDescription,
-        medicPlan : {
-            plan: order.patientInsurancePlan,
-            number: order.patientInsuranceNumber
-        }
+        patientMedicPlan : order.patientInsurancePlan,
+        patientMedicPlanNumber : order.patientInsuranceNumber
     }).then( (r) => {
         setStatusCode(r.status);
         //uh
