@@ -529,7 +529,7 @@
         "invalid": "Please insert a valid email",
         "non-exists": "Email does not exist in our database."
       },
-      "label": "Pacient\u0027s Email"
+      "label": "Patient\u0027s Email"
     },
     "send-button": "Send",
     "study": {
