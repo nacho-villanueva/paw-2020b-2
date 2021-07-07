@@ -593,6 +593,10 @@
         "cancel": "Cancel",
         "submit": "Upload Results"
       }
+    },
+    "toast-change":{
+      "title": "MedTransfer",
+      "body": "This order's clinic has been changed."
     }
   }
 }

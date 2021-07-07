@@ -15,6 +15,14 @@
     color: white !important;
 }
 
+.cl-search-btn:hover{
+    background: white !important;
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    border-style: solid;
+    border-width: thin;
+}
+
 .cl-schedule-btn {
     color: var(--primary) !important;
     border-color: var(--secondary) !important;

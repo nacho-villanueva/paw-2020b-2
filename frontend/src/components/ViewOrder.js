@@ -1,4 +1,4 @@
-import {Form, Button, Table, Collapse, Pagination, Spinner, Alert} from "react-bootstrap";
+import {Form, Button, Table, Collapse, Pagination, Spinner, Alert, Toast} from "react-bootstrap";
 import {useState, useEffect, useCallback} from "react";
 import {useHistory} from "react-router-dom";
 import {GetLogguedUser, GetOrderInfo, GetResults} from "../api/Auth";
@@ -18,6 +18,7 @@ import { GetIdentificationByURL } from "../api/UserInfo";
 import {ChangeClinic} from "./vieworder_components/ChangeClinic";
 
 import { Trans, useTranslation } from 'react-i18next'
+
 
 
 function ViewOrder(){
@@ -186,6 +187,11 @@ function ViewOrder(){
             GetResults(orderId, setResults);
         }
     }, [statusCode]);
+
+    const [showToast, setShowToast] = useState(false);
+    const showUpdateToast = () => {
+        setShowToast(true);
+    }
 
 
     const ResultCardView = (props) => {
@@ -442,7 +448,17 @@ function ViewOrder(){
                 show={showChangeClinicModal}
                 setShow={setShowChangeClinicModal}
                 orderInfo={orderInfo}
+                orderId={orderId}
+                showUpdateToast={showUpdateToast}
             />
+            <Toast onClose={()=> setShowToast(false)} show={showToast} delay={3000} autohide>
+                <Toast.Header>
+                    <strong className="mr-auto"><Trans t={t} i18nKey="view-order.toast-change.title"/></strong>
+                </Toast.Header>
+                <Toast.Body>
+                    <Trans t={t} i18nKey="view-order.toast-change.body"/>
+                </Toast.Body>
+            </Toast>
         </>
     )
 }
