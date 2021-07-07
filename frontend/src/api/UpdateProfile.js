@@ -95,10 +95,20 @@ export async function UpdateMedic(medic) {
     }
 
     if(medic.identification !== null) {
-        data.identification = {contentType: medic.identification.type}
-        await getBase64(medic.identification).then((img) => {
-            data.identification.image = img;
-        });
+        if((typeof medic.identification) === 'string') {
+            let splitString = medic.identification.split(';base64,');
+            let contentType = splitString[0].split(':')[1]
+            let b64Image = splitString[1]
+            data.identification = {
+                contentType: contentType,
+                image: b64Image
+            }
+        } else {
+            data.identification = {contentType: medic.identification.type}
+            await getBase64(medic.identification).then((img) => {
+                data.identification.image = img;
+            });
+        }
     }
 
     return apiInstance.put("/medics/" + id, data)
@@ -114,6 +124,7 @@ export async function UpdateMedic(medic) {
                         case "telephone":
                             errors.telephone = e.code;
                             break;
+                        case "identification":
                         case "identification.type":
                         case "identification.image":
                             errors.identification = e.code;
