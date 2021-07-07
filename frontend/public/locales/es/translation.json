@@ -486,5 +486,56 @@
     "medic": "Médico",
     "patient": "Paciente",
     "user": "Usuario"
+  },
+  "view-order": {
+    "order" : {
+      "order-number" : "Número de orden: {{number}}",
+      "date":"Fecha: {{today}}",
+      "patient": "Paciente",
+      "clinic": "Clínica",
+      "insurance-plan": "Plan médico",
+      "insurance-number": "Número del plan médico",
+      "study-type":"Tipo de estudio: {{studyType}}"
+    },
+    "results":{
+      "date":"Fecha: {{today}}",
+      "upload-results": "Subir Resultados",
+      "title": "Resultados",
+      "no-results":"No se han encontrado resultados para este estudio",
+      "select-result": "Seleccione un resultado"
+    },
+    "actions":{
+      "change-clinic": "Cambiar Clínica",
+      "share-w-medic": "Compartir con médico"
+    },
+    "upload":{
+      "title": "Subir Resultados",
+      "order-number" : "Número de orden",
+      "patient": "Paciente",
+      "insurance-plan": "Plan médico del paciente",
+      "insurance-number": "Número del plan médico del paciente",
+      "file-upload":{
+        "label": "Elegir archivos a subir",
+        "text": "Solo seleccione resultados en formato de imagen (jpeg, png, etc.)",
+        "error": "Los resultados son requeridos."
+      },
+      "responsible-name":{
+        "label" : "Médico responsable",
+        "error": "El nombre del médico responsable es requerido."
+      },
+      "responsible-number":{
+        "label" : "Licencia del médico responsable",
+        "error": "La licencia debe ser valida."
+      },
+      "responsible-id":{
+        "label" : "Subir firma",
+        "text" : "Suba una imagen de la firma del médico responsable",
+        "error": "La identificacion es requerida."
+      },
+      "actions":{
+        "cancel": "Cancelar",
+        "submit": "Subir Resultados"
+      }
+    }
   }
 }

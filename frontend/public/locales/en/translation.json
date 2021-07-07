@@ -496,5 +496,56 @@
     "medic": "Medic",
     "patient": "Patient",
     "user": "User"
+  },
+  "view-order": {
+    "order" : {
+      "order-number" : "Order number: {{number}}",
+      "date":"Date: {{today}}",
+      "patient": "Patient",
+      "clinic": "Clinic",
+      "insurance-plan": "Insurance plan",
+      "insurance-number": "Insurance plan number",
+      "study-type":"Study Type: {{studyType}}"
+    },
+    "results":{
+      "date":"Date: {{today}}",
+      "upload-results": "Upload Results",
+      "title": "Results",
+      "no-results":"No study results have been found",
+      "select-result": "Select a result"
+    },
+    "actions":{
+      "change-clinic": "Change Clinic",
+      "share-w-medic": "Share with medic"
+    },
+    "upload":{
+      "title": "Upload Results",
+      "order-number" : "Order number",
+      "patient": "Patient",
+      "insurance-plan": "Patient insurance plan",
+      "insurance-number": "Patient insurance plan number",
+      "file-upload":{
+        "label": "Choose the files to upload",
+        "text": "Only pick results in an image format (jpeg, png, etc.)",
+        "error": "Results are required."
+      },
+      "responsible-name":{
+        "label" : "Responsible Medic",
+        "error": "The responsible medic's name is required."
+      },
+      "responsible-number":{
+        "label" : "Responsible Medic's Licence Number",
+        "error": "The responsible medic's licence number must be valid."
+      },
+      "responsible-id":{
+        "label" : "Upload signature",
+        "text" : "Upload a picture of the responsible's signature",
+        "error": "Identification is required."
+      },
+      "actions":{
+        "cancel": "Cancel",
+        "submit": "Upload Results"
+      }
+    }
   }
 }

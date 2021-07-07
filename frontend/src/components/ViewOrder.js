@@ -17,10 +17,15 @@ import { GetIdentificationByURL } from "../api/UserInfo";
 
 import {ChangeClinic} from "./vieworder_components/ChangeClinic";
 
+import { Trans, useTranslation } from 'react-i18next'
+
+
 function ViewOrder(){
     const roleType = useSelector(state => state.auth.role);
     var orderId = window.location.href.split('/');
     orderId = orderId[orderId.length - 1];
+
+    const {t} = useTranslation();
 
     const imageAssets = "http://localhost:8080/";
     const changeClinicPath = "http://localhost:8080/";
@@ -194,7 +199,9 @@ function ViewOrder(){
                         <div className="card-body">
                             <div className="row justify-content-start">
                                 <div className="col type">
-                                    <p className="type-title">Date:</p> {props.item.date}
+                                    <p className="type-title">
+                                        <Trans t={t} i18nKey="view-order.results.date" />
+                                    </p> {props.item.date}
                                 </div>
                             </div>
 
@@ -224,7 +231,7 @@ function ViewOrder(){
                     </div>
                 :
                 <div className="align-items-end result-not">
-                    <h1 className="text-center mt-5 py-5">Select a result</h1>
+                    <h1 className="text-center mt-5 py-5"><Trans t={t} i18nKey="view-order.results.select-result" /></h1>
                 </div>
                 }
 
@@ -244,7 +251,9 @@ function ViewOrder(){
                     type="button"
                 >
                     <div className="d-flex w-100 justify-content-between">
-                        <p className="type-title">Date {result.date}</p>
+                        <p className="type-title">
+                            <Trans t={t} i18nKey="view-order.results.date" values={{today: result.date}} />
+                        </p>
                         </div>
                     <p>{result.responsibleName}</p>
                 </Button>
@@ -282,7 +291,9 @@ function ViewOrder(){
         return(
             <section>
                 <div className="align-items-end result-not">
-                    <h1 className="text-center mt-5 py-5">No Results Found For This Medical Order</h1>
+                    <h1 className="text-center mt-5 py-5">
+                        {t("view-order.results.no-results")}
+                    </h1>
                 </div>
                 {roleType === Roles.PATIENT ?
                     <div className="row justify-content-center">
@@ -291,7 +302,7 @@ function ViewOrder(){
                             className="btn upload-btn mt-0 mb-3 mr-4"
                             onClick={(e) => {e.preventDefault();setShowChangeClinicModal(true);e.stopPropagation();}}
                         >
-                            Change Clinic
+                            {t("view-order.actions.change-clinic")}
                         </Button>
                     </div>
                     :
@@ -306,7 +317,9 @@ function ViewOrder(){
             <div className="card order-card bg-light float-right">
                 <div className="row mt-4" key={"orderInfo_"}>
                     <div className="col">
-                        <p className="card-title ml-3 h4">Order Number: {orderInfo.id}</p>
+                        <p className="card-title ml-3 h4">
+                            <Trans t={t} i18nKey="view-order.order.order-number" values={{number: orderInfo.id}} />
+                        </p>
                     </div>
                     {roleType === Roles.PATIENT ?
                         <div className="col">
@@ -315,7 +328,7 @@ function ViewOrder(){
                                     className="btn upload-btn mt-0 mb-3 mr-4"
                                     role="button" type="button"
                                 >
-                                    Share Order
+                                    {t("view-order.actions.share-w-medic")}
                                 </a>
                             </div>
                         </div> : <></>
@@ -324,33 +337,41 @@ function ViewOrder(){
                 <div className="row">
                     <div className="col">
                         <p className="card-subtitle ml-3 text-muted lead">
-                            Date: {orderInfo.date}
+                            <Trans t={t} i18nKey="view-order.order.date" values={{today: orderInfo.date}} />
                         </p>
                     </div>
                 </div>
                 <hr className="mt-3 mb-4"/>
                 <div className="row justify-content-start mx-4">
                     <div className="col type">
-                        <p className="type-title">Patient</p>
+                        <p className="type-title">
+                            <Trans t={t} i18nKey="view-order.order.patient"/>
+                        </p>
                         {orderInfo.patientName}
                     </div>
                     <div className="col type">
-                        <p className="type-title">Medical Clinic</p>
+                        <p className="type-title">
+                            <Trans t={t} i18nKey="view-order.order.clinic"/>
+                        </p>
                         {orderInfo.clinic}
                     </div>
                     <div className="w-100"></div>
                     <div className="col type">
-                        <p className="type-title">Patient insurance plan</p>
+                        <p className="type-title">
+                            <Trans t={t} i18nKey="view-order.order.insurance-plan"/>
+                        </p>
                         {/*orderInfo.medicPlan.name*/}
                     </div>
                     <div className="col type">
-                        <p className="type-title">Patient insurance number</p>
+                        <p className="type-title">
+                            <Trans t={t} i18nKey="view-order.order.insurance-number"/>
+                        </p>
                         {/*orderInfo.medicPlan.number*/}
                     </div>
                 </div>
                 <hr className="mt-3 mb-5"/>
                 <p className="card-text text-center h5">
-                    Study type: {orderInfo.studyType}
+                    <Trans t={t} i18nKey="view-order.order.study-type" values={{studyType: orderInfo.studyType}} />
                 </p>
                 <p className="card-text text-center">{orderInfo.description}</p>
                 <hr className="mt-5 mb-4"/>
@@ -376,7 +397,7 @@ function ViewOrder(){
                 <div className="card-body"  key={"results-container_"+count}>
                     <div className="row">
                         <div className="col">
-                            <p className="card-title h4">Results</p>
+                            <p className="card-title h4"><Trans t={t} i18nKey="view-order.results.title"/></p>
                         </div>
                         <div className="col">
                             <div className="row justify-content-end">
@@ -386,7 +407,7 @@ function ViewOrder(){
                                         className="btn upload-btn mt-0 mb-3 mr-4"
                                         onClick={(e) => {e.preventDefault();setShowUploadModal(true);e.stopPropagation();}}
                                     >
-                                        Upload Results
+                                        {t("view-order.results.upload-results")}
                                     </Button>
                                     : <></>
                                 }
