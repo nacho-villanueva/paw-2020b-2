@@ -43,20 +43,39 @@ const EditClinicTab = () => {
         name: "",
         telephone: "",
         hours: null,
-        insurancePlans: null,
-        studyTypes: null
+        insurancePlans: [],
+        studyTypes: [],
+        verified: false
     }
 
-    const [accountValues, setAccountValues] = useState( {...defaultValues, verified: false})
-    const [insurancePlans, setInsurancePlans] = useState( "")
-    const [studyTypes, setStudyTypes] = useState( "")
-
+    const [accountValues, setAccountValues] = useState(defaultValues)
     const [modifiedValues, setModifiedValues] = useState(defaultValues)
 
-    const resetModifiedValues = ()=>{
+    const resetModifiedStatus = ()=>{
         setModified(false)
-        setModifiedValues(defaultValues)
+        setModifiedValues(accountValues)
         setSuccess(false)
+    }
+
+    const setClinicValues = (data) => {
+        let newValues = {
+            name: data.name,
+            telephone: data.telephone,
+            verified: data.verified,
+            hours: data.hours
+        }
+        setAccountValues(((prevState) => ({...prevState, ...newValues})));
+        setModifiedValues((prevState) => ({...prevState, ...newValues}));
+    }
+
+    const updateStudyTypes = (st) => {
+        setAccountValues((prevState) => ({...prevState, studyTypes: st}))
+        setModifiedValues((prevState) => ({...prevState, studyTypes: st}))
+    }
+
+    const updateMedicalPlans = (ip) => {
+        setAccountValues((prevState) => ({...prevState, insurancePlans: ip}))
+        setModifiedValues((prevState) => ({...prevState, insurancePlans: ip}))
     }
 
     useEffect(() => {
@@ -66,9 +85,9 @@ const EditClinicTab = () => {
             getAllStudyTypes(setStudyTypesOptions)
             GetClinicInfo(store.getState().auth.userId)
                 .then((r) => {
-                    setAccountValues(r)
-                    GetStudyTypesByURL(r.studyTypes).then((st)=>{setStudyTypes(st)});
-                    GetMedicalPlansByURL(r.insurancePlans).then((ip)=>{setInsurancePlans(ip)});
+                    setClinicValues(r)
+                    GetStudyTypesByURL(r.studyTypes).then((st)=>{updateStudyTypes(st)});
+                    GetMedicalPlansByURL(r.insurancePlans).then((ip)=>{updateMedicalPlans(ip)});
                 })
 
         }
@@ -91,15 +110,15 @@ const EditClinicTab = () => {
                 let shouldIP = modifiedValues.insurancePlans !== [];
                 let shouldST = modifiedValues.studyTypes !== [];
 
-                resetModifiedValues();
+                resetModifiedStatus();
                 setSuccess(true);
                 GetClinicInfo(store.getState().auth.userId)
                     .then((r) => {
-                        setAccountValues(r);
+                        setClinicValues(r);
                         if(shouldIP)
-                            GetStudyTypesByURL(r.studyTypes).then((st)=>{setStudyTypes(st)});
+                            GetStudyTypesByURL(r.studyTypes).then((st)=>{updateStudyTypes(st)});
                         if(shouldST)
-                            GetMedicalPlansByURL(r.insurancePlans).then((ip)=>{setInsurancePlans(ip)});
+                            GetMedicalPlansByURL(r.insurancePlans).then((ip)=>{updateMedicalPlans(ip)});
                     })
             }
             setLoading(false)
@@ -111,8 +130,8 @@ const EditClinicTab = () => {
             <Alert show={success} variant={"success"}><Trans t={t} i18nKey={"edit-profile.save.alert"} /></Alert>
             <table className={"fieldsTable"}>
                 <tbody>
-                <EditFieldRow type="text" modified={modified} field={accountValues.name} name={t("edit-profile.tabs.clinic.name.label")}
-                              onEdit={()=> {setModifiedValues({...modifiedValues, name:accountValues.name}); onEdit(); }}>
+                <EditFieldRow type="text" modified={modified} field={modifiedValues.name} name={t("edit-profile.tabs.clinic.name.label")}
+                              onEdit={()=> { onEdit(); }}>
                     <Form.Group className="form-group col mt-1">
                         <FormControl
                             className={"fieldEditInput"}
@@ -120,12 +139,12 @@ const EditClinicTab = () => {
                             value={modifiedValues.name}
                             onChange={(val)=> {setModifiedValues({...modifiedValues, name: val.target.value})}}
                             type={"text"} />
-                        <ErrorFeedback isInvalid={errors.name === ERROR_CODES.INVALID}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.name.error"} /></ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.name === ERROR_CODES.INVALID || errors.name === ERROR_CODES.MISSING_FIELD}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.name.error"} /></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type="text" modified={modified} field={accountValues.telephone} name={t("edit-profile.tabs.clinic.telephone.label")}
-                              onEdit={()=>{setModifiedValues({...modifiedValues, telephone: accountValues.telephone}); onEdit();}}>
+                <EditFieldRow type="text" modified={modified} field={modifiedValues.telephone} name={t("edit-profile.tabs.clinic.telephone.label")}
+                              onEdit={()=>{ onEdit();}}>
                     <Form.Group className="form-group col mt-1">
                         <FormControl
                             className={"fieldEditInput"}
@@ -133,12 +152,12 @@ const EditClinicTab = () => {
                             value={modifiedValues.telephone}
                             onChange={(val)=> {setModifiedValues({...modifiedValues, telephone: val.target.value})}}
                             type={"text"} />
-                        <ErrorFeedback isInvalid={errors.telephone === ERROR_CODES.INVALID}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.telephone.error"} /></ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.telephone === ERROR_CODES.INVALID || errors.telephone === ERROR_CODES.MISSING_FIELD}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.telephone.error"} /></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type="list" modified={modified} field={insurancePlans} name={t("edit-profile.tabs.clinic.insurances.label")}
-                              onEdit={()=>{setModifiedValues({...modifiedValues, insurancePlans: insurancePlans}); onEdit();}}>
+                <EditFieldRow type="list" modified={modified} field={modifiedValues.insurancePlans} name={t("edit-profile.tabs.clinic.insurances.label")}
+                              onEdit={()=>{ onEdit();}}>
                     <Form.Group className="form-group col mt-1">
                         <Typeahead
                             options={medicalInsuranceOptions}
@@ -155,8 +174,8 @@ const EditClinicTab = () => {
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type="list" modified={modified} field={studyTypes} name={t("edit-profile.tabs.clinic.studies.label")}
-                              onEdit={()=>{setModifiedValues({...modifiedValues, studyTypes: studyTypes}); onEdit();}}>
+                <EditFieldRow type="list" modified={modified} field={modifiedValues.studyTypes} name={t("edit-profile.tabs.clinic.studies.label")}
+                              onEdit={()=>{onEdit();}}>
                     <Form.Group className="form-group col mt-1">
                         <Typeahead
                             options={studyTypesOptions}
@@ -169,14 +188,18 @@ const EditClinicTab = () => {
                             multiple
                             required
                         />
-                        <ErrorFeedback isInvalid={errors.studyTypes === ERROR_CODES.INVALID}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.studies.error"} /></ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.studyTypes === ERROR_CODES.INVALID || errors.studyTypes === ERROR_CODES.MISSING_FIELD}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.studies.error"} /></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type="hours" modified={modified} field={accountValues.hours} name={t("edit-profile.tabs.clinic.hours.label")}
-                              onEdit={()=>{setModifiedValues({...modifiedValues, hours: accountValues.hours}); onEdit();}}>
+                <EditFieldRow type="hours" modified={modified} field={modifiedValues.hours} name={t("edit-profile.tabs.clinic.hours.label")}
+                              onEdit={()=>{ onEdit();}}>
                     <Form.Group className="form-group col mt-1">
-                        <SelectDaysHours key={accountValues.hours} defaultValue={accountValues.hours} onChange={(val) => {setModifiedValues({...modifiedValues, hours: val})}} selectStyle={{top:"-1000%!important;"}} selectPlaceholder={t("edit-profile.tabs.clinic.hours.select")}/>
+                        <SelectDaysHours
+                            key={modifiedValues.hours}
+                            defaultValue={modifiedValues.hours}
+                            onChange={(val) => {setModifiedValues({...modifiedValues, hours: val})}} selectStyle={{top:"-1000%!important;"}}
+                            selectPlaceholder={t("edit-profile.tabs.clinic.hours.select")}/>
                         <ErrorFeedback isInvalid={errors.hours === ERROR_CODES.INVALID || errors.hours === ERROR_CODES.MISSING_FIELD}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.hours.error"} /></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
@@ -184,14 +207,14 @@ const EditClinicTab = () => {
                 <tr>
                     <td className={"fieldName"}><Trans t={t} i18nKey={"edit-profile.tabs.clinic.verified"} /></td>
                     <td>
-                        {accountValues.verified && <i className={"fas verified fa-check fa-lg verified"}/>}
-                        {!accountValues.verified && <i className={"fas verified fa-times fa-lg notVerified"}/>}
+                        {modifiedValues.verified && <i className={"fas verified fa-check fa-lg verified"}/>}
+                        {!modifiedValues.verified && <i className={"fas verified fa-times fa-lg notVerified"}/>}
                     </td>
                 </tr>
                 </tbody>
             </table>
             <hr className={"divider"}/>
-            {modified && <SaveChanges isLoading={loading} askPassword={false} onSubmit={handleSubmit} onCancel={resetModifiedValues}/>}
+            {modified && <SaveChanges isLoading={loading} askPassword={false} onSubmit={handleSubmit} onCancel={resetModifiedStatus}/>}
         </div>)
 }
 

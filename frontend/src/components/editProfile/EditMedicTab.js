@@ -39,10 +39,12 @@ const EditMedicTab = () => {
         verified: false
     }
 
+    const [accountValues, setAccountValues] = useState(defaultValues)
     const [modifiedValues, setModifiedValues] = useState(defaultValues)
 
     const resetModifiedStatus = ()=>{
         setModified(false)
+        setModifiedValues(accountValues)
         setSuccess(false)
     }
 
@@ -53,14 +55,17 @@ const EditMedicTab = () => {
             licenseNumber: data.licenseNumber,
             verified: data.verified
         }
+        setAccountValues((prevState) => ({...prevState, ...newValues}));
         setModifiedValues((prevState) => ({...prevState, ...newValues}));
     }
 
     const updateIdentification = (i) => {
+        setAccountValues((prevState) => ({...prevState, identification: i}));
         setModifiedValues((prevState) => ({...prevState, identification: i}));
     }
 
     const updateMedicalFields = (mf) => {
+        setAccountValues((prevState) => ({...prevState, medicalFields: mf}));
         setModifiedValues((prevState) => ({...prevState, medicalFields: mf}));
     }
 
