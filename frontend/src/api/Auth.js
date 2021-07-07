@@ -61,11 +61,7 @@ export function registerPatient(name, insurancePlan, insuranceNumber, onSuccess,
         {
             "name": name,
             "patientPlanInfo": {
-                "plan": {
-                    "id": insurancePlan.id,
-                    "name": insurancePlan.name,
-                    "url": insurancePlan.url
-                },
+                "plan": insurancePlan,
                 "number": insuranceNumber
             }
         })

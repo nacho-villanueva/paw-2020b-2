@@ -34,7 +34,7 @@ const EditPatientProfileTab = () => {
                 .then((r) => {
                     setAccountValues({
                         name:r.name,
-                        insurancePlan: r.insurancePlan,
+                        insurancePlan: r.insurancePlan.name,
                         insuranceNumber: r.insuranceNumber
                     })
             })
@@ -45,9 +45,9 @@ const EditPatientProfileTab = () => {
     const [modified, setModified] = useState(false)
 
     const defaultValues = {
-        name: "",
-        insurancePlan: "",
-        insuranceNumber: ""
+        name: null,
+        insurancePlan: null,
+        insuranceNumber: null
     }
 
     const [accountValues, setAccountValues] = useState(defaultValues)
@@ -66,7 +66,7 @@ const EditPatientProfileTab = () => {
 
     const handleSubmit = () => {
         let insurancePlan = null;
-        if(modifiedValues.insurancePlan !== "") {
+        if(modifiedValues.insurancePlan !== null) {
             for (let ip of insurancePlansOptions) {
                 if (ip.name === modifiedValues.insurancePlan) {
                     insurancePlan = ip;
@@ -74,15 +74,11 @@ const EditPatientProfileTab = () => {
                 }
             }
 
-            console.log(modifiedValues.insurancePlan)
-
-            if(insurancePlan === null){
-                setErrors({...defaultErrors, insurancePlan:ERROR_CODES.INVALID})
-                return;
-            }
+            if(insurancePlan === null)
+                insurancePlan = ""
         }
 
-        if(insurancePlan == null && modifiedValues.insuranceNumber !== "")
+        if(insurancePlan === null && modifiedValues.insuranceNumber !== null)
             insurancePlan = accountValues.insurancePlan
 
         setLoading(true)
@@ -97,7 +93,7 @@ const EditPatientProfileTab = () => {
                     .then((r) => {
                         setAccountValues({
                             name:r.name,
-                            insurancePlan: r.insurancePlan,
+                            insurancePlan: r.insurancePlan.name,
                             insuranceNumber: r.insuranceNumber
                         })
                     })
@@ -125,12 +121,12 @@ const EditPatientProfileTab = () => {
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type={"text"} modified={modified} field={accountValues.insurancePlan.name} name={t("edit-profile.tabs.patient.insurancePlan.label")}
+                <EditFieldRow type={"text"} modified={modified} field={accountValues.insurancePlan} name={t("edit-profile.tabs.patient.insurancePlan.label")}
                               onEdit={()=>{setModifiedValues({...modifiedValues, insurancePlan: accountValues.insurancePlan}); onEdit()}}>
                     <Form.Group className="form-group col mt-1">
                         <Typeahead
                             options={Array.from(insurancePlansOptions,(x) => x.name)}
-                            defaultSelected={[accountValues.insurancePlan.name]}
+                            defaultSelected={[accountValues.insurancePlan]}
                             highlightOnlyResult={true}
                             placeholder={t("edit-profile.tabs.patient.insurancePlan.label")}
                             id={"patientInsurancePlan"}
