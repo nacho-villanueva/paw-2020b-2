@@ -1,5 +1,6 @@
 import apiInstance, {apiRedirects} from "./index";
 import {GetInsurancePlanByURL} from "./CustomFields";
+import {intermediateMinuteCircle} from "react-timekeeper/lib/components/styles/clock-hand";
 
 export function GetUserByURL(url){
     return apiRedirects.get(url).then((r) => {return r.data} );
@@ -13,17 +14,20 @@ export function GetUserInfo(id) {
         }})
 }
 
-export function GetPatientInfo(id) {
-    return apiInstance.get("/patients/" + id)
-        .then((pir) => {
-            return GetInsurancePlanByURL(pir.data.medicPlan).
-            then((ipr) => {
-                return {
-                    name: pir.data.name,
-                    insurancePlan: ipr.data,
-                    insuranceNumber: pir.data.medicPlanNumber
-                }
-            })})
+export async function GetPatientInfo(id) {
+
+    const patientInfo = await apiInstance.get("/patients/" + id).then((r) => {return r.data})
+
+    let insurancePlan = null;
+
+    if(patientInfo.medicPlan !== undefined)
+        insurancePlan = await GetInsurancePlanByURL(patientInfo.medicPlan).then((r) => {return r.data})
+
+    return {
+        name: patientInfo.name,
+        insurancePlan: insurancePlan,
+        insuranceNumber: patientInfo.medicPlanNumber
+    }
 }
 
 export function GetIdentificationByURL(url){

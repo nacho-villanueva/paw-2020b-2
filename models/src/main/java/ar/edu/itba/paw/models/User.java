@@ -40,7 +40,7 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    protected User() {
+    public User() {
         //Just for hibernate
         this.enabled = false;
     }

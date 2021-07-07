@@ -17,8 +17,8 @@ i18n
       ],
       backendOptions: [{
         // expiration
-        //expirationTime: 0 // Use this value for development (check changes to translation files)
-        expirationTime: 7*24*60*60*1000 // Use this value for production
+        expirationTime: 0 // Use this value for development (check changes to translation files)
+        //expirationTime: 7*24*60*60*1000 // Use this value for production
       }, {
       }]
     },

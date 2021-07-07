@@ -32,7 +32,7 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     }
 
     @Override
-    public StudyType findOrRegister(String name) {
+    public StudyType register(String name) {
         return studyTypeDao.findOrRegister(name);
     }
 

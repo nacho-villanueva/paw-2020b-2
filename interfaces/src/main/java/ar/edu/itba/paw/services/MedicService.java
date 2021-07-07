@@ -9,9 +9,17 @@ import java.util.Optional;
 
 public interface MedicService {
 
-    Collection<Medic> getAll();
+    Collection<Medic> getAll(int page, int pageSize);
 
-    Collection<Medic> getAllUnverified();
+    long getAllCount();
+
+    int getAllLastPage(int pageSize);
+
+    Collection<Medic> getAllUnverified(int page, int pageSize);
+
+    long getAllUnverifiedCount();
+
+    int getAllUnverifiedLastPage(int pageSize);
 
     Medic register(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields);
 
@@ -19,7 +27,9 @@ public interface MedicService {
 
     MedicalField registerFieldToMedic(int medicId, MedicalField medicalField);
 
-    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields, boolean verified);
+    Medic updateMedicInfo(User user, String name, String telephone, String identificationType, byte[] identification, String licenceNumber, Collection<MedicalField> knownFields);
+
+    void verifyMedic(int medicId);
 
     boolean knowsField(int medicId, int fieldId);
 }

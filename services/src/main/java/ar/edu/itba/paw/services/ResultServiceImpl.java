@@ -26,8 +26,18 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Collection<Result> findByOrderId(long id) {
-        return resultDao.findByOrderId(id);
+    public Collection<Result> findByOrderId(long id, int page, int pageSize) {
+        return resultDao.findByOrderId(id,page,pageSize);
+    }
+
+    @Override
+    public long findByOrderIdCount(long id) {
+        return resultDao.findByOrderIdCount(id);
+    }
+
+    @Override
+    public long findByOrderIdLastPage(long id, int pageSize) {
+        return getLastPage(findByOrderIdCount(id),pageSize);
     }
 
     @Override
@@ -35,6 +45,11 @@ public class ResultServiceImpl implements ResultService {
         Result result = resultDao.register(orderId,resultDataType,resultData,identificationType,identification,date,responsibleName,responsibleLicenceNumber);
         mailNotificationService.sendResultMail(result);
         return result;
+    }
+
+    // auxiliar functions
+    private long getLastPage(final long count, final int pageSize){
+        return (long) Math.ceil((double)count / pageSize);
     }
 }
 

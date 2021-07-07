@@ -289,11 +289,11 @@
       },
       "patient": {
         "insuranceNumber": {
-          "error": "Please insert a valid Insurance Number (Only alphanumeric)",
+          "error": "You must provide a medic plan alongside the plan number",
           "label": "Medical Insurance Number"
         },
         "insurancePlan": {
-          "error": "Please insert a valid medical insurance",
+          "error": "Please insert a valid medical insurance or dont provide a plan number",
           "label": "Medical Insurance"
         },
         "name": {
@@ -529,7 +529,7 @@
         "invalid": "Please insert a valid email",
         "non-exists": "Email does not exist in our database."
       },
-      "label": "Pacient\u0027s Email"
+      "label": "Patient\u0027s Email"
     },
     "send-button": "Send",
     "study": {

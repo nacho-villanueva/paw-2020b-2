@@ -11,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public class MedicJpaDao implements MedicDao {
 
@@ -26,20 +28,52 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Collection<Medic> getAll() {
-        return getAll(true);
+    public Collection<Medic> getAll(final int page, final int pageSize) {
+        return getAll(true,page,pageSize);
     }
 
     @Override
-    public Collection<Medic> getAllUnverified() {
-        return getAll(false);
+    public long getAllCount() {
+        return getAllCount(true);
     }
 
-    private Collection<Medic> getAll(final boolean verified) {
-        // with hibernate, the validation that a medic is associated with an user should be unnecesary
-        final TypedQuery<Medic> query = em.createQuery("SELECT m FROM Medic m WHERE m.verified = :isVerified",Medic.class);
+    @Override
+    public Collection<Medic> getAllUnverified(final int page, final int pageSize) {
+        return getAll(false,page,pageSize);
+    }
+
+    @Override
+    public long getAllUnverifiedCount() {
+        return getAllCount(false);
+    }
+
+    private Collection<Medic> getAll(final boolean verified, final int page, final int pageSize) {
+
+        if(pageSize <= 0 || page <= 0)
+            return null;
+
+        String queryString = "SELECT m FROM Medic m "+
+                "WHERE m.verified = :isVerified " +
+                "ORDER BY m.name ASC, m.user.id ASC";
+
+
+        final TypedQuery<Medic> query = em.createQuery(queryString,Medic.class);
         query.setParameter("isVerified",verified);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
+    }
+
+    private Long getAllCount(final boolean verified){
+
+        final String queryString = "SELECT COUNT(m) FROM Medic m " +
+                "WHERE m.verified = :isVerified";
+
+        final TypedQuery<Long> countQuery = em.createQuery(queryString,Long.class);
+        countQuery.setParameter("isVerified",verified);
+        return countQuery.getSingleResult();
     }
 
     @Override
@@ -59,6 +93,17 @@ public class MedicJpaDao implements MedicDao {
         return medic;
     }
 
+    @Override
+    public void verifyMedic(int medicId) {
+        Optional<Medic> medicDB = findByUserId(medicId);
+
+        medicDB.ifPresent(medic -> {
+            if(!medic.isVerified())
+                medic.setVerified(true);
+            em.flush();
+        });
+    }
+
     private MedicalField getFieldRef(MedicalField medicalField) {
         MedicalField retRef;
         if(medicalField.getId() != null) {
@@ -75,22 +120,27 @@ public class MedicJpaDao implements MedicDao {
     }
 
     @Override
-    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields, final boolean verified) {
+    public Medic updateMedicInfo(User user, final String name, final String telephone, final String identificationType, final byte[] identification, final String licenceNumber, final Collection<MedicalField> knownFields) {
 
         Optional<Medic> medicDB = findByUserId(user.getId());
 
         medicDB.ifPresent(medic -> {
-            medic.setName(name);
+            if(!isEmpty(name))
+                medic.setName(name);
             medic.setTelephone(telephone);
-            medic.setIdentificationType(identificationType);
-            medic.setIdentification(identification);
-            medic.setLicenceNumber(licenceNumber);
-            medic.setVerified(verified);
-            Collection<MedicalField> fieldsRef = new HashSet<>();
-            knownFields.forEach(medicalField -> {
-                fieldsRef.add(getFieldRef(medicalField));
-            });
-            medic.setMedicalFields(fieldsRef);
+            if(!isEmpty(identificationType))
+                medic.setIdentificationType(identificationType);
+            if(identification != null)
+                medic.setIdentification(identification);
+            if(!isEmpty(licenceNumber))
+                medic.setLicenceNumber(licenceNumber);
+            if(knownFields != null) {
+                Collection<MedicalField> fieldsRef = new HashSet<>();
+                knownFields.forEach(medicalField -> {
+                    fieldsRef.add(getFieldRef(medicalField));
+                });
+                medic.setMedicalFields(fieldsRef);
+            }
             em.flush();
         });
 

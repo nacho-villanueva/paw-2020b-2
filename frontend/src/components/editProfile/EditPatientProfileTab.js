@@ -32,11 +32,7 @@ const EditPatientProfileTab = () => {
             getAllInsurancePlans(setInsurancePlansOptions)
             GetPatientInfo(store.getState().auth.userId)
                 .then((r) => {
-                    setAccountValues({
-                        name:r.name,
-                        insurancePlan: r.insurancePlan,
-                        insuranceNumber: r.insuranceNumber
-                    })
+                    setPatientValues(r)
             })
         }
         return () => {loaded = true}
@@ -45,9 +41,9 @@ const EditPatientProfileTab = () => {
     const [modified, setModified] = useState(false)
 
     const defaultValues = {
-        name: "",
-        insurancePlan: "",
-        insuranceNumber: ""
+        name: null,
+        insurancePlan: null,
+        insuranceNumber: null
     }
 
     const [accountValues, setAccountValues] = useState(defaultValues)
@@ -64,27 +60,39 @@ const EditPatientProfileTab = () => {
         setSuccess(false);
     }
 
+    const setPatientValues = (data) => {
+        let newValues = {
+            name:data.name,
+            insurancePlan: data.insurancePlan,
+            insuranceNumber: data.insuranceNumber
+        };
+        setAccountValues(newValues);
+        let insuranceName = null;
+        if(newValues.insurancePlan != null)
+            insuranceName = newValues.insurancePlan.name
+        setModifiedValues({...newValues, insurancePlan: insuranceName });
+    }
+
     const handleSubmit = () => {
+        // Transform insurance name into insurance object
         let insurancePlan = null;
-        if(modifiedValues.insurancePlan !== "") {
+        if(modifiedValues.insurancePlan !== null && modifiedValues.insurancePlan.length > 0) {
+            // We search on the available options
             for (let ip of insurancePlansOptions) {
                 if (ip.name === modifiedValues.insurancePlan) {
                     insurancePlan = ip;
                     break;
                 }
             }
-
-            console.log(modifiedValues.insurancePlan)
-
-            if(insurancePlan === null){
-                setErrors({...defaultErrors, insurancePlan:ERROR_CODES.INVALID})
-                return;
+            // If we didnt find it we create the new object
+            if (insurancePlan === null) {
+                insurancePlan = {
+                    name:modifiedValues.insurancePlan
+                };
             }
         }
-
-        if(insurancePlan == null && modifiedValues.insuranceNumber !== "")
-            insurancePlan = accountValues.insurancePlan
-
+        if(modifiedValues.insuranceNumber !== null && modifiedValues.insuranceNumber !== undefined && modifiedValues.insuranceNumber.length === 0)
+            modifiedValues.insuranceNumber = null
         setLoading(true)
         UpdatePatient({name: modifiedValues.name, insurancePlan: insurancePlan, insuranceNumber: modifiedValues.insuranceNumber}).then((r)=> {
             if(r !== true){
@@ -95,11 +103,7 @@ const EditPatientProfileTab = () => {
                 setSuccess(true)
                 GetPatientInfo(store.getState().auth.userId)
                     .then((r) => {
-                        setAccountValues({
-                            name:r.name,
-                            insurancePlan: r.insurancePlan,
-                            insuranceNumber: r.insuranceNumber
-                        })
+                        setPatientValues(r)
                     })
             }
             setLoading(false)
@@ -112,8 +116,8 @@ const EditPatientProfileTab = () => {
             <Alert show={success} variant={"success"}><Trans t={t} i18nKey="edit-profile.save.alert"/></Alert>
             <table className={"fieldsTable"}>
                 <tbody>
-                <EditFieldRow type={"text"} modified={modified} field={accountValues.name} name={t("edit-profile.tabs.patient.name.label")}
-                              onEdit={()=> {setModifiedValues({...modifiedValues, name:accountValues.name}); onEdit(); }}>
+                <EditFieldRow type={"text"} modified={modified} field={modifiedValues.name} name={t("edit-profile.tabs.patient.name.label")}
+                              onEdit={()=> { onEdit(); }}>
                     <Form.Group className="form-group col mt-1">
                         <FormControl
                             className={"fieldEditInput"}
@@ -121,16 +125,15 @@ const EditPatientProfileTab = () => {
                             value={modifiedValues.name}
                             onChange={(val)=> {setModifiedValues({...modifiedValues, name: val.target.value})}}
                             type={"text"} />
-                        <ErrorFeedback isInvalid={errors.name === ERROR_CODES.INVALID}><Trans t={t} i18nKey="edit-profile.tabs.patient.name.error"/></ErrorFeedback>
+                        <ErrorFeedback isInvalid={errors.name === ERROR_CODES.MISSING_FIELD}><Trans t={t} i18nKey="edit-profile.tabs.patient.name.error"/></ErrorFeedback>
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type={"text"} modified={modified} field={accountValues.insurancePlan.name} name={t("edit-profile.tabs.patient.insurancePlan.label")}
-                              onEdit={()=>{setModifiedValues({...modifiedValues, insurancePlan: accountValues.insurancePlan}); onEdit()}}>
+                <EditFieldRow type={"text"} modified={modified} field={modifiedValues.insurancePlan} name={t("edit-profile.tabs.patient.insurancePlan.label")}
+                              onEdit={()=>{ setModifiedValues({...modifiedValues, insurancePlan: null}); onEdit()}}>
                     <Form.Group className="form-group col mt-1">
                         <Typeahead
                             options={Array.from(insurancePlansOptions,(x) => x.name)}
-                            defaultSelected={[accountValues.insurancePlan.name]}
                             highlightOnlyResult={true}
                             placeholder={t("edit-profile.tabs.patient.insurancePlan.label")}
                             id={"patientInsurancePlan"}
@@ -142,8 +145,8 @@ const EditPatientProfileTab = () => {
                     </Form.Group>
                 </EditFieldRow>
 
-                <EditFieldRow type={"text"} modified={modified} field={accountValues.insuranceNumber} name={t("edit-profile.tabs.patient.insuranceNumber.label")}
-                              onEdit={()=>{onEdit(); setModifiedValues({...modifiedValues, insuranceNumber: accountValues.insuranceNumber})}}>
+                <EditFieldRow type={"text"} modified={modified} field={modifiedValues.insuranceNumber} name={t("edit-profile.tabs.patient.insuranceNumber.label")}
+                              onEdit={()=>{onEdit();}}>
                     <Form.Group className="form-group col mt-1">
                         <FormControl
                             className={"fieldEditInput"}

@@ -46,10 +46,31 @@ public class ShareRequestJpaDao implements ShareRequestDao{
     }
 
     @Override
-    public Collection<ShareRequest> getAllPatientRequests(String patientEmail){
-        final TypedQuery<ShareRequest> query = em.createQuery("SELECT sr FROM ShareRequest sr WHERE sr.patientEmail = :email", ShareRequest.class);
+    public Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page, int pageSize) {
+
+        String queryString = "SELECT sr FROM ShareRequest sr " +
+                "WHERE sr.patientEmail = :email " +
+                "ORDER BY sr.studyType.id ASC, sr.medic.user.id ASC";
+
+        final TypedQuery<ShareRequest> query = em.createQuery(queryString, ShareRequest.class);
         query.setParameter("email", patientEmail);
+
+        query.setFirstResult((page-1) * pageSize);
+        query.setMaxResults(pageSize);
+
         return query.getResultList();
+    }
+
+    @Override
+    public long getAllPatientRequestsCount(String patientEmail) {
+
+        String queryString = "SELECT COUNT(sr) FROM ShareRequest sr " +
+                "WHERE sr.patientEmail = :email";
+
+        final TypedQuery<Long> query = em.createQuery(queryString, Long.class);
+        query.setParameter("email", patientEmail);
+
+        return query.getSingleResult();
     }
 
     @Override

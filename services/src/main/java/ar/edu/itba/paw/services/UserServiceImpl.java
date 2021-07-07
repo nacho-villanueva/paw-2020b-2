@@ -13,8 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Primary
 @Service
@@ -58,6 +62,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password, String locale) {
+        Optional<User> maybeUser = findByEmail(email);
+        if (maybeUser.isPresent())
+            return null;
         final User user = userDao.register(email,encoder.encode(password), User.UNDEFINED_ROLE_ID, locale);
         //Since user has just been created, he is not registered as patient/clinic or medic
         user.setRegistered(false);
@@ -80,6 +87,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateEmail(User user, String email) {
+        Optional<User> maybeUser = findByEmail(email);
+        if (maybeUser.isPresent())
+            return null;
         return userDao.updateEmail(user,email);
     }
 
@@ -108,6 +118,28 @@ public class UserServiceImpl implements UserService {
             this.setUserFlags(verificationToken.getUser());
         });
         return maybeToken;
+    }
+
+    @Override
+    public User updateUser(User user, String email, String password, String locale) {
+        return userDao.updateUser(user,email,isEmpty(password) ? null : encoder.encode(password),locale);
+    }
+
+    @Override
+    public Collection<User> getAll(final int page, final int pageSize) {
+        return userDao.getAll(page, pageSize);
+    }
+
+    @Override
+    public int getPageCount(int perPage) {
+        long userCount = userDao.userCount();
+
+        return (int) Math.ceil((double)userCount / perPage);
+    }
+
+    @Override
+    public User updateLocale(User user, String locale) {
+        return userDao.updateLocale(user,locale);
     }
 
     private void setUserFlags(final User user) {

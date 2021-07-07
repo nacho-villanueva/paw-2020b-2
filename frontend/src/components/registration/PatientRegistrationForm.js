@@ -37,7 +37,12 @@ const PatientRegistrationForm = () => {
         let insurance = insurancePlans.filter(i => i.name === inputs.insurancePlan)
         const form = event.currentTarget;
 
-        if (form.checkValidity() === false || insurance.length !== 1) {
+        if(insurance.length !== 1)
+            insurance = null;
+        else
+            insurance = insurance[0]
+
+        if (form.checkValidity() === false) {
 
             let e = {firstName: false, lastName:false, insurancePlan: false, insuranceNumber: false}
 
@@ -46,10 +51,6 @@ const PatientRegistrationForm = () => {
                 e.firstName = true
             if(inputs.lastName === "")
                 e.lastName = true
-            if(inputs.insuranceNumber === "")
-                e.insuranceNumber = true
-            if(insurance.length !== 1)
-                e.insurancePlan = true
 
             setFormErrors(e)
             setValidated(true)
@@ -58,7 +59,7 @@ const PatientRegistrationForm = () => {
         }
         else {
             setLoading(true)
-            registerPatient(inputs.firstName + " " + inputs.lastName, insurance[0], inputs.insuranceNumber, onRegisterSuccess, onRegisterFail)
+            registerPatient(inputs.firstName + " " + inputs.lastName, insurance, inputs.insuranceNumber, onRegisterSuccess, onRegisterFail)
         }
     }
 
@@ -107,7 +108,6 @@ const PatientRegistrationForm = () => {
                 placeholder={t("registration.patient.insurance-plan.placeholder")}
                 id={"patientInsurancePlan"}
                 isInvalid={!!formErrors.insurancePlan}
-                required
             />
             <ErrorFeedback isInvalid={formErrors.insurancePlan}><Trans t={t} i18nKey="registration.patient.insurance-plan.error"/></ErrorFeedback>
         </Form.Group>
@@ -117,7 +117,6 @@ const PatientRegistrationForm = () => {
             <Form.Control
                 type="text" className={"registrationInput"}
                 name="patientInsuranceNumber" placeholder={t("registration.patient.insurance-number.placeholder")}
-                required
             />
             <ErrorFeedback isInvalid={formErrors.insuranceNumber}><Trans t={t} i18nKey="registration.patient.insurance-number.error"/></ErrorFeedback>
         </Form.Group>

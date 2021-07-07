@@ -13,7 +13,9 @@ public interface ShareRequestDao {
 
     void remove(ShareRequest shareRequest);
 
-    Collection<ShareRequest> getAllPatientRequests(String patientEmail);
+    Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page, int pageSize);
+
+    long getAllPatientRequestsCount(String patientEmail);
 
     Optional<ShareRequest> getShareRequest(Medic medic, String patientEmail, StudyType type);
 }
