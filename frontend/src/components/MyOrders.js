@@ -136,12 +136,13 @@ function MyOrders(){
 
         setCurrentPage(searchFilters.page);
 
-        GetOrders(setOrders,searchFilters, setTotalOrderPages)
+        GetOrders(searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
-                    GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList)
-                        .then((r) => {
+                    GetAndSetUpStudyTypesAndLink(res, update, setUpdate, setStudyTypesList)
+                        .then((ord) => {
                             //console.log("running on fetched studytypeslist");
+                            setOrders(ord);
                             SetUpClinicNames();
                             setUpdate((prevState) => {
                                 let next = prevState + 1;
@@ -152,7 +153,8 @@ function MyOrders(){
                         });
                 }else{
                     //console.log("running on saved studytypeslist", studyTypesList);
-                    SetUpStudyTypesAndLink(studyTypesList, orders, setOrders);
+                    let newOrders = SetUpStudyTypesAndLink(studyTypesList, res);
+                    setOrders(newOrders)
                     SetUpClinicNames();
                     setUpdate((prevState) => {
                         let next = prevState + 1;
@@ -172,7 +174,7 @@ function MyOrders(){
         }
     }
 
-    const [searching, setSearching] = useState(0);
+    const [searching, setSearching] = useState(false);
     const [load, setLoad] = useState(true);
 
     //calling on mount...
@@ -244,6 +246,8 @@ function MyOrders(){
                 <div className="row list-results" key={"fetchedResults_"+update+"+"+searching}>
                     <ul className="nav flex-column w-100 ul-results" id="orders" role="tablist">
                         {
+                            orders !== undefined && orders.length > 0 &&
+
                             orders.map((item, index) => (
                                 <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
                             ))
