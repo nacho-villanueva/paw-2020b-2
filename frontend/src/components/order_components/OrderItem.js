@@ -24,16 +24,10 @@ export function OrderItem(props) {
                         </div>
                         <div className="d-flex w-100 justify-content-between">
                             <p className="mb-1">
-                            {(roleType === Roles.PATIENT || roleType === Roles.MEDIC) ?
-                                <Trans t={t} i18nKey="my-orders.orders.order.clinic" values={{clinic: order.clinic}} /> :
-                                <Trans t={t} i18nKey="my-orders.orders.order.patient" values={{patient: order.patientName}} />
-                            }
+                            <Trans t={t} i18nKey="my-orders.orders.order.patient" values={{patient: order.patientName}} />
                             </p>
                             <small>
-                            {(roleType === Roles.CLINIC || roleType === Roles.PATIENT) ?
-                                <small><Trans t={t} i18nKey="my-orders.orders.order.medic" values={{medic: order.medic}} /></small> :
-                                <small><Trans t={t} i18nKey="my-orders.orders.order.patient" values={{patient: order.patientName}} /></small>
-                            }
+                            <Trans t={t} i18nKey="my-orders.orders.order.medic" values={{medic: order.medic}} />
                             </small>
                         </div>
                     </Button>

@@ -1,5 +1,5 @@
 import {useState, useLayoutEffect, useEffect} from "react";
-import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink } from "../api/Orders";
+import { GetOrders, GetAndSetUpStudyTypesAndLink, SetUpStudyTypesAndLink, GetMedics, GetClinics } from "../api/Orders";
 import {useSelector} from "react-redux";
 import { Form, Button} from "react-bootstrap";
 import { Trans, useTranslation } from 'react-i18next'
@@ -49,8 +49,14 @@ function MyOrders(){
             let aux = orders;
             Promise.all(orders.map(async (order, index) => {
                 if(order["clinic"].includes("http")){
-                    await InternalQuery(order["clinic"]).then((res) => {aux[index]["clinic"] = res.name;});
-                    setOrders(aux);
+                    await InternalQuery(order["clinic"]).then((res) => {
+                        aux[index]["clinic"] = res.name;
+                        setOrders((prevState) => {
+                            let next = aux;
+                            return {...prevState, ...next};
+                        });
+                    })
+                    //setOrders(aux);
                     setCount((prevState) => {
                         let next = prevState + 1;
                         return {...prevState, ...next};
@@ -61,8 +67,14 @@ function MyOrders(){
                     })
                 }
                 if(order["medic"].includes("http")){
-                    await InternalQuery(order["medic"]).then((res) => {aux[index]["medic"] = res.name;});
-                    setOrders(aux);
+                    await InternalQuery(order["medic"]).then((res) => {
+                        aux[index]["medic"] = res.name;
+                        setOrders((prevState) => {
+                            let next = aux;
+                            return {...prevState, ...next};
+                        });
+                    });
+                    //setOrders(aux);
                     setCount((prevState) => {
                         let next = prevState + 1;
                         return {...prevState, ...next};
@@ -120,16 +132,18 @@ function MyOrders(){
         setSearchFilters(aux);
     }
 
+    const [loading, setLoading] = useState(false);
     const fetchAndChangePage = (pageNumber) => {
 
         setCurrentPage(searchFilters.page);
-
-        GetOrders(setOrders,searchFilters, setTotalOrderPages)
+        setLoading(true);
+        GetOrders(searchFilters, setTotalOrderPages)
             .then( (res) => {
                 if(studyTypesList.length === 0 ) {
-                    GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList)
-                        .then((r) => {
+                    GetAndSetUpStudyTypesAndLink(res, update, setUpdate, setStudyTypesList)
+                        .then((ord) => {
                             //console.log("running on fetched studytypeslist");
+                            setOrders(ord);
                             SetUpClinicNames();
                             setUpdate((prevState) => {
                                 let next = prevState + 1;
@@ -140,14 +154,18 @@ function MyOrders(){
                         });
                 }else{
                     //console.log("running on saved studytypeslist", studyTypesList);
-                    SetUpStudyTypesAndLink(studyTypesList, orders, setOrders);
+                    let newOrders = SetUpStudyTypesAndLink(studyTypesList, res);
+                    setOrders(newOrders)
                     SetUpClinicNames();
                     setUpdate((prevState) => {
                         let next = prevState + 1;
                         return {...prevState, ...next};
                     });
+                    setLoading(false);
                 }
             });
+
+
         setCurrentPage(pageNumber);
     }
 
@@ -160,22 +178,24 @@ function MyOrders(){
         }
     }
 
-    const [searching, setSearching] = useState(0);
+    const [searching, setSearching] = useState(false);
     const [load, setLoad] = useState(true);
 
     //calling on mount...
     useLayoutEffect( () => {
-        if(searching){
+        if(searching && !loading){
             fetchAndChangePage(searchFilters.page);
-            GetStudyTypes(setStudyTypesList, update, setUpdate);
             setSearching(false);
         }
     }, [searching]);
+
+
     //calling on mount...
     useEffect( () => {
         if(load){
             fetchAndChangePage(searchFilters.page);
-            GetStudyTypes(setStudyTypesList, update, setUpdate);
+            GetMedics(setMedicsList, update, setUpdate);
+            GetClinics(setClinicsList, update, setUpdate);
             setLoad(false);
         }
     }, []);
@@ -230,6 +250,8 @@ function MyOrders(){
                 <div className="row list-results" key={"fetchedResults_"+update+"+"+searching}>
                     <ul className="nav flex-column w-100 ul-results" id="orders" role="tablist">
                         {
+                            orders !== undefined && orders.length > 0 &&
+
                             orders.map((item, index) => (
                                 <OrderItem order={item} role={roleType} index={index} key={"orderItem_"+index+"_"+update}/>
                             ))
