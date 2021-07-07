@@ -313,6 +313,11 @@
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>
+          <groupId>com.github.eirslett</groupId>
+          <artifactId>frontend-maven-plugin</artifactId>
+          <version>1.11.0</version>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>${maven-eclipse-plugin.version}</version>
@@ -338,9 +343,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>${maven-war-plugin.version}</version>
-          <configuration>
-            <packagingExcludes>**/logback-test.xml</packagingExcludes>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -360,5 +362,6 @@
     <module>persistence</module>
     <module>interfaces</module>
     <module>models</module>
+    <module>frontend</module>
   </modules>
 </project>

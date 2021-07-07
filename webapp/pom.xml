@@ -20,6 +20,21 @@
 
   <build>
     <finalName>webapp</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <packagingExcludes>**/logback-test.xml</packagingExcludes>
+          <webResources>
+            <resource>
+              <!-- This is where we move the react build files -->
+              <directory>../frontend/build</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -137,6 +152,12 @@
       <artifactId>services</artifactId>
       <version>${project.parent.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>ar.edu.itba.paw</groupId>
+      <artifactId>frontend</artifactId>
+      <version>${project.parent.version}</version>
+      <type>pom</type>
     </dependency>
     <!--<dependency>
       <groupId>javax.validation</groupId>
