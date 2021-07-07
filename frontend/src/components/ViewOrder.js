@@ -1,3 +1,5 @@
+import React, { Suspense } from "react";
+
 import {Form, Button, Table, Collapse, Pagination, Spinner, Alert, Toast} from "react-bootstrap";
 import {useState, useEffect, useCallback} from "react";
 import {useHistory} from "react-router-dom";
@@ -8,16 +10,21 @@ import { store } from "../redux";
 import { Roles } from "../constants/Roles";
 import {useSelector} from "react-redux";
 
-import {UploadResults} from "./vieworder_components/UploadResults";
 import {getFilesFrom, getValueFromEvent, convertToBase64, getAuthorizedImage, isValidImage} from "../api/utils";
 import { UploadResult } from "../api/Results";
-
-import {ImageDataContainer} from "./vieworder_components/ImageDataContainer";
 import { GetIdentificationByURL } from "../api/UserInfo";
+import { Trans, useTranslation } from 'react-i18next';
 
-import {ChangeClinic} from "./vieworder_components/ChangeClinic";
 
-import { Trans, useTranslation } from 'react-i18next'
+const UploadResults = React.lazy(() => import("./vieworder_components/UploadResults"));
+//import {UploadResults} from "./vieworder_components/UploadResults";
+
+//import {ImageDataContainer} from "./vieworder_components/ImageDataContainer";
+
+const ChangeClinic = React.lazy(() => import("./vieworder_components/ChangeClinic"));
+//import {ChangeClinic} from "./vieworder_components/ChangeClinic";
+
+
 
 
 
@@ -54,7 +61,12 @@ function ViewOrder(){
     const [load, setLoad] = useState(true);
     useEffect(() => {
         if(load){
-            fetchData().then(setCount(count +1));
+            fetchData().then((r) => {
+                setCount((prevState) => {
+                    let next = prevState + 1;
+                    return {...prevState, ...next};
+                })
+            });
             setLoad(false);
         }
     }, []);
@@ -432,33 +444,36 @@ function ViewOrder(){
 
     return(
         <>
-            <div className="row-custom justify-content-center mt-5" key={"view-order_"+count}>
-                <OrderInfoCard/>
-                <ResultsInfoCard/>
-            </div>
-            <UploadResults
-                show={showUploadModal}
-                setShow={setShowUploadModal}
-                handleUploadResults={handleUploadResults}
-                uploadValidated={uploadValidated}
-                orderInfo={orderInfo}
-                uploadErrors={uploadErrors}
-            />
-            <ChangeClinic
-                show={showChangeClinicModal}
-                setShow={setShowChangeClinicModal}
-                orderInfo={orderInfo}
-                orderId={orderId}
-                showUpdateToast={showUpdateToast}
-            />
-            <Toast onClose={()=> setShowToast(false)} show={showToast} delay={3000} autohide>
-                <Toast.Header>
-                    <strong className="mr-auto"><Trans t={t} i18nKey="view-order.toast-change.title"/></strong>
-                </Toast.Header>
-                <Toast.Body>
-                    <Trans t={t} i18nKey="view-order.toast-change.body"/>
-                </Toast.Body>
-            </Toast>
+            <Suspense fallback={<Spinner animation="grow" variant="primary" size="sm" />}>
+                <div className="row-custom justify-content-center mt-5" key={"view-order_"+count}>
+                    <OrderInfoCard/>
+                    <ResultsInfoCard/>
+                </div>
+                <UploadResults
+                    show={showUploadModal}
+                    setShow={setShowUploadModal}
+                    handleUploadResults={handleUploadResults}
+                    uploadValidated={uploadValidated}
+                    orderInfo={orderInfo}
+                    uploadErrors={uploadErrors}
+                />
+                <ChangeClinic
+                    show={showChangeClinicModal}
+                    setShow={setShowChangeClinicModal}
+                    orderInfo={orderInfo}
+                    orderId={orderId}
+                    showUpdateToast={showUpdateToast}
+                />
+                <Toast onClose={()=> setShowToast(false)} show={showToast} delay={3000} autohide>
+                    <Toast.Header>
+                        <strong className="mr-auto"><Trans t={t} i18nKey="view-order.toast-change.title"/></strong>
+                    </Toast.Header>
+                    <Toast.Body>
+                        <Trans t={t} i18nKey="view-order.toast-change.body"/>
+                    </Toast.Body>
+                </Toast>
+
+            </Suspense>
         </>
     )
 }
