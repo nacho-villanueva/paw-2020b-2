@@ -117,7 +117,7 @@ export function ClinicsResults(props){
 
     const Item = (props) => {
         return(
-            <li className="nav-item" key={props.clinic.name}>
+            <li className="nav-item resultsItem" key={props.clinic.name}>
                 <Button
                     id={"cl-item-"+props.clinic.userId}
                     onClick={() => {chooseClinic(props.clinic);}}
@@ -137,7 +137,7 @@ export function ClinicsResults(props){
             <div className="row">
                 <div className="d-flex flex-row">
                     <div id="cl-results" className="list-group res-section">
-                        <ul className="nav flex-column" id="myTab" role="tablist">
+                        <ul className="nav flex-column resultsList" id="myTab" role="tablist">
                             {
                                 results.map((item) => (
                                     <Item key={item.userId} clinic={item}/>

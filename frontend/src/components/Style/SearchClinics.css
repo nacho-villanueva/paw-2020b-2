@@ -39,3 +39,12 @@
 .cl-modal > .modal-dialog > .modal-content > .modal-body {
     width: max-content;
 }
+
+.resultsList {
+    display: block;
+}
+
+.resultsItem {
+    width: 15em;
+    overflow: hidden;
+}
