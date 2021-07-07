@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Table } from "react-bootstrap";
+import { Form, Button, Table, Collapse } from "react-bootstrap";
 import { Trans, useTranslation } from 'react-i18next'
 
 import { PaginationComponent } from "../order_components/PaginationComponent";
@@ -15,6 +15,10 @@ export function ClinicsResults(props){
     const [update, setUpdate] = useState(0);
 
     const {t} = useTranslation();
+
+    const[showSchedule, setShowSchedule] = useState(false);
+    const[showPlans, setShowPlans] = useState(false);
+    const[showStudies, setShowStudies] = useState(false);
 
 
     const NoClinicResultsFound = () => {
@@ -45,35 +49,65 @@ export function ClinicsResults(props){
                             <td className="output">{props.item.telephone}</td>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="advanced-search-clinics.clinic-info.open-hours"/></td>
                             <td>
-                                {props.item.hours.map((piano) => (
-                                    <div key={"oh_"+id+"_"+piano.day}>
-                                        <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
-                                        <span>{piano.openTime + " - " + piano.closeTime}</span>
-                                    </div>
-                                ))}
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {setShowSchedule(!showSchedule);}}
+                                >
+                                    {t("advanced-search-clinics.clinic-info.open-hours")}
+                                    {showSchedule===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                </Button>
                             </td>
+                            <Collapse in={showSchedule}>
+                                <td>
+                                    {props.item.hours.map((piano) => (
+                                        <div key={"oh_"+id+"_"+piano.day}>
+                                            <span>{t('days.day-'+piano.day)}</span>&nbsp;&nbsp;&nbsp;
+                                            <span>{piano.openTime + " - " + piano.closeTime}</span>
+                                        </div>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="advanced-search-clinics.clinic-info.insurance"/></td>
-                            <td className="output">
-                                {props.item.acceptedPlans.map((pico) => (
-                                    <span
-                                        key={"plan_"+ id +"_"+pico.id}
-                                        className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
-                                    >{pico.plan}</span>
+                            <td>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {setShowPlans(!showPlans);}}
+                                >
+                                    {t("advanced-search-clinics.clinic-info.insurance")}
+                                    {showPlans===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                </Button>
+                            </td>
+                            <Collapse in={showPlans}>
+                                <td className="output">
+                                    {props.item.acceptedPlans.map((pico) => (
+                                        <span
+                                            key={"plan_"+ id +"_"+pico.id}
+                                            className="badge-sm badge-pill badge-secondary mr-1 d-inline-block"
+                                        >{pico.plan}</span>
 
-                                ))}
-                            </td>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                         <tr>
-                            <td><Trans t={t} i18nKey="advanced-search-clinics.clinic-info.studies"/></td>
-                            <td className="output">
-                                {props.item.medicalStudies.map((study) => (
-                                    <p key={"study_"+ id +"_"+study.name}>{study.name}</p>
-                                ))}
+                            <td>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {setShowStudies(!showStudies);}}
+                                >
+                                    {t("advanced-search-clinics.clinic-info.studies")}
+                                    {showStudies===false? <i className="fas fa-chevron-down ml-2"/> : <i className="fas fa-chevron-up ml-2"/>}
+                                </Button>
                             </td>
+                            <Collapse in={showStudies}>
+                                <td className="output">
+                                    {props.item.medicalStudies.map((study) => (
+                                        <p key={"study_"+ id +"_"+study.name}>{study.name}</p>
+                                    ))}
+                                </td>
+                            </Collapse>
                         </tr>
                     </tbody>
                 </Table>

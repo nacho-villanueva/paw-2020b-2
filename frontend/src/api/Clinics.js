@@ -46,19 +46,28 @@ export async function SearchClinics(filters, setClinicsList, update, setUpdate, 
                 InternalQuery(clinics[idx].user).then(
                     (response) => {
                         clinic["email"] = response.email;
-                        setUpdate(update + 1);
+                        setUpdate((prevState) => {
+                            let next = prevState + 1;
+                            return {...prevState, ...next};
+                        })
                     }
                 );
                 InternalQuery(clinics[idx].acceptedPlans).then(
                     (response) => {
                         clinic["acceptedPlans"] = response;
-                        setUpdate(update + 3);
+                        setUpdate((prevState) => {
+                            let next = prevState + 1;
+                            return {...prevState, ...next};
+                        })
                     }
                 );
                 InternalQuery(clinics[idx].availableStudies).then(
                     (response) => {
                         clinic["medicalStudies"] = response;
-                        setUpdate(update + 5);
+                        setUpdate((prevState) => {
+                            let next = prevState + 1;
+                            return {...prevState, ...next};
+                        })
                     }
                 );
 
@@ -70,7 +79,10 @@ export async function SearchClinics(filters, setClinicsList, update, setUpdate, 
 
             setStatusCode(r.status);
 
-            setUpdate(update + 7);
+            setUpdate((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            })
         }
 
     })

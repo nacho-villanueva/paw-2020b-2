@@ -137,19 +137,19 @@ export function getDaySchedule(event, idx){
     let avail = "isAvailable"+idx;
     let ot = "day-"+idx+"-ot";
     let ct = "day-"+idx+"-ct";
-    for(let idx = 0; idx <= event.target.length; idx++){
-
+    for(let idx = 0; idx < event.target.length; idx++){
+        console.log("some target", event.target[idx]);
         let t = event.target[idx];
         if(t.hasOwnProperty('name')){
             if(t.name === ot){
-                console.log(ot, t.value);
                 dayOp.fromTime = t.value;
+                console.log(ot, dayOp.fromTime);
             }else if(t.name === ct){
-                console.log(ct, t.value);
                 dayOp.toTime = t.value;
+                console.log(ct, dayOp.toTime);
             }else if(t.name === avail){
-                console.log(avail, t.checked);
                 dayOp.checked = t.checked;
+                console.log(avail, dayOp.checked);
             }
         }
     }

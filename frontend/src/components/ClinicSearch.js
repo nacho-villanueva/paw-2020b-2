@@ -11,6 +11,8 @@ import { getAllInsurancePlans } from "../api/CustomFields";
 
 import { Trans, useTranslation } from 'react-i18next'
 
+import { InputsSearch } from "./search_clinic/utils";
+
 import "./Style/SearchClinics.css";
 
 function ClinicSearch(){
@@ -44,13 +46,13 @@ function ClinicSearch(){
         insurancePlan: '',
         studyType: '',
         schedule: [
-            {day:0, checked: false, fromTime: '', toTime: ''},
-            {day:1, checked: false, fromTime: '', toTime: ''},
-            {day:2, checked: false, fromTime: '', toTime: ''},
-            {day:3, checked: false, fromTime: '', toTime: ''},
-            {day:4, checked: false, fromTime: '', toTime: ''},
-            {day:5, checked: false, fromTime: '', toTime: ''},
-            {day:6, checked: false, fromTime: '', toTime: ''}
+            {day:0, checked: true, fromTime: '', toTime: ''},
+            {day:1, checked: true, fromTime: '', toTime: ''},
+            {day:2, checked: true, fromTime: '', toTime: ''},
+            {day:3, checked: true, fromTime: '', toTime: ''},
+            {day:4, checked: true, fromTime: '', toTime: ''},
+            {day:5, checked: true, fromTime: '', toTime: ''},
+            {day:6, checked: true, fromTime: '', toTime: ''}
         ]
     };
     const [inputs, setInputs] = useState(defaultInputs);
@@ -86,50 +88,8 @@ function ClinicSearch(){
     }
 
     const [filtersValidated, setFiltersValidated] = useState(false);
-    const handleFiltersSubmit = (event) => {
-        event.preventDefault();
-        console.log("CLICK");
-
-        const form = event.target;
-        if(form.checkValidity() === false){
-            event.stopPropagation();
-
-            setFiltersValidated(true);
-            //FILTERS FORM FEEDBACK CHECKS HERE
-        }else{
-            setSearchFilters(sendableFilters);
-
-            let auxInputs = inputs;
-            auxInputs.studyType = getValueFromEvent("studyPlanSelect", event);
-            auxInputs.clinicName = getValueFromEvent("clinicName", event);
-            auxInputs.insurancePlan = getValueFromEvent("insurancePlanSelect", event);
-
-            let auxFilters = searchFilters;
-            auxFilters.studyType = auxInputs.studyType !== '-1' ?  auxInputs.studyType : '';
-            auxFilters.clinicName = auxInputs.clinicName !== -1 ?  auxInputs.clinicName : '';
-            auxFilters.plan = auxInputs.insurancePlan !== -1 ?  auxInputs.insurancePlan : '';
-            auxFilters.days.fill(0);
-            auxFilters.fromTime.fill(0);
-            auxFilters.toTime.fill(0);
-
-
-            console.log("checking days", event)
-            for(let idx = 1; idx <= 7; idx++){
-                auxInputs.schedule[idx - 1] = getDaySchedule(event, idx - 1);
-                if(auxInputs.schedule[idx - 1].checked === true){
-                    auxFilters.days[idx - 1] = 1;
-                    auxFilters.fromTime[idx - 1] = auxInputs.schedule[idx - 1].fromTime;
-                    auxFilters.toTime[idx - 1] = auxInputs.schedule[idx - 1].toTime;
-
-                }
-            }
-
-            setSearchFilters(auxFilters);
-            setInputs(auxInputs);
-
-            SearchClinics(searchFilters, setClinicsList, update, setUpdate, 1, setTotalClinicPages, setStatusCode, setErrors);
-
-        }
+    const handleFiltersSubmit = () => {
+        InputsSearch(searchFilters, setSearchFilters, inputs, setInputs, setClinicsList, update, setUpdate, setTotalClinicPages, setStatusCode, setErrors);
     }
 
     return(
@@ -137,6 +97,7 @@ function ClinicSearch(){
             <ClinicsFilters
                 handleFiltersSubmit={handleFiltersSubmit}
                 inputs={inputs}
+                setInputs={setInputs}
                 studyTypesList={studyTypesList}
                 insurancePlans={insurancePlans}
                 daysOfTheWeek={daysOfTheWeek}
