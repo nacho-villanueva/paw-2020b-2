@@ -333,63 +333,103 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
+    public Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantStudyTypes(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
 
     @Override
-    public long studyTypesFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
+    public long studyTypesFromFilteredOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantStudyTypesCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
     }
 
     @Override
-    public long studyTypesFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
-        return getLastPage(studyTypesFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
+    public long studyTypesFromFilteredOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(studyTypesFromFilteredOrdersCount(user, clinicUsersId, medicUsersId, patientEmails, fromDate, toDate, studyTypesId, includeSharedIfMedic), pageSize);
     }
 
     @Override
-    public Collection<Clinic> clinicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
+    public Collection<Clinic> clinicsFromFilteredOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantClinics(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
 
     @Override
-    public long clinicsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
+    public long clinicsFromFilteredOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantClinicsCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
     }
 
     @Override
-    public long clinicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
-        return getLastPage(clinicsFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
+    public long clinicsFromFilteredOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(clinicsFromFilteredOrdersCount(user, clinicUsersId, medicUsersId, patientEmails, fromDate, toDate, studyTypesId, includeSharedIfMedic), pageSize);
     }
 
     @Override
-    public Collection<Medic> medicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
+    public Collection<Medic> medicsFromFilteredOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantMedics(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
 
     @Override
-    public long medicsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
+    public long medicsFromFilteredOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantMedicsCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
     }
 
     @Override
-    public long medicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
-        return getLastPage(medicsFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
+    public long medicsFromFilteredOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(medicsFromFilteredOrdersCount(user, clinicUsersId, medicUsersId, patientEmails, fromDate, toDate, studyTypesId, includeSharedIfMedic), pageSize);
     }
 
     @Override
-    public Collection<String> patientEmailsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
+    public Collection<String> patientEmailsFromFilteredOrders(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int page, int pageSize) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantPatientEmails(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
 
     @Override
-    public long patientEmailsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
+    public long patientEmailsFromFilteredOrdersCount(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic) {
+
+        Collection<User> clinicUsers = getClinicUsersFromId(clinicUsersId);
+        Collection<User> medicUsers = getMedicUsersFromId(medicUsersId);
+        Collection<StudyType> studyTypes = getStudyTypesFromId(studyTypesId);
+
         return orderDao.getRelevantPatientEmailsCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
     }
 
     @Override
-    public long patientEmailsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
-        return getLastPage(patientEmailsFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
+    public long patientEmailsFromFilteredOrdersLastPage(User user, Collection<Integer> clinicUsersId, Collection<Integer> medicUsersId, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<Integer> studyTypesId, boolean includeSharedIfMedic, int pageSize) {
+        return getLastPage(patientEmailsFromFilteredOrdersCount(user, clinicUsersId, medicUsersId, patientEmails, fromDate, toDate, studyTypesId, includeSharedIfMedic), pageSize);
     }
 
     @Override
@@ -415,5 +455,48 @@ public class OrderServiceImpl implements OrderService {
     // auxiliary functions
     private long getLastPage(final long count, final int pageSize) {
         return (long) Math.ceil((double) count / pageSize);
+    }
+
+    // auxiliary functions
+    private boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    private Collection<User> getClinicUsersFromId(Collection<Integer> clinicUsersId){
+        Collection<User> clinicUsers = new ArrayList<>();
+
+        if (!isEmpty(clinicUsersId)) {
+            for (Integer id : clinicUsersId) {
+                if (id != null)
+                    clinicService.findByUserId(id).ifPresent(clinic -> clinicUsers.add(clinic.getUser()));
+            }
+        }
+
+        return clinicUsers;
+    }
+
+    private Collection<User> getMedicUsersFromId(Collection<Integer> medicUsersId){
+        Collection<User> medicUsers = new ArrayList<>();
+
+        if (!isEmpty(medicUsersId)) {
+            for (Integer id : medicUsersId) {
+                if (id != null)
+                    medicService.findByUserId(id).ifPresent(medic -> medicUsers.add(medic.getUser()));
+            }
+        }
+
+        return medicUsers;
+    }
+
+    private Collection<StudyType> getStudyTypesFromId(Collection<Integer> studyTypesId){
+        Collection<StudyType> studyTypes = new ArrayList<>();
+
+        if (!isEmpty(studyTypesId)) {
+            for (Integer id : studyTypesId) {
+                if (id != null) studyService.findById(id).ifPresent(studyTypes::add);
+            }
+        }
+
+        return studyTypes;
     }
 }
