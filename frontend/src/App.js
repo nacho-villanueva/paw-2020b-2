@@ -3,7 +3,7 @@ import DashboardPage from "./components/DashboardPage";
 import "./App.css";
 
 import "./css/bootstrap-related.css";
-import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect, HashRouter} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {store} from "./redux";
 import {StatusType} from "./redux/actions/actions";
@@ -17,7 +17,7 @@ function App() {
     const role = useSelector(state => state.auth.role);
 
     return (
-        <Router basename={"/paw-2020b-2"}>
+        <HashRouter basename={"/paw-2020b-2"}>
             <div className="main-container">
                 <div className="wrapper">
                     <Switch>
@@ -38,11 +38,11 @@ function App() {
                         {status === StatusType.AUTHENTICATED && role !== Roles.UNREGISTERED && <Route path="/dashboard" component={DashboardPage}/>}
                         {/*{status === StatusType.AUTHENTICATED && role === Roles.UNREGISTERED && <Route path="/register" component={RegisterPage}/>}*/}
                         <Route path="/register" component={RegisterPage}/>
-                        <Redirect from={"*"} to={"/"}/>
+                        <Redirect from={"/*"} to={"/"}/>
                     </Switch>
                 </div>
             </div>
-        </Router>
+        </HashRouter>
     );
 }
 
