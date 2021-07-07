@@ -53,9 +53,9 @@ export function ClinicsFilters(props){
                                 {t("advanced-search-clinics.form.insurance-plan.any")}
                             </option>
                             {
-                                insurancePlans.map((item) => (
+                                insurancePlans.map((item,idx) => (
                                     <option
-                                        value={item.id}
+                                        value={item.id} key={"inpl-"+idx}
                                         defaultValue={item.id === inputs.insurancePlan}
                                     >{item.name}</option>
                                 ))
@@ -76,20 +76,19 @@ export function ClinicsFilters(props){
                                 {t("advanced-search-clinics.form.study-type.any")}
                             </option>
                             {
-                                studyTypesList.map((item) => (
+                                studyTypesList.map((item,idx) => (
                                     <option
-                                        value={item.id}
+                                        value={item.id} key={"stty-"+idx}
                                         defaultValue={item.id === inputs.studyType}
                                     >{item.name}</option>
                                 ))
                             }
                         </Form.Control>
                     </Form.Group>
-                    <div className="row mx-1 mb-3">
+                    <div className="row justify-content-center mb-3">
                         <Button
                             className="cl-search-btn mx-auto"
-                            type="submit" name="clinicSearchSubmit"
-                            value="advanced-search-clinics.form.submit.value"
+                            type="submit"
                         >
                             <Trans t={t} i18nKey="advanced-search-clinics.form.submit.value" />
                         </Button>
@@ -123,8 +122,8 @@ export function ClinicsFilters(props){
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {daysOfTheWeek.map((item) => (
-                                        <Day item={item} filters={inputs}/>
+                                    {daysOfTheWeek.map((item,idx) => (
+                                        <Day item={item} filters={inputs} key={"di-"+idx}/>
                                     ))}
                                 </tbody>
                             </Table>

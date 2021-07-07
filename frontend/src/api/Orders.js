@@ -78,3 +78,25 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
 export async function GetMedics(setMedicsList, update, setUpdate){
 
 }
+
+export async function UpdateOrderClinic(orderId, clinic, setStatusCode, setErrors){
+    apiInstance.put('/orders/' + orderId, {clinicId: clinic})
+    .then((r) => {
+        setStatusCode(r.status);
+    })
+    .catch((e)  => {
+        if(e.response){
+            // error in response
+            setStatusCode(e.response.status);
+            if(e.response.status === 400 && e.response.data !== undefined){
+                setErrors(e.response.data)
+            }
+        }else if(e.request){
+            // no response received
+            console.log('Error in request: ',e.request);
+        }else{
+            // error in the request building, which shouldn't happen
+            console.log('Error in request: ', e.message);
+        }
+    });
+}
