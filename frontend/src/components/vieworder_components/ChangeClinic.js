@@ -13,7 +13,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { UpdateOrderClinic } from "../../api/Orders";
 
 
-export function ChangeClinic(props){
+function ChangeClinic(props){
     const {t} = useTranslation();
 
     const show = props.show;
@@ -80,7 +80,12 @@ export function ChangeClinic(props){
     }, []);
 
     useEffect(()=>{
-        fetchOptions().then((r) => {setUpdate(update + 1);})
+        fetchOptions().then((r) => {
+            setUpdate((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            });
+        });
     }, []);
 
     const changePageAndFetch = (pageNumber) => {
@@ -121,6 +126,7 @@ export function ChangeClinic(props){
             auxFilters.fromTime.fill(0);
             auxFilters.toTime.fill(0);
 
+            console.log("event", event);
 
             for(let idx = 1; idx <= 7; idx++){
                 console.log("checking days", idx)
@@ -149,14 +155,19 @@ export function ChangeClinic(props){
     const handleSubmitChange = () => {
         setChanging(true);
     }
-    const putClinic = useCallback(() => {
+    const putClinic = useCallback(async () => {
         if(changing){
             UpdateOrderClinic(orderId, selectedClinic.userId, setStatusCode, setErrors).then((r) => {showUpdateToast();});
             setChanging(false);
         }
-    });
+    }, []);
     useEffect(() => {
-        putClinic().then((r) => {setUpdate(update +1)});
+        putClinic().then((r) => {
+            setUpdate((prevState) => {
+                let next = prevState + 1;
+                return {...prevState, ...next};
+            })
+        });
     }, [changing]);
 
     return(
@@ -197,3 +208,5 @@ export function ChangeClinic(props){
         </Modal>
     );
 }
+
+export default ChangeClinic;
