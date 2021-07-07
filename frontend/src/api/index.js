@@ -3,7 +3,7 @@ import {store} from "../redux"
 import {logout} from "./Auth";
 
 const settings = {
-    baseURL: 'http://127.0.0.1:8080/api/',
+    baseURL: 'http://pawserver.it.itba.edu.ar/paw-2020b-2/api/',
     timeout: 30000,
 };
 
