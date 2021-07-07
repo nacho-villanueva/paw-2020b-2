@@ -11,6 +11,7 @@ import InvalidFeedback from "./InvalidFeedback.js";
 import { getAuthorizedImage, getValueFromEvent } from "../api/utils";
 import { getAllInsurancePlans } from "../api/CustomFields";
 import { GetIdentificationByURL } from "../api/UserInfo";
+import { InputsSearch } from "./search_clinic/utils";
 
 function CreateOrder(){
 
@@ -226,13 +227,13 @@ function CreateOrder(){
         insurancePlan: '',
         studyType: '',
         schedule: [
-            {day:0, checked: false, fromTime: '', toTime: ''},
-            {day:1, checked: false, fromTime: '', toTime: ''},
-            {day:2, checked: false, fromTime: '', toTime: ''},
-            {day:3, checked: false, fromTime: '', toTime: ''},
-            {day:4, checked: false, fromTime: '', toTime: ''},
-            {day:5, checked: false, fromTime: '', toTime: ''},
-            {day:6, checked: false, fromTime: '', toTime: ''}
+            {day:0, checked: true, fromTime: '', toTime: ''},
+            {day:1, checked: true, fromTime: '', toTime: ''},
+            {day:2, checked: true, fromTime: '', toTime: ''},
+            {day:3, checked: true, fromTime: '', toTime: ''},
+            {day:4, checked: true, fromTime: '', toTime: ''},
+            {day:5, checked: true, fromTime: '', toTime: ''},
+            {day:6, checked: true, fromTime: '', toTime: ''}
         ]
     })
 
@@ -368,75 +369,10 @@ function CreateOrder(){
 
     const [clinicSearchValidated, setClinicSearchValidated] = useState(false);
     //search clinics call
-    const searchClinics = (event) => {
-        let inputs =searchFilters;
-
-        inputs.studyType = orderInfo.studyType;
-        inputs.clinicName = '';
-        inputs.plan = orderInfo.patientInsurancePlan
-        inputs.days.fill(0);
-        inputs.fromTime.fill(0);
-        inputs.toTime.fill(0);
-
-        setSearchFilters(inputs);
-
-        event.preventDefault();
-        const form = event.target;
-
-        //MISSING: checking that closing time > opening time
-        if(form.checkValidity() === false){
-            event.stopPropagation();
-        }else{
-            let searchInputsAux = searchInputs;
-            searchInputsAux.clinicName = event.target[0].value;
-            inputs.clinicName = searchInputsAux.clinicName;
-
-            searchInputsAux.studyType = orderInfo.studyType;
-            inputs.studyType = searchInputsAux.studyType;
-
-            if(event.target[1].value !== orderInfo.patientInsurancePlan){
-                searchInputsAux.insurancePlan = event.target[1].value;
-                inputs.plan = searchInputsAux.insurancePlan;
-
-                let aux = orderInfo;
-                aux.patientInsurancePlan = inputs.plan;
-                setOrderInfo(orderInfo);
-            }
-
-            for(let idx=1; idx <= 7; idx++){
-                //suceciones... what a concept
-                searchInputsAux.schedule[idx-1].checked = event.target[1+(3*idx)].checked;
-                searchInputsAux.schedule[idx-1].fromTime = event.target[2+(3*idx)].value;
-                searchInputsAux.schedule[idx-1].toTime = event.target[3+(3*idx)].value;
-
-                if(searchInputsAux.schedule[idx-1].checked === true){
-                    inputs.days[idx-1] = 1;
-                    inputs.fromTime[idx-1] = searchInputsAux.schedule[idx-1].fromTime;
-                    inputs.toTime[idx-1] = searchInputsAux.schedule[idx-1].toTime;
-                }
-            }
-
-            setSearchInputs(searchInputsAux);
-            //console.log("searchInputsAux (up to date)", searchInputs);
-
-            setSearchFilters(inputs);
-            //console.log("searchFilters (late?)", searchFilters);
-
-            //will always search/fetch for page 1
-            QueryClinics(searchFilters, setClinicsList, count, setCount, 1, setTotalClinicPages, setStatusCode, setErrors);
-        }
+    const searchClinics = () => {
+        InputsSearch(searchFilters, setSearchFilters, searchInputs, setSearchInputs, setClinicsList, count, setCount, setTotalClinicPages, setStatusCode, setErrors);
 
         setClinicSearchValidated(true);
-
-        /////in case you need to know how to read the form from the event prop:
-        /////
-        //event.target[0] -> clinicName
-        ///event.target[1] -> insurancePlan
-        //---
-        //for 0:N:6
-        //event.target[4+N] -> isAvailableN
-        //event.target[4+1+N] -> day-N-ot
-        //event.target[4+2+N] -> day-N-ct
     };
 
     const changePageAndFetch = (pageNumber) => {
@@ -580,6 +516,11 @@ function CreateOrder(){
                     <Form.Group controlId={"isAvailable" + props.item.id}>
                         <Form.Control defaultChecked={searchInputs.schedule[props.item.id].checked}
                             type="checkbox" name={"isAvailable" + props.item.id}
+                            onChange={(val) => {
+                                let aux = searchInputs.schedule;
+                                aux[props.item.id].checked = val.target.checked
+                                setSearchInputs({...searchInputs, schedule: aux})
+                            }}
                         />
                     </Form.Group>
                 </th>
@@ -591,6 +532,11 @@ function CreateOrder(){
                             name={"day-" + props.item.id + "-ot"}
                             defaultValue={searchInputs.schedule[props.item.id].fromTime}
                             pattern="[0-9]{2}:[0-9]{2}"
+                            onChange={(val) => {
+                                let aux = searchInputs.schedule;
+                                aux[props.item.id].fromTime = val.target.value
+                                setSearchInputs({...searchInputs, schedule: aux})
+                            }}
                         />
                     </Form.Group>
                 </th>
@@ -602,6 +548,11 @@ function CreateOrder(){
                             name={"day-" + props.item.id + "-ct"}
                             defaultValue={searchInputs.schedule[props.item.id].toTime}
                             pattern="[0-9]{2}:[0-9]{2}"
+                            onChange={(val) => {
+                                let aux = searchInputs.schedule;
+                                aux[props.item.id].toTime = val.target.value
+                                setSearchInputs({...searchInputs, schedule: aux})
+                            }}
                         />
                     </Form.Group>
                 </th>
@@ -891,6 +842,7 @@ function CreateOrder(){
                                         <Form.Control
                                             type="text" style={{paddingTop: "10px"}}
                                             name="clinicName" defaultValue={searchInputs.clinicName}
+                                            onChange={(val) => {setSearchInputs({...searchInputs, clinicName: val.target.value})}}
                                         />
                                     </Form.Group>
                                     <Form.Group className="form-group col" controlId="insurancePlan">
@@ -898,9 +850,10 @@ function CreateOrder(){
                                         <Form.Control
                                             as="select"
                                             name="insurancePlan"
+                                            onChange={(val) => {setSearchInputs({...searchInputs, insurancePlan: val.target.value})}}
                                         >
                                             {insurancePlans.map((item) => (
-                                                <option selected={item.name === searchInputs.insurancePlan}>{item.name}</option>
+                                                <option selected={item.name === searchInputs.insurancePlan} value={item.id}>{item.name}</option>
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
@@ -917,8 +870,12 @@ function CreateOrder(){
                                     </Button>
                                     <Button
                                         className="clinic-btn search-btn mx-auto"
-                                        type="submit" name="clinicSearchSubmit"
+                                        name="clinicSearchSubmit"
                                         value="create-order.steps.step-2.form.submit.value"
+                                        onClick={(e)=> {
+                                            e.preventDefault();
+                                            searchClinics();
+                                        }}
                                     >
                                         <Trans t={t} i18nKey="create-order.steps.step-2.form.submit.value" />
                                     </Button>
