@@ -20,6 +20,7 @@ import {ChangeClinic} from "./vieworder_components/ChangeClinic";
 import { Trans, useTranslation } from 'react-i18next'
 
 
+
 function ViewOrder(){
     const roleType = useSelector(state => state.auth.role);
     var orderId = window.location.href.split('/');

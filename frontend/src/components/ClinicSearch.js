@@ -1,24 +1,20 @@
-import {Modal, Button} from "react-bootstrap";
-import {ClinicsFilters} from "../search_clinic/ClinicsFilters";
-import {ClinicsResults} from "../search_clinic/ClinicsResults";
+import { ClinicsFilters } from "./search_clinic/ClinicsFilters";
+import { ClinicsResults } from "./search_clinic/ClinicsResults";
+
+import { SearchClinics } from "../api/Clinics";
 
 import { useCallback, useEffect, useState } from "react";
-import { GetStudyTypes } from "../../api/Auth";
-import { getValueFromEvent, getDaySchedule } from "../../api/utils";
-import { getAllInsurancePlans } from "../../api/CustomFields";
 
-import { SearchClinics } from "../../api/Clinics";
+import { GetStudyTypes } from "../api/Auth";
+import { getValueFromEvent, getDaySchedule } from "../api/utils";
+import { getAllInsurancePlans } from "../api/CustomFields";
 
 import { Trans, useTranslation } from 'react-i18next'
 
+import "./Style/SearchClinics.css";
 
-export function ChangeClinic(props){
+function ClinicSearch(){
     const {t} = useTranslation();
-
-    const show = props.show;
-    const setShow = props.setShow;
-    const orderInfo = props.orderInfo;
-
     const [selectedClinic, setSelectedClinic] = useState(null);
 
     const daysOfTheWeek = [
@@ -59,6 +55,7 @@ export function ChangeClinic(props){
     };
     const [inputs, setInputs] = useState(defaultInputs);
 
+
     const [insurancePlans, setInsurancePlans] = useState([]);
     const [studyTypesList, setStudyTypesList] = useState([]);
 
@@ -69,6 +66,7 @@ export function ChangeClinic(props){
     const [update, setUpdate] = useState(0);
     const [statusCode, setStatusCode] = useState(0);
     const [errors, setErrors] = useState([]);
+
 
 
     const fetchOptions = useCallback(async () => {
@@ -87,14 +85,10 @@ export function ChangeClinic(props){
         }
     }
 
-
-    const handleClose = () => {
-        setShow(false);
-    }
-
     const [filtersValidated, setFiltersValidated] = useState(false);
     const handleFiltersSubmit = (event) => {
         event.preventDefault();
+        console.log("CLICK");
 
         const form = event.target;
         if(form.checkValidity() === false){
@@ -133,50 +127,31 @@ export function ChangeClinic(props){
             setSearchFilters(auxFilters);
             setInputs(auxInputs);
 
-            //console.log("event change clinic", event);
-
             SearchClinics(searchFilters, setClinicsList, update, setUpdate, 1, setTotalClinicPages, setStatusCode, setErrors);
 
         }
-
-
     }
 
     return(
-        <Modal className="cl-modal" show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    <Trans t={t} i18nKey="advanced-search-clinics.title-change" />
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div className="row-custom justify-content-center mt-2">
-                    <ClinicsFilters
-                        handleFiltersSubmit={handleFiltersSubmit}
-                        inputs={inputs}
-                        studyTypesList={studyTypesList}
-                        insurancePlans={insurancePlans}
-                        daysOfTheWeek={daysOfTheWeek}
-                        filtersValidated={filtersValidated}
-                        />
-                    <ClinicsResults
-                        results={clinicsList}
-                        currentPage={currentPage}
-                        totalClinicPages={totalClinicPages}
-                        changePageAndFetch={changePageAndFetch}
-                        selectedClinic={selectedClinic}
-                        chooseClinic={setSelectedClinic}
-                    />
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                <Trans t={t} i18nKey="advanced-search-clinics.form.change.cancel" />
-                </Button>
-                <Button variant="primary" type="submit">
-                <Trans t={t} i18nKey="advanced-search-clinics.form.change.submit" />
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        <div className="row-custom justify-content-center mt-2">
+            <ClinicsFilters
+                handleFiltersSubmit={handleFiltersSubmit}
+                inputs={inputs}
+                studyTypesList={studyTypesList}
+                insurancePlans={insurancePlans}
+                daysOfTheWeek={daysOfTheWeek}
+                filtersValidated={filtersValidated}
+                />
+            <ClinicsResults
+                results={clinicsList}
+                currentPage={currentPage}
+                totalClinicPages={totalClinicPages}
+                changePageAndFetch={changePageAndFetch}
+                selectedClinic={selectedClinic}
+                chooseClinic={setSelectedClinic}
+            />
+        </div>
     );
+
 }
+export default ClinicSearch;
