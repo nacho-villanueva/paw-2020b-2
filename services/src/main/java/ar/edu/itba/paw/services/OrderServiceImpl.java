@@ -333,11 +333,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page) {
-        return studyTypesFromFilteredOrders(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public Collection<StudyType> studyTypesFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page, int pageSize) {
         return orderDao.getRelevantStudyTypes(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, pageSize);
     }
@@ -348,18 +343,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long studyTypesFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
-        return studyTypesFromFilteredOrdersLastPage(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long studyTypesFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
         return getLastPage(studyTypesFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
-    }
-
-    @Override
-    public Collection<Clinic> clinicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page) {
-        return clinicsFromFilteredOrders(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -373,18 +358,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long clinicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
-        return clinicsFromFilteredOrdersLastPage(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long clinicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
         return getLastPage(clinicsFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
-    }
-
-    @Override
-    public Collection<Medic> medicsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page) {
-        return medicsFromFilteredOrders(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -398,18 +373,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long medicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
-        return medicsFromFilteredOrdersLastPage(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, DEFAULT_MAX_PAGE_SIZE);
-    }
-
-    @Override
     public long medicsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int pageSize) {
         return getLastPage(medicsFromFilteredOrdersCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic), pageSize);
-    }
-
-    @Override
-    public Collection<String> patientEmailsFromFilteredOrders(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic, int page) {
-        return patientEmailsFromFilteredOrders(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, page, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override
@@ -420,11 +385,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public long patientEmailsFromFilteredOrdersCount(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
         return orderDao.getRelevantPatientEmailsCount(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic);
-    }
-
-    @Override
-    public long patientEmailsFromFilteredOrdersLastPage(User user, Collection<User> clinicUsers, Collection<User> medicUsers, Collection<String> patientEmails, LocalDate fromDate, LocalDate toDate, Collection<StudyType> studyTypes, boolean includeSharedIfMedic) {
-        return patientEmailsFromFilteredOrdersLastPage(user, clinicUsers, medicUsers, patientEmails, fromDate, toDate, studyTypes, includeSharedIfMedic, DEFAULT_MAX_PAGE_SIZE);
     }
 
     @Override

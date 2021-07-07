@@ -154,7 +154,6 @@ public class OrderController {
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         if (page > MIN_PAGE) {
-
             response.link(uriBuilder.replaceQueryParam("page", page - 1).build(), "prev");
         }
 
