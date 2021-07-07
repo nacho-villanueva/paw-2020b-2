@@ -4,41 +4,41 @@ import { parameterSerializer, parseHeadersLinks, findLastPageNumber, prepareView
 import {InternalQuery} from "./Auth";
 import {GetClinicByURL, GetMedicByURL, GetPatientByURL, GetStudyTypesByURL} from "./UserInfo";
 
-export function SetUpStudyTypesAndLink(studyTypesList, orders, setOrders){
+export function SetUpStudyTypesAndLink(studyTypesList, orders){
     let aux = orders;
-    console.log("WHY", studyTypesList);
     orders.forEach((val, idx) => {
         for(let s in studyTypesList){
             if(studyTypesList[s].url === val["studyType"]){
                 aux[idx]["studyType"] = studyTypesList[s].name;
-                console.log("YES");
+                console.log(".");
             }
         }
         //eww...
         aux[idx]["url"] = prepareViewStudyUrl(val["url"]);
     });
-    setOrders(aux);
+
+    return aux;
 }
 
-export async function GetAndSetUpStudyTypesAndLink(orders, setOrders, update, setUpdate, setStudyTypesList){
-    apiInstance.get("/study-types")
+export async function GetAndSetUpStudyTypesAndLink(orders, update, setUpdate, setStudyTypesList){
+    return apiInstance.get("/orders/filters/study-type")
     .then((r) => {
         let stl = [];
         for(var idx in r.data){
             stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
         }
         setStudyTypesList(stl);
-        SetUpStudyTypesAndLink(stl, orders, setOrders);
+        let out = SetUpStudyTypesAndLink(stl, orders);
         setUpdate((prevState) => {
             let next = prevState + 1;
             return {...prevState, ...next};
         })
-        return r.status;
+        return out;
     })
-    .catch((error) => {return -1;} );
+    .catch((error) => {return orders;} );
 }
 
-export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
+export async function GetOrders(searchFilters, setTotalOrderPages){
     let params = {
         'page': searchFilters.page,
         'per_page': searchFilters.perPage,
@@ -53,7 +53,7 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
 
     let serializedParams = parameterSerializer(params);
 
-    apiInstance.get( "/orders" + serializedParams).then(
+    return apiInstance.get( "/orders" + serializedParams).then(
         (r) => {
             if(r.status === 200){
                 let headerInfo = r.headers;
@@ -67,15 +67,14 @@ export async function GetOrders(setOrders, searchFilters, setTotalOrderPages){
                     setTotalOrderPages(1);
                 }
                 let orders = r.data;
-                setOrders(orders);
+                return orders;
 
             }
-            return r.status;
+            return [];
         }
     ).catch((e) => {
-        setOrders([]);
         setTotalOrderPages(0);
-        return -1;
+        return [];
     })
 }
 
@@ -109,7 +108,37 @@ export async function GetAllOrders(page, per_page){
 }
 
 export async function GetMedics(setMedicsList, update, setUpdate){
+    apiInstance.get("/orders/filters/medic")
+    .then((r) => {
+        let stl = [];
+        for(var idx in r.data){
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
+        }
+        setMedicsList(stl);
+        setUpdate((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
+        return r.status;
+    })
+    .catch((error) => {return -1;} );
+}
 
+export async function GetClinics(setClinicsList, update, setUpdate){
+    apiInstance.get("/orders/filters/clinic")
+    .then((r) => {
+        let stl = [];
+        for(var idx in r.data){
+            stl[idx] = {name: r.data[idx].name, id: r.data[idx].id, url: r.data[idx].url};
+        }
+        setClinicsList(stl);
+        setUpdate((prevState) => {
+            let next = prevState + 1;
+            return {...prevState, ...next};
+        })
+        return r.status;
+    })
+    .catch((error) => {return -1;} );
 }
 
 export async function UpdateOrderClinic(orderId, clinic, setStatusCode, setErrors){

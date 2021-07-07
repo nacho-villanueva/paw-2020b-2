@@ -58,7 +58,7 @@ export function parseHeadersLinks(link){
 
 export function findLastPageNumber(last){
     let sts = last.split("&");
-    console.log("STRINGS", sts);
+    //console.log("STRINGS", sts);
     for(var s of sts){
         if(!s.includes("per_page") && s.includes("page")){
             let aux = s.split("=");
