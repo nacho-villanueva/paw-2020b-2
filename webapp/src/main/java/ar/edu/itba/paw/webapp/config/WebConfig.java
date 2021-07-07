@@ -118,11 +118,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("/static/")
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "file:/resources/")
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
                 .resourceChain(false)
-                .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
-                .addTransformer(new CssLinkResourceTransformer());
+                .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"));
     }
 
     @Bean
