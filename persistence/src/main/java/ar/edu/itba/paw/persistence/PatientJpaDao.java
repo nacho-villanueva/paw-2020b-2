@@ -65,10 +65,11 @@ public class PatientJpaDao implements PatientDao {
         patientDB.ifPresent(patient1 -> {
             if(!isEmpty(name))
                 patient1.setName(name);
-            if(medicPlan != null)
+            if (medicPlan != null)
                 patient1.setMedicPlan(getPlanRef(medicPlan));
-            if(!isEmpty(medicPlanNumber))
-                patient1.setMedicPlanNumber(medicPlanNumber);
+            else
+                patient1.setMedicPlan(null);
+            patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);
@@ -78,10 +79,11 @@ public class PatientJpaDao implements PatientDao {
     public Patient updateMedicPlan(final User user, final MedicPlan medicPlan, final String medicPlanNumber) {
         Optional<Patient> patientDB = findByUserId(user.getId());
         patientDB.ifPresent(patient1 -> {
-            if(medicPlan != null)
+            if (medicPlan != null)
                 patient1.setMedicPlan(getPlanRef(medicPlan));
-            if(!isEmpty(medicPlanNumber))
-                patient1.setMedicPlanNumber(medicPlanNumber);
+            else
+                patient1.setMedicPlan(null);
+            patient1.setMedicPlanNumber(medicPlanNumber);
             em.flush();
         });
         return patientDB.orElse(null);

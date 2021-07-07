@@ -197,7 +197,7 @@ public class ClinicController {
     ){
         User user = getLoggedUser();
         if(user == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         String name = clinicPostDto.getName();
         String telephone = clinicPostDto.getTelephone();
@@ -225,7 +225,7 @@ public class ClinicController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateClinic(
             @PathParam("id") final int id,
-            @Valid @NotNull ClinicPutDto clinicPutDto
+            @Valid @NotNull ClinicPostDto clinicPutDto
     ){
 
         Optional<Clinic> clinicOptional = clinicService.findByUserId(id);
@@ -237,7 +237,7 @@ public class ClinicController {
 
         User user = getLoggedUser();
         if(user == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         // check permissions to edit profile
         if(!user.getId().equals(clinic.getUser().getId()))
