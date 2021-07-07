@@ -167,6 +167,15 @@
     "day-short-5": "Vi",
     "day-short-6": "Sa"
   },
+  "display-requests": {
+    "accept": "Aceptar",
+    "deny": "Rechazar",
+    "empty": "No hay pedidos",
+    "medic": "Medico: ",
+    "pages": "Paginas:",
+    "study": "Tipo de Estudio: ",
+    "title": "Pedidos de Acceso a Tus Ordenes"
+  },
   "edit-profile": {
     "edit": "Editar",
     "save": {
@@ -460,6 +469,25 @@
     "subtitle": "Necesitamos un par de datos.",
     "tabs": "Eligí entrar como: ",
     "title": "Antes de continuar..."
+  },
+  "request-order": {
+    "alerts": {
+      "exists": "La solicitud ya existe, y esta esperando la aprobacio del paciente.",
+      "success": "La solicitud fue enviada con exito."
+    },
+    "email": {
+      "error": {
+        "invalid": "Por favor inserte un mail valido",
+        "non-exists": "El email ingresado no existe en nuestra base de datos."
+      },
+      "label": "Email del Paciente"
+    },
+    "send-button": "Enviar",
+    "study": {
+      "error": "Por favor inserte un estudio medico valido",
+      "label": "Tipo de Estudio"
+    },
+    "title": "Enviar un pedido para acceder a los estudios del paciente"
   },
   "role": {
     "clinic": "Clínica",
