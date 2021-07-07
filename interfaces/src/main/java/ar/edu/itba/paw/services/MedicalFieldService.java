@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface MedicalFieldService {
-    public Optional<MedicalField> findById(int id);
+    Optional<MedicalField> findById(int id);
 
-    public Optional<MedicalField> findByName(String name);
+    Optional<MedicalField> findByName(String name);
 
-    public Collection<MedicalField> getAll();
+    Collection<MedicalField> getAll();
 
-    public MedicalField findOrRegister(String name);
+    MedicalField register(String name);
 }

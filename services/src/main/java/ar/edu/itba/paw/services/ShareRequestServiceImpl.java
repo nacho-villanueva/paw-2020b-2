@@ -62,7 +62,22 @@ public class ShareRequestServiceImpl implements ShareRequestService{
     }
 
     @Override
-    public Collection<ShareRequest> getAllPatientRequest(String patientEmail){
-        return srd.getAllPatientRequests(patientEmail);
+    public Collection<ShareRequest> getAllPatientRequests(String patientEmail, int page, int pageSize) {
+        return srd.getAllPatientRequests(patientEmail, page, pageSize);
+    }
+
+    @Override
+    public long getAllPatientRequestsCount(String patientEmail) {
+        return srd.getAllPatientRequestsCount(patientEmail);
+    }
+
+    @Override
+    public long getAllPatientRequestsLastPage(String patientEmail, int pageSize) {
+        return getLastPage(getAllPatientRequestsCount(patientEmail),pageSize);
+    }
+
+    // auxiliar functions
+    private long getLastPage(final long count, final int pageSize){
+        return (long) Math.ceil((double)count / pageSize);
     }
 }

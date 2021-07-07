@@ -9,10 +9,10 @@ public interface StudyTypeService {
 
     Collection<StudyType> getAll();
 
-    public Optional<StudyType> findById(int id);
+    Optional<StudyType> findById(int id);
 
-    public Optional<StudyType> findByName(String name);
+    Optional<StudyType> findByName(String name);
 
-    public StudyType findOrRegister(String name);
+    StudyType register(String name);
 
 }

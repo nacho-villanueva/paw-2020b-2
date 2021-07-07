@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.MedicPlan;
 import ar.edu.itba.paw.models.Patient;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -36,8 +37,12 @@ public class PatientDaoTest {
     private static final User userZero = new User(1,"zero@zero.com","passZero",User.PATIENT_ROLE_ID);
     private static final Patient patientZero = new Patient(userZero,"Patient Zero");
 
+    //Known Medic Plans
+    private static final MedicPlan medicPlanOne = new MedicPlan(1,"Osde");
+    private static final MedicPlan medicPlanTwo = new MedicPlan(2,"Swiss Medical");
+
     //PATIENT INFO
-    private static final Patient patientTest = new Patient(userSix,"Test Patient","Test Plan","12345678");
+    private static final Patient patientTest = new Patient(userSix,"Test Patient",medicPlanOne,"12345678");
     private static final User userTest = new User(0,"test@test.com","testPass",User.UNDEFINED_ROLE_ID,"es-AR");
 
     @Autowired
@@ -121,17 +126,17 @@ public class PatientDaoTest {
     @Rollback
     @Test
     public void testUpdatePatientInfo() {
-        Patient patient = dao.updatePatientInfo(patientZero,patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
+        Patient patient = dao.updatePatientInfo(patientZero.getUser(),patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
 
         Assert.assertNotNull(patient);
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"name = '" + patientTest.getName() + "' AND medic_plan = '" + patientTest.getMedicPlan() + "' AND medic_plan_number = '" + patientTest.getMedicPlanNumber() + "' AND user_id = " + patientZero.getUser().getId()));
+        Assert.assertEquals(1,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"name = '" + patientTest.getName() + "' AND plan_id = " + patientTest.getMedicPlan().getId() + " AND medic_plan_number = '" + patientTest.getMedicPlanNumber() + "' AND user_id = " + patientZero.getUser().getId()));
     }
 
     @Transactional
     @Rollback
     @Test
     public void testUpdatePatientInfoNonExistentPatient() {
-        Patient patient = dao.updatePatientInfo(patientTest,patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
+        Patient patient = dao.updatePatientInfo(patientTest.getUser(),patientTest.getName(),patientTest.getMedicPlan(),patientTest.getMedicPlanNumber());
 
         Assert.assertNull(patient);
         Assert.assertEquals(0,JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,PATIENTS_TABLE_NAME,"user_id = " + patientTest.getUser().getId()));
