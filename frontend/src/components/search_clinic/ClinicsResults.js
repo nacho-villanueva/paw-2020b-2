@@ -21,7 +21,9 @@ export function ClinicsResults(props){
         return(
             <section>
                 <div className="align-items-end result-not">
-                    <h1 className="text-center mt-5 py-5">No Results Found</h1>
+                    <h1 className="text-center mt-5 py-5">
+                        <Trans t={t} i18nKey="advanced-search-clinics.form.results.no-results" />
+                    </h1>
                 </div>
             </section>
         );
@@ -140,7 +142,9 @@ export function ClinicsResults(props){
             <div className="card-body" key={"results-key-"+update}>
                 <div className="row">
                     <div className="col">
-                        <p className="card-title h4">ResultsHHHHH</p>
+                        <p className="card-title h4">
+                        <Trans t={t} i18nKey="advanced-search-clinics.title-results" />
+                        </p>
                     </div>
                 </div>
                 <hr/>

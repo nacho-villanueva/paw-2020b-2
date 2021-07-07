@@ -39,10 +39,12 @@
         "label": "Search by clinic name"
       },
       "insurance-plan": {
-        "label": "Search by insurance plan"
+        "label": "Search by insurance plan",
+        "any" : "Any insurance plan"
       },
       "study-type": {
-        "label": "Search by study type"
+        "label": "Search by study type",
+        "any" : "Any study type"
       },
       "errors": {
         "close-alert": "Close",
@@ -65,9 +67,16 @@
       },
       "submit": {
         "value": "Search"
+      },
+      "change": {
+        "submit": "Change Clinic",
+        "cancel": "Cancel"
       }
     },
-    "title": "Advanced Search | Clinic"
+    "title": "Advanced Search | Clinic",
+    "title-filters" : "Filters",
+    "title-results" : "Results",
+    "title-change" : "Change Clinic"
   },
   "appname": "MedTransfer",
   "create-order": {

@@ -22,7 +22,9 @@ export function ClinicsFilters(props){
             <div className="card-body">
                 <div className="row">
                     <div className="col">
-                        <p className="card-title h4">FiltersJJJJJJ</p>
+                        <p className="card-title h4">
+                        <Trans t={t} i18nKey="advanced-search-clinics.title-filters" />
+                        </p>
                     </div>
                 </div>
                 <hr/>
@@ -44,9 +46,12 @@ export function ClinicsFilters(props){
                         <Form.Control
                             className="select-picker"
                             as="select" name="insurancePlanSelect"
+                            placeholder={t("advanced-search-clinics.form.insurance-plan.any")}
                             defaultValue={inputs.insurancePlan}
                         >
-                            <option value={-1}>Any insurance plan</option>
+                            <option value={-1}>
+                                {t("advanced-search-clinics.form.insurance-plan.any")}
+                            </option>
                             {
                                 insurancePlans.map((item) => (
                                     <option
@@ -65,8 +70,11 @@ export function ClinicsFilters(props){
                             className="select-picker"
                             as="select" name="studyPlanSelect"
                             defaultValue={inputs.studyType}
+                            placeholder={t("advanced-search-clinics.form.study-type.any")}
                         >
-                            <option value={-1}>Any study type</option>
+                            <option value={-1}>
+                                {t("advanced-search-clinics.form.study-type.any")}
+                            </option>
                             {
                                 studyTypesList.map((item) => (
                                     <option

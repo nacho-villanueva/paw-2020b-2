@@ -9,7 +9,12 @@ import { getAllInsurancePlans } from "../../api/CustomFields";
 
 import { SearchClinics } from "../../api/Clinics";
 
+import { Trans, useTranslation } from 'react-i18next'
+
+
 export function ChangeClinic(props){
+    const {t} = useTranslation();
+
     const show = props.show;
     const setShow = props.setShow;
     const orderInfo = props.orderInfo;
@@ -140,7 +145,9 @@ export function ChangeClinic(props){
     return(
         <Modal className="cl-modal" show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Change Clinic</Modal.Title>
+                <Modal.Title>
+                    <Trans t={t} i18nKey="advanced-search-clinics.title-change" />
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="row-custom justify-content-center mt-2">
@@ -163,8 +170,12 @@ export function ChangeClinic(props){
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                <Button variant="primary" type="submit">Change Clinic</Button>
+                <Button variant="secondary" onClick={handleClose}>
+                <Trans t={t} i18nKey="advanced-search-clinics.form.change.cancel" />
+                </Button>
+                <Button variant="primary" type="submit">
+                <Trans t={t} i18nKey="advanced-search-clinics.form.change.submit" />
+                </Button>
             </Modal.Footer>
         </Modal>
     );

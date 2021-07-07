@@ -1,8 +1,10 @@
 .cl-filters {
-
+    margin: 0.5rem;
+    width: fit-content;
 }
 .cl-results {
-
+    margin: 0.5rem;
+    width: 30rem;
 }
 
 .cl-search-btn {
@@ -20,9 +22,12 @@
     border-width: thin;
 }
 
-.cl-modal > .modal-dialog {
-    width: 80%;
+.cl-modal {
+    left: -15%;
 }
 .cl-modal > .modal-dialog > .modal-content {
+    width: fit-content;
+}
+.cl-modal > .modal-dialog > .modal-content > .modal-body {
     width: max-content;
 }
